@@ -331,6 +331,32 @@
 
                                 </ul>
                             </li>
+
+                            <li class="header">মাসিক বাজার Management</li>
+                            <li class="treeview {{ (Request::route()->getName() == 'admin.monthly_bazaar.index') || (Request::route()->getName() == 'admin.monthly_bazaar.orders') ? 'menu-open' : '' }}">
+                                <a href="#">
+                                    <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
+                                        class="svg-icon" alt="">
+                                    <span>মাসিক বাজার</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ (Request::route()->getName() == 'admin.monthly_bazaar.index') || (Request::route()->getName() == 'admin.monthly_bazaar.orders') ? 'd-block' : '' }}">
+                                    <li class="">
+                                        <a href="{{ route('admin.monthly_bazaar.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>প্যাকেজসমূহ</span>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="{{ route('admin.monthly_bazaar.orders') }}">
+                                            <i class="ti-more"></i>
+                                            <span>অর্ডার রিকোয়েস্ট</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="header">User Managment</li>
                             <li class="treeview {{ (Request::route()->getName() == 'alluser')? 'menu-open' : '' }}">
                                 <a href="#">
@@ -498,6 +524,31 @@
                                         </a>
                                     </li>
 
+                                </ul>
+                            </li>
+
+                            <li class="treeview {{ (Request::route()->getName() == 'user.monthly_bazaar.index') || (Request::route()->getName() == 'user.monthly_bazaar.my_orders') ? 'menu-open' : '' }}">
+                                <a href="#">
+                                    <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
+                                        class="svg-icon" alt="">
+                                    <span>মাসিক বাজার</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ (Request::route()->getName() == 'user.monthly_bazaar.index') || (Request::route()->getName() == 'user.monthly_bazaar.my_orders') ? 'd-block' : '' }}">
+                                    <li class="">
+                                        <a href="{{ route('user.monthly_bazaar.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>মাসিক বাজার প্যাকেজ</span>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="{{ route('user.monthly_bazaar.my_orders') }}">
+                                            <i class="ti-more"></i>
+                                            <span>আমার অর্ডারসমূহ</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

@@ -132,3 +132,8 @@ function WithdrawMethod($id){
 function SitePaymentSystem($id){
     return SitePaymentSystem::where('id', $id)->first();
 }
+
+function GetUserCardNumber($user_id){
+    $card = \App\Models\CardNumber::where('used_by', $user_id)->first();
+    return $card ? $card->number : 'N/A';
+}
