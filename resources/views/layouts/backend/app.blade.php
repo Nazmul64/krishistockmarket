@@ -250,7 +250,7 @@
                             </li>
 
                             <li class="header">Stock Managment</li>
-                            <li class="treeview {{ (Request::route()->getName() == 'admin.stock.index') || (Request::route()->getName() == 'admin.stock.allStock') ? 'menu-open' : '' }}">
+                            <li class="treeview {{ (Request::route()->getName() == 'admin.stock.index') || (Request::route()->getName() == 'admin.stock.allStock') || (Request::route()->getName() == 'admin.stock_preset.index') ? 'menu-open' : '' }}">
                                 <a href="#">
                                     <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
                                         class="svg-icon" alt="">
@@ -259,7 +259,7 @@
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
                                 </a>
-                                <ul class="treeview-menu {{ (Request::route()->getName() == 'admin.stock.index') || (Request::route()->getName() == 'admin.stock.allStock') ? 'd-block' : '' }}" >
+                                <ul class="treeview-menu {{ (Request::route()->getName() == 'admin.stock.index') || (Request::route()->getName() == 'admin.stock.allStock') || (Request::route()->getName() == 'admin.stock_preset.index') ? 'd-block' : '' }}" >
 
                                     <li class="">
                                         <a href="{{ route('admin.stock.index') }}">
@@ -272,6 +272,13 @@
                                         <a href="{{ route('admin.stock.allStock') }}">
                                             <i class="ti-more"></i>
                                             <span>All Stock</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="">
+                                        <a href="{{ route('admin.stock_preset.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>Stock Presets</span>
                                         </a>
                                     </li>
 

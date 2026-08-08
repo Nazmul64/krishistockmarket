@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminEmployeeController;
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminPaymentSystemController;
 use App\Http\Controllers\Admin\AdminStockController;
+use App\Http\Controllers\Admin\AdminStockPresetController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminWithdrawController;
 use App\Http\Controllers\Admin\SiteSettingController;
@@ -124,6 +125,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
 
     Route::get('/stocks', [AdminStockController::class, 'index'])->name('admin.stock.index');
     Route::post('/stock/post', [AdminStockController::class, 'store'])->name('admin.stock.post');
+    Route::get('/stock-presets', [AdminStockPresetController::class, 'index'])->name('admin.stock_preset.index');
+    Route::post('/stock-presets/store', [AdminStockPresetController::class, 'store'])->name('admin.stock_preset.store');
+    Route::get('/stock-presets/edit/{id}', [AdminStockPresetController::class, 'edit'])->name('admin.stock_preset.edit');
+    Route::post('/stock-presets/update/{id}', [AdminStockPresetController::class, 'update'])->name('admin.stock_preset.update');
+    Route::get('/stock-presets/destroy/{id}', [AdminStockPresetController::class, 'destroy'])->name('admin.stock_preset.destroy');
     Route::get('/stock/pricing-list', [AdminStockController::class, 'list'])->name('admin.stock.list');
     Route::get('/stock/pricing/{id}', [AdminStockController::class, 'pricing'])->name('admin.stock.add.price');
     Route::post('/stock/pricing/post', [AdminStockController::class, 'pricingPost'])->name('admin.stock.pricing.post');

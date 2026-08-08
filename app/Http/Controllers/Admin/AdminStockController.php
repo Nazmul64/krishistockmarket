@@ -15,12 +15,15 @@ use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Models\StockPreset;
+
 class AdminStockController extends Controller
 {
 
 
     public function index(){
-        return view('admin.add-stock');
+        $presets = StockPreset::orderBy('price', 'asc')->get();
+        return view('admin.add-stock', compact('presets'));
     }
 
 

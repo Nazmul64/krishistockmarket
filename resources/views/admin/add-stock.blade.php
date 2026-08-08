@@ -38,13 +38,21 @@
 
                                         <!-- Quick Stock Package Presets -->
                                         <div class="form-group pb-4">
-                                            <label class="form-label fw-bold">Quick Stock Package Presets (দ্রুত স্টক প্যাকেজ সিলেক্ট করুন):</label>
-                                            <div class="d-flex flex-wrap gap-2 mt-1">
-                                                <button type="button" class="btn btn-outline-success btn-sm preset-btn" data-name="Stock Package ৳5,000" data-price="5000">৳৫,০০০ স্টক</button>
-                                                <button type="button" class="btn btn-outline-success btn-sm preset-btn" data-name="Stock Package ৳10,000" data-price="10000">৳১০,০০০ স্টক</button>
-                                                <button type="button" class="btn btn-outline-success btn-sm preset-btn" data-name="Stock Package ৳20,000" data-price="20000">৳২০,০০০ স্টক</button>
-                                                <button type="button" class="btn btn-outline-success btn-sm preset-btn" data-name="Stock Package ৳40,000" data-price="40000">৳৪০,০০০ স্টক</button>
-                                                <button type="button" class="btn btn-outline-success btn-sm preset-btn" data-name="Stock Package ৳50,000" data-price="50000">৳৫০,০০০ স্টক</button>
+                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                <label class="form-label fw-bold mb-0">Quick Stock Package Presets (দ্রুত স্টক প্যাকেজ সিলেক্ট করুন):</label>
+                                                <a href="{{ route('admin.stock_preset.index') }}" class="btn btn-outline-info btn-xs" title="Manage Stock Presets"><i class="fa fa-cog me-1"></i> ম্যানেজ প্রিসেট</a>
+                                            </div>
+                                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                                @forelse($presets as $preset)
+                                                    <button type="button" class="btn btn-outline-success btn-sm preset-btn"
+                                                            data-name="{{ $preset->package_name }}"
+                                                            data-price="{{ (float)$preset->price }}"
+                                                            data-quantity="{{ $preset->quantity ?? 10 }}">
+                                                        {{ $preset->title }}
+                                                    </button>
+                                                @empty
+                                                    <span class="text-muted small">কোনো প্রিসেট প্যাকেজ নেই। <a href="{{ route('admin.stock_preset.index') }}">প্রিসেট যোগ করুন</a></span>
+                                                @endforelse
                                             </div>
                                         </div>
 
@@ -211,12 +219,11 @@
         $('.preset-btn').on('click', function() {
             var name = $(this).data('name');
             var price = $(this).data('price');
+            var qty = $(this).data('quantity') || 10;
             $('#stock_name').val(name);
             $('#selling_price').val(price);
             $('#buying_price').val(price);
-            if(!$('#stock_quantity').val()) {
-                $('#stock_quantity').val(10);
-            }
+            $('#stock_quantity').val(qty);
         });
     });
 </script>
