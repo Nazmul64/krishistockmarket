@@ -1,0 +1,308 @@
+/*  - Slateblue #FAB327 */
+
+.search-box .input-group-btn > .btn,
+.search-box span i,
+.header_s .ownavigation .navbar-brand > span > span,
+.header_s1 .top-header .top-content > span > i,
+.header_s1 .top-header .top-content > span > a:hover,
+.header_s1 .top-header .top-content > ul > li > a:hover,
+.header_s1 .ownavigation .navbar-nav > .active > a, 
+.header_s1 .ownavigation .navbar-nav > .active > a:focus, 
+.header_s1 .ownavigation .navbar-nav > .active > a:hover, 
+.header_s1 .ownavigation .navbar-nav li:hover > a, 
+.header_s1 .ownavigation .navbar-nav li a:hover,
+.header_s1 .ownavigation .navbar-nav li a:focus,
+.header_s1 .ownavigation .navbar-nav li .dropdown-menu li > a:hover,
+.header_s2 .logo-block a > span > span,
+.header_s2 .top-detail .detail-box p > a:hover,
+.header_s2 .ownavigation .navbar-nav > .active > a, 
+.header_s2 .ownavigation .navbar-nav > .active > a:focus, 
+.header_s2 .ownavigation .navbar-nav > .active > a:hover, 
+.header_s2 .ownavigation .navbar-nav li:hover > a, 
+.header_s2 .ownavigation .navbar-nav li a:hover,
+.header_s2 .ownavigation .navbar-nav li a:focus,
+.header_s3 .ownavigation .navbar-nav > .active > a, 
+.header_s3 .ownavigation .navbar-nav > .active > a:focus, 
+.header_s3 .ownavigation .navbar-nav > .active > a:hover, 
+.header_s3 .ownavigation .navbar-nav li:hover > a, 
+.header_s3 .ownavigation .navbar-nav li a:hover,
+.header_s3 .ownavigation .navbar-nav li a:focus,
+.header_s3 .ownavigation .search > a,
+.slide-txt-color,
+#home-slider-1 .tparrows::before,
+#home-slider-2 .tparrows:hover::before,
+#home-slider-3 .tparrows:hover::before,
+#home-slider-1 .slide-btn:hover > a,
+#home-slider-1 .slide-btn2 > a,
+#home-slider-2 .slide-btn:hover > a,
+#home-slider-2 .slide-btn2 > a,
+#home-slider-3 .slide-btn:hover > a,
+#home-slider-3 .slide-btn2 > a,
+.section-header h3 > span,
+.why-choose-style-1 .why-choose-box:hover > h3,
+.about-company .about-company-box h5,
+.about-company .about-company-box p i,
+.counter-style-1 .counter-box span,
+.counter-style-1 .counter-box i,
+.section-header-3 > h4,
+.feature-section .feature-box:hover > h3,
+.team-box .team-content > ul > li > a:hover,
+.testimonial-main-title > span,
+.type-post .entry-title a:hover,
+.type-post .entry-footer > div > i,
+.type-post .entry-footer > div > a:hover,
+.newsletter-section2 form .input-group-btn > .btn:hover,
+.counter-style-2 .counter-box i,
+.team-style-2 .team-box:hover .team-content > h3,
+.testimonial-carousel2 .testimonial-box > h3,
+.introduction-section .intro-detail .intro-title h3 span,
+.introduction-section .intro-detail > a:hover,
+.feature-section-2 .feature-content .feature-title h3,
+.feature-section-2 .feature-content > a,
+.feature-section-2 .feature-box:hover > i, 
+.feature-section-2 .feature-box:hover > h4,
+.team-style-3 .team-box:hover .team-content > h3,
+.page-banner i,
+.portfolio-detail-desc h3 > span,
+.portfolio-detail-content .detail-title > span,
+.client-detail > h5,
+.client-feedback > p > a,
+.client-feedback > span,
+.type-post .entry-footer > div.post-category > a,
+.type-post .entry-content > p > a,
+article.type-post .entry-content .post-video-block .video-content ul > li::before,
+.about-author-box > h3 > span,
+.comments-title > span,
+.comment-metadata a,
+.comment-list .reply a:hover,
+.comment-reply-title > span,
+.comment-form input[type="submit"]:hover,
+.error-section .error-detail h2,
+.error-section .error-detail h3 span,
+.coming-soon .subscribe-box .input-group .btn:hover,
+.footer-widget .widget_about > a.ftr-logo,
+.footer-widget .widget_about a:hover,
+.footer-widget .widget_links ul li a:hover,
+.footer-section2 .footer-widget .widget_about table tbody tr td b,
+.footer-widget .widget_latestposts .latest-content span a:hover,
+.footer-widget .widget_latestposts .latest-content h5 > a:hover,
+.widget_archive ul li > a::before, 
+.widget_categories ul > li > a::before,
+.widget_archive > ul li:hover,
+.widget_archive ul li:hover a,
+.widget_archive ul li a:hover,
+.footer-widget .widget_archive ul li:hover,
+.footer-widget .widget_archive ul li:hover a,
+.footer-widget .widget_archive ul li a:hover,
+.widget_categories > ul li:hover,
+.widget_categories ul > li:hover > a,
+.widget_categories ul li > a:hover,
+.footer-widget .widget_categories ul > li:hover,
+.footer-widget .widget_categories ul > li:hover > a,
+.footer-widget .widget_categories ul > li > a:hover,
+.widget_calendar th,
+.widget_calendar tbody a,
+.widget_nav_menu ul li a:hover,
+.widget_meta ul li:hover a,
+.widget_pages > ul li a:hover,
+.widget_recent_comments ul li a:hover,
+.widget_recent_entries ul li a:hover,
+.widget_search .btn-default:hover,
+.widget_recent_entries ul li > span,
+.widget_rss > ul > li > a,
+.footer-widget .widget_nav_menu ul li a:hover,
+.footer-widget .widget_meta ul li a:hover,
+.footer-widget .widget_pages > ul li a:hover,
+.footer-widget .widget_recent_comments ul li a:hover,
+.footer-widget .widget_recent_entries ul li a:hover {
+	color: #FAB327;
+}
+.header_s1 .ownavigation .navbar-brand span > i,
+.header_s1 .ownavigation .navbar-brand > i,
+.header_s1 .top-header .search a,
+.header_s2 .logo-block a > span > i,
+.header_s2 .top-detail .detail-box > i,
+.header_s2 .ownavigation .search > a,
+.header_s3 .ownavigation .navbar-brand i::before,
+#home-slider-1 .tparrows:hover,
+#home-slider-1 .tp-bullet.selected,
+#home-slider-2 .tp-bullet.selected,
+#home-slider-3 .hesperiden .tp-bullet.selected,
+.section-header-1::before, 
+.section-header-1::after, 
+.section-header-1 > h3::before,
+.why-choose-style-1 .why-choose-box > i,
+.about-company .about-company-box > a::before, 
+.about-company .about-company-box > a::after,
+.section-title::before, 
+.section-title::after, 
+.section-title h3::before,
+.feature-section .feature-box > i,
+.team-style-1::before,
+.gallery-category ul li a::before, 
+.gallery-category ul li a::after,
+.gallery-category ul li a:hover, 
+.gallery-category ul li a:focus, 
+.gallery-category ul li a.active,
+.testimonial-section,
+.testimonial-section .carousel-indicators,
+.type-post .entry-cover .post-format > a > span,
+.newsletter-section::after,
+.bottom-footer,
+.what-we-offer .offer-box .offer-detail-back,
+.faq-block .card-header h5 a span,
+.faq-block .card-header h5 a::before, 
+.faq-block .card-header h5 a:hover::before, 
+.faq-block .card-header h5 a.collapsed:hover::before,
+.newsletter-section2,
+.why-choose-style-2 .why-choose-box > i,
+.testimonial-carousel2 .testimonial-box .img-block::before,
+.testimonial-carousel2.owl-theme .owl-dots .owl-dot.active span,
+.price-box .price-title > span::before,
+.price-box .price-content .purchase-btn > a:hover,
+.recent-blog-2 .type-post .entry-cover .post-format > a,
+.recent-blog-3 .type-post .entry-cover .post-format > a,
+.ftr-content,
+.introduction-section .intro-detail .intro-title::before, 
+.introduction-section .intro-detail .intro-title::after, 
+.introduction-section .intro-detail .intro-title h3::before,
+.introduction-section .intro-box i,
+.counter-style-3 .counter-box i,
+.help-section form .btn > i,
+.help-section form .btn:hover,
+.feature-section-2 .feature-content .feature-title::before, 
+.feature-section-2 .feature-content .feature-title::after, 
+.feature-section-2 .feature-content .feature-title h3::before,
+.team-style-3 .team-box .team-content > ul,
+.ow-pagination ul li a:focus,
+.ow-pagination ul li a:hover,
+.portfolio-team .portfolio-detail-team > h3,
+.client-detail i::before,
+.comment-form input[type="submit"],
+.contact-form .submit,
+.error-section .error-img > i::before,
+.error-section .searchbox .input-group .btn:hover,
+.coming-soon .logo-block a > i,
+.coming-soon .logo-block a i::before,
+.coming-soon .subscribe-box .input-group .btn,
+.coming-soon .ftr-content .social > li > a:hover,
+.widget_about a.ftr-logo > i,
+.widget-title::after,
+.footer-widget .widget-title::after,
+.footer-widget .widget_about a.ftr-logo > i,
+.widget-title > i::after,
+.widget_brochure > span > a > i,
+.widget_calendar caption,
+.widget_calendar tbody #today,
+.widget_calendar #next a, 
+.widget_calendar #prev a,
+.tagcloud a:hover {
+	background-color: #FAB327;
+}
+.what-we-offer .offer-box > a::before,
+.footer-section2 .bottom-footer,
+.footer-section3 .bottom-footer {
+	border-top-color: #FAB327;
+}
+.faq-block .card-block {
+	border-bottom-color: #FAB327;
+}
+
+#home-slider-1 .slide-btn:not(.slide-btn2),
+#home-slider-2 .slide-btn:not(.slide-btn2),
+#home-slider-3 .slide-btn:not(.slide-btn2) {
+	background-color: #FAB327 !important;
+}
+#home-slider-1 .slide-btn:not(.slide-btn2):hover,
+#home-slider-2 .slide-btn:not(.slide-btn2):hover,
+#home-slider-3 .slide-btn:not(.slide-btn2):hover {
+	background-color: #FFFFFF !important;
+}
+#home-slider-1 .slide-btn2,
+#home-slider-2 .slide-btn2 {
+	border-color: #FAB327 !important;
+}
+#home-slider-1 .slide-btn:hover,
+#home-slider-2 .slide-btn:hover,
+#home-slider-3 .slide-btn:hover {
+	color: #FAB327 !important;
+}
+#home-slider-1 .slide-btn2,
+#home-slider-2 .slide-btn2 {
+	color: #FAB327 !important;
+}
+#home-slider-1 .tparrows,
+#home-slider-1 .tp-bullet,
+#home-slider-2 .tp-bullet,
+#home-slider-3 .hesperiden .tp-bullet,
+.why-choose-style-1 .why-choose-box::before,
+.why-choose-style-1 .why-choose-box:hover,
+.testimonial-carousel2 .testimonial-box .img-block > img,
+.help-section form .btn,
+.feature-section-2 .feature-box:hover,
+.pricing-section2 .price-box:hover .price-content,
+.client-detail i > img,
+.comment-form input[type="submit"]:hover {
+	border-color: #FAB327;
+}
+
+.counter-style-1::before,
+.client-section::before,
+.gallery-box .gallery-content::before,
+.testimonial-section3::before {
+    background-color: rgba(250, 179, 39, 0.9);
+}
+.newsletter-section::before {
+    background-color: rgba(250, 179, 39, 0.8);	
+}
+.footer-section3 .ftr-content::before {
+    background-color: rgba(250, 179, 39, 0.95);	
+}
+.price-box .price-title::before,
+.price-box .price-content {
+	box-shadow: inset 0px 3px 0px 0px #FAB327;
+	-webkit-box-shadow: inset 0px 3px 0px 0px #FAB327;
+}
+
+.page-banner {
+	box-shadow: 0px 5px 0px 0px #FAB327;
+	-webkit-box-shadow: 0px 5px 0px 0px #FAB327;
+}
+/* - min-width: 992 */
+@media (min-width: 992px) {
+	.header_s .ownavigation .navbar-nav li .dropdown-menu li > a {
+		border-top-color: #FAB327;
+	}
+	.header_s .ownavigation .navbar-nav li .dropdown-menu li > a:hover {
+		background-color: #FAB327;
+		color: #fff;
+	}
+	
+	.bottom-menu .ownavigation .navbar-collapse > ul > li .dropdown-menu {
+		background-color: #FAB327;
+	}
+	.bottom-menu .ownavigation .navbar-nav li .dropdown-menu li > a:hover {
+		color: #FAB327;
+	}
+}
+/* - max-width: 991 */
+@media (max-width: 991px) {
+	.ownavigation .navbar-toggler,
+	.ownavigation .navbar-toggler:hover, 
+	.ownavigation .navbar-toggler:focus,
+	#slidepanel {
+		border-color: #FAB327;
+	}
+	.ownavigation .navbar-toggler,
+	.ownavigation .navbar-toggler:hover, 
+	.ownavigation .navbar-toggler:focus,
+	#slideit, 
+	#closeit,
+	#slideit:hover, 
+	#closeit:hover {
+		color: #FAB327;
+	}
+	.ownavigation .ddl-switch {
+		background-color: #FAB327;
+	}
+}
