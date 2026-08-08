@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAgentLedgerController;
 use App\Http\Controllers\Admin\AdminCardNumberController;
 use App\Http\Controllers\Admin\AdminEmployeeController;
 use App\Http\Controllers\Admin\AdminFeatureController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\AdminWithdrawController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Employee\EmployeeController;
+use App\Http\Controllers\Employee\EmployeeStockLedgerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Users\UserCartController;
 use App\Http\Controllers\Users\UserMonthlyBazaarController;
@@ -94,6 +96,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::post('/employee/edit/', [AdminEmployeeController::class, 'EditPost'])->name('admin.employee.edit.post');
     Route::get('/employee/view/{id}', [AdminEmployeeController::class, 'ViewEmployee'])->name('admin.employee.view');
     Route::get('/employee/referal/view/{id}', [AdminEmployeeController::class, 'ViewReferalUser'])->name('admin.employee.referaluser');
+
+    // Marketing Agent Live Stock & Ledger Routes
+    Route::get('/agent-ledger', [AdminAgentLedgerController::class, 'index'])->name('admin.agent_ledger.index');
+    Route::get('/agent-ledger/view/{agent_id}', [AdminAgentLedgerController::class, 'show'])->name('admin.agent_ledger.show');
+    Route::post('/agent-ledger/allocate', [AdminAgentLedgerController::class, 'allocateStock'])->name('admin.agent_ledger.allocate');
 
 
 
@@ -180,6 +187,10 @@ Route::group(['prefix' => 'employee', 'middleware' => 'EmployeeChacker'], functi
     Route::get('/referal', [EmployeeController::class, 'Referal'])->name('my.referal');
     Route::get('/profile/business', [EmployeeController::class, 'profileBusiness'])->name('profile.business');
     Route::post('/profile/business/submit', [EmployeeController::class, 'profileBusinessSubmit'])->name('profile.business.submit');
+
+    // Marketing Agent Live Stock & Ledger Employee Routes
+    Route::get('/stock-ledger', [EmployeeStockLedgerController::class, 'index'])->name('employee.stock_ledger.index');
+    Route::post('/stock-ledger/sell', [EmployeeStockLedgerController::class, 'sellStock'])->name('employee.stock_ledger.sell');
 });
 
 

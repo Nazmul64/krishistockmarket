@@ -407,21 +407,28 @@
                             </li>
                             <li class="header">Employee Managment</li>
 
-                            <li class="treeview {{ (Request::route()->getName() == 'admin.employee.index') ? 'menu-open' : '' }}">
+                            <li class="treeview {{ (Request::route()->getName() == 'admin.employee.index') || (Request::route()->getName() == 'admin.agent_ledger.index') || (Request::route()->getName() == 'admin.agent_ledger.show') ? 'menu-open' : '' }}">
                                 <a href="#">
                                     <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
                                         class="svg-icon" alt="">
-                                    <span>Employee</span>
+                                    <span>Employee / Agent</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
                                 </a>
-                                <ul class="treeview-menu {{ (Request::route()->getName() == 'admin.employee.index') ? 'd-block' : '' }}">
+                                <ul class="treeview-menu {{ (Request::route()->getName() == 'admin.employee.index') || (Request::route()->getName() == 'admin.agent_ledger.index') || (Request::route()->getName() == 'admin.agent_ledger.show') ? 'd-block' : '' }}">
 
                                     <li class="">
                                         <a href="{{ route('admin.employee.index') }}">
                                             <i class="ti-more"></i>
-                                            <span>Employee</span>
+                                            <span>Employee List</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="">
+                                        <a href="{{ route('admin.agent_ledger.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>বিপণন এজেন্ট লাইভ হিসাব</span>
                                         </a>
                                     </li>
 
@@ -616,6 +623,14 @@
                         @else
 
                         <!-- ================================ Employee sidebar menu -->
+                        <li class="{{ (Request::route()->getName() == 'employee.stock_ledger.index') ? 'menu-open' : '' }}">
+                            <a href="{{ route('employee.stock_ledger.index') }}">
+                                <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
+                                    class="svg-icon" alt="">
+                                <span>আমার লাইভ স্টক ও হিসাব</span>
+                            </a>
+                        </li>
+
                         <li class="treeview {{ (Request::route()->getName() == 'my.referal') ? 'menu-open' : '' }}">
                             <a href="#">
                                 <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
