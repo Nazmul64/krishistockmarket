@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             StockPresetSeeder::class,
             MonthlyBazaarSeeder::class,
+            EmployeeSeeder::class,
         ]);
     }
 }
