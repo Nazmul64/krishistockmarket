@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Admin\AdminAgentLedgerController;
 use App\Http\Controllers\Admin\AdminCardNumberController;
+use App\Http\Controllers\Admin\AdminDepositController;
 use App\Http\Controllers\Admin\AdminEmployeeController;
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminMonthlyBazaarController;
 use App\Http\Controllers\Admin\AdminPaymentSystemController;
+use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminStockController;
 use App\Http\Controllers\Admin\AdminStockPresetController;
 use App\Http\Controllers\Admin\AdminUserController;
@@ -16,9 +18,11 @@ use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Employee\EmployeeStockLedgerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Users\UserCartController;
+use App\Http\Controllers\Users\UserDepositController;
 use App\Http\Controllers\Users\UserMonthlyBazaarController;
 use App\Http\Controllers\Users\UserPaymentSystemController;
 use App\Http\Controllers\Users\UserStockController;
+use App\Http\Controllers\Users\UserWalletController;
 use App\Http\Controllers\Users\WithdrawController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -175,6 +179,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::get('/monthly-bazaar/order/approve/{id}', [AdminMonthlyBazaarController::class, 'approveOrder'])->name('admin.monthly_bazaar.order.approve');
     Route::get('/monthly-bazaar/order/reject/{id}', [AdminMonthlyBazaarController::class, 'rejectOrder'])->name('admin.monthly_bazaar.order.reject');
 
+    // Deposit System Admin Routes
+    Route::get('/deposits', [AdminDepositController::class, 'index'])->name('admin.deposit.index');
+    Route::get('/deposit/approve/{id}', [AdminDepositController::class, 'approve'])->name('admin.deposit.approve');
+    Route::get('/deposit/reject/{id}', [AdminDepositController::class, 'reject'])->name('admin.deposit.reject');
+
+    // Admin Reports & Analytics Routes
+    Route::get('/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
+
 });
 
 
@@ -226,6 +238,11 @@ Route::group(['prefix' => 'user', 'middleware' => 'UserChacker'], function () {
     Route::get('/monthly-bazaar', [UserMonthlyBazaarController::class, 'index'])->name('user.monthly_bazaar.index');
     Route::post('/monthly-bazaar/order', [UserMonthlyBazaarController::class, 'storeOrder'])->name('user.monthly_bazaar.order.post');
     Route::get('/monthly-bazaar/my-orders', [UserMonthlyBazaarController::class, 'myOrders'])->name('user.monthly_bazaar.my_orders');
+
+    // Customer Deposit & Wallet Ledger Routes
+    Route::get('/deposit', [UserDepositController::class, 'index'])->name('user.deposit.index');
+    Route::post('/deposit/post', [UserDepositController::class, 'store'])->name('user.deposit.post');
+    Route::get('/wallet/ledger', [UserWalletController::class, 'ledger'])->name('user.wallet.ledger');
 
 });
 

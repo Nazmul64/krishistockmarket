@@ -43,6 +43,30 @@ class UserMonthlyBazaarController extends Controller
 
         $total_price = $item->price * $request->quantity;
 
+        $status = 'pending';
+
+        if ($request->payment_method === 'Customer Wallet Balance' || $request->payment_method === 'Wallet Balance') {
+            $user = Auth::user();
+            if ($user->balance < $total_price) {
+                return redirect()->back()->with('error', 'আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই! আপনার বর্তমান ব্যালেন্স: ৳' . number_format($user->balance, 2) . '। অনুগ্রহ করে ডিপোজিট করুন।');
+            }
+
+            // Ledger Rule #18 & Section #8: Debit Wallet Balance and record ledger
+            RecordWalletLedger(
+                $user->id,
+                'Monthly Market Purchase',
+                0,
+                $total_price,
+                'Customer Wallet Balance',
+                'WLT-' . strtoupper(Str::random(6)),
+                'Approved'
+            );
+
+            $status = 'approved';
+            $item->increment('sold_quantity', $request->quantity);
+            $item->decrement('quantity', $request->quantity);
+        }
+
         MonthlyBazaarOrder::create([
             'user_id' => Auth::id(),
             'item_id' => $item->id,
@@ -51,10 +75,10 @@ class UserMonthlyBazaarController extends Controller
             'quantity' => $request->quantity,
             'total_price' => $total_price,
             'payment_method' => $request->payment_method,
-            'pay_from_number' => $request->pay_from_number,
-            'trx_number' => $request->trx_number,
+            'pay_from_number' => $request->pay_from_number ?? Auth::user()->phone,
+            'trx_number' => $request->trx_number ?? 'WLT-PAY',
             'screenshot' => $screenshotName,
-            'status' => 'pending',
+            'status' => $status,
         ]);
 
         return redirect()->route('user.monthly_bazaar.my_orders')->with('success', 'আপনার মাসিক বাজার রিকোয়েস্ট সফলভাবে জমা হয়েছে!');

@@ -137,3 +137,30 @@ function GetUserCardNumber($user_id){
     $card = \App\Models\CardNumber::where('used_by', $user_id)->first();
     return $card ? $card->number : 'N/A';
 }
+
+function RecordWalletLedger($user_id, $transaction_type, $credit_amount, $debit_amount, $payment_method = 'Wallet Balance', $trx_number = null, $status = 'Approved') {
+    $user = \App\Models\User::find($user_id);
+    if (!$user) return false;
+
+    $previous_balance = (float) $user->balance;
+    $new_balance = $previous_balance + (float) $credit_amount - (float) $debit_amount;
+
+    $user->update(['balance' => $new_balance]);
+
+    $card_number = GetUserCardNumber($user_id);
+    $txn_id = 'TXN-' . strtoupper(\Illuminate\Support\Str::random(8));
+
+    return \App\Models\WalletTransaction::create([
+        'transaction_id'   => $txn_id,
+        'user_id'          => $user_id,
+        'card_number'      => $card_number,
+        'transaction_type' => $transaction_type,
+        'credit_amount'    => $credit_amount,
+        'debit_amount'     => $debit_amount,
+        'previous_balance' => $previous_balance,
+        'new_balance'      => $new_balance,
+        'payment_method'   => $payment_method,
+        'trx_number'       => $trx_number ?? $txn_id,
+        'status'           => $status,
+    ]);
+}

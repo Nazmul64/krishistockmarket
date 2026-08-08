@@ -223,15 +223,31 @@ class AdminStockController extends Controller
     }
 
     public function ByuRequestAproved($id){
-        BuyStock::where("id", $id)->update([
-            "status" => "aproved"
-        ]);
         $update_info = BuyStock::where("id", $id)->first();
-        $stock_info = Stock::where('id', $update_info->stock_id)->first();
 
-        Stock::where('id', $update_info->stock_id)->update([
-            'stock_quantity' => $stock_info->stock_quantity - $update_info->buy_quantiy
-        ]);
+        if ($update_info && $update_info->status !== 'aproved') {
+            BuyStock::where("id", $id)->update([
+                "status" => "aproved"
+            ]);
+            $stock_info = Stock::where('id', $update_info->stock_id)->first();
+
+            if ($stock_info) {
+                Stock::where('id', $update_info->stock_id)->update([
+                    'stock_quantity' => max(0, $stock_info->stock_quantity - $update_info->buy_quantiy)
+                ]);
+            }
+
+            // Log in Wallet Transaction Ledger
+            RecordWalletLedger(
+                $update_info->user_id,
+                'Stock Purchase',
+                0,
+                $update_info->buyed_price,
+                'Wallet Balance',
+                $update_info->trx_number
+            );
+        }
+
         return back();
 
     }

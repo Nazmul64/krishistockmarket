@@ -358,23 +358,34 @@
                                 </ul>
                             </li>
                             <li class="header">User Managment</li>
-                            <li class="treeview {{ (Request::route()->getName() == 'alluser')? 'menu-open' : '' }}">
+                            <li class="treeview {{ (Request::route()->getName() == 'alluser') || (Request::route()->getName() == 'admin.deposit.index') || (Request::route()->getName() == 'admin.reports.index') ? 'menu-open' : '' }}">
                                 <a href="#">
                                     <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
                                         class="svg-icon" alt="">
-                                    <span>User's</span>
+                                    <span>User & Financial</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
                                 </a>
-                                <ul class="treeview-menu {{ (Request::route()->getName() == 'alluser')? 'd-block' : '' }}">
+                                <ul class="treeview-menu {{ (Request::route()->getName() == 'alluser') || (Request::route()->getName() == 'admin.deposit.index') || (Request::route()->getName() == 'admin.reports.index') ? 'd-block' : '' }}">
                                     <li class="">
                                         <a href="{{ route('alluser') }}">
                                             <i class="ti-more"></i>
-                                            <span>All User</span>
+                                            <span>All Customer List</span>
                                         </a>
                                     </li>
-
+                                    <li class="">
+                                        <a href="{{ route('admin.deposit.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>Deposit Requests</span>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="{{ route('admin.reports.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>Reports & Analytics</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 
@@ -557,6 +568,22 @@
                                         </a>
                                     </li>
                                 </ul>
+                            </li>
+
+                            <li class="{{ (Request::route()->getName() == 'user.deposit.index') ? 'menu-open' : '' }}">
+                                <a href="{{ route('user.deposit.index') }}">
+                                    <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
+                                        class="svg-icon" alt="">
+                                    <span>Deposit Money (ডিপোজিট)</span>
+                                </a>
+                            </li>
+
+                            <li class="{{ (Request::route()->getName() == 'user.wallet.ledger') ? 'menu-open' : '' }}">
+                                <a href="{{ route('user.wallet.ledger') }}">
+                                    <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/transactions.svg"
+                                        class="svg-icon" alt="">
+                                    <span>Wallet Ledger (ওয়ালেট খতিয়ান)</span>
+                                </a>
                             </li>
 
                             <li class="{{ (Request::route()->getName() == 'my.cart') ? 'menu-open' : '' }}">

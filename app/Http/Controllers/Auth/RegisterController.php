@@ -38,13 +38,15 @@ class RegisterController extends Controller
         $phone = trim($request->phone_number);
         $name = trim($request->name);
 
+        $initialBonus = $cardNumber->amount ?? 300.00;
+
         $user = User::create([
             'username'          => $phone,
             'name'              => $name,
             'email'             => $phone . '@ikrishiporibar.com',
             'phone'             => $phone,
             'role'              => 'user',
-            'balance'           => $cardNumber->amount ?? 300.00,
+            'balance'           => 0.00,
             'password'          => Hash::make($request->password),
             'email_verified_at' => Carbon::now(),
         ]);
@@ -56,6 +58,9 @@ class RegisterController extends Controller
                 'used_by' => $user->id,
                 'used_at' => Carbon::now(),
             ]);
+
+            // Record Registration Balance Ledger Entry (Previous 0 -> Credit 300 -> New 300)
+            RecordWalletLedger($user->id, 'Registration Balance', $initialBonus, 0, 'Registration Bonus', $cardNumber->number);
 
             return redirect()->route('login')->with('success', 'Registration successful! 300 TK has been credited to your balance. Please sign in with your phone number.');
         } else {
