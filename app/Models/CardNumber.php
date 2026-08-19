@@ -12,6 +12,7 @@ class CardNumber extends Model
     protected $fillable = [
         'number',
         'amount',
+        'card_type',
         'is_used',
         'used_by',
         'used_at',

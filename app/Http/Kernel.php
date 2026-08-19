@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'AdminCheck' => \App\Http\Middleware\AdminCheck::class,
         'UserChacker' => \App\Http\Middleware\UserChacker::class,
         'EmployeeChacker' => \App\Http\Middleware\EmployeeChacker::class,
+        'SupplierChecker' => \App\Http\Middleware\SupplierChecker::class,
     ];
 }

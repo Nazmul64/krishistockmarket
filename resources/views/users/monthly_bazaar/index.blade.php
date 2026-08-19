@@ -47,7 +47,14 @@
                                 </div>
                             @endif
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title fw-bold text-dark">{{ $item->title }}</h5>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title fw-bold text-dark mb-0">{{ $item->title }}</h5>
+                                    @if($item->is_unlimited)
+                                        <span class="badge bg-success small"><i class="fa fa-infinity me-1"></i> Stock Available</span>
+                                    @else
+                                        <span class="badge bg-info small">মজুদ: {{ $available }} টি</span>
+                                    @endif
+                                </div>
                                 <h6 class="card-subtitle mb-2 text-primary fw-semibold">{{ $item->package_name }}</h6>
                                 <p class="card-text text-muted small flex-grow-1" style="white-space: pre-line;">{{ $item->description ?? 'মাসিক প্রয়োজনীয় খাদ্য পণ্যের সমাহার।' }}</p>
 
@@ -62,7 +69,7 @@
                                                 data-id="{{ $item->id }}"
                                                 data-title="{{ $item->title }}"
                                                 data-price="{{ $item->price }}"
-                                                data-available="{{ $available }}">
+                                                data-available="{{ $item->is_unlimited ? 999999 : $available }}">
                                             <i class="fa fa-shopping-cart me-1"></i> অর্ডার করুন
                                         </button>
                                     </div>
@@ -127,14 +134,48 @@
                         <label class="form-label fw-bold text-success fs-5">সর্বমোট মূল্য: <span id="modal_total_price">৳0</span></label>
                     </div>
 
+                    <!-- Area & Agent Point Selection (Dynamic from Admin DB) -->
+                    <div class="row bg-light p-2 rounded mb-3 border">
+                        <div class="col-12"><small class="text-success fw-bold mb-2 d-block"><i class="fa fa-map-marker me-1"></i> রিকোয়েস্টের এলাকা ও এজেন্ট পয়েন্ট (বাধ্যতামূলক)</small></div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-bold">রিকোয়েস্টের এলাকা <span class="text-danger">*</span></label>
+                            <input type="text" name="request_area" list="area_list" class="form-control" placeholder="যেমন: নওগাঁ, বগুড়া, গাজীপুর" required>
+                            <datalist id="area_list">
+                                @if(isset($agent_points) && count($agent_points) > 0)
+                                    @foreach($agent_points->pluck('area')->unique() as $area)
+                                        <option value="{{ $area }}">
+                                    @endforeach
+                                @else
+                                    <option value="নওগাঁ">
+                                    <option value="বগুড়া">
+                                    <option value="গাজীপুর">
+                                    <option value="ঢাকা">
+                                @endif
+                            </datalist>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-bold">সংগ্রহের Agent Point <span class="text-danger">*</span></label>
+                            <select name="agent_point" class="form-control" required>
+                                <option value="">-- Agent Point বেছে নিন --</option>
+                                @if(isset($agent_points) && count($agent_points) > 0)
+                                    @foreach($agent_points as $ap)
+                                        <option value="{{ $ap->name }}">{{ $ap->name }} ({{ $ap->area }})</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label fw-bold">পেমেন্ট মেথড সিলেক্ট করুন <span class="text-danger">*</span></label>
                         <select name="payment_method" id="payment_method_select" class="form-control" required>
                             <option value="">-- পেমেন্ট মেথড বেছে নিন --</option>
-                            <option value="bKash (বিকাশ)">bKash (বিকাশ)</option>
-                            <option value="Nagad (নগদ)">Nagad (নগদ)</option>
-                            <option value="Rocket (রকেট)">Rocket (রকেট)</option>
-                            <option value="Bank Transfer (ব্যাংক)">Bank Transfer (ব্যাংক ট্রান্সফার)</option>
+                            <option value="Wallet Balance (ওয়ালেট ব্যালেন্স)">Wallet Balance (ওয়ালেট ব্যালেন্স - ৳{{ number_format(Auth::user()->balance ?? 0, 2) }})</option>
+                            @if(isset($payment_systems) && count($payment_systems) > 0)
+                                @foreach($payment_systems as $sys)
+                                    <option value="{{ $sys->pay_s_name }}">{{ $sys->pay_s_name }} ({{ $sys->pay_s_number }})</option>
+                                @endforeach
+                            @endif
                             <option value="Cash on Delivery (ক্যাশ অন ডেলিভারি)">Cash on Delivery (ক্যাশ অন ডেলিভারি)</option>
                         </select>
                     </div>

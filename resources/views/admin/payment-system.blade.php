@@ -33,15 +33,19 @@
                                         @csrf
 
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Select Type</label>
+                                        <label class="col-sm-3 col-form-label">Payment Method</label>
                                         <div class="col-sm-9">
-                                            <select name="pay_s_name" class="form-control" required>
-                                                    <option value="">Select Payment Method...</option>
-                                                    <option value="bKash">bKash (বিকাশ)</option>
-                                                    <option value="Nagad">Nagad (নগদ)</option>
-                                                    <option value="Rocket">Rocket (রকেট)</option>
-                                                    <option value="Bank Transfer">Bank Transfer (ব্যাংক ট্রান্সফার)</option>
-                                            </select>
+                                            <input type="text" name="pay_s_name" list="payment_presets" class="form-control" placeholder="Select or type custom (e.g. bKash, Upay, Bank)..." required>
+                                            <datalist id="payment_presets">
+                                                <option value="bKash (বিকাশ)">
+                                                <option value="Nagad (নগদ)">
+                                                <option value="Rocket (রকেট)">
+                                                <option value="Upay (উপায়)">
+                                                <option value="CellFin (সেলফিন)">
+                                                <option value="Bank Transfer (ব্যাংক ট্রান্সফার)">
+                                                <option value="Cash on Delivery (ক্যাশ অন ডেলিভারি)">
+                                            </datalist>
+                                            <small class="text-muted">আপনি লিস্ট থেকে সিলেক্ট করতে পারেন অথবা যেকোনো কাস্টম নাম টাইপ করে দিতে পারেন।</small>
                                         </div>
                                     </div>
 

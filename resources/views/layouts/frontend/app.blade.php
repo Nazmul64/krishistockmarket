@@ -64,8 +64,26 @@
         .top-header-bar a:hover {
             color: #38bdf8;
         }
-        .navbar-brand img {
-            max-height: 52px;
+        @media (min-width: 1200px) {
+            .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+                max-width: 1480px !important;
+            }
+        }
+        .ownavigation a.navbar-brand {
+            display: inline-flex !important;
+            align-items: center !important;
+            height: auto !important;
+            padding: 0 !important;
+            margin: 0 15px 0 0 !important;
+            position: relative !important;
+            z-index: 10 !important;
+        }
+        .ownavigation a.navbar-brand img {
+            height: 52px !important;
+            max-height: 52px !important;
+            width: auto !important;
+            display: block !important;
+            position: static !important;
             background: #fff;
             padding: 4px 10px;
             border-radius: 8px;
@@ -74,24 +92,31 @@
         .ownavigation .navbar-nav .nav-link {
             font-family: 'Hind Siliguri', 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px !important;
+            white-space: nowrap !important;
             color: #334155 !important;
-            padding: 15px 16px !important;
+            padding: 10px 10px !important;
             transition: all 0.2s ease;
         }
         .ownavigation .navbar-nav .nav-link:hover,
         .ownavigation .navbar-nav li.active .nav-link {
             color: #1b88ce !important;
         }
-        .btn-nav-register {
-            background: linear-gradient(135deg, #1b88ce, #1469a0);
-            color: #fff !important;
+        .ownavigation .navbar-nav .btn-nav-register {
+            background: linear-gradient(135deg, #1b88ce, #1469a0) !important;
+            color: #ffffff !important;
             border-radius: 25px;
-            padding: 8px 22px !important;
+            padding: 8px 20px !important;
             box-shadow: 0 4px 12px rgba(27,136,206,0.3);
-            margin-left: 10px;
+            margin-left: 6px;
         }
-        .btn-nav-register:hover {
+        .ownavigation .navbar-nav .btn-nav-register,
+        .ownavigation .navbar-nav .btn-nav-register:hover,
+        .ownavigation .navbar-nav .btn-nav-register:focus,
+        .ownavigation .navbar-nav .btn-nav-register i {
+            color: #ffffff !important;
+        }
+        .ownavigation .navbar-nav .btn-nav-register:hover {
             box-shadow: 0 6px 16px rgba(27,136,206,0.45);
             transform: translateY(-1px);
         }
@@ -99,6 +124,67 @@
         /* Hide slider arrows & overlay caption boxes as requested */
         .tparrows, .tp-bullets, .tp-caption {
             display: none !important;
+        }
+
+        /* Mobile responsive fix for gallery box - 2 items per row */
+        @media (max-width: 575.98px) {
+            .gallery-list {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                margin-left: -6px !important;
+                margin-right: -6px !important;
+            }
+            .gallery-list .gallery-box,
+            .portfolio-section .gallery-box {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                width: 50% !important;
+                padding-left: 6px !important;
+                padding-right: 6px !important;
+                margin-bottom: 12px !important;
+                float: left !important;
+            }
+            .gallery-box .gallery-content {
+                position: relative !important;
+                overflow: hidden !important;
+                border-radius: 8px !important;
+                width: 100% !important;
+            }
+            .gallery-box .gallery-content img,
+            .gallery-box .gallery-content i img {
+                width: 100% !important;
+                height: 160px !important;
+                object-fit: cover !important;
+                border-radius: 8px !important;
+                display: block !important;
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .gallery-list {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                margin-left: -8px !important;
+                margin-right: -8px !important;
+            }
+            .gallery-list .gallery-box,
+            .portfolio-section .gallery-box {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+                width: 50% !important;
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+                margin-bottom: 16px !important;
+                float: left !important;
+            }
+            .gallery-box .gallery-content img,
+            .gallery-box .gallery-content i img {
+                width: 100% !important;
+                height: 200px !important;
+                object-fit: cover !important;
+                border-radius: 8px !important;
+                display: block !important;
+            }
         }
     </style>
 </head>
@@ -117,24 +203,36 @@
         </div>
     </div><!-- Loader /- -->
 
-    <!-- Top Header Bar (Only Icons) -->
+    <!-- Top Header Bar -->
     <div class="top-header-bar d-none d-md-block">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <a href="tel:{{ setting('phone1') }}" title="{{ setting('phone1') }}" class="me-4"><i class="fa fa-phone text-info me-1"></i></a>
-                    <a href="mailto:{{ setting('email1') }}" title="{{ setting('email1') }}" class="me-4"><i class="fa fa-envelope text-info me-1"></i></a>
-                    <span title="{{ setting('address1') }}"><i class="fa fa-map-marker text-info me-1"></i></span>
+                <div class="d-flex align-items-center flex-wrap" style="font-size: 13px;">
+                    @if(setting('phone1'))
+                        <a href="tel:{{ setting('phone1') }}" class="me-4"><i class="fa fa-phone text-info me-1"></i> {{ setting('phone1') }}</a>
+                    @endif
+                    @if(setting('email1'))
+                        <a href="mailto:{{ setting('email1') }}" class="me-4"><i class="fa fa-envelope text-info me-1"></i> {{ setting('email1') }}</a>
+                    @endif
+                    @if(setting('address1'))
+                        <span class="me-3 text-light"><i class="fa fa-map-marker text-info me-1"></i> {{ setting('address1') }}</span>
+                    @endif
                 </div>
                 <div class="d-flex align-items-center">
-                    <a href="{{ setting('facbook_link') }}" title="Facebook" class="me-3"><i class="fa fa-facebook"></i></a>
-                    <a href="{{ setting('linkedin_link') }}" title="Linkedin" class="me-3"><i class="fa fa-linkedin"></i></a>
-                    <a href="{{ setting('twitter_link') }}" title="Twitter" class="me-3"><i class="fa fa-twitter"></i></a>
+                    @if(setting('facbook_link'))
+                        <a href="{{ setting('facbook_link') }}" target="_blank" title="Facebook" class="me-3"><i class="fa fa-facebook"></i></a>
+                    @endif
+                    @if(setting('linkedin_link'))
+                        <a href="{{ setting('linkedin_link') }}" target="_blank" title="Linkedin" class="me-3"><i class="fa fa-linkedin"></i></a>
+                    @endif
+                    @if(setting('twitter_link'))
+                        <a href="{{ setting('twitter_link') }}" target="_blank" title="Twitter" class="me-3"><i class="fa fa-twitter"></i></a>
+                    @endif
                     @auth
-                        <a href="{{ route('dashboard') }}" title="ড্যাশবোর্ড" class="fw-bold text-success"><i class="fa fa-user"></i></a>
+                        <a href="{{ route('dashboard') }}" title="ড্যাশবোর্ড" class="fw-bold text-success ms-2"><i class="fa fa-user me-1"></i> ড্যাশবোর্ড</a>
                     @else
-                        <a href="{{ route('login') }}" title="লগইন" class="me-3"><i class="fa fa-sign-in"></i></a>
-                        <a href="{{ route('register') }}" title="রেজিস্ট্রেশন" class="text-info"><i class="fa fa-user-plus"></i></a>
+                        <a href="{{ route('login') }}" title="লগইন" class="me-3 ms-2"><i class="fa fa-sign-in me-1"></i> লগইন</a>
+                        <a href="{{ route('register') }}" title="রেজিস্ট্রেশন" class="text-info"><i class="fa fa-user-plus me-1"></i> রেজিস্ট্রেশন</a>
                     @endauth
                 </div>
             </div>
@@ -174,10 +272,16 @@
                             <li class="{{ Route::is('contact') ? 'active' : '' }}">
                                 <a class="nav-link" title="যোগাযোগ" href="{{ route('contact') }}">যোগাযোগ</a>
                             </li>
+                            <li class="{{ Route::is('terms') ? 'active' : '' }}">
+                                <a class="nav-link" title="টার্মস এন্ড কন্ডিশন" href="{{ route('terms') }}">টার্মস এন্ড কন্ডিশন</a>
+                            </li>
+                            <li class="{{ Route::is('privacy') ? 'active' : '' }}">
+                                <a class="nav-link" title="প্রাইভেসি এন্ড পলিসি" href="{{ route('privacy') }}">প্রাইভেসি এন্ড পলিসি</a>
+                            </li>
                             @auth
                                 <li><a class="nav-link btn-nav-register" title="ড্যাশবোর্ড" href="{{ route('dashboard') }}"><i class="fa fa-tachometer me-1"></i> ড্যাশবোর্ড</a></li>
                             @else
-                                <li><a class="nav-link btn-nav-register" title="রেজিস্ট্রেশন" href="{{ route('register') }}"><i class="fa fa-user-plus me-1"></i> রেজিস্ট্রেশন</a></li>
+                                <li><a class="nav-link btn-nav-register" title="লগইন" href="{{ route('login') }}"><i class="fa fa-sign-in me-1"></i> লগইন</a></li>
                             @endauth
                         </ul>
                     </div>
@@ -189,17 +293,7 @@
 
     </header><!-- Header Section /- -->
 
-
-
-
-
-
     @yield("content")
-
-
-
-
-
     <!-- Footer Main -->
     <footer class="container-fluid no-left-padding no-right-padding footer-main footer-section2">
         <!-- Main Footer Widgets (4 Columns) -->
@@ -215,11 +309,6 @@
                             <p style="color: #a0aab5; font-size: 14px; line-height: 1.6; margin-top: 15px; margin-bottom: 20px;">
                                 কৃষি পরিবার - আপনার কৃষি সেবা, স্টকের সঠিক মূল্য এবং আর্থিক সমৃদ্ধির নির্ভরযোগ্য ডিজিটাল মাধ্যম।
                             </p>
-                            <ul class="social" style="margin: 0; padding: 0; list-style: none; display: flex; gap: 10px;">
-                                <li><a href="{{ setting('facbook_link') }}" title="Facebook" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #1b88ce; color: #fff; border-radius: 50%; transition: all 0.3s ease;"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="{{ setting('linkedin_link') }}" title="Linkedin" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #1b88ce; color: #fff; border-radius: 50%; transition: all 0.3s ease;"><i class="fa fa-linkedin"></i></a></li>
-                                <li><a href="{{ setting('twitter_link') }}" title="Twitter" style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #1b88ce; color: #fff; border-radius: 50%; transition: all 0.3s ease;"><i class="fa fa-twitter"></i></a></li>
-                            </ul>
                         </aside>
                     </div>
 
@@ -259,23 +348,72 @@
                         </aside>
                     </div>
 
-                    <!-- Column 4: Gallery Thumbnails -->
+                    <!-- Column 4: Social Media Icons -->
                     <div class="col-lg-3 col-md-6 col-sm-12">
-                        <aside class="widget widget_instagram">
-                            <h3 class="widget-title" style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #1b88ce; display: inline-block; padding-bottom: 5px;">প্রোডাক্ট গ্যালারি</h3>
-                            <div class="instagram-box">
-                                @php
-                                    $gallery_images = App\Models\StockGallery::take(6)->get();
-                                @endphp
-                                <div class="row g-2">
-                                    @foreach ($gallery_images as $image)
-                                    <div class="col-4 mb-2" style="padding: 2px;">
-                                        <a href="{{ route('gallery') }}" style="display: block; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                            <img src="{{ asset('upload/stock_images') }}/{{ $image->image }}" alt="Gallery" style="width: 100%; height: 55px; object-fit: cover; transition: transform 0.3s ease;">
-                                        </a>
-                                    </div>
-                                    @endforeach
-                                </div>
+                        <aside class="widget widget_social_media">
+                            <h3 class="widget-title" style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #1b88ce; display: inline-block; padding-bottom: 5px;">সোশ্যাল মিডিয়া</h3>
+                            <p style="color: #a0aab5; font-size: 13.5px; line-height: 1.5; margin-bottom: 18px;">আমাদের সাথে সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন ও সর্বশেষ আপডেট পান।</p>
+                            
+                            <style>
+                                .ftr-social-icons {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 12px;
+                                    flex-wrap: wrap;
+                                    padding: 0;
+                                    margin: 0;
+                                }
+                                .ftr-social-icon-btn {
+                                    width: 42px;
+                                    height: 42px;
+                                    display: inline-flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    border-radius: 50%;
+                                    color: #fff !important;
+                                    font-size: 18px;
+                                    text-decoration: none !important;
+                                    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+                                    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                                }
+                                .ftr-social-icon-btn:hover {
+                                    transform: translateY(-4px) scale(1.08);
+                                }
+                                .ftr-social-icon-btn.fb { background: #1877f2; }
+                                .ftr-social-icon-btn.fb:hover { box-shadow: 0 6px 15px rgba(24, 119, 242, 0.45); }
+                                
+                                .ftr-social-icon-btn.insta { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+                                .ftr-social-icon-btn.insta:hover { box-shadow: 0 6px 15px rgba(214, 36, 159, 0.45); }
+                                
+                                .ftr-social-icon-btn.tw { background: #1da1f2; }
+                                .ftr-social-icon-btn.tw:hover { box-shadow: 0 6px 15px rgba(29, 161, 242, 0.45); }
+                                
+                                .ftr-social-icon-btn.in { background: #0a66c2; }
+                                .ftr-social-icon-btn.in:hover { box-shadow: 0 6px 15px rgba(10, 102, 194, 0.45); }
+                            </style>
+
+                            <div class="ftr-social-icons">
+                                @if(setting('facbook_link'))
+                                <a href="{{ setting('facbook_link') }}" target="_blank" class="ftr-social-icon-btn fb" title="Facebook">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                                @endif
+
+                                <a href="https://instagram.com" target="_blank" class="ftr-social-icon-btn insta" title="Instagram">
+                                    <i class="fa fa-instagram"></i>
+                                </a>
+
+                                @if(setting('twitter_link'))
+                                <a href="{{ setting('twitter_link') }}" target="_blank" class="ftr-social-icon-btn tw" title="Twitter">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                                @endif
+
+                                @if(setting('linkedin_link'))
+                                <a href="{{ setting('linkedin_link') }}" target="_blank" class="ftr-social-icon-btn in" title="LinkedIn">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                                @endif
                             </div>
                         </aside>
                     </div>
@@ -344,6 +482,8 @@
 
     <!-- Library - Theme JS -->
     <script src="{{ asset('frontend/assets') }}/js/functions.js"></script>
+
+    @include('components.chat-widget')
 
 </body>
 

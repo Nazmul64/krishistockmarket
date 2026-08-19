@@ -30,32 +30,39 @@ class UserCartController extends Controller
 
 
 
-    public function AddCart($id){
-
+    public function AddCart($id, Request $request){
         $stock_info = Stock::find($id);
-        $available_stock = "0";
-        $available_stock = $stock_info->stock_quantity - $stock_info->sold_quantity;
-        $input_quantity = "1";
+        if (!$stock_info) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'পণ্যটি পাওয়া যায়নি!'], 404);
+            }
+            return back()->with('error', 'পণ্যটি পাওয়া যায়নি!');
+        }
 
+        $is_unlimited = (bool) $stock_info->is_unlimited;
+        $available_stock = $is_unlimited ? 999999 : ($stock_info->stock_quantity - $stock_info->sold_quantity);
+        $input_quantity = 1;
 
-
-        if ($available_stock < $input_quantity ) {
+        if (!$is_unlimited && $available_stock < $input_quantity) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'দুঃখিত, পণ্যটির পর্যাপ্ত স্টক নেই!'], 400);
+            }
             return back()->with('stockout', 'Stock Out');
         }
 
-        if (UserCart::where('stock_id', $id)->where('user_id', auth()->id())->exists()) {
+        $existingCart = UserCart::where('stock_id', $id)->where('user_id', auth()->id())->first();
 
-            $available_stock_on_cartlist = UserCart::where('stock_id', $id)->where('user_id', auth()->id())->first()->quantity;
-
-            if ($available_stock < $input_quantity + $available_stock_on_cartlist ) {
-                return redirect()->route('userbuystocklist')->with('already_in', 'Available for your cart');
-            }else{
-                UserCart::where('stock_id', $id)->where('user_id', auth()->id())->increment('quantity', $input_quantity);
+        if ($existingCart) {
+            if (!$is_unlimited && $available_stock < ($input_quantity + $existingCart->quantity)) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json(['status' => 'error', 'message' => 'আপনার কার্টে ইতিমধ্যে সর্বোচ্চ সংখ্যক স্টক রয়েছে!'], 400);
+                }
+                return redirect()->route('my.cart')->with('already_in', 'Available for your cart');
+            } else {
+                $existingCart->increment('quantity', $input_quantity);
             }
-
-        }
-        else{
-            UserCart::insert([
+        } else {
+            UserCart::create([
                 'user_id' => auth()->id(),
                 'stock_id' => $id,
                 'add_date' => Carbon::now(),
@@ -64,9 +71,27 @@ class UserCartController extends Controller
             ]);
         }
 
-        return $this->index();
+        $totalCartCount = UserCart::where('user_id', auth()->id())->sum('quantity');
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'পণ্যটি সফলভাবে কার্টে যুক্ত হয়েছে!',
+                'cart_count' => (int) $totalCartCount,
+                'stock_name' => $stock_info->stock_name
+            ]);
+        }
 
+        $notification = [
+            'message' => 'পণ্যটি কার্টে যুক্ত হয়েছে!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->back()->with($notification);
+    }
+
+    public function getCartCount(Request $request) {
+        $count = UserCart::where('user_id', auth()->id())->sum('quantity');
+        return response()->json(['cart_count' => (int) $count]);
     }
 
     /**
@@ -121,50 +146,68 @@ class UserCartController extends Controller
 
 
     public function CartPost(Request $request){
-
-
         $request->validate([
             'payment_system_id' => ['required'],
             'from_phone_number' => ['required'],
             'trx_id' => ['required'],
-            'sceenshorts' => ['required'],
+            'sceenshorts' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:5120'],
         ], [
-            'payment_system_id.required' => 'Please Select Pyment System',
-            'from_phone_number.required' => 'Phone Number is required',
-            'trx_id.required' => 'Trx.ID is required',
-            'sceenshorts.required' => 'Sceenshort is required',
+            'payment_system_id.required' => 'দয়া করে পেমেন্ট মেথড নির্বাচন করুন',
+            'from_phone_number.required' => 'প্রেরকের মোবাইল নম্বর দেওয়া আবশ্যক',
+            'trx_id.required' => 'ট্রানজেকশন আইডি (Trx ID) দেওয়া আবশ্যক',
+            'sceenshorts.required' => 'পেমেন্টের স্ক্রিনশট আপলোড করা আবশ্যক',
+            'sceenshorts.image' => 'স্ক্রিনশট অবশ্যই একটি বৈধ ছবি হতে হবে',
         ]);
 
         // Get the form data
-        $payment_system_id = request('payment_system_id');
-        $from_phone_number = request('from_phone_number');
-        $trx_id = request('trx_id');
+        $payment_system_id = $request->input('payment_system_id');
+        $from_phone_number = $request->input('from_phone_number');
+        $trx_id = $request->input('trx_id');
 
         if ($request->hasFile('sceenshorts')) {
-            $trnx_image_name = time().Str::random(5).'.'.$request->file('sceenshorts')->getClientOriginalExtension();
-            Image::make($request->file('sceenshorts'))->save(base_path('public/upload/payment/'.$trnx_image_name));
-        }else{
+            $image = $request->file('sceenshorts');
+            $trnx_image_name = time().'_'.Str::random(8).'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('upload/payment');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0777, true);
+            }
+            Image::make($image)->save($destinationPath.'/'.$trnx_image_name);
+        } else {
             $trnx_image_name = "";
         }
 
-        $productRows = $request->input('product_row');
+        $productRows = $request->input('product_row', []);
 
+        if (empty($productRows)) {
+            $notification = [
+                'message' => 'আপনার কার্টে কোনো প্রোডাক্ট নেই!',
+                'alert-type' => 'error'
+            ];
+            return redirect()->back()->with($notification)->with('error', 'আপনার কার্টে কোনো প্রোডাক্ট নেই!');
+        }
 
         // Loop through each product and create a new order item instance
         foreach ($productRows as $key => $product) {
             $stockId = $product['stock_id'];
             $cart_id = $product['cart_id'];
-            $quantity = $product['quantity'];
-            $price_per_unit = $product['price_per_unit'];
-
+            $quantity = (int) $product['quantity'];
+            $price_per_unit = (float) $product['price_per_unit'];
             $total_price = $price_per_unit * $quantity;
 
+            $stock_info = Stock::where('id', $stockId)->first();
+            if (!$stock_info) {
+                continue;
+            }
 
-            $stock_info = Stock::where('id', $product['stock_id'])->first();
-            $available_quantity = $stock_info->stock_quantity - $stock_info->sold_quantity;
+            $is_unlimited = (bool) $stock_info->is_unlimited;
+            $available_quantity = $is_unlimited ? 999999 : ($stock_info->stock_quantity - $stock_info->sold_quantity);
 
-            if ($available_quantity < $quantity) {
-                return back()->with('stock_out', $stock_info->stock_name." Product Stock Out Please removed this");
+            if (!$is_unlimited && $available_quantity < $quantity) {
+                $notification = [
+                    'message' => $stock_info->stock_name . " পণ্যটির পর্যাপ্ত স্টক নেই। অনুগ্রহ করে পরিমাণ কমান অথবা রিমুভ করুন।",
+                    'alert-type' => 'error'
+                ];
+                return back()->with($notification)->with('error', $stock_info->stock_name . " পণ্যটির পর্যাপ্ত স্টক নেই।");
             }
 
             BuyStock::insert([
@@ -178,18 +221,23 @@ class UserCartController extends Controller
                 "buyed_price" => $total_price,
                 "status" => "pending",
                 "created_at" => Carbon::now(),
-            ]);
-            UserCart::where('id', $cart_id)->where('user_id', auth()->id())->delete();
-            Stock::where('id', $stockId)->update([
-                'sold_quantity' => $stock_info->sold_quantity + $product['quantity'],
-                'stock_quantity' => $stock_info->stock_quantity - $product['quantity'],
+                "updated_at" => Carbon::now(),
             ]);
 
+            UserCart::where('id', $cart_id)->where('user_id', auth()->id())->delete();
+
+            if (!$is_unlimited) {
+                $stock_info->decrement('stock_quantity', $quantity);
+            }
+            $stock_info->increment('sold_quantity', $quantity);
         }
 
-        return redirect()->route('userbuystocklist');
+        $notification = [
+            'message' => 'আপনার স্টক ক্রয়ের অনুরোধ সফলভাবে সম্পন্ন হয়েছে! এডমিন যাচাই করে অনুমোদন করবেন।',
+            'alert-type' => 'success'
+        ];
 
-
+        return redirect()->route('userbuystocklist')->with($notification)->with('success', 'আপনার স্টক ক্রয়ের অনুরোধ সফলভাবে সম্পন্ন হয়েছে!');
     }
 
 

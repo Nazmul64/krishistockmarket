@@ -114,6 +114,9 @@
 
 
 
+                                        <a href="{{ route('admin.employee.permissions', $item->id) }}"
+                                            class="waves-effect waves-light btn btn-warning mb-5 btn-xs"><i class="ti-key me-1"></i> Permissions</a>
+
                                         <a href="{{ route('admin.employee.edit', $item->id) }}"
                                             class="waves-effect waves-light btn btn-info mb-5 btn-xs">Edit</a>
 

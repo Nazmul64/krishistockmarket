@@ -20093,7 +20093,7 @@ Width property
 }
 
 .w-100 {
-    width: 100px !important;
+    width: 100% !important;
 }
 
 .min-w-100 {

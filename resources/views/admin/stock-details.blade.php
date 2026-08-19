@@ -159,13 +159,22 @@
             },
             stroke: {
                 curve: 'smooth',
-                width: 3
+                width: 3.5
+            },
+            markers: {
+                size: 6,
+                colors: ['#28a745', '#e2bb33'],
+                strokeColors: '#ffffff',
+                strokeWidth: 2,
+                hover: {
+                    size: 9
+                }
             },
             fill: {
                 type: 'gradient',
                 gradient: {
                     shadeIntensity: 1,
-                    opacityFrom: 0.5,
+                    opacityFrom: 0.45,
                     opacityTo: 0.05,
                     stops: [0, 90, 100]
                 }
@@ -175,17 +184,21 @@
                 categories: dates,
                 title: {
                     text: 'Date',
-                    style: { color: '#888', fontWeight: 600 }
+                    style: { color: '#64748b', fontWeight: 600 }
+                },
+                labels: {
+                    style: { color: '#64748b', fontWeight: 600 }
                 }
             },
             yaxis: {
                 title: {
                     text: 'Price (BDT)',
-                    style: { color: '#888', fontWeight: 600 }
+                    style: { color: '#64748b', fontWeight: 600 }
                 },
                 labels: {
+                    style: { color: '#64748b', fontWeight: 600 },
                     formatter: function (val) {
-                        return val.toFixed(2) + ' ৳';
+                        return '৳' + val.toFixed(2);
                     }
                 }
             },
@@ -195,12 +208,13 @@
                 theme: 'dark',
                 y: {
                     formatter: function (val) {
-                        return val.toFixed(2) + ' ৳';
+                        return '৳' + val.toFixed(2);
                     }
                 }
             },
             grid: {
-                borderColor: '#f1f1f1'
+                borderColor: '#e2e8f0',
+                strokeDashArray: 4
             },
             legend: {
                 position: 'top',

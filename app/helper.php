@@ -33,38 +33,14 @@ function StockLastPricing($id){
 }
 
 function sellingPriceForChart($stock_id){
-    $sell_ing_price_data = StockPrice::where('stock_id', $stock_id)->orderBy('pricing_date', 'ASC')->take(10)->get('selling_price');
-    $data = $sell_ing_price_data->toArray();
-    $prices = array_map(function($item) {
-        return (float) $item['selling_price'];
-    }, $data);
-
-    if (empty($prices)) {
-        return [0, 0];
-    }
-    if (count($prices) === 1) {
-        return [$prices[0], $prices[0]];
-    }
-
-    return $prices;
+    $history = stockFullPriceHistory($stock_id);
+    return $history['sellingPrices'];
 }
 
 
 function buyingPriceForChart($stock_id){
-    $buying_price_data = StockPrice::where('stock_id', $stock_id)->orderBy('pricing_date', 'ASC')->take(10)->get('buying_price');
-    $data = $buying_price_data->toArray();
-    $prices = array_map(function($item) {
-        return (float) $item['buying_price'];
-    }, $data);
-
-    if (empty($prices)) {
-        return [0, 0];
-    }
-    if (count($prices) === 1) {
-        return [$prices[0], $prices[0]];
-    }
-
-    return $prices;
+    $history = stockFullPriceHistory($stock_id);
+    return $history['buyingPrices'];
 }
 
 
@@ -78,15 +54,19 @@ function stockFullPriceHistory($stock_id) {
     $buyingPrices = [];
 
     foreach ($history as $row) {
-        $dates[] = \Carbon\Carbon::parse($row->pricing_date)->format('d M Y');
+        $dates[] = \Carbon\Carbon::parse($row->pricing_date)->format('d M');
         $sellingPrices[] = (float) $row->selling_price;
         $buyingPrices[] = (float) $row->buying_price;
     }
 
+    // Fallback if no historical price points exist: use current price point from StockLastPrice
     if (empty($dates)) {
-        $dates = [\Carbon\Carbon::now()->format('d M Y')];
-        $sellingPrices = [0];
-        $buyingPrices = [0];
+        $lastPriceRecord = StockLastPrice($stock_id);
+        if ($lastPriceRecord) {
+            $dates[] = \Carbon\Carbon::parse($lastPriceRecord->pricing_date ?? now())->format('d M');
+            $sellingPrices[] = (float) $lastPriceRecord->selling_price;
+            $buyingPrices[] = (float) $lastPriceRecord->buying_price;
+        }
     }
 
     return [

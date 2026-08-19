@@ -310,7 +310,7 @@
 			}else{
 				revapi6 = tpj("#home-slider-1").show().revolution({
 					sliderType:"standard",
-					sliderLayout:"fullwidth",
+					sliderLayout:"auto",
 					dottedOverlay:"none",
 					delay:9000,
 					navigation: {
@@ -357,8 +357,8 @@
 					},
 					responsiveLevels:[1920,1200,768,480],
 					visibilityLevels:[1920,1200,768,480],
-					gridwidth:[1920,1200,768,480],
-					gridheight:[820,640,520,400],
+					gridwidth:[900,800,768,480],
+					gridheight:[380,360,340,260],
 					lazyType:"none",
 					shadow:0,
 					spinner:"spinner0",

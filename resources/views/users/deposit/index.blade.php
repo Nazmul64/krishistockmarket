@@ -54,10 +54,16 @@
                                     <label class="form-label fw-bold">পেমেন্ট মেথড নির্বাচন করুন <span class="text-danger">*</span></label>
                                     <select name="payment_method" class="form-control" required>
                                         <option value="">-- পেমেন্ট মেথড বেছে নিন --</option>
-                                        <option value="bKash (বিকাশ)">bKash (বিকাশ)</option>
-                                        <option value="Nagad (নগদ)">Nagad (নগদ)</option>
-                                        <option value="Rocket (রকেট)">Rocket (রকেট)</option>
-                                        <option value="Bank Transfer (ব্যাংক)">Bank Transfer (ব্যাংক ট্রান্সফার)</option>
+                                        @if(isset($payment_systems) && count($payment_systems) > 0)
+                                            @foreach($payment_systems as $sys)
+                                                <option value="{{ $sys->pay_s_name }}">{{ $sys->pay_s_name }} ({{ $sys->pay_s_number }})</option>
+                                            @endforeach
+                                        @else
+                                            <option value="bKash (বিকাশ)">bKash (বিকাশ)</option>
+                                            <option value="Nagad (নগদ)">Nagad (নগদ)</option>
+                                            <option value="Rocket (রকেট)">Rocket (রকেট)</option>
+                                            <option value="Bank Transfer (ব্যাংক)">Bank Transfer (ব্যাংক ট্রান্সফার)</option>
+                                        @endif
                                     </select>
                                     @error('payment_method') <span class="text-danger small d-block">{{ $message }}</span> @enderror
                                 </div>

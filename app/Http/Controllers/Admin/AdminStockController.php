@@ -52,9 +52,11 @@ class AdminStockController extends Controller
     public function adminStockEdit($id){
         $stock_info = Stock::where('id', $id)->first();
         $images = StockGallery::where('stock_id', $id)->take(6)->get();
+        $last_price = StockLastPricing($id);
         return view('admin.edit-stock',[
             'stock_info' => $stock_info,
-            'images' => $images
+            'images' => $images,
+            'last_price' => $last_price
         ]);
     }
 
@@ -74,33 +76,69 @@ class AdminStockController extends Controller
             }
         }
 
-
-
+        $isUnlimited = $request->has('is_unlimited') && $request->is_unlimited == '1';
 
         Stock::where('id', $id)->update([
             'stock_name' => $request->stock_name,
-            'stock_quantity'=> $request->stock_quantity,
+            'stock_quantity'=> $isUnlimited ? 0 : ($request->stock_quantity ?? 0),
+            'is_unlimited' => $isUnlimited ? 1 : 0,
             'description'=>$request->stock_description
         ]);
 
+        if ($request->filled('selling_price') || $request->filled('buying_price')) {
+            $selling_price = $this->parsePrice($request->selling_price);
+            $buying_price = $this->parsePrice($request->buying_price);
 
-        return redirect('/admin/stock/allStock');
+            $lastPrice = StockPrice::where('stock_id', $id)->orderBy('pricing_date', 'DESC')->first();
+            if ($lastPrice) {
+                $lastPrice->update([
+                    'selling_price' => $selling_price,
+                    'buying_price' => $buying_price,
+                    'pricing_date' => Carbon::now(),
+                ]);
+            } else {
+                StockPrice::create([
+                    'stock_id' => $id,
+                    'selling_price' => $selling_price,
+                    'buying_price' => $buying_price,
+                    'pricing_date' => Carbon::now(),
+                ]);
+            }
+        }
 
-
+        return redirect('/admin/stock/allStock')->with('success', 'স্টক সফলভাবে আপডেট করা হয়েছে!');
     }
 
 
 
 
 
+    private function parsePrice($value)
+    {
+        if (empty($value)) return 0;
+        // Map Bengali numerals to English digits if present
+        $bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        $en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $value = str_replace($bn, $en, (string)$value);
+        // Remove commas, currency symbols, and any non-numeric characters except period
+        $value = preg_replace('/[^\d.]/', '', $value);
+        return is_numeric($value) ? (float)$value : 0;
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
+        $isUnlimited = $request->has('is_unlimited') && $request->is_unlimited == '1';
+
+        $rules = [
             'stock_name' => ['required'],
             'selling_price' => ['required'],
             'buying_price' => ['required'],
-            'stock_quantity' => ['required'],
-        ], [
+        ];
+        if (!$isUnlimited) {
+            $rules['stock_quantity'] = ['required'];
+        }
+
+        $request->validate($rules, [
             'stock_name.required' => 'Stock Name is required',
             'selling_price.required' => 'Selling Price is required',
             'buying_price.required' => 'Buying Price is required',
@@ -115,7 +153,8 @@ class AdminStockController extends Controller
             // Create a new Stock model
             $stock = new Stock;
             $stock->stock_name = $request->stock_name;
-            $stock->stock_quantity = $request->stock_quantity;
+            $stock->stock_quantity = $isUnlimited ? 0 : $request->stock_quantity;
+            $stock->is_unlimited = $isUnlimited ? 1 : 0;
             $stock->description = $request->stock_description;
             $stock->published_date = Carbon::now();
             $stock->save();
@@ -135,8 +174,8 @@ class AdminStockController extends Controller
             // Create a new StockPrice model
             $StockPrice = new StockPrice;
             $StockPrice->stock_id = $stock->id;
-            $StockPrice->buying_price = $request->buying_price;
-            $StockPrice->selling_price = $request->selling_price;
+            $StockPrice->buying_price = $this->parsePrice($request->buying_price);
+            $StockPrice->selling_price = $this->parsePrice($request->selling_price);
             $StockPrice->pricing_date = Carbon::now();
             $StockPrice->save();
 
@@ -189,8 +228,8 @@ class AdminStockController extends Controller
 
         StockPrice::insert([
             'stock_id' => $request->stock_id,
-            'buying_price' => $request->buying_price,
-            'selling_price' => $request->selling_price,
+            'buying_price' => $this->parsePrice($request->buying_price),
+            'selling_price' => $this->parsePrice($request->selling_price),
             'pricing_date' => Carbon::now(),
         ]);
 

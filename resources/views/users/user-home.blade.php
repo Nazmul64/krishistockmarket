@@ -35,7 +35,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-6 mb-3">
-                    <a href="{{ route('userstocklist') }}" class="btn btn-primary w-100 py-3 text-start shadow-sm h-100">
+                    <a href="{{ route('stock.index') }}" class="btn btn-primary w-100 py-3 text-start shadow-sm h-100">
                         <i class="fa fa-line-chart fa-2x d-block mb-2"></i>
                         <strong class="d-block fs-6">Buy Stock</strong>
                         <small class="opacity-75">স্টক প্যাকেজ কিনুন</small>

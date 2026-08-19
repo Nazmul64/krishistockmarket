@@ -313,9 +313,16 @@
             </form>
 
             <!-- Footer -->
-            <div class="auth-footer">
-                Don't have an account?
-                <a href="{{ route('register') }}" class="ms-1">Create Account / সাইন আপ</a>
+            <div class="auth-footer text-center">
+                <div class="mb-2">
+                    Don't have a Customer account?
+                    <a href="{{ route('register') }}" class="ms-1">Sign Up Here</a>
+                </div>
+                <div class="mt-3 pt-2 border-top">
+                    <a href="{{ route('supplier.register') }}" class="btn btn-outline-success btn-sm w-100 py-2 fw-bold" style="border-radius: 10px;">
+                        <i class="ti-truck me-1"></i> Supplier Registration / সাপ্লায়ার সাইন আপ
+                    </a>
+                </div>
             </div>
         </div>
     </div>

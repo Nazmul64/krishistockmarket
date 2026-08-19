@@ -69,6 +69,38 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group pb-4">
+                                            <div class="row ">
+                                                <label class="col-lg-6 control-label text-lg-start pt-2"
+                                                    for="selling_price">Selling Price</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" min="1" id="selling_price" name="selling_price"
+                                                        title="Enter Stock selling Price" value="{{ $last_price ? $last_price->selling_price : '' }}">
+                                                    <span class="text-danger">
+                                                        @error('selling_price')
+                                                        {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group pb-4">
+                                            <div class="row ">
+                                                <label class="col-lg-6 control-label text-lg-start pt-2"
+                                                    for="buying_price">Buying Price</label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control" min="1" required id="buying_price" name="buying_price"
+                                                        title="Enter buying_price" value="{{ $last_price ? $last_price->buying_price : '' }}">
+                                                    <span class="text-danger">
+                                                        @error('buying_price')
+                                                        {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{--
                                         images --}}
                                         <div class="form-group pb-4">
@@ -109,10 +141,18 @@
                                         <div class="form-group pb-4">
                                             <div class="row ">
                                                 <label class="col-lg-6 control-label text-lg-start pt-2"
-                                                    for="stock_quantity">Stock Quantiy</label>
+                                                    for="stock_quantity">Stock Quantity</label>
                                                 <div class="col-lg-6">
-                                                    <input type="text" class="form-control" min="1" required id="stock_quantity" name="stock_quantity"
-                                                        title="Enter Stock Quantity" value="{{ $stock_info->stock_quantity }}">
+                                                    <input type="text" class="form-control" min="1" id="stock_quantity" name="stock_quantity"
+                                                        title="Enter Stock Quantity" value="{{ $stock_info->stock_quantity }}" {{ $stock_info->is_unlimited ? 'disabled' : 'required' }}>
+                                                    
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input" type="checkbox" id="is_unlimited" name="is_unlimited" value="1" {{ $stock_info->is_unlimited ? 'checked' : '' }}>
+                                                        <label class="form-check-label fw-bold text-success" for="is_unlimited" style="cursor: pointer;">
+                                                            <i class="fa fa-infinity me-1"></i> Unlimited Stock (আনলিমিটেড স্টক)
+                                                        </label>
+                                                    </div>
+
                                                     <span class="text-danger">
                                                         @error('stock_quantity')
                                                         {{ $message }}
@@ -177,6 +217,17 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        function toggleUnlimited() {
+            if ($('#is_unlimited').is(':checked')) {
+                $('#stock_quantity').val('').prop('disabled', true).removeAttr('required');
+            } else {
+                $('#stock_quantity').prop('disabled', false).attr('required', 'required');
+            }
+        }
+
+        $('#is_unlimited').on('change', toggleUnlimited);
+        toggleUnlimited();
+
         $('.editor').summernote({
             height: 200,
             toolbar: [

@@ -57,8 +57,16 @@ class WithdrawController extends Controller
         ]);
 
         $user_info = User::where('id', Auth::user()->id)->first();
-        if ($user_info->balance < $request->withdraw_amount) {
-            return back()->with('error', "Not Enough Balance");
+        $locked_balance = (float)($user_info->locked_balance ?? 0.00);
+        $available_balance = max(0, (float)$user_info->balance - $locked_balance);
+
+        if ($request->withdraw_amount > $available_balance) {
+            if ($locked_balance > 0) {
+                $locked_formatted = number_format($locked_balance, 2);
+                $avail_formatted = number_format($available_balance, 2);
+                return back()->with('error', "আপনার মেম্বারশিপ ফি (৳{$locked_formatted}) ফ্রিজকৃত (Locked) অবস্থায় রয়েছে। এডমিন আনলক করার পরই এই টাকা উইথড্র করতে পারবেন। আপনার বর্তমান উইথড্রযোগ্য ব্যালেন্স: ৳{$avail_formatted}");
+            }
+            return back()->with('error', "পর্যাপ্ত ব্যালেন্স নেই। আপনার বর্তমান উইথড্রযোগ্য ব্যালেন্স: ৳" . number_format($available_balance, 2));
         }
 
         $check_withdraw = Withdraw::where('user_id', Auth::user()->id)->where('status', 'pending')->exists();

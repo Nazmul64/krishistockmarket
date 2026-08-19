@@ -136,10 +136,18 @@
                                         <div class="form-group pb-4">
                                             <div class="row ">
                                                 <label class="col-lg-6 control-label text-lg-start pt-2"
-                                                    for="stock_quantity">Stock Quantiy</label>
+                                                    for="stock_quantity">Stock Quantity</label>
                                                 <div class="col-lg-6">
                                                     <input type="text" class="form-control" min="1" required id="stock_quantity" name="stock_quantity"
                                                         title="Enter Stock Quantity" value="">
+                                                    
+                                                    <div class="form-check mt-2">
+                                                        <input class="form-check-input" type="checkbox" id="is_unlimited" name="is_unlimited" value="1">
+                                                        <label class="form-check-label fw-bold text-success" for="is_unlimited" style="cursor: pointer;">
+                                                            <i class="fa fa-infinity me-1"></i> Unlimited Stock (আনলিমিটেড স্টক)
+                                                        </label>
+                                                    </div>
+
                                                     <span class="text-danger">
                                                         @error('stock_quantity')
                                                         {{ $message }}
@@ -204,6 +212,17 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
+        function toggleUnlimited() {
+            if ($('#is_unlimited').is(':checked')) {
+                $('#stock_quantity').val('').prop('disabled', true).removeAttr('required');
+            } else {
+                $('#stock_quantity').prop('disabled', false).attr('required', 'required');
+            }
+        }
+
+        $('#is_unlimited').on('change', toggleUnlimited);
+        toggleUnlimited();
+
         $('.editor').summernote({
             height: 200,
             toolbar: [
@@ -223,7 +242,9 @@
             $('#stock_name').val(name);
             $('#selling_price').val(price);
             $('#buying_price').val(price);
-            $('#stock_quantity').val(qty);
+            if (!$('#is_unlimited').is(':checked')) {
+                $('#stock_quantity').val(qty);
+            }
         });
     });
 </script>

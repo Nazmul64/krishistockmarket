@@ -22,56 +22,80 @@ class SiteSettingController extends Controller
 
 
     public function SliderSetting(){
-        return view('admin.setting.slider');
+        $sliders = [];
+        for ($i = 1; $i <= 4; $i++) {
+            $sliders[$i] = [
+                'id' => $i,
+                'text' => setting('slider' . $i . '_text'),
+                'description' => setting('slider' . $i . '_description'),
+                'img' => setting('slider' . $i . '_img'),
+            ];
+        }
+        return view('admin.setting.slider', compact('sliders'));
     }
-
-
-
 
     public function SliderSettingPost(Request $request)
     {
-        if ($request->hasFile('slider1_img')) {
-            $setting = SiteSetting::where('name', 'slider1_img')->first();
-            if ($setting && $setting->value && $setting->value != 'slider1_img.png') {
-                $oldPath = base_path('public/upload/slider/' . $setting->value);
-                if (file_exists($oldPath)) {
-                    @unlink($oldPath);
+        for ($i = 1; $i <= 4; $i++) {
+            $imgKey = 'slider' . $i . '_img';
+            $textKey = 'slider' . $i . '_text';
+            $descKey = 'slider' . $i . '_description';
+
+            if ($request->hasFile($imgKey)) {
+                $setting = SiteSetting::where('name', $imgKey)->first();
+                if ($setting && $setting->value) {
+                    $oldPath = base_path('public/upload/slider/' . $setting->value);
+                    if (file_exists($oldPath)) {
+                        @unlink($oldPath);
+                    }
                 }
+                $uploadDir = base_path('public/upload/slider');
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                $imgName = time() . '_' . $i . '_' . Str::random(5) . '.' . $request->file($imgKey)->getClientOriginalExtension();
+                Image::make($request->file($imgKey))->save($uploadDir . '/' . $imgName);
+
+                SiteSetting::updateOrCreate(
+                    ['name' => $imgKey],
+                    ['value' => $imgName]
+                );
             }
-            $slider1_imgName = time() . Str::random(5) . '.' . $request->file('slider1_img')->getClientOriginalExtension();
 
-            Image::make($request->file('slider1_img'))->save(base_path('public/upload/slider/' . $slider1_imgName));
+            if ($request->has($textKey)) {
+                SiteSetting::updateOrCreate(
+                    ['name' => $textKey],
+                    ['value' => $request->input($textKey) ?? '']
+                );
+            }
 
-            SiteSetting::updateOrCreate(
-                ['name' => 'slider1_img'],
-                ['value' => $slider1_imgName]
-            );
+            if ($request->has($descKey)) {
+                SiteSetting::updateOrCreate(
+                    ['name' => $descKey],
+                    ['value' => trim($request->input($descKey)) ?? '']
+                );
+            }
         }
 
-        if ($request->hasFile('slider2_img')) {
-            $setting = SiteSetting::where('name', 'slider2_img')->first();
-            if ($setting && $setting->value && $setting->value != 'slider2_img.png') {
-                $oldPath = base_path('public/upload/slider/' . $setting->value);
-                if (file_exists($oldPath)) {
-                    @unlink($oldPath);
-                }
+        return back()->with('success', 'Slider Settings Updated Successfully');
+    }
+
+    public function SliderDelete($num)
+    {
+        $imgKey = 'slider' . $num . '_img';
+        $setting = SiteSetting::where('name', $imgKey)->first();
+        if ($setting && $setting->value) {
+            $oldPath = base_path('public/upload/slider/' . $setting->value);
+            if (file_exists($oldPath)) {
+                @unlink($oldPath);
             }
-            $slider2_imgName = time() . Str::random(5) . '.' . $request->file('slider2_img')->getClientOriginalExtension();
-
-            Image::make($request->file('slider2_img'))->save(base_path('public/upload/slider/' . $slider2_imgName));
-
-            SiteSetting::updateOrCreate(
-                ['name' => 'slider2_img'],
-                ['value' => $slider2_imgName]
-            );
+            $setting->delete();
         }
 
-        SiteSetting::updateOrCreate(['name' => 'slider1_description'], ['value' => $request->slider1_description ?? '']);
-        SiteSetting::updateOrCreate(['name' => 'slider2_description'], ['value' => $request->slider2_description ?? '']);
-        SiteSetting::updateOrCreate(['name' => 'slider1_text'], ['value' => $request->slider1_text ?? '']);
-        SiteSetting::updateOrCreate(['name' => 'slider2_text'], ['value' => $request->slider2_text ?? '']);
+        SiteSetting::where('name', 'slider' . $num . '_text')->delete();
+        SiteSetting::where('name', 'slider' . $num . '_description')->delete();
 
-        return back()->with('success', 'Update Successfull');
+        return back()->with('success', 'Slider ' . $num . ' deleted successfully');
     }
 
     public function update(Request $request)
@@ -135,6 +159,73 @@ class SiteSettingController extends Controller
         SiteSetting::updateOrCreate(['name' => 'about_us_full_text'], ['value' => $request->about_us_full_text ?? '']);
 
         return back()->with('success', 'Update Successfull');
+    }
+
+    public function OfferBannerSetting()
+    {
+        return view('admin.setting.offer_banner');
+    }
+
+    public function OfferBannerPost(Request $request)
+    {
+        $request->validate([
+            'offer_banner_img' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:4096',
+            'offer_banner_link' => 'nullable|string|max:500',
+            'offer_banner_title' => 'nullable|string|max:255',
+        ]);
+
+        if ($request->hasFile('offer_banner_img')) {
+            $setting = SiteSetting::where('name', 'offer_banner_img')->first();
+            if ($setting && $setting->value) {
+                $oldPath = base_path('public/upload/slider/' . $setting->value);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
+            }
+            $uploadDir = base_path('public/upload/slider');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $imgName = 'offer_banner_' . time() . '_' . Str::random(5) . '.' . $request->file('offer_banner_img')->getClientOriginalExtension();
+            Image::make($request->file('offer_banner_img'))->save($uploadDir . '/' . $imgName);
+
+            SiteSetting::updateOrCreate(
+                ['name' => 'offer_banner_img'],
+                ['value' => $imgName]
+            );
+        }
+
+        if ($request->has('offer_banner_link')) {
+            SiteSetting::updateOrCreate(
+                ['name' => 'offer_banner_link'],
+                ['value' => $request->input('offer_banner_link') ?? '']
+            );
+        }
+
+        if ($request->has('offer_banner_title')) {
+            SiteSetting::updateOrCreate(
+                ['name' => 'offer_banner_title'],
+                ['value' => $request->input('offer_banner_title') ?? '']
+            );
+        }
+
+        return back()->with('success', 'অফার ব্যানার সফলভাবে আপডেট করা হয়েছে');
+    }
+
+    public function OfferBannerDelete()
+    {
+        $setting = SiteSetting::where('name', 'offer_banner_img')->first();
+        if ($setting && $setting->value) {
+            $oldPath = base_path('public/upload/slider/' . $setting->value);
+            if (file_exists($oldPath)) {
+                @unlink($oldPath);
+            }
+            $setting->delete();
+        }
+        SiteSetting::where('name', 'offer_banner_link')->delete();
+        SiteSetting::where('name', 'offer_banner_title')->delete();
+
+        return back()->with('success', 'অফার ব্যানার মুছে ফেলা হয়েছে');
     }
 
     /**

@@ -38,11 +38,11 @@
                                         <tr>
                                             <th>SN.</th>
                                             <th>মাসিক বাজার প্যাকেজ</th>
-                                            <th class="text-center">একক মূল্য</th>
+                                            <th>এলাকা ও Agent Point</th>
                                             <th class="text-center">পরিমাণ</th>
                                             <th class="text-center">সর্বমোট মূল্য</th>
                                             <th class="text-center">পেমেন্ট মেথড</th>
-                                            <th class="text-center">তারিখ</th>
+                                            <th class="text-center">সংগ্রহের নির্দেশ (Collection Point)</th>
                                             <th class="text-center">স্ট্যাটাস</th>
                                         </tr>
                                     </thead>
@@ -51,10 +51,14 @@
                                             <tr>
                                                 <td>{{ ++$key }}</td>
                                                 <td>
-                                                    <strong class="text-dark">{{ $item->package_title }}</strong>
+                                                    <strong class="text-dark fs-15">{{ $item->package_title }}</strong><br>
+                                                    <small class="text-muted">একক মূল্য: ৳{{ number_format($item->price, 2) }}</small>
                                                 </td>
-                                                <td class="text-center">৳{{ number_format($item->price, 2) }}</td>
-                                                <td class="text-center">{{ $item->quantity }} টি</td>
+                                                <td>
+                                                    <span class="badge bg-primary mb-1"><i class="fa fa-map-marker me-1"></i> {{ $item->request_area ?? 'সাধারণ' }}</span><br>
+                                                    <span class="badge bg-dark"><i class="fa fa-building me-1"></i> {{ $item->agent_point ?? 'Central Point' }}</span>
+                                                </td>
+                                                <td class="text-center font-weight-bold">{{ $item->quantity }} টি</td>
                                                 <td class="text-center fw-bold text-success">৳{{ number_format($item->total_price, 2) }}</td>
                                                 <td class="text-center">
                                                     <span class="badge bg-info">{{ $item->payment_method }}</span><br>
@@ -62,12 +66,17 @@
                                                         <small class="text-muted">Trx: <code>{{ $item->trx_number }}</code></small>
                                                     @endif
                                                 </td>
-                                                <td class="text-center">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y h:i A') }}</td>
+                                                <td class="text-center">
+                                                    <div class="p-2 rounded border bg-light text-start small">
+                                                        <strong class="text-success"><i class="fa fa-info-circle me-1"></i> পণ্য সংগ্রহের স্থান:</strong><br>
+                                                        {{ $item->collection_note ?? ('আপনার মাসিক বাজার ' . ($item->agent_point ?? 'নির্ধারিত Agent Point') . ' (এলাকা: ' . ($item->request_area ?? 'আপনার এলাকা') . ') থেকে সংগ্রহ করুন।') }}
+                                                    </div>
+                                                </td>
                                                 <td class="text-center">
                                                     @if($item->status == 'pending')
                                                         <span class="badge bg-warning text-dark py-2 px-3"><i class="fa fa-clock-o me-1"></i>Pending</span>
                                                     @elseif($item->status == 'approved')
-                                                        <span class="badge bg-success py-2 px-3"><i class="fa fa-check-circle me-1"></i>Approved</span>
+                                                        <span class="badge bg-success py-2 px-3"><i class="fa fa-check-circle me-1"></i>Approved / Allocated</span>
                                                     @else
                                                         <span class="badge bg-danger py-2 px-3"><i class="fa fa-times-circle me-1"></i>Rejected</span>
                                                     @endif

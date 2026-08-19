@@ -47,7 +47,9 @@ class HomeController extends Controller
             ]);
         } elseif($user_info->role == "employee") {
             return view('employee.employee-home');
-        }else{
+        } elseif($user_info->role == "supplier") {
+            return redirect()->route('supplier.dashboard');
+        } else {
 
             $all_sell = SellStock::where('user_id', Auth::user()->id)->where("status",'aproved')->sum('selled_price');
             $all_buy = BuyStock::where('user_id', Auth::user()->id)->where("status",'aproved')->sum('buyed_price');
