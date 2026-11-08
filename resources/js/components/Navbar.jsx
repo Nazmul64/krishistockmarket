@@ -510,42 +510,13 @@ export default function Navbar({
                             </div>
                         </div>
 
-                        {/* Mobile Header Controls */}
-                        <div className="d-flex d-lg-none align-items-center gap-2">
-                            {/* Mobile Dark Mode Toggle */}
-                            <button
-                                type="button"
-                                className={`header-theme-toggle-btn mobile-theme-btn ${theme === 'dark' ? 'is-dark' : ''}`}
-                                onClick={onToggleTheme}
-                                aria-label="Toggle Theme"
-                            >
-                                {theme === 'dark' ? <i className="fa fa-sun-o"></i> : <i className="fa fa-moon-o"></i>}
-                            </button>
-
-                            {/* Mobile Language Switcher Pill */}
-                            <div className="header-lang-switcher-pill mobile-lang-pill">
-                                <button
-                                    type="button"
-                                    className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
-                                    onClick={() => onSwitchLang('en')}
-                                >
-                                    EN
-                                </button>
-                                <span className="lang-divider">|</span>
-                                <button
-                                    type="button"
-                                    className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
-                                    onClick={() => onSwitchLang('bn')}
-                                >
-                                    বাং
-                                </button>
-                            </div>
-
+                        {/* Mobile Header Controls - Clean Hamburger Toggle Only */}
+                        <div className="d-flex d-lg-none align-items-center">
                             <button
                                 type="button"
                                 className={`mobile-nav-toggle-btn-golden ${mobileMenuOpen ? 'active' : ''}`}
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                aria-label="Toggle Navigation"
+                                aria-label="Toggle Navigation Menu"
                             >
                                 <i className={`fa ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
                             </button>
@@ -576,30 +547,61 @@ export default function Navbar({
             <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
                 <div className="mobile-drawer-header golden-drawer-head">
                     <img src={site.logo} alt="Logo" className="mobile-drawer-logo" />
-                    <button className="mobile-drawer-close" onClick={() => setMobileMenuOpen(false)}>
+                    <button className="mobile-drawer-close" onClick={() => setMobileMenuOpen(false)} aria-label="Close Menu">
                         <i className="fa fa-times"></i>
                     </button>
                 </div>
 
                 <div className="mobile-drawer-body">
-                    {/* Theme & Language Switchers in Mobile Drawer */}
-                    <div className="d-flex align-items-center justify-content-between mb-3 p-2 bg-slate-100 rounded mobile-pref-card">
-                        <div className="d-flex align-items-center gap-2">
-                            <span className="small text-muted fw-bold">Theme:</span>
+                    {/* 1. Login & Registration / Dashboard in Mobile Drawer */}
+                    <div className="mobile-user-card mb-3 p-3 rounded-3" style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)', border: '1px solid #fed7aa' }}>
+                        {auth.is_authenticated ? (
+                            <a href={auth.dashboard_url} className="btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center text-decoration-none">
+                                <i className="fa fa-tachometer me-2"></i> {t.dashboard}
+                            </a>
+                        ) : (
+                            <div>
+                                <div className="small text-muted mb-2 fw-bold text-center">
+                                    {lang === 'bn' ? 'একাউন্টে প্রবেশ করুন অথবা নিবন্ধন করুন' : 'Sign in to account or register'}
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    <a href={auth.login_url} className="btn-golden-action-outline flex-fill text-center py-2 text-decoration-none" style={{ marginRight: '10px' }}>
+                                        <i className="fa fa-sign-in me-1"></i> {t.login}
+                                    </a>
+                                    <a href={auth.register_url} className="btn-golden-action flex-fill text-center py-2 text-decoration-none">
+                                        <i className="fa fa-user-plus me-1"></i> {t.register}
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* 2. Theme & Language Switchers in Mobile Drawer */}
+                    <div className="d-flex align-items-center justify-content-between mb-3 p-2 bg-slate-100 rounded mobile-pref-card" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+                        {/* Theme Toggle (Dark / Light) */}
+                        <div className="d-flex align-items-center">
+                            <span className="small text-muted fw-bold me-2" style={{ marginRight: '8px' }}>
+                                {lang === 'bn' ? 'থিম:' : 'Theme:'}
+                            </span>
                             <button
                                 type="button"
-                                className={`btn btn-sm ${theme === 'dark' ? 'btn-dark' : 'btn-light'} border`}
+                                className={`btn btn-sm ${theme === 'dark' ? 'btn-dark text-warning' : 'btn-light text-dark'} border fw-bold px-3 py-1`}
                                 onClick={onToggleTheme}
+                                style={{ borderRadius: '20px' }}
                             >
                                 {theme === 'dark' ? (
                                     <span><i className="fa fa-sun-o text-warning me-1"></i> Light</span>
                                 ) : (
-                                    <span><i className="fa fa-moon-o me-1"></i> Dark</span>
+                                    <span><i className="fa fa-moon-o text-warning me-1"></i> Dark</span>
                                 )}
                             </button>
                         </div>
-                        <div className="d-flex align-items-center gap-1">
-                            <span className="small text-muted fw-bold">Lang:</span>
+
+                        {/* Language Switcher Pill [ EN | বাংলা ] */}
+                        <div className="d-flex align-items-center">
+                            <span className="small text-muted fw-bold me-2" style={{ marginRight: '8px' }}>
+                                {lang === 'bn' ? 'ভাষা:' : 'Lang:'}
+                            </span>
                             <div className="header-lang-switcher-pill d-inline-flex">
                                 <button
                                     type="button"
@@ -614,13 +616,13 @@ export default function Navbar({
                                     className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
                                     onClick={() => onSwitchLang('bn')}
                                 >
-                                    বাং
+                                    বাংলা
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    {/* Mobile Search Box with Integrated Search Button */}
+                    {/* 3. Mobile Search Box with Integrated Search Button */}
                     <div className="mobile-search-holder mb-3" ref={mobileSearchWrapRef}>
                         <form className="header-search-bar-unified w-100" onSubmit={handleSearchSubmit}>
                             <input

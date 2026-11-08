@@ -482,44 +482,13 @@
                     </div>
                 </div>
 
-                <!-- Mobile Header Controls -->
-                <div class="d-flex d-lg-none align-items-center gap-2">
-                    <button
-                        type="button"
-                        class="header-theme-toggle-btn mobile-theme-btn {{ $siteTheme === 'dark' ? 'is-dark' : '' }}"
-                        onclick="switchSiteTheme('{{ $siteTheme === 'dark' ? 'light' : 'dark' }}')"
-                        aria-label="Toggle Theme"
-                    >
-                        @if($siteTheme === 'dark')
-                            <i class="fa fa-sun-o"></i>
-                        @else
-                            <i class="fa fa-moon-o"></i>
-                        @endif
-                    </button>
-
-                    <div class="header-lang-switcher-pill mobile-lang-pill">
-                        <button
-                            type="button"
-                            class="lang-btn {{ !$isBn ? 'active' : '' }}"
-                            onclick="switchSiteLang('en')"
-                        >
-                            EN
-                        </button>
-                        <span class="lang-divider">|</span>
-                        <button
-                            type="button"
-                            class="lang-btn {{ $isBn ? 'active' : '' }}"
-                            onclick="switchSiteLang('bn')"
-                        >
-                            বাং
-                        </button>
-                    </div>
-
+                <!-- Mobile Header Controls - Clean Hamburger Toggle Only -->
+                <div class="d-flex d-lg-none align-items-center">
                     <button
                         type="button"
                         class="mobile-nav-toggle-btn-golden"
                         onclick="document.getElementById('bladeMobileDrawer').classList.toggle('open'); document.getElementById('bladeDrawerOverlay').classList.toggle('show');"
-                        aria-label="Toggle Navigation"
+                        aria-label="Toggle Navigation Menu"
                     >
                         <i class="fa fa-bars"></i>
                     </button>
@@ -556,29 +525,72 @@
         </div>
 
         <div class="mobile-drawer-body">
-            <!-- Mobile Language Switcher Inside Drawer -->
-            <div class="mobile-drawer-lang-wrap mb-3 p-2 bg-slate-100 rounded text-center">
-                <span class="small text-muted me-2 fw-bold">Language / ভাষা:</span>
-                <div class="header-lang-switcher-pill d-inline-flex">
+            <!-- 1. Login & Registration / Dashboard in Mobile Drawer -->
+            <div class="mobile-user-card mb-3 p-3 rounded-3" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border: 1px solid #fed7aa;">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa fa-tachometer"></i> {{ $isBn ? 'ড্যাশবোর্ডে প্রবেশ করুন' : 'Go to Dashboard' }}
+                    </a>
+                @else
+                    <div class="small text-muted mb-2 fw-bold text-center">
+                        {{ $isBn ? 'একাউন্টে প্রবেশ করুন অথবা নিবন্ধন করুন' : 'Sign in to account or register' }}
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{{ route('login') }}" class="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
+                            <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
+                        </a>
+                        <a href="{{ route('register.referlink') }}" class="btn btn-golden-action w-50 py-2 text-center">
+                            <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্টার' : 'Register' }}
+                        </a>
+                    </div>
+                @endauth
+            </div>
+
+            <!-- 2. Dark Mode & Language Switcher inside Mobile Drawer -->
+            <div class="d-flex align-items-center justify-content-between mb-3 p-2 bg-slate-100 rounded mobile-pref-card" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                <div class="d-flex align-items-center">
+                    <span class="small text-muted fw-bold me-2" style="margin-right: 8px;">
+                        {{ $isBn ? 'থিম:' : 'Theme:' }}
+                    </span>
                     <button
                         type="button"
-                        class="lang-btn {{ !$isBn ? 'active' : '' }}"
-                        onclick="switchSiteLang('en')"
+                        class="btn btn-sm {{ $siteTheme === 'dark' ? 'btn-dark text-warning' : 'btn-light text-dark' }} border fw-bold px-3 py-1"
+                        onclick="switchSiteTheme('{{ $siteTheme === 'dark' ? 'light' : 'dark' }}')"
+                        style="border-radius: 20px;"
                     >
-                        English
+                        @if($siteTheme === 'dark')
+                            <span><i class="fa fa-sun-o text-warning me-1"></i> Light</span>
+                        @else
+                            <span><i class="fa fa-moon-o text-warning me-1"></i> Dark</span>
+                        @endif
                     </button>
-                    <span class="lang-divider">|</span>
-                    <button
-                        type="button"
-                        class="lang-btn {{ $isBn ? 'active' : '' }}"
-                        onclick="switchSiteLang('bn')"
-                    >
-                        বাংলা
-                    </button>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <span class="small text-muted fw-bold me-2" style="margin-right: 8px;">
+                        {{ $isBn ? 'ভাষা:' : 'Lang:' }}
+                    </span>
+                    <div class="header-lang-switcher-pill d-inline-flex">
+                        <button
+                            type="button"
+                            class="lang-btn {{ !$isBn ? 'active' : '' }}"
+                            onclick="switchSiteLang('en')"
+                        >
+                            EN
+                        </button>
+                        <span class="lang-divider">|</span>
+                        <button
+                            type="button"
+                            class="lang-btn {{ $isBn ? 'active' : '' }}"
+                            onclick="switchSiteLang('bn')"
+                        >
+                            বাংলা
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Mobile Search Box with Integrated Search Button -->
+            <!-- 3. Mobile Search Box with Integrated Search Button -->
             <div class="mobile-search-holder mb-3 position-relative" id="bladeMobileSearchWrap">
                 <form class="header-search-bar-unified w-100" onsubmit="event.preventDefault();">
                     <input
@@ -593,23 +605,6 @@
                     </button>
                 </form>
                 <div id="bladeMobileSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
-            </div>
-
-            <div class="mobile-user-card mb-3">
-                @auth
-                    <a href="{{ route('dashboard') }}" class="btn btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                        <i class="fa fa-tachometer"></i> {{ $isBn ? 'ড্যাশবোর্ডে প্রবেশ করুন' : 'Go to Dashboard' }}
-                    </a>
-                @else
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('login') }}" class="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
-                            <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
-                        </a>
-                        <a href="{{ route('register.referlink') }}" class="btn btn-golden-action w-50 py-2 text-center">
-                            <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্টার' : 'Register' }}
-                        </a>
-                    </div>
-                @endauth
             </div>
 
             <ul class="mobile-nav-list">

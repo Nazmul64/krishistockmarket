@@ -73,6 +73,9 @@ if(!chatSessionId) {
     localStorage.setItem('krishi_chat_session_id', chatSessionId);
 }
 
+let krishiChatPollingTimer = null;
+let lastKnownChatCount = -1;
+
 function toggleKrishiChat() {
     const modal = document.getElementById('krishi-chat-modal');
     const chatIcon = document.getElementById('krishi-chat-icon');
@@ -82,15 +85,23 @@ function toggleKrishiChat() {
         modal.style.display = 'flex';
         chatIcon.style.display = 'none';
         closeIcon.style.display = 'block';
-        fetchKrishiChatMessages();
+        fetchKrishiChatMessages(true);
+        // Auto-poll every 3 seconds for live admin replies
+        if (krishiChatPollingTimer) clearInterval(krishiChatPollingTimer);
+        krishiChatPollingTimer = setInterval(() => fetchKrishiChatMessages(false), 3000);
     } else {
         modal.style.display = 'none';
         chatIcon.style.display = 'block';
         closeIcon.style.display = 'none';
+        // Clear interval when closed
+        if (krishiChatPollingTimer) {
+            clearInterval(krishiChatPollingTimer);
+            krishiChatPollingTimer = null;
+        }
     }
 }
 
-function fetchKrishiChatMessages() {
+function fetchKrishiChatMessages(forceScroll = false) {
     fetch("{{ route('chat.fetch') }}", {
         method: 'POST',
         headers: {
@@ -101,10 +112,23 @@ function fetchKrishiChatMessages() {
     })
     .then(res => res.json())
     .then(data => {
-        if(data.status === 'success') {
-            renderChatMessages(data.messages);
+        if(data.status === 'success' && Array.isArray(data.messages)) {
+            if (forceScroll || data.messages.length !== lastKnownChatCount) {
+                lastKnownChatCount = data.messages.length;
+                renderChatMessages(data.messages);
+            }
         }
+    })
+    .catch(err => {
+        // Silently catch background network glitches
     });
+}
+
+function formatChatText(str) {
+    if(!str) return '';
+    // Format bold markdown **text**
+    let formatted = str.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return formatted.replace(/\n/g, '<br>');
 }
 
 function renderChatMessages(messages) {
@@ -113,23 +137,46 @@ function renderChatMessages(messages) {
 
     messages.forEach(msg => {
         const isUser = msg.sender_type === 'user';
+        const isAdmin = msg.sender_type === 'admin';
+        const isBot = msg.sender_type === 'bot';
+
         const msgDiv = document.createElement('div');
         msgDiv.style.display = 'flex';
         msgDiv.style.justifyContent = isUser ? 'flex-end' : 'flex-start';
-        msgDiv.style.marginBottom = '6px';
+        msgDiv.style.marginBottom = '8px';
 
         const bubble = document.createElement('div');
-        bubble.style.maxWidth = '80%';
+        bubble.style.maxWidth = '85%';
         bubble.style.padding = '10px 14px';
         bubble.style.borderRadius = isUser ? '16px 16px 4px 16px' : '16px 16px 16px 4px';
         bubble.style.fontSize = '13px';
-        bubble.style.lineHeight = '1.4';
+        bubble.style.lineHeight = '1.45';
         bubble.style.wordBreak = 'break-word';
 
+        let senderBadge = '';
+        if (isAdmin) {
+            senderBadge = `<div style="font-size: 11px; font-weight: 700; color: #2563eb; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class="fa fa-user-circle"></i> ${msg.sender_name || 'এডমিন প্রতিনিধি (Admin Support)'}</div>`;
+        } else if (isBot) {
+            senderBadge = `<div style="font-size: 11px; font-weight: 600; color: #ea580c; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class="fa fa-robot"></i> কৃষি পরিবার AI Assistant</div>`;
+        }
+
+        let timeStr = '';
+        if (msg.created_at) {
+            try {
+                const d = new Date(msg.created_at);
+                timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } catch(e) {}
+        }
+
         if(isUser) {
-            bubble.style.background = '#ea580c';
+            bubble.style.background = 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)';
             bubble.style.color = '#ffffff';
-            bubble.style.boxShadow = '0 2px 8px rgba(234, 88, 12, 0.2)';
+            bubble.style.boxShadow = '0 2px 8px rgba(234, 88, 12, 0.25)';
+        } else if (isAdmin) {
+            bubble.style.background = '#eff6ff';
+            bubble.style.color = '#1e3a8a';
+            bubble.style.border = '1px solid #bfdbfe';
+            bubble.style.boxShadow = '0 2px 6px rgba(37, 99, 235, 0.08)';
         } else {
             bubble.style.background = '#ffffff';
             bubble.style.color = '#1e293b';
@@ -137,7 +184,7 @@ function renderChatMessages(messages) {
             bubble.style.boxShadow = '0 2px 6px rgba(0,0,0,0.03)';
         }
 
-        bubble.innerHTML = msg.message.replace(/\n/g, '<br>');
+        bubble.innerHTML = `${senderBadge}<div>${formatChatText(msg.message)}</div>${timeStr ? `<div style="font-size: 10px; opacity: 0.75; text-align: right; margin-top: 4px;">${timeStr}</div>` : ''}`;
         msgDiv.appendChild(bubble);
         container.appendChild(msgDiv);
     });
@@ -159,13 +206,13 @@ function submitKrishiChatMessage(e) {
 
     input.value = '';
 
-    // Append optimistic user message
+    // Append optimistic user message immediately
     const container = document.getElementById('krishi-chat-messages-container');
     const userDiv = document.createElement('div');
     userDiv.style.display = 'flex';
     userDiv.style.justifyContent = 'flex-end';
-    userDiv.style.marginBottom = '6px';
-    userDiv.innerHTML = `<div style="max-width: 80%; padding: 10px 14px; border-radius: 16px 16px 4px 16px; font-size: 13px; background: #ea580c; color: #ffffff;">${message}</div>`;
+    userDiv.style.marginBottom = '8px';
+    userDiv.innerHTML = `<div style="max-width: 85%; padding: 10px 14px; border-radius: 16px 16px 4px 16px; font-size: 13px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff;">${formatChatText(message)}</div>`;
     container.appendChild(userDiv);
 
     const body = document.getElementById('krishi-chat-body');
@@ -184,9 +231,13 @@ function submitKrishiChatMessage(e) {
     })
     .then(res => res.json())
     .then(data => {
-        if(data.status === 'success') {
+        if(data.status === 'success' && Array.isArray(data.messages)) {
+            lastKnownChatCount = data.messages.length;
             renderChatMessages(data.messages);
         }
+    })
+    .catch(err => {
+        console.error('Error sending message:', err);
     });
 }
 </script>

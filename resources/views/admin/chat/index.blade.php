@@ -151,6 +151,7 @@
 <script>
 let currentActiveSession = null;
 let chatPollInterval = null;
+let sessionListPollInterval = null;
 
 function loadAdminSession(sessionId, element) {
     currentActiveSession = sessionId;
@@ -166,7 +167,7 @@ function loadAdminSession(sessionId, element) {
     fetchSessionMessages(sessionId);
 
     if(chatPollInterval) clearInterval(chatPollInterval);
-    chatPollInterval = setInterval(() => fetchSessionMessages(sessionId), 4000);
+    chatPollInterval = setInterval(() => fetchSessionMessages(sessionId), 3000);
 }
 
 function fetchSessionMessages(sessionId) {
@@ -203,6 +204,70 @@ function fetchSessionMessages(sessionId) {
         });
 }
 
+function fetchSessionsList() {
+    const role = "{{ $selectedRole ?? '' }}";
+    fetch("{{ route('admin.chat.sessions_json') }}" + (role ? "?role=" + role : ""))
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success' && data.sessions) {
+                renderSessionsList(data.sessions, data.counts);
+            }
+        })
+        .catch(e => {});
+}
+
+function renderSessionsList(sessions, counts) {
+    const list = document.getElementById('chatSessionList');
+    if(!list) return;
+
+    if(!sessions || sessions.length === 0) {
+        list.innerHTML = `
+            <div class="p-4 text-center text-muted">
+                <i class="fa fa-comment-slash fs-30 mb-2 text-secondary"></i>
+                <p class="mb-0 fs-14">কোনো চ্যাট মেসেজ পাওয়া যায়নি।</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    sessions.forEach(sess => {
+        const isActive = sess.session_id === currentActiveSession;
+        const senderName = (sess.user_info && sess.user_info.sender_name) ? sess.user_info.sender_name : ('Guest Visitor (#' + sess.session_id.substring(0, 6) + ')');
+        const lastMsg = sess.last_message ? sess.last_message.message : 'No messages';
+        const timeAgo = sess.time_ago || '';
+        
+        let roleBadge = '<span class="badge bg-primary" style="font-size: 10px;">ইউজার</span>';
+        if (sess.detected_role === 'employee') roleBadge = '<span class="badge bg-info text-white" style="font-size: 10px;">এমপ্লয়ী</span>';
+        else if (sess.detected_role === 'supplier') roleBadge = '<span class="badge bg-success" style="font-size: 10px;">সাপ্লায়ার</span>';
+        else if (sess.detected_role === 'agent') roleBadge = '<span class="badge bg-warning text-dark" style="font-size: 10px;">এজেন্ট</span>';
+
+        const unreadBadge = sess.unread_count > 0 ? `<span class="badge bg-danger rounded-pill ms-1" style="font-size: 10px;">${sess.unread_count} new</span>` : '';
+
+        html += `
+            <a href="javascript:void(0)" onclick="loadAdminSession('${sess.session_id}', this)" class="list-group-item list-group-item-action p-3 session-item border-bottom ${isActive ? 'active bg-light' : ''}" data-session-id="${sess.session_id}">
+                <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                    <h6 class="mb-0 fw-bold text-dark d-flex align-items-center gap-1">
+                        <i class="fa fa-user-circle text-secondary me-1"></i>
+                        ${senderName}
+                    </h6>
+                    <small class="text-muted" style="font-size: 11px;">${timeAgo}</small>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                    <p class="mb-0 text-truncate small text-secondary" style="max-width: 70%;">${lastMsg}</p>
+                    <div>${roleBadge}${unreadBadge}</div>
+                </div>
+            </a>
+        `;
+    });
+    list.innerHTML = html;
+}
+
+// Auto-refresh session list every 5 seconds
+document.addEventListener('DOMContentLoaded', () => {
+    sessionListPollInterval = setInterval(fetchSessionsList, 5000);
+});
+
 function sendAdminReply(e) {
     e.preventDefault();
     const input = document.getElementById('adminReplyInput');
@@ -224,6 +289,7 @@ function sendAdminReply(e) {
     .then(data => {
         if(data.status === 'success') {
             fetchSessionMessages(currentActiveSession);
+            fetchSessionsList();
         }
     });
 }

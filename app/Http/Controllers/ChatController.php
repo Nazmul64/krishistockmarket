@@ -40,7 +40,17 @@ class ChatController extends Controller
         $user = Auth::user();
         $userId = $user ? $user->id : null;
         $userName = $user ? $user->name : ($request->input('sender_name') ?: 'Guest Visitor');
-        $userRole = $user ? ($user->role ?: 'user') : 'user';
+
+        // Customer chat role mapping:
+        // If sender is an authenticated employee, supplier, or agent, assign their respective role.
+        // Otherwise (regular users, guests, super_admin or admin testing public site), assign 'user'
+        // so that messages ALWAYS appear in the User Chat queue for support agents!
+        $actualRole = $user ? ($user->role ?: 'user') : 'user';
+        if (in_array($actualRole, ['employee', 'supplier', 'agent'])) {
+            $userRole = $actualRole;
+        } else {
+            $userRole = 'user';
+        }
 
         // Save User Message
         $userMsg = ChatMessage::create([
@@ -136,8 +146,9 @@ class ChatController extends Controller
                 $query->where(function($q) {
                     $q->where('user_role', 'user')
                       ->orWhereNull('user_role')
+                      ->orWhereNotIn('user_role', ['employee', 'supplier', 'agent'])
                       ->orWhereHas('user', function($uQuery) {
-                          $uQuery->where('role', 'user');
+                          $uQuery->whereNotIn('role', ['employee', 'supplier', 'agent']);
                       });
                 });
             } elseif ($selectedRole === 'employee') {
@@ -156,9 +167,9 @@ class ChatController extends Controller
                 });
             } elseif ($selectedRole === 'agent') {
                 $query->where(function($q) {
-                    $q->whereIn('user_role', ['agent', 'employee'])
+                    $q->where('user_role', 'agent')
                       ->orWhereHas('user', function($uQuery) {
-                          $uQuery->whereIn('role', ['agent', 'employee']);
+                          $uQuery->where('role', 'agent');
                       });
                 });
             }
@@ -187,19 +198,102 @@ class ChatController extends Controller
             } elseif ($session->user_info && $session->user_info->user) {
                 $roleTag = $session->user_info->user->role ?: 'user';
             }
+            if (!in_array($roleTag, ['employee', 'supplier', 'agent'])) {
+                $roleTag = 'user';
+            }
             $session->detected_role = $roleTag;
         }
 
         // Unread counts per role
         $counts = [
-            'user' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where(function($q){ $q->where('user_role', 'user')->orWhereNull('user_role'); })->distinct('session_id')->count('session_id'),
+            'user' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where(function($q){
+                $q->where('user_role', 'user')->orWhereNull('user_role')->orWhereNotIn('user_role', ['employee', 'supplier', 'agent']);
+            })->distinct('session_id')->count('session_id'),
             'employee' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where('user_role', 'employee')->distinct('session_id')->count('session_id'),
             'supplier' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where('user_role', 'supplier')->distinct('session_id')->count('session_id'),
-            'agent' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->whereIn('user_role', ['agent', 'employee'])->distinct('session_id')->count('session_id'),
+            'agent' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where('user_role', 'agent')->distinct('session_id')->count('session_id'),
             'all' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->distinct('session_id')->count('session_id'),
         ];
 
         return view('admin.chat.index', compact('sessions', 'selectedRole', 'counts'));
+    }
+
+    /**
+     * Admin fetch active session list (JSON) for auto-updating inbox without reload.
+     */
+    public function adminFetchSessions(Request $request)
+    {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('chat.view')) {
+            return response()->json(['status' => 'error', 'message' => "Action Forbidden"], 403);
+        }
+
+        $selectedRole = $request->query('role');
+
+        $query = ChatMessage::select('session_id')
+            ->selectRaw('MAX(created_at) as last_activity')
+            ->selectRaw('COUNT(id) as total_messages')
+            ->selectRaw('SUM(CASE WHEN is_read = 0 AND sender_type = "user" THEN 1 ELSE 0 END) as unread_count')
+            ->groupBy('session_id');
+
+        if (!empty($selectedRole)) {
+            if ($selectedRole === 'user') {
+                $query->where(function($q) {
+                    $q->where('user_role', 'user')
+                      ->orWhereNull('user_role')
+                      ->orWhereNotIn('user_role', ['employee', 'supplier', 'agent']);
+                });
+            } elseif ($selectedRole === 'employee') {
+                $query->where('user_role', 'employee');
+            } elseif ($selectedRole === 'supplier') {
+                $query->where('user_role', 'supplier');
+            } elseif ($selectedRole === 'agent') {
+                $query->where('user_role', 'agent');
+            }
+        }
+
+        $sessions = $query->orderBy('last_activity', 'desc')->get();
+
+        foreach ($sessions as $session) {
+            $session->last_message = ChatMessage::where('session_id', $session->session_id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $session->user_info = ChatMessage::where('session_id', $session->session_id)
+                ->whereNotNull('sender_name')
+                ->where('sender_type', 'user')
+                ->first();
+
+            if (!$session->user_info && $session->last_message) {
+                $session->user_info = $session->last_message;
+            }
+
+            $roleTag = 'user';
+            if ($session->last_message && !empty($session->last_message->user_role)) {
+                $roleTag = $session->last_message->user_role;
+            }
+            if (!in_array($roleTag, ['employee', 'supplier', 'agent'])) {
+                $roleTag = 'user';
+            }
+            $session->detected_role = $roleTag;
+            $session->time_ago = $session->last_message ? $session->last_message->created_at->diffForHumans() : '';
+        }
+
+        $counts = [
+            'user' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where(function($q){
+                $q->where('user_role', 'user')->orWhereNull('user_role')->orWhereNotIn('user_role', ['employee', 'supplier', 'agent']);
+            })->distinct('session_id')->count('session_id'),
+            'employee' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where('user_role', 'employee')->distinct('session_id')->count('session_id'),
+            'supplier' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where('user_role', 'supplier')->distinct('session_id')->count('session_id'),
+            'agent' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->where('user_role', 'agent')->distinct('session_id')->count('session_id'),
+            'all' => ChatMessage::where('is_read', 0)->where('sender_type', 'user')->distinct('session_id')->count('session_id'),
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'sessions' => $sessions,
+            'counts' => $counts
+        ]);
     }
 
     /**

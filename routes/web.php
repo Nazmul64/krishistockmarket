@@ -357,6 +357,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
 
     // Admin Live Chat Support Hub Routes
     Route::get('/chat-support', [\App\Http\Controllers\ChatController::class, 'adminIndex'])->name('admin.chat.index');
+    Route::get('/chat-support/sessions-json', [\App\Http\Controllers\ChatController::class, 'adminFetchSessions'])->name('admin.chat.sessions_json');
     Route::get('/chat-support/session/{sessionId}', [\App\Http\Controllers\ChatController::class, 'adminFetchSession'])->name('admin.chat.session');
     Route::post('/chat-support/reply', [\App\Http\Controllers\ChatController::class, 'adminSendReply'])->name('admin.chat.reply');
 
