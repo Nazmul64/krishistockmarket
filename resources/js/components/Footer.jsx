@@ -100,29 +100,29 @@ export default function Footer({
                                 <p className="small text-slate-400 mb-3">
                                     {lang === 'bn' ? 'আমাদের সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন এবং প্রতিদিনের স্টক রেট ও কৃষি অফারের সাথে আপডেট থাকুন।' : 'Connect with us on social channels to stay updated with daily stock rates and member offers.'}
                                 </p>
-                                <div className="footer-social-links-row d-flex align-items-center gap-2">
+                                <div className="footer-social-links-row d-flex align-items-center flex-wrap">
                                     {site.facebook && (
-                                        <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="footer-social-icon fb" title="Facebook">
+                                        <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="footer-social-icon ftr-btn fb" title="Facebook" style={{ marginRight: '12px', marginBottom: '8px' }}>
                                             <i className="fa fa-facebook"></i>
                                         </a>
                                     )}
+                                    {site.instagram && (
+                                        <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="footer-social-icon ftr-btn ig insta" title="Instagram" style={{ marginRight: '12px', marginBottom: '8px' }}>
+                                            <i className="fa fa-instagram"></i>
+                                        </a>
+                                    )}
                                     {site.twitter && (
-                                        <a href={site.twitter} target="_blank" rel="noopener noreferrer" className="footer-social-icon tw" title="Twitter">
+                                        <a href={site.twitter} target="_blank" rel="noopener noreferrer" className="footer-social-icon ftr-btn tw" title="Twitter" style={{ marginRight: '12px', marginBottom: '8px' }}>
                                             <i className="fa fa-twitter"></i>
                                         </a>
                                     )}
                                     {site.linkedin && (
-                                        <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="footer-social-icon in" title="LinkedIn">
+                                        <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="footer-social-icon ftr-btn in" title="LinkedIn" style={{ marginRight: '12px', marginBottom: '8px' }}>
                                             <i className="fa fa-linkedin"></i>
                                         </a>
                                     )}
-                                    {site.instagram && (
-                                        <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="footer-social-icon ig" title="Instagram">
-                                            <i className="fa fa-instagram"></i>
-                                        </a>
-                                    )}
                                     {site.youtube && (
-                                        <a href={site.youtube} target="_blank" rel="noopener noreferrer" className="footer-social-icon yt" title="YouTube">
+                                        <a href={site.youtube} target="_blank" rel="noopener noreferrer" className="footer-social-icon ftr-btn yt" title="YouTube" style={{ marginRight: '12px', marginBottom: '8px' }}>
                                             <i className="fa fa-youtube-play"></i>
                                         </a>
                                     )}

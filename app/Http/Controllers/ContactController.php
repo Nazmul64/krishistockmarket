@@ -9,6 +9,20 @@ class ContactController extends Controller
 {
     public function store(Request $request)
     {
+        $name = $request->name ?? $request->input('contact-name');
+        $phone = $request->phone ?? $request->input('contact-phone');
+        $email = $request->email ?? $request->input('contact-email');
+        $subject = $request->subject ?? $request->input('contact-subject');
+        $message = $request->message ?? $request->input('textarea-message');
+
+        $request->merge([
+            'name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'subject' => $subject,
+            'message' => $message,
+        ]);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
@@ -30,6 +44,15 @@ class ContactController extends Controller
             'status' => 'unread',
         ]);
 
-        return back()->with('success', 'ধন্যবাদ! আপনার বার্তাটি আমাদের কাছে পৌঁছেছে। আমরা দ্রুতই আপনার সাথে যোগাযোগ করব।');
+        $successMsg = 'ধন্যবাদ! আপনার বার্তাটি আমাদের কাছে পৌঁছেছে। আমরা দ্রুতই আপনার সাথে যোগাযোগ করব।';
+
+        if ($request->wantsJson() || $request->ajax() || $request->header('Accept') === 'application/json') {
+            return response()->json([
+                'success' => true,
+                'message' => $successMsg
+            ], 200);
+        }
+
+        return back()->with('success', $successMsg);
     }
 }

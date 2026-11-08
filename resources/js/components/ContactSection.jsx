@@ -39,6 +39,11 @@ export default function ContactSection({
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify({
+                    name: formData.name,
+                    phone: formData.phone,
+                    email: formData.email,
+                    subject: formData.subject,
+                    message: formData.message,
                     'contact-name': formData.name,
                     'contact-phone': formData.phone,
                     'contact-email': formData.email,
@@ -48,18 +53,26 @@ export default function ContactSection({
             });
 
             if (res.ok) {
+                const data = await res.json().catch(() => ({}));
                 setStatus({
                     submitting: false,
-                    success: t.contact_success || (lang === 'bn' ? 'আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে! আমাদের প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন।' : 'Thank you! Your message has been sent successfully. Our team will contact you shortly.'),
+                    success: data.message || t.contact_success || (lang === 'bn' ? 'আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে! আমাদের প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন।' : 'Thank you! Your message has been sent successfully. Our team will contact you shortly.'),
                     error: null,
                 });
                 setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
             } else {
                 const data = await res.json().catch(() => ({}));
+                let errMsg = data.message;
+                if (data.errors && typeof data.errors === 'object') {
+                    const firstKey = Object.keys(data.errors)[0];
+                    if (firstKey && data.errors[firstKey] && data.errors[firstKey][0]) {
+                        errMsg = data.errors[firstKey][0];
+                    }
+                }
                 setStatus({
                     submitting: false,
                     success: null,
-                    error: data.message || (lang === 'bn' ? 'মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে ফোন নম্বরে সরাসরি যোগাযোগ করুন।' : 'Failed to send message. Please reach us directly via helpline.'),
+                    error: errMsg || (lang === 'bn' ? 'মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে ফোন নম্বরে সরাসরি যোগাযোগ করুন।' : 'Failed to send message. Please reach us directly via helpline.'),
                 });
             }
         } catch (err) {

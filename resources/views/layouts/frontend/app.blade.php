@@ -738,25 +738,30 @@
                             <p class="footer-social-desc">
                                 আমাদের সাথে সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন ও সর্বশেষ আপডেট পান।
                             </p>
-                            <div class="footer-social-buttons">
+                            <div class="footer-social-buttons d-flex align-items-center flex-wrap">
                                 @if(setting('facbook_link'))
-                                    <a href="{{ setting('facbook_link') }}" target="_blank" rel="noreferrer" class="ftr-btn fb" title="Facebook">
+                                    <a href="{{ setting('facbook_link') }}" target="_blank" rel="noreferrer" class="ftr-btn fb" title="Facebook" style="margin-right: 12px; margin-bottom: 8px;">
                                         <i class="fa fa-facebook"></i>
                                     </a>
                                 @endif
                                 @if(setting('instagram_link'))
-                                    <a href="{{ setting('instagram_link') }}" target="_blank" rel="noreferrer" class="ftr-btn insta" title="Instagram">
+                                    <a href="{{ setting('instagram_link') }}" target="_blank" rel="noreferrer" class="ftr-btn insta" title="Instagram" style="margin-right: 12px; margin-bottom: 8px;">
                                         <i class="fa fa-instagram"></i>
                                     </a>
                                 @endif
                                 @if(setting('twitter_link'))
-                                    <a href="{{ setting('twitter_link') }}" target="_blank" rel="noreferrer" class="ftr-btn tw" title="Twitter">
+                                    <a href="{{ setting('twitter_link') }}" target="_blank" rel="noreferrer" class="ftr-btn tw" title="Twitter" style="margin-right: 12px; margin-bottom: 8px;">
                                         <i class="fa fa-twitter"></i>
                                     </a>
                                 @endif
                                 @if(setting('linkedin_link'))
-                                    <a href="{{ setting('linkedin_link') }}" target="_blank" rel="noreferrer" class="ftr-btn in" title="LinkedIn">
+                                    <a href="{{ setting('linkedin_link') }}" target="_blank" rel="noreferrer" class="ftr-btn in" title="LinkedIn" style="margin-right: 12px; margin-bottom: 8px;">
                                         <i class="fa fa-linkedin"></i>
+                                    </a>
+                                @endif
+                                @if(setting('youtube_link'))
+                                    <a href="{{ setting('youtube_link') }}" target="_blank" rel="noreferrer" class="ftr-btn yt" title="YouTube" style="margin-right: 12px; margin-bottom: 8px;">
+                                        <i class="fa fa-youtube-play"></i>
                                     </a>
                                 @endif
                             </div>
