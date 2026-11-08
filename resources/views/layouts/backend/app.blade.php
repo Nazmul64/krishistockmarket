@@ -474,6 +474,18 @@
                             </li>
                             @endif
 
+                            @if(Auth::user()->hasPermission('settings') || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                            <li class="{{ (optional(Request::route())->getName() == 'setting.index') ? 'active menu-open' : '' }}">
+                                <a href="{{ route('setting.index') }}">
+                                    <i class="fa fa-font text-warning"></i>
+                                    <span>ফন্ট ফ্যামিলি (Font Settings)</span>
+                                    <span class="pull-right-container">
+                                        <span class="label label-warning pull-right">১০০+ ফন্ট</span>
+                                    </span>
+                                </a>
+                            </li>
+                            @endif
+
                             @if(Auth::user()->hasPermission('contact_messages'))
                             <li class="{{ (optional(Request::route())->getName() == 'admin.contact_messages.index') ? 'active menu-open' : '' }}">
                                 <a href="{{ route('admin.contact_messages.index') }}">
@@ -771,7 +783,7 @@
                                     <li class="">
                                         <a href="{{ route('setting.index') }}">
                                             <i class="ti-more"></i>
-                                            <span>Site & Contact Setting</span>
+                                            <span>Site & Font Setting (ফন্ট ও সাইট সেটিংস)</span>
                                         </a>
                                     </li>
                                     <li class="">

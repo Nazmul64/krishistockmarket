@@ -70,7 +70,7 @@
                                         <!-- ============================================== -->
                                         <!-- 100 Font Families Selector & Live Font Preview -->
                                         <!-- ============================================== -->
-                                        <div class="form-group pb-4 p-3 mb-4 rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1.5px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-radius: 12px;">
+                                        <div id="site_font_family_card" class="form-group pb-4 p-3 mb-4 rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #ea580c; box-shadow: 0 6px 20px rgba(234, 88, 12, 0.12); border-radius: 14px;">
                                             <div class="row align-items-center mb-2">
                                                 <div class="col-12">
                                                     <div class="d-flex align-items-center justify-content-between mb-2">
