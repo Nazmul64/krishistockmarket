@@ -242,6 +242,11 @@
     <div class="auth-card">
         <!-- Portal Header -->
         <div class="brand-header">
+            <div style="text-align: center; margin-bottom: 14px;">
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="ekrishisheba" style="height: 44px; max-height: 48px; width: auto; max-width: 190px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25)); background: transparent;">
+                </a>
+            </div>
             <div class="portal-icon-wrap">
                 <i class="{{ $config['icon'] ?? 'ti-lock' }}"></i>
             </div>

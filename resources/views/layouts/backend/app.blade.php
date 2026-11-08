@@ -118,7 +118,9 @@
 
     <style>
         .main-header .logo {
-            width: 115px !important;
+            width: auto !important;
+            min-width: 150px !important;
+            max-width: 230px !important;
         }
     </style>
 </head>
@@ -126,7 +128,24 @@
 <body class="hold-transition light-skin sidebar-mini theme-warning fixed">
 
     <div class="wrapper">
-        <div id="loader"></div>
+        <!-- Admin Animated Preloader with Main Logo -->
+        <div id="loader" class="ekrishi-preloader-wrap">
+            <div class="ekrishi-preloader-inner">
+                <div class="preloader-logo-ring-outer">
+                    <div class="preloader-logo-ring-pulse"></div>
+                    <div class="preloader-logo-ring-spinner"></div>
+                    <div class="preloader-logo-circle">
+                        <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="ekrishisheba" class="preloader-logo-img">
+                    </div>
+                </div>
+                <h3 class="preloader-brand-title">ekrishisheba</h3>
+                <p class="preloader-tagline">এডমিন কন্ট্রোল প্যানেল লোড হচ্ছে...</p>
+                <div class="preloader-progress-bar">
+                    <div class="preloader-progress-fill"></div>
+                </div>
+                <small class="preloader-loading-text">অনুগ্রহ করে একটু অপেক্ষা করুন...</small>
+            </div>
+        </div>
 
         <header class="main-header">
             <div class="d-flex align-items-center logo-box justify-content-start">
@@ -148,10 +167,10 @@
                 <a href="{{ route('home') }}" class="logo">
                     <div class="logo-lg d-flex align-items-center">
                         <span class="light-logo">
-                            <img style="width: 44px; max-height: 40px; object-fit: contain;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
+                            <img style="height: 44px; max-height: 48px; width: auto; max-width: 180px; object-fit: contain; background: transparent !important; padding: 0 !important;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
                         </span>
                         <span class="dark-logo">
-                            <img style="width: 44px; max-height: 40px; object-fit: contain;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
+                            <img style="height: 44px; max-height: 48px; width: auto; max-width: 180px; object-fit: contain; background: transparent !important; padding: 0 !important;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
                         </span>
                     </div>
                 </a>
@@ -267,7 +286,7 @@
             <!-- Mobile Sidebar Drawer Header with Close Button -->
             <div class="sidebar-mobile-header d-flex align-items-center justify-content-between px-3 py-3 d-md-none" style="border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.35);">
                 <div class="d-flex align-items-center gap-2">
-                    <img style="width: 32px; height: 32px; object-fit: contain; background: transparent; padding: 0; border-radius: 0;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
+                    <img style="height: 34px; width: auto; max-width: 110px; object-fit: contain; background: transparent !important; padding: 0 !important; border-radius: 0 !important;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
                     <div>
                         <div class="text-white fw-bold font-size-14" style="line-height: 1.2;">ekrishisheba Admin</div>
                         <small class="text-warning font-size-11">{{ Auth::user()->name ?? 'Administrator' }}</small>
@@ -423,7 +442,7 @@
                             @endif
 
                             @if(Auth::user()->hasPermission('packages.view') || Auth::user()->hasPermission('our_packages'))
-                            <li class="{{ (optional(Request::route())->getName() == 'admin.our_packages.index') ? 'active menu-open' : '' }}">
+                            <li class="{{ (Str::startsWith(optional(Request::route())->getName(), 'admin.our_packages')) ? 'active menu-open' : '' }}">
                                 <a href="{{ route('admin.our_packages.index') }}">
                                     <i class="ti-package text-success"></i>
                                     <span>Our Packages</span>
@@ -1345,6 +1364,19 @@
                     }
                 });
 
+                // 3. Fallback to stored clicked href from sessionStorage
+                if (!bestMatch) {
+                    var storedHref = sessionStorage.getItem('ekrishi_active_sidebar_href');
+                    if (storedHref) {
+                        $sidebar.find('a').each(function () {
+                            if (this.href && this.href.split('#')[0].split('?')[0].replace(/\/+$/, '') === storedHref) {
+                                bestMatch = $(this);
+                                return false;
+                            }
+                        });
+                    }
+                }
+
                 if (bestMatch && bestMatch.length) {
                     // Remove other active items inside submenus to prevent stale multi-highlights
                     $sidebar.find('li.active:not(.treeview)').removeClass('active');
@@ -1353,11 +1385,14 @@
                     // Highlight the matched item
                     bestMatch.addClass('active');
                     var $parentLi = bestMatch.closest('li');
-                    $parentLi.addClass('active');
+                    $parentLi.addClass('active menu-open');
 
                     // If inside treeview, open and expand all parent treeviews
                     var $treeviews = bestMatch.parents('li.treeview');
                     if ($treeviews.length) {
+                        // Close any unrelated treeviews
+                        $sidebar.find('li.treeview').not($treeviews).removeClass('active menu-open').children('.treeview-menu').hide();
+
                         $treeviews.each(function () {
                             var $tv = $(this);
                             $tv.addClass('active menu-open');
@@ -1366,6 +1401,11 @@
                             $tv.find('> a .pull-right-container .fa-angle-right').css('transform', 'rotate(90deg)');
                         });
                     }
+
+                    // Save matched href in sessionStorage
+                    try {
+                        sessionStorage.setItem('ekrishi_active_sidebar_href', (bestMatch[0].href || '').split('#')[0].split('?')[0].replace(/\/+$/, ''));
+                    } catch (e) {}
 
                     // Scroll the active menu item into view in the sidebar
                     setTimeout(function () {
@@ -1416,14 +1456,26 @@
                     }
                 });
 
-                // When user clicks a sidebar menu link on mobile, auto-close sidebar after navigation starts
+                // When user clicks a sidebar menu link on mobile or desktop, immediately highlight & remember
                 $('.sidebar-menu').on('click', 'a', function () {
                     var href = $(this).attr('href');
                     if (href && href !== '#' && !href.startsWith('javascript:')) {
                         // Immediately highlight clicked link
-                        $('.sidebar-menu li.active:not(.treeview)').removeClass('active');
+                        $('.sidebar-menu li.active:not(.treeview)').removeClass('active menu-open');
                         $('.sidebar-menu a.active').removeClass('active');
-                        $(this).addClass('active').closest('li').addClass('active');
+                        var $parentLi = $(this).closest('li');
+                        $(this).addClass('active');
+                        $parentLi.addClass('active menu-open');
+
+                        var $treeviews = $(this).parents('li.treeview');
+                        if ($treeviews.length) {
+                            $treeviews.addClass('active menu-open');
+                        }
+
+                        try {
+                            var cleanHref = (this.href || '').split('#')[0].split('?')[0].replace(/\/+$/, '');
+                            sessionStorage.setItem('ekrishi_active_sidebar_href', cleanHref);
+                        } catch (e) {}
 
                         if ($(window).width() <= 767) {
                             setTimeout(closeMobileMenu, 200);
@@ -1431,6 +1483,21 @@
                     }
                 });
             }
+
+            // Safety dismiss for admin preloader
+            function dismissAdminLoader() {
+                var ldr = document.getElementById('loader');
+                if (ldr) {
+                    ldr.classList.add('loaded');
+                    setTimeout(function () {
+                        if (ldr) ldr.style.display = 'none';
+                    }, 400);
+                }
+            }
+            window.addEventListener('load', function () {
+                setTimeout(dismissAdminLoader, 150);
+            });
+            setTimeout(dismissAdminLoader, 2500);
 
             // Run on Ready and Window Load
             $(document).ready(function () {

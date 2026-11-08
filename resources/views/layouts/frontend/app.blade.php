@@ -188,24 +188,173 @@
                 display: block !important;
             }
         }
+        /* Premium ekrishisheba Animated Preloader */
+        .ekrishi-preloader-wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: radial-gradient(circle at center, #ffffff 0%, #fffbf2 60%, #fef3c7 100%) !important;
+            z-index: 9999999 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s ease !important;
+            pointer-events: all;
+        }
+        .ekrishi-preloader-wrap.loaded {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        .ekrishi-preloader-inner {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 24px !important;
+            max-width: 380px !important;
+        }
+        .preloader-logo-ring-outer {
+            position: relative !important;
+            min-width: 150px !important;
+            max-width: 240px !important;
+            height: 110px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin-bottom: 22px !important;
+        }
+        .preloader-logo-ring-pulse {
+            position: absolute !important;
+            inset: -8px !important;
+            border-radius: 28px !important;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.25) 0%, rgba(245, 158, 11, 0.08) 60%, transparent 100%) !important;
+            animation: ekrishiPulse 2s ease-in-out infinite !important;
+        }
+        .preloader-logo-ring-spinner {
+            position: absolute !important;
+            inset: -4px !important;
+            border-radius: 26px !important;
+            border: 3px solid rgba(245, 158, 11, 0.18) !important;
+            border-top-color: #ea580c !important;
+            border-right-color: #f59e0b !important;
+            animation: ekrishiSpin 1.4s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite !important;
+        }
+        .preloader-logo-circle {
+            min-width: 140px !important;
+            max-width: 220px !important;
+            height: 84px !important;
+            border-radius: 22px !important;
+            background: #ffffff !important;
+            box-shadow: 0 12px 30px rgba(234, 88, 12, 0.22), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 2 !important;
+            padding: 10px 20px !important;
+            animation: ekrishiFloat 2.8s ease-in-out infinite !important;
+        }
+        .preloader-logo-img {
+            max-width: 180px !important;
+            max-height: 64px !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+            background: transparent !important;
+        }
+        .preloader-brand-title {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif !important;
+            font-size: 26px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.02em !important;
+            margin: 0 0 4px 0 !important;
+            background: linear-gradient(135deg, #ea580c 0%, #d97706 60%, #b45309 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+        .preloader-tagline {
+            font-family: 'Hind Siliguri', sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            color: #64748b !important;
+            margin: 0 0 16px 0 !important;
+        }
+        .preloader-progress-bar {
+            width: 180px !important;
+            height: 5px !important;
+            background: rgba(234, 88, 12, 0.14) !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            position: relative !important;
+            margin-bottom: 10px !important;
+        }
+        .preloader-progress-fill {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 45% !important;
+            background: linear-gradient(90deg, #ea580c, #f59e0b, #ea580c) !important;
+            background-size: 200% 100% !important;
+            border-radius: 10px !important;
+            animation: ekrishiBar 1.4s ease-in-out infinite !important;
+        }
+        .preloader-loading-text {
+            font-family: 'Hind Siliguri', sans-serif !important;
+            font-size: 12.5px !important;
+            color: #94a3b8 !important;
+        }
+
+        @keyframes ekrishiSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes ekrishiPulse {
+            0%, 100% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 1; }
+        }
+        @keyframes ekrishiFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes ekrishiBar {
+            0% { left: -45%; }
+            50% { left: 40%; }
+            100% { left: 100%; }
+        }
     </style>
 </head>
 
 <body data-offset="200" data-spy="scroll" data-target=".ownavigation">
-    @if(!Route::is('/'))
-    <!-- Loader -->
-    <div id="site-loader" class="load-complete">
-        <div class="loader">
-            <div class="line-scale">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+    <!-- Premium ekrishisheba Animated Preloader with Main Logo -->
+    <div id="site-preloader" class="ekrishi-preloader-wrap">
+        <div class="ekrishi-preloader-inner">
+            <!-- Orbit Rotating Rings around Main Logo -->
+            <div class="preloader-logo-ring-outer">
+                <div class="preloader-logo-ring-pulse"></div>
+                <div class="preloader-logo-ring-spinner"></div>
+                <div class="preloader-logo-circle">
+                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="ekrishisheba" class="preloader-logo-img">
+                </div>
             </div>
-        </div>
-    </div><!-- Loader /- -->
 
+            <!-- Brand Name & Animated Shimmer Bar -->
+            <h3 class="preloader-brand-title">ekrishisheba</h3>
+            <p class="preloader-tagline">স্মার্ট কৃষি ও নিরাপদ ডিজিটাল সেবা</p>
+
+            <div class="preloader-progress-bar">
+                <div class="preloader-progress-fill"></div>
+            </div>
+            <small class="preloader-loading-text">লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</small>
+        </div>
+    </div>
+
+    @if(!Route::is('/'))
     <!-- Dynamic Marquee Notice Top Header Bar - Aligned with Container -->
     <div class="top-marquee-notice-bar">
         <div class="container">
@@ -538,6 +687,32 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
     @include('components.chat-widget')
+
+    <!-- Preloader Auto-dismiss Script -->
+    <script>
+        (function () {
+            function dismissSitePreloader() {
+                var pl = document.getElementById('site-preloader');
+                if (pl && !pl.classList.contains('loaded')) {
+                    pl.classList.add('loaded');
+                    setTimeout(function () {
+                        if (pl && pl.parentNode) {
+                            pl.style.display = 'none';
+                        }
+                    }, 500);
+                }
+            }
+            if (document.readyState === 'complete') {
+                setTimeout(dismissSitePreloader, 100);
+            } else {
+                window.addEventListener('load', function () {
+                    setTimeout(dismissSitePreloader, 150);
+                });
+                // Fallback timeout so preloader never stays stuck
+                setTimeout(dismissSitePreloader, 3000);
+            }
+        })();
+    </script>
 
 </body>
 
