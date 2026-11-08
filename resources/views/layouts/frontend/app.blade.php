@@ -373,9 +373,9 @@
         $siteLang = request()->cookie('ekrishi_lang', 'en');
         $isBn = ($siteLang === 'bn');
     @endphp
-    <!-- Dynamic Marquee Notice Top Header Bar - Full Width -->
+    <!-- Dynamic Marquee Notice Top Header Bar - Inside Container -->
     <div class="top-marquee-notice-bar">
-        <div class="container-fluid px-3 px-xl-4">
+        <div class="container">
             <div class="d-flex align-items-center w-100">
                 <!-- Notice Badge -->
                 <div class="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style="margin-right: 14px !important;">
@@ -396,7 +396,7 @@
 
     <!-- Golden Sticky Navbar Header -->
     <header class="react-main-header golden-navbar sticky-top">
-        <div class="container-fluid px-3 px-xl-4">
+        <div class="container">
             <div class="d-flex align-items-center justify-content-between header-inner-row">
                 <!-- Brand Logo -->
                 <a href="{{ route('/') }}" class="react-brand-logo flex-shrink-0">
@@ -404,7 +404,7 @@
                 </a>
 
                 <!-- Prominent Search Bar (Taking Full Space on Desktop) -->
-                <div class="d-none d-lg-flex flex-grow-1 search-container-col" id="bladeSearchWrap" style="margin: 0 24px !important;">
+                <div class="d-none d-lg-flex flex-grow-1 search-container-col" id="bladeSearchWrap" style="margin: 0 18px !important;">
                     <form class="header-search-bar-unified w-100" id="bladeSearchForm" onsubmit="event.preventDefault();">
                         <input
                             type="text"
@@ -529,7 +529,7 @@
 
         <!-- Sub-Navigation Strip (Desktop Menu below Main Header) -->
         <div class="header-sub-nav-bar d-none d-lg-block">
-            <div class="container-fluid px-3 px-xl-4">
+            <div class="container">
                 <nav class="d-flex align-items-center sub-nav-links-row">
                     <a href="{{ route('/') }}" class="sub-nav-link-item {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
                     <a href="{{ route('about') }}" class="sub-nav-link-item {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>

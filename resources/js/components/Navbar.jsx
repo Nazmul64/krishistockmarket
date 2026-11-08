@@ -377,9 +377,9 @@ export default function Navbar({
 
     return (
         <>
-            {/* Top Marquee Notice Header Bar - Running across full width as requested */}
+            {/* Top Marquee Notice Header Bar - Inside Container */}
             <div className="top-marquee-notice-bar">
-                <div className="container-fluid px-3 px-xl-4">
+                <div className="container">
                     <div className="d-flex align-items-center w-100">
                         {/* Notice Badge */}
                         <div className="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style={{ marginRight: '14px' }}>
@@ -388,7 +388,7 @@ export default function Navbar({
                             <span className="marquee-badge-title">{t.notice_badge}</span>
                         </div>
 
-                        {/* Scrolling Marquee Area - Full Width */}
+                        {/* Scrolling Marquee Area */}
                         <div className="marquee-ticker-wrap flex-grow-1 overflow-hidden" style={{ minWidth: 0, width: '100%' }}>
                             <marquee
                                 behavior="scroll"
@@ -409,7 +409,7 @@ export default function Navbar({
 
             {/* Main Header Row: Logo + Prominent Full-Width Search Bar + Language + Dark Mode + Auth */}
             <header className={`react-main-header golden-navbar ${scrolled ? 'header-scrolled shadow-lg' : ''}`}>
-                <div className="container-fluid px-3 px-xl-4">
+                <div className="container">
                     <div className="d-flex align-items-center justify-content-between header-inner-row">
                         {/* Brand Logo */}
                         <a href={routes.home || '/'} className="react-brand-logo flex-shrink-0">
@@ -417,7 +417,7 @@ export default function Navbar({
                         </a>
 
                         {/* Center Prominent Search Bar (Taking Full Space on Desktop as requested) */}
-                        <div className="d-none d-lg-flex flex-grow-1 search-container-col" ref={searchWrapRef} style={{ margin: '0 24px' }}>
+                        <div className="d-none d-lg-flex flex-grow-1 search-container-col" ref={searchWrapRef} style={{ margin: '0 18px' }}>
                             <form className="header-search-bar-unified w-100" onSubmit={handleSearchSubmit}>
                                 <input
                                     type="text"
@@ -555,7 +555,7 @@ export default function Navbar({
 
                 {/* Sub-Navigation Strip (Desktop Navigation Bar below header with active highlights) */}
                 <div className="header-sub-nav-bar d-none d-lg-block">
-                    <div className="container-fluid px-3 px-xl-4">
+                    <div className="container">
                         <nav className="d-flex align-items-center sub-nav-links-row">
                             {navLinks.map((item, index) => (
                                 <a

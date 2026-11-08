@@ -2006,8 +2006,8 @@ body, html {
     flex: 1 1 auto !important;
     width: 100% !important;
     max-width: none !important;
-    margin: 0 24px !important;
-    min-width: 260px;
+    margin: 0 18px !important;
+    min-width: 200px;
 }
 
 @media (max-width: 991.98px) {
