@@ -76,8 +76,8 @@ export default function Navbar({
         { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
         { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
         { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
-        { label: t.pkg_title || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
-        { label: t.card_title || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
+        { label: t.packages_nav || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
+        { label: t.cards_nav || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
         { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
         { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
         { label: t.terms || 'Terms & Conditions', url: routes.terms || '/terms', active: currentPath.includes('/terms') },
@@ -377,19 +377,19 @@ export default function Navbar({
 
     return (
         <>
-            {/* Top Marquee Notice Header Bar - Running as requested */}
+            {/* Top Marquee Notice Header Bar - Running across full width as requested */}
             <div className="top-marquee-notice-bar">
-                <div className="container">
-                    <div className="d-flex align-items-center gap-3">
+                <div className="container-fluid px-3 px-xl-4">
+                    <div className="d-flex align-items-center w-100">
                         {/* Notice Badge */}
-                        <div className="marquee-badge-wrap d-flex align-items-center gap-2 flex-shrink-0">
-                            <span className="marquee-live-dot"></span>
-                            <i className="fa fa-bullhorn marquee-icon"></i>
+                        <div className="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style={{ marginRight: '14px' }}>
+                            <span className="marquee-live-dot" style={{ marginRight: '6px' }}></span>
+                            <i className="fa fa-bullhorn marquee-icon" style={{ marginRight: '6px' }}></i>
                             <span className="marquee-badge-title">{t.notice_badge}</span>
                         </div>
 
                         {/* Scrolling Marquee Area - Full Width */}
-                        <div className="marquee-ticker-wrap flex-grow-1 overflow-hidden">
+                        <div className="marquee-ticker-wrap flex-grow-1 overflow-hidden" style={{ minWidth: 0, width: '100%' }}>
                             <marquee
                                 behavior="scroll"
                                 direction="left"
@@ -397,6 +397,8 @@ export default function Navbar({
                                 onMouseOver={(e) => e.target.stop()}
                                 onMouseOut={(e) => e.target.start()}
                                 className="marquee-ticker-content"
+                                width="100%"
+                                style={{ width: '100%', display: 'block' }}
                             >
                                 {site.top_notice || t.default_notice}
                             </marquee>
@@ -405,17 +407,17 @@ export default function Navbar({
                 </div>
             </div>
 
-            {/* Main Header Row: Logo + Prominent Search Bar with Attached Search Button + Language + Dark Mode + Auth */}
+            {/* Main Header Row: Logo + Prominent Full-Width Search Bar + Language + Dark Mode + Auth */}
             <header className={`react-main-header golden-navbar ${scrolled ? 'header-scrolled shadow-lg' : ''}`}>
-                <div className="container">
-                    <div className="d-flex align-items-center justify-content-between header-inner-row gap-3">
+                <div className="container-fluid px-3 px-xl-4">
+                    <div className="d-flex align-items-center justify-content-between header-inner-row">
                         {/* Brand Logo */}
                         <a href={routes.home || '/'} className="react-brand-logo flex-shrink-0">
                             <img src={site.logo} alt={site.title} />
                         </a>
 
-                        {/* Center Prominent Search Bar with Attached Search Button (Modeled from Reference Image) */}
-                        <div className="d-none d-lg-flex flex-grow-1 justify-content-center search-container-col" ref={searchWrapRef}>
+                        {/* Center Prominent Search Bar (Taking Full Space on Desktop as requested) */}
+                        <div className="d-none d-lg-flex flex-grow-1 search-container-col" ref={searchWrapRef} style={{ margin: '0 24px' }}>
                             <form className="header-search-bar-unified w-100" onSubmit={handleSearchSubmit}>
                                 <input
                                     type="text"
@@ -450,10 +452,10 @@ export default function Navbar({
                             {searchOpen && renderSearchResultsDropdown()}
                         </div>
 
-                        {/* Right Action Icons: Language Pill + Dark Mode Moon/Sun + Auth Buttons */}
-                        <div className="d-none d-lg-flex align-items-center header-right-actions gap-2 flex-shrink-0">
+                        {/* Right Action Icons: Language Pill + Dark Mode Moon/Sun + Auth Buttons (With clear spacing) */}
+                        <div className="d-none d-lg-flex align-items-center header-right-actions flex-shrink-0">
                             {/* Language Switcher Pill [ EN | বাংলা ] */}
-                            <div className="header-lang-switcher-pill">
+                            <div className="header-lang-switcher-pill" style={{ marginRight: '16px' }}>
                                 <button
                                     type="button"
                                     className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
@@ -480,6 +482,7 @@ export default function Navbar({
                                 onClick={onToggleTheme}
                                 title={theme === 'dark' ? (t.theme_light || 'Switch to Light Mode') : (t.theme_dark || 'Switch to Dark Mode / ব্ল্যাক মোড')}
                                 aria-label="Toggle Black/Dark Mode"
+                                style={{ marginRight: '16px' }}
                             >
                                 {theme === 'dark' ? (
                                     <i className="fa fa-sun-o theme-icon-sun"></i>
@@ -495,8 +498,8 @@ export default function Navbar({
                                         <i className="fa fa-tachometer me-2"></i> {t.dashboard}
                                     </a>
                                 ) : (
-                                    <div className="d-flex align-items-center gap-2">
-                                        <a href={auth.login_url} className="btn-golden-action-outline">
+                                    <div className="d-flex align-items-center">
+                                        <a href={auth.login_url} className="btn-golden-action-outline" style={{ marginRight: '14px' }}>
                                             <i className="fa fa-sign-in me-1"></i> {t.login}
                                         </a>
                                         <a href={auth.register_url} className="btn-golden-action">
@@ -552,7 +555,7 @@ export default function Navbar({
 
                 {/* Sub-Navigation Strip (Desktop Navigation Bar below header with active highlights) */}
                 <div className="header-sub-nav-bar d-none d-lg-block">
-                    <div className="container">
+                    <div className="container-fluid px-3 px-xl-4">
                         <nav className="d-flex align-items-center sub-nav-links-row">
                             {navLinks.map((item, index) => (
                                 <a

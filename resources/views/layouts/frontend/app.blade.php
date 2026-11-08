@@ -373,20 +373,20 @@
         $siteLang = request()->cookie('ekrishi_lang', 'en');
         $isBn = ($siteLang === 'bn');
     @endphp
-    <!-- Dynamic Marquee Notice Top Header Bar - Aligned with Container -->
+    <!-- Dynamic Marquee Notice Top Header Bar - Full Width -->
     <div class="top-marquee-notice-bar">
-        <div class="container">
-            <div class="d-flex align-items-center gap-3">
+        <div class="container-fluid px-3 px-xl-4">
+            <div class="d-flex align-items-center w-100">
                 <!-- Notice Badge -->
-                <div class="marquee-badge-wrap d-flex align-items-center gap-2 flex-shrink-0">
-                    <span className="marquee-live-dot"></span>
-                    <i class="fa fa-bullhorn marquee-icon"></i>
+                <div class="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style="margin-right: 14px !important;">
+                    <span class="marquee-live-dot" style="margin-right: 6px !important;"></span>
+                    <i class="fa fa-bullhorn marquee-icon" style="margin-right: 6px !important;"></i>
                     <span class="marquee-badge-title">{{ $isBn ? 'নোটিশ:' : 'Notice:' }}</span>
                 </div>
 
                 <!-- Scrolling Marquee Area -->
-                <div class="marquee-ticker-wrap flex-grow-1 overflow-hidden" style="overflow: hidden; width: 100%;">
-                    <marquee behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();" class="marquee-ticker-content">
+                <div class="marquee-ticker-wrap flex-grow-1 overflow-hidden" style="overflow: hidden; width: 100%; min-width: 0;">
+                    <marquee behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();" class="marquee-ticker-content" width="100%" style="width: 100%; display: block;">
                         {{ setting('top_notice') ?: (setting('notice') ?: ($isBn ? 'ekrishisheba-তে স্বাগতম! আধুনিক ও নিরাপদ কৃষি প্ল্যাটফর্ম।' : 'Welcome to ekrishisheba! Modern, safe & reliable digital agro platform.')) }}
                     </marquee>
                 </div>
@@ -396,15 +396,15 @@
 
     <!-- Golden Sticky Navbar Header -->
     <header class="react-main-header golden-navbar sticky-top">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between header-inner-row gap-3">
+        <div class="container-fluid px-3 px-xl-4">
+            <div class="d-flex align-items-center justify-content-between header-inner-row">
                 <!-- Brand Logo -->
                 <a href="{{ route('/') }}" class="react-brand-logo flex-shrink-0">
                     <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="{{ setting('title') }}" />
                 </a>
 
-                <!-- Prominent Search Bar with Attached Search Button -->
-                <div class="d-none d-lg-flex flex-grow-1 justify-content-center search-container-col" id="bladeSearchWrap">
+                <!-- Prominent Search Bar (Taking Full Space on Desktop) -->
+                <div class="d-none d-lg-flex flex-grow-1 search-container-col" id="bladeSearchWrap" style="margin: 0 24px !important;">
                     <form class="header-search-bar-unified w-100" id="bladeSearchForm" onsubmit="event.preventDefault();">
                         <input
                             type="text"
@@ -418,16 +418,16 @@
                         </button>
                         <button type="submit" class="unified-search-submit-btn">
                             <i class="fa fa-search me-1"></i>
-                            <span>{{ $isBn ? 'Search' : 'Search' }}</span>
+                            <span>Search</span>
                         </button>
                     </form>
                     <div id="bladeSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
                 </div>
 
-                <!-- Right Action Icons: Language Pill + Dark Mode Moon/Sun + Auth Buttons -->
-                <div class="d-none d-lg-flex align-items-center header-right-actions gap-2 flex-shrink-0">
+                <!-- Right Action Icons: Language Pill + Dark Mode Moon/Sun + Auth Buttons (Generous Spacing) -->
+                <div class="d-none d-lg-flex align-items-center header-right-actions flex-shrink-0">
                     <!-- Language Switcher Pill [ EN | বাংলা ] -->
-                    <div class="header-lang-switcher-pill">
+                    <div class="header-lang-switcher-pill" style="margin-right: 16px !important;">
                         <button
                             type="button"
                             class="lang-btn {{ !$isBn ? 'active' : '' }}"
@@ -454,6 +454,7 @@
                         onclick="switchSiteTheme('{{ $siteTheme === 'dark' ? 'light' : 'dark' }}')"
                         title="{{ $siteTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode / ব্ল্যাক মোড' }}"
                         aria-label="Toggle Theme"
+                        style="margin-right: 16px !important;"
                     >
                         @if($siteTheme === 'dark')
                             <i class="fa fa-sun-o theme-icon-sun"></i>
@@ -469,8 +470,8 @@
                                 <i class="fa fa-tachometer me-2"></i> {{ $isBn ? 'ড্যাশবোর্ড' : 'Dashboard' }}
                             </a>
                         @else
-                            <div class="d-flex align-items-center gap-2">
-                                <a href="{{ route('login') }}" class="btn-golden-action-outline">
+                            <div class="d-flex align-items-center">
+                                <a href="{{ route('login') }}" class="btn-golden-action-outline" style="margin-right: 14px !important;">
                                     <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
                                 </a>
                                 <a href="{{ route('register.referlink') }}" class="btn-golden-action">
@@ -528,7 +529,7 @@
 
         <!-- Sub-Navigation Strip (Desktop Menu below Main Header) -->
         <div class="header-sub-nav-bar d-none d-lg-block">
-            <div class="container">
+            <div class="container-fluid px-3 px-xl-4">
                 <nav class="d-flex align-items-center sub-nav-links-row">
                     <a href="{{ route('/') }}" class="sub-nav-link-item {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
                     <a href="{{ route('about') }}" class="sub-nav-link-item {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>

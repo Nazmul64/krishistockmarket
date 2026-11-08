@@ -33,3 +33,4 @@ export const saveTheme = (theme) => {
     }
     applyTheme(theme);
 };
+

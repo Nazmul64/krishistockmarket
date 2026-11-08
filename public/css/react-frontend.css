@@ -77,12 +77,18 @@ body, html {
     display: flex;
     align-items: center;
     cursor: default;
+    flex: 1 1 0% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden;
 }
 .marquee-ticker-content {
     color: #e2e8f0;
     font-weight: 500;
     font-size: 13.5px;
     letter-spacing: 0.2px;
+    width: 100% !important;
+    display: block;
 }
 .top-header-bar {
     background: #090e1d;
@@ -1993,17 +1999,20 @@ body, html {
 
 
 /* ==========================================================================
-   PROMINENT SEARCH BAR (MODELED FROM USER REFERENCE IMAGE)
+   PROMINENT SEARCH BAR (EXPANDS TO FILL AVAILABLE SPACE ON LARGE SCREENS)
    ========================================================================== */
 .search-container-col {
     position: relative;
-    max-width: 580px;
-    margin: 0 16px;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 24px !important;
+    min-width: 260px;
 }
 
-@media (min-width: 1400px) {
+@media (max-width: 991.98px) {
     .search-container-col {
-        max-width: 640px;
+        margin: 0 10px !important;
     }
 }
 
@@ -2014,6 +2023,7 @@ body, html {
     border: 1.8px solid #ea580c;
     border-radius: 9999px;
     height: 44px;
+    width: 100% !important;
     padding: 0;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(234, 88, 12, 0.15);
@@ -2212,6 +2222,38 @@ body, html {
     padding: 3px 8px;
     border-radius: 6px;
     flex-shrink: 0;
+}
+
+/* ==========================================================================
+   HEADER RIGHT ACTIONS: LANGUAGE, THEME TOGGLE & AUTH BUTTONS SPACING
+   Guarantees generous spacing across all browsers & Bootstrap versions
+   ========================================================================== */
+.header-right-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    flex-shrink: 0 !important;
+}
+
+.header-right-actions .header-lang-switcher-pill {
+    margin-right: 16px !important;
+    flex-shrink: 0 !important;
+}
+
+.header-right-actions .header-theme-toggle-btn {
+    margin-right: 16px !important;
+    flex-shrink: 0 !important;
+}
+
+.header-right-actions .header-auth-buttons {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-shrink: 0 !important;
+}
+
+.header-right-actions .header-auth-buttons .btn-golden-action-outline {
+    margin-right: 14px !important;
 }
 
 /* ==========================================================================
