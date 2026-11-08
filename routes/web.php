@@ -61,7 +61,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () { return view('frontend.index');})->name('/');
+Route::get('/', [\App\Http\Controllers\FrontendController::class, 'index'])->name('/');
+Route::get('/api/home-data', [\App\Http\Controllers\FrontendController::class, 'apiHomepageData'])->name('api.home_data');
 Route::get('/about', function () {return view('frontend.about-us');})->name('about');
 Route::get('/gallery', function () {return view('frontend.gallery');})->name('gallery');
 Route::get('/contact', function () {return view('frontend.contact');})->name('contact');
@@ -69,27 +70,137 @@ Route::post('/contact/send', [ContactController::class, 'store'])->name('contact
 Route::get('/terms', function () {return view('frontend.terms');})->name('terms');
 Route::get('/privacy-policy', function () { return view('frontend.privacy');})->name('privacy');
 
-Auth::routes();
-// Dedicated Role Login Routes
-Route::get('/admin/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
-Route::get('/supplier/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('supplier.login');
-Route::get('/agent/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('agent.login');
-Route::get('/employee/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('employee.login');
+// Dedicated Role Login & Auth Routes (Section 2 - Isolated Login Mappings)
+Route::get('/admin/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'admin')->name('admin.login');
+Route::post('/admin/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'admin')->name('admin.login.post');
+Route::post('/admin/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'admin')->name('admin.logout');
+
+Route::get('/manager/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'manager')->name('manager.login');
+Route::post('/manager/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'manager')->name('manager.login.post');
+Route::post('/manager/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'manager')->name('manager.logout');
+
+Route::get('/employee/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'employee')->name('employee.login');
+Route::post('/employee/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'employee')->name('employee.login.post');
+Route::post('/employee/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'employee')->name('employee.logout');
+
+Route::get('/staff/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'staff')->name('staff.login');
+Route::post('/staff/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'staff')->name('staff.login.post');
+Route::post('/staff/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'staff')->name('staff.logout');
+
+Route::get('/support/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'support')->name('support.login');
+Route::post('/support/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'support')->name('support.login.post');
+Route::post('/support/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'support')->name('support.logout');
+
+Route::get('/security/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'security')->name('security.login');
+Route::post('/security/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'security')->name('security.login.post');
+Route::post('/security/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'security')->name('security.logout');
+
+Route::get('/audit/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'audit')->name('audit.login');
+Route::post('/audit/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'audit')->name('audit.login.post');
+Route::post('/audit/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'audit')->name('audit.logout');
+
+Route::get('/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'customer')->name('login');
+Route::post('/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'customer')->name('login.post');
+Route::post('/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'customer')->name('logout');
+
+// Registration routes
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'registerPost'])->name('register.submit');
 Route::get('/user/register', [RegisterController::class, 'showRegistrationForm'])->name('register.referlink');
 Route::post('/user/register', [RegisterController::class, 'registerPost'])->name('register.post');
 
-// Supplier Self Registration Routes
+// Supplier Registration Routes
+Route::get('/supplier/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'supplier')->name('supplier.login');
+Route::post('/supplier/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'supplier')->name('supplier.login.post');
 Route::get('/supplier/register', [RegisterController::class, 'showSupplierRegistrationForm'])->name('supplier.register');
 Route::post('/supplier/register', [RegisterController::class, 'supplierRegisterPost'])->name('supplier.register.post');
 
-
-
-
-// Common Route
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+// Common Profiles & Settings
 Route::resource('profile', 'App\Http\Controllers\ProfileController');
 Route::post('/profile/change', [ProfileController::class, 'changePasswordPost'])->name('profile.password.change');
+
+// Dedicated Role Dashboards & Isolated Portals (Section 2)
+// 1. Super Admin / Admin Portal
+Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('admin.dashboard')->middleware(['auth', 'portal:/admin']);
+
+// 2. Manager Portal
+Route::group(['prefix' => 'manager', 'middleware' => ['auth', 'portal:/manager']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Manager\ManagerDashboardController::class, 'index'])->name('manager.dashboard');
+    Route::get('/leave/approve/{id}', [\App\Http\Controllers\Manager\ManagerDashboardController::class, 'approveLeave'])->name('manager.leave.approve');
+});
+
+// 3. Employee Portal
+Route::group(['prefix' => 'employee', 'middleware' => ['auth', 'portal:/employee']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Employee\EmployeeDashboardController::class, 'index'])->name('employee.dashboard');
+    Route::get('/packages', [\App\Http\Controllers\Employee\EmployeeDashboardController::class, 'packages'])->name('employee.packages');
+    Route::post('/packages/store', [\App\Http\Controllers\Employee\EmployeeDashboardController::class, 'storePackage'])->name('employee.packages.store');
+});
+
+// 4. Operations Staff Portal
+Route::group(['prefix' => 'staff', 'middleware' => ['auth', 'portal:/staff']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Staff\StaffDashboardController::class, 'index'])->name('staff.dashboard');
+    Route::post('/task/escalate/{id}', [\App\Http\Controllers\Staff\StaffDashboardController::class, 'escalateTask'])->name('staff.task.escalate');
+});
+
+// 5. Customer Support Hub (Support Lead & Agent Dashboards)
+Route::group(['prefix' => 'support', 'middleware' => ['auth', 'portal:/support']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Support\SupportDashboardController::class, 'index'])->name('support.dashboard');
+    Route::get('/lead/dashboard', [\App\Http\Controllers\Support\SupportDashboardController::class, 'leadDashboard'])->name('support.lead.dashboard');
+    Route::get('/agent/dashboard', [\App\Http\Controllers\Support\SupportDashboardController::class, 'agentDashboard'])->name('support.agent.dashboard');
+    Route::post('/ticket/reply/{id}', [\App\Http\Controllers\Support\SupportDashboardController::class, 'reply'])->name('support.ticket.reply');
+    Route::post('/ticket/assign/{id}', [\App\Http\Controllers\Support\SupportDashboardController::class, 'assignTicket'])->name('support.ticket.assign');
+    Route::post('/ticket/status/{id}', [\App\Http\Controllers\Support\SupportDashboardController::class, 'updateStatus'])->name('support.ticket.status');
+});
+
+// 6. Cyber Security SOC Portal
+Route::group(['prefix' => 'security', 'middleware' => ['auth', 'portal:/security']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Security\SecurityDashboardController::class, 'index'])->name('security.dashboard');
+    Route::post('/block/add', [\App\Http\Controllers\Security\SecurityDashboardController::class, 'addBlock'])->name('security.block.add');
+    Route::get('/block/remove/{id}', [\App\Http\Controllers\Security\SecurityDashboardController::class, 'removeBlock'])->name('security.block.remove');
+    Route::get('/alert/ack/{id}', [\App\Http\Controllers\Security\SecurityDashboardController::class, 'acknowledgeAlert'])->name('security.alert.ack');
+    Route::post('/fraud/update/{id}', [\App\Http\Controllers\Security\SecurityDashboardController::class, 'updateFraud'])->name('security.fraud.update');
+});
+
+// 7. Compliance & Audit Portal (Read-only)
+Route::group(['prefix' => 'audit', 'middleware' => ['auth', 'portal:/audit']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Auditor\AuditorDashboardController::class, 'index'])->name('audit.dashboard');
+});
+
+// 8. Customer Member Portal
+Route::group(['prefix' => 'portal', 'middleware' => ['auth', 'portal:/portal']], function () {
+    Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('portal.dashboard');
+});
+
+// Customer Dashboard Aliases
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+Route::get('/user/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('user.dashboard');
+
+// Admin RBAC Management Routes
+Route::group(['prefix' => 'admin/rbac', 'middleware' => ['auth', 'role:super_admin,admin']], function () {
+    Route::get('/users', [\App\Http\Controllers\Admin\RbacManagementController::class, 'users'])->name('admin.rbac.users');
+    Route::post('/users/store', [\App\Http\Controllers\Admin\RbacManagementController::class, 'storeUser'])->name('admin.rbac.users.store');
+    Route::post('/users/update/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'updateUser'])->name('admin.rbac.users.update');
+    Route::get('/users/{id}/permissions', [\App\Http\Controllers\Admin\RbacManagementController::class, 'manageDirectPermissions'])->name('admin.rbac.users.permissions');
+    Route::post('/users/{id}/permissions/update', [\App\Http\Controllers\Admin\RbacManagementController::class, 'updateDirectPermissions'])->name('admin.rbac.users.permissions.update');
+    Route::post('/users/toggle-status/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'toggleStatus'])->name('admin.rbac.users.toggle_status');
+    Route::post('/users/force-logout/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'forceLogout'])->name('admin.rbac.users.force_logout');
+
+    Route::get('/roles', [\App\Http\Controllers\Admin\RbacManagementController::class, 'roles'])->name('admin.rbac.roles');
+    Route::post('/roles/store', [\App\Http\Controllers\Admin\RbacManagementController::class, 'storeRole'])->name('admin.rbac.roles.store');
+    Route::post('/roles/update/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'updateRole'])->name('admin.rbac.roles.update');
+    Route::post('/roles/clone/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'cloneRole'])->name('admin.rbac.roles.clone');
+    Route::post('/roles/archive/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'archiveRole'])->name('admin.rbac.roles.archive');
+
+    Route::get('/permissions', [\App\Http\Controllers\Admin\RbacManagementController::class, 'permissions'])->name('admin.rbac.permissions');
+    Route::get('/audit-logs', [\App\Http\Controllers\Admin\RbacManagementController::class, 'auditLogs'])->name('admin.rbac.audit_logs');
+
+    Route::get('/security-hub', [\App\Http\Controllers\Admin\RbacManagementController::class, 'securityHub'])->name('admin.rbac.security_hub');
+    Route::post('/blocklist/store', [\App\Http\Controllers\Admin\RbacManagementController::class, 'storeBlocklist'])->name('admin.rbac.blocklist.store');
+    Route::get('/blocklist/remove/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'removeBlocklist'])->name('admin.rbac.blocklist.remove');
+    Route::get('/alert/ack/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'acknowledgeAlert'])->name('admin.rbac.alert.ack');
+    Route::post('/fraud/update/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'updateFraudCase'])->name('admin.rbac.fraud.update');
+});
 
 
 // Admin Route
@@ -127,6 +238,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::get('/setting/slider', [SiteSettingController::class, 'SliderSetting'])->name('setting.slider');
     Route::post('/setting/slider/post', [SiteSettingController::class, 'SliderSettingPost'])->name('setting.slider.post');
     Route::get('/setting/slider/delete/{num}', [SiteSettingController::class, 'SliderDelete'])->name('setting.slider.delete');
+    Route::get('/setting/notice', [SiteSettingController::class, 'NoticeSetting'])->name('setting.notice');
+    Route::post('/setting/notice/post', [SiteSettingController::class, 'NoticeSettingPost'])->name('setting.notice.post');
+    Route::get('/setting/notice/delete', [SiteSettingController::class, 'NoticeDelete'])->name('setting.notice.delete');
     Route::get('/setting/offer-banner', [SiteSettingController::class, 'OfferBannerSetting'])->name('setting.offer_banner');
     Route::post('/setting/offer-banner/post', [SiteSettingController::class, 'OfferBannerPost'])->name('setting.offer_banner.post');
     Route::get('/setting/offer-banner/delete', [SiteSettingController::class, 'OfferBannerDelete'])->name('setting.offer_banner.delete');

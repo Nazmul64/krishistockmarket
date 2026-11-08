@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\AuditLog;
+use App\Models\SecurityAlert;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class AdminCheck
 {
     /**
-     * Handle an incoming request.
+     * Handle an incoming request for Admin portal isolation.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
@@ -17,55 +19,55 @@ class AdminCheck
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-
-            if ($user->role === 'admin') {
-                return $next($request);
-            }
-
-            if ($user->role === 'employee') {
-                $routeName = optional($request->route())->getName() ?: '';
-                $permissionKey = $this->getPermissionKeyForRoute($routeName, $request->path());
-
-                if ($permissionKey) {
-                    if ($user->hasPermission($permissionKey)) {
-                        return $next($request);
-                    }
-                    return redirect()->route('home')->with('error', 'আপনার এই পেজে প্রবেশের অনুমতি নেই।');
-                }
-
-                return $next($request);
-            }
-
-            return redirect()->route('home');
+        if (!Auth::check()) {
+            return redirect()->route('admin.login')->with('error', 'অনুগ্রহ করে অ্যাডমিন পোর্টালে লগইন করুন।');
         }
 
-        return redirect()->route('login');
-    }
+        $user = Auth::user();
 
-    /**
-     * Map route names or URL paths to permission keys.
-     */
-    private function getPermissionKeyForRoute($routeName, $path)
-    {
-        if (str_contains($routeName, 'admin.chat')) return 'live_chat';
-        if (str_contains($routeName, 'admin.contact_messages')) return 'contact_messages';
-        if (str_contains($routeName, 'admin.our_packages')) return 'our_packages';
-        if (str_contains($routeName, 'admin.card_numbers')) return 'card_numbers';
+        if (!$user->isActive()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login')->with('error', 'আপনার একাউন্টটি সাময়িকভাবে নিষ্ক্রিয় বা স্থগিত করা হয়েছে।');
+        }
 
-        if (str_contains($routeName, 'admin.stock_preset') || $routeName === 'admin.stock.index' || $routeName === 'admin.stock.allStock' || $routeName === 'admin.stock.post') return 'stock_management';
-        if ($routeName === 'admin.stock.list' || str_contains($routeName, 'admin.stock.pricing') || str_contains($routeName, 'admin.stock.add.price')) return 'set_stock_price';
-        if (str_contains($routeName, 'admin.stock.buyrequest') || str_contains($routeName, 'admin.stock.sellrequest') || str_contains($routeName, 'admin.buy.stock') || str_contains($routeName, 'admin.sell.stock')) return 'stock_buy_sell';
+        // Only super_admin or admin roles can access /admin routes
+        if ($user->hasRole('super_admin') || $user->hasRole('admin')) {
+            return $next($request);
+        }
 
-        if (str_contains($routeName, 'admin.monthly_bazaar')) return 'monthly_bazaar';
-        if ($routeName === 'alluser' || str_contains($routeName, 'admin.deposit') || str_contains($routeName, 'admin.reports') || str_contains($routeName, 'admin.user.')) return 'user_financial';
-        if (str_contains($routeName, 'admin.all.withdraw')) return 'withdraw';
-        if (str_contains($routeName, 'admin.employee') || str_contains($routeName, 'admin.agent_ledger')) return 'employee_agent';
-        if (str_contains($routeName, 'admin.suppliers')) return 'supplier_management';
-        if (str_contains($routeName, 'admin.hrm')) return 'hrm_management';
-        if (str_contains($routeName, 'setting.') || str_contains($routeName, 'admin.feature') || str_contains($routeName, 'admin.payment')) return 'settings';
+        // Zero-Trust Breach: Non-admin trying to access Admin domain
+        SecurityAlert::create([
+            'title'     => 'Cross-Portal Access Violation',
+            'severity'  => 'high',
+            'source_ip' => $request->ip(),
+            'target'    => $request->path(),
+            'status'    => 'active',
+            'details'   => "Zero Trust Breach: User '{$user->username}' (Role: {$user->role}) attempted unauthorized access to Admin Panel '{$request->path()}' from IP {$request->ip()}",
+        ]);
 
-        return null;
+        AuditLog::log(
+            'PORTAL_ACCESS_DENIED',
+            $user,
+            null,
+            ['attempted_path' => $request->path(), 'user_role' => $user->role],
+            "Cross-portal access denied: {$user->username} attempted Admin Panel access"
+        );
+
+        if ($request->expectsJson() || $request->isXmlHttpRequest()) {
+            return response()->json([
+                'status' => 'forbidden',
+                'error'  => 'Unauthorized Portal Access: আপনি এই পোর্টালে প্রবেশের অনুমতিপ্রাপ্ত নন।'
+            ], 403);
+        }
+
+        return response()->view('errors.portal_forbidden', [
+            'user'           => $user,
+            'requiredPortal' => '/admin',
+            'userPortal'     => $user->getPortalPrefix(),
+            'ownDashboard'   => $user->getDashboardRoute(),
+            'errorMessage'   => 'Unauthorized Portal Access: আপনি এই পোর্টালে প্রবেশের অনুমতিপ্রাপ্ত নন।'
+        ], 403);
     }
 }

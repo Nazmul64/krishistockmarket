@@ -46360,12 +46360,7 @@ img.online {
 /* .treeview.menu-open {
 
 } */
-.sidebar-menu>li.menu-open a {
-    background-color: rgba(255, 168, 0, 0) !important;
-    color: #ffa800 !important;
-    border-left: 0px solid rgba(255, 168, 0, 0) !important;
+.theme-warning.light-skin .sidebar-menu>li.treeview .treeview-menu li a {
+    color: #ffffff !important;
 }
 
-.theme-warning.light-skin .sidebar-menu>li.treeview .treeview-menu li a {
-    color: #000 !important;
-}

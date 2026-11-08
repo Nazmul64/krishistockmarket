@@ -3,11 +3,11 @@
 @section('content')
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
 
     body {
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%) !important;
+        font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif !important;
+        background: linear-gradient(135deg, #0b1120 0%, #1c1917 50%, #431407 100%) !important;
         min-height: 100vh;
         margin: 0;
         padding: 0;
@@ -25,18 +25,18 @@
     .auth-card {
         width: 100%;
         max-width: 480px;
-        background: rgba(255, 255, 255, 0.96);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
         border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4),
-                    0 0 35px rgba(16, 185, 129, 0.25);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                    0 0 35px rgba(245, 158, 11, 0.28);
         overflow: hidden;
         margin: 0 auto;
     }
 
     .brand-header {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #f59e0b 100%);
         padding: 32px 24px;
         text-align: center;
         color: #ffffff;
@@ -52,7 +52,7 @@
 
     .brand-header p {
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.95);
         margin: 0;
     }
 
@@ -93,7 +93,7 @@
         left: 16px;
         top: 50%;
         transform: translateY(-50%);
-        color: #64748b;
+        color: #94a3b8;
         font-size: 18px;
         z-index: 10;
         transition: color 0.2s ease;
@@ -117,34 +117,34 @@
     .custom-input:focus {
         outline: none;
         background: #ffffff;
-        border-color: #10b981;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
     }
 
     .custom-input-group:focus-within .input-icon {
-        color: #10b981;
+        color: #d97706;
     }
 
     .btn-register {
         width: 100%;
         height: 52px;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #f59e0b 100%);
         border: none;
         border-radius: 12px;
         color: #ffffff;
         font-size: 15px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 0.5px;
-        box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+        box-shadow: 0 10px 22px -5px rgba(234, 88, 12, 0.45);
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 8px;
     }
 
     .btn-register:hover {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        background: linear-gradient(135deg, #c2410c 0%, #b45309 50%, #d97706 100%);
         transform: translateY(-2px);
-        box-shadow: 0 14px 24px -5px rgba(16, 185, 129, 0.5);
+        box-shadow: 0 14px 26px -5px rgba(234, 88, 12, 0.6);
     }
 
     .auth-footer {
@@ -157,12 +157,13 @@
     }
 
     .auth-footer a {
-        color: #059669;
+        color: #d97706;
         font-weight: 700;
         text-decoration: none;
     }
 
     .auth-footer a:hover {
+        color: #ea580c;
         text-decoration: underline;
     }
 

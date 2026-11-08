@@ -9,7 +9,7 @@
     <meta name="author" content="">
     @php
         $site_setting = class_exists(\App\Models\Admin\SiteSetting::class) ? \App\Models\Admin\SiteSetting::first() : null;
-        $site_name = $site_setting->site_name ?? $site_setting->name ?? 'iKrishiPoribar';
+        $site_name = $site_setting->site_name ?? $site_setting->name ?? 'ekrishisheba';
         $site_logo = !empty($site_setting->logo) ? asset($site_setting->logo) : asset('assets/images/logo.png');
     @endphp
 
@@ -110,10 +110,10 @@
     <link rel="stylesheet" href="{{ asset('assets/plugin') }}/icons/iconsmind/style.css">
     <link rel="stylesheet" href="{{ asset('assets/plugin') }}/icons/icomoon/style.css">
     <link rel="stylesheet" href="{{ asset('assets/plugin') }}/vendor_components/animate/animate.css">
-    <link rel="stylesheet" href="{{ asset('assets/main/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/main/css/style.css') }}?v={{ file_exists(public_path('assets/main/css/style.css')) ? filemtime(public_path('assets/main/css/style.css')) : time() }}">
     <link rel="stylesheet" href="{{ asset('assets/main/css/skin_color.css') }}">
     <!-- Premium Modern Admin Custom Styles -->
-    <link rel="stylesheet" href="{{ asset('assets/main/css/modern_admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/main/css/modern_admin.css') }}?v={{ file_exists(public_path('assets/main/css/modern_admin.css')) ? filemtime(public_path('assets/main/css/modern_admin.css')) : time() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -131,20 +131,27 @@
         <header class="main-header">
             <div class="d-flex align-items-center logo-box justify-content-start">
 
+                <!-- Mobile Menu Hamburger Button -->
+                <a href="#" class="waves-effect waves-light nav-link push-btn btn-outline no-border d-inline-block d-md-none mobile-hamburger-btn me-2"
+                    data-toggle="push-menu" role="button" aria-label="Toggle Navigation" title="মেনু খুলুন">
+                    <i class="fa fa-bars font-size-22 text-white"></i>
+                </a>
+
+                <!-- Desktop Menu Push Button -->
                 <a href="{{ route('home') }}" class="waves-effect waves-light nav-link rounded d-none d-md-inline-block push-btn"
-                    data-toggle="push-menu" role="button">
+                    data-toggle="push-menu" role="button" title="Toggle Sidebar">
                     <img style="width: 46px;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}"
                         class="img-fluid svg-icon" alt="">
                 </a>
 
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="logo">
-                    <div class="logo-lg">
+                    <div class="logo-lg d-flex align-items-center">
                         <span class="light-logo">
-                            <img style="width: 46px;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
+                            <img style="width: 44px; max-height: 40px; object-fit: contain;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
                         </span>
                         <span class="dark-logo">
-                            <img style="width: 46px;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
+                            <img style="width: 44px; max-height: 40px; object-fit: contain;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
                         </span>
                     </div>
                 </a>
@@ -257,6 +264,19 @@
 
 
         <aside class="main-sidebar">
+            <!-- Mobile Sidebar Drawer Header with Close Button -->
+            <div class="sidebar-mobile-header d-flex align-items-center justify-content-between px-3 py-3 d-md-none" style="border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.35);">
+                <div class="d-flex align-items-center gap-2">
+                    <img style="width: 32px; height: 32px; object-fit: contain; background: transparent; padding: 0; border-radius: 0;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
+                    <div>
+                        <div class="text-white fw-bold font-size-14" style="line-height: 1.2;">ekrishisheba Admin</div>
+                        <small class="text-warning font-size-11">{{ Auth::user()->name ?? 'Administrator' }}</small>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-light rounded-circle sidebar-mobile-close-btn" id="sidebarMobileCloseBtn" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);" title="মেনু বন্ধ করুন">
+                    <i class="fa fa-times text-white font-size-15"></i>
+                </button>
+            </div>
             <!-- sidebar-->
             <section class="sidebar position-relative">
                 <div class="multinav">
@@ -266,17 +286,133 @@
                         <!-- sidebar menu-->
                         <ul class="sidebar-menu" data-widget="tree">
                             <!-- ================================= Common sidebar menu  Item-->
-                            <li class="{{ (optional(Request::route())->getName() == 'home') ? 'menu-open' : '' }}">
-                                <a href="{{ route('home') }}">
-                                    
-                                    <span>Dashboard</span>
+                            <li class="{{ (optional(Request::route())->getName() == 'home' || Str::contains(optional(Request::route())->getName(), 'dashboard')) ? 'menu-open active' : '' }}">
+                                <a href="{{ route(Auth::user()->getDashboardRoute()) }}">
+                                    <i class="ti-dashboard"></i>
+                                    <span>ড্যাশবোর্ড (Dashboard)</span>
                                 </a>
                             </li>
                             <!-- ================================= /Common sidebar menu  Item-->
 
+                        <!-- ================================= RBAC Management menu (Super Admin & Admin) -->
+                        @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">RBAC & Access Control</li>
+                            <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'admin.rbac') ? 'menu-open active' : '' }}">
+                                <a href="#">
+                                    <i class="ti-shield text-primary"></i>
+                                    <span>Role & Permission</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.rbac.users' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.rbac.users') }}"><i class="ti-user text-primary"></i> ব্যবহারকারী তালিকা (Users)</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.rbac.roles' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.rbac.roles') }}"><i class="ti-key text-info"></i> রোল ও পারমিশন (Roles)</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.rbac.permissions' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.rbac.permissions') }}"><i class="ti-layout-grid2 text-success"></i> পারমিশন ম্যাট্রিক্স</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.rbac.security_hub' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.rbac.security_hub') }}"><i class="ti-alert text-danger"></i> সিকিউরিটি ও অ্যালার্ট</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.rbac.audit_logs' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.rbac.audit_logs') }}"><i class="ti-time text-warning"></i> অডিট ট্রেইল (Audit Logs)</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+
+                        <!-- ================================= Manager Dedicated Menu -->
+                        @if (Auth::user()->hasRole('manager'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">ম্যানেজার মেনু</li>
+                            <li class="{{ optional(Request::route())->getName() == 'manager.dashboard' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('manager.dashboard') }}">
+                                    <i class="ti-briefcase text-primary"></i>
+                                    <span>টিম ড্যাশবোর্ড ও অনুমোদন</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        <!-- ================================= Staff Dedicated Menu -->
+                        @if (Auth::user()->hasRole('staff'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">স্টাফ মেনু</li>
+                            <li class="{{ optional(Request::route())->getName() == 'staff.dashboard' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('staff.dashboard') }}">
+                                    <i class="ti-tasks text-info"></i>
+                                    <span>অপারেশনাল কিউ</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        <!-- ================================= Support Dedicated Menu -->
+                        @if (Auth::user()->hasRole('support_agent') || Auth::user()->hasRole('support_lead'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">সাপোর্ট মেনু</li>
+                            <li class="{{ optional(Request::route())->getName() == 'support.dashboard' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('support.dashboard') }}">
+                                    <i class="ti-headphone-alt text-warning"></i>
+                                    <span>সাপোর্ট টিকেট ও ভেরিফিকেশন</span>
+                                </a>
+                            </li>
+                            <li class="{{ optional(Request::route())->getName() == 'admin.chat.index' ? 'active' : '' }}">
+                                <a href="{{ route('admin.chat.index') }}">
+                                    <i class="ti-comments text-success"></i>
+                                    <span>লাইভ চ্যাট হাব</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        <!-- ================================= Security Dedicated Menu -->
+                        @if (Auth::user()->hasRole('security_analyst'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">সিকিউরিটি মেনু</li>
+                            <li class="{{ optional(Request::route())->getName() == 'security.dashboard' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('security.dashboard') }}">
+                                    <i class="ti-shield text-danger"></i>
+                                    <span>সাইবার অ্যালার্ট ও ফ্রড চেক</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        <!-- ================================= Auditor Dedicated Menu -->
+                        @if (Auth::user()->hasRole('auditor'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">অডিট মেনু</li>
+                            <li class="{{ optional(Request::route())->getName() == 'audit.dashboard' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('audit.dashboard') }}">
+                                    <i class="ti-eye text-success"></i>
+                                    <span>সিস্টেম অডিট ট্রেইল</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        <!-- ================================= Employee Dedicated Menu -->
+                        @if (Auth::user()->hasRole('employee'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">এমপ্লয়ী মেনু</li>
+                            <li class="{{ optional(Request::route())->getName() == 'employee.dashboard' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('employee.dashboard') }}">
+                                    <i class="ti-layout-grid2 text-primary"></i>
+                                    <span>আমার ড্যাশবোর্ড</span>
+                                </a>
+                            </li>
+                            @if (Auth::user()->hasPermission('packages.view') || Auth::user()->hasPermission('packages.upload_image'))
+                            <li class="{{ optional(Request::route())->getName() == 'employee.packages' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('employee.packages') }}">
+                                    <i class="ti-package text-success"></i>
+                                    <span>আওয়ার প্যাকেজসমূহ</span>
+                                </a>
+                            </li>
+                            @endif
+                            <li class="{{ optional(Request::route())->getName() == 'employee.stock_ledger.index' ? 'menu-open active' : '' }}">
+                                <a href="{{ route('employee.stock_ledger.index') }}">
+                                    <i class="ti-archive text-warning"></i>
+                                    <span>লাইভ স্টক লেজার</span>
+                                </a>
+                            </li>
+                        @endif
+
                         <!-- ================================= Admin sidebar menu-->
-                        <!-- ================================= Admin sidebar menu-->
-                        @if (Auth::user()->role == "admin" || Auth::user()->role == "employee")
+                        @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
 
                             @if(Auth::user()->hasPermission('card_numbers'))
                             <li class="{{ (optional(Request::route())->getName() == 'admin.card_numbers.index') ? 'menu-open' : '' }}">
@@ -286,7 +422,7 @@
                             </li>
                             @endif
 
-                            @if(Auth::user()->hasPermission('our_packages'))
+                            @if(Auth::user()->hasPermission('packages.view') || Auth::user()->hasPermission('our_packages'))
                             <li class="{{ (optional(Request::route())->getName() == 'admin.our_packages.index') ? 'active menu-open' : '' }}">
                                 <a href="{{ route('admin.our_packages.index') }}">
                                     <i class="ti-package text-success"></i>
@@ -295,7 +431,7 @@
                             </li>
                             @endif
 
-                            @if(Auth::user()->hasPermission('our_packages') || Auth::user()->role_id == 1)
+                            @if(Auth::user()->hasPermission('packages.view') || Auth::user()->hasPermission('our_packages') || Auth::user()->role_id == 1)
                             <li class="{{ (Str::startsWith(optional(Request::route())->getName(), 'admin.card_benefits')) ? 'active menu-open' : '' }}">
                                 <a href="{{ route('admin.card_benefits.index') }}">
                                     <i class="ti-id-badge text-warning"></i>
@@ -321,7 +457,7 @@
                             </li>
                             @endif
 
-                            @if(Auth::user()->hasPermission('live_chat'))
+                            @if(Auth::user()->hasPermission('chat.view') || Auth::user()->hasPermission('live_chat'))
                             <li class="header">লাইভ চ্যাট ম্যানেজমেন্ট</li>
                             <li class="treeview {{ (optional(Request::route())->getName() == 'admin.chat.index') ? 'active menu-open' : '' }}">
                                 <a href="#">
@@ -608,6 +744,12 @@
                                         <a href="{{ route('setting.index') }}#about_us_full_text">
                                             <i class="ti-more"></i>
                                             <span>Pages (About, Privacy, Terms)</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'setting.notice') ? 'active' : '' }}">
+                                        <a href="{{ route('setting.notice') }}">
+                                            <i class="ti-more"></i>
+                                            <span class="text-warning fw-bold"><i class="fa fa-bullhorn me-1"></i> Marquee Notice (নোটিশ)</span>
                                         </a>
                                     </li>
                                     <li class="">
@@ -921,9 +1063,9 @@
                             <div class="copyright text-start m-25">
                                 <p class="text-center">
                                     <strong class="d-block">
-                                        <a href="http://ikrishiporibar.shop/">ikrishiporibar</a>
+                                        <a href="#">ekrishisheba</a>
                                     </strong>
-                                    © 2023 All Rights Reserved
+                                    © {{ date('Y') }} All Rights Reserved
                                 </p>
                             </div>
                         </div>
@@ -932,6 +1074,9 @@
                 </div>
             </section>
         </aside>
+
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
         @yield('content')
 
@@ -1157,6 +1302,147 @@
                 });
             }
         });
+    </script>
+
+    <!-- Dynamic Sidebar Active Menu & Full Mobile Controller -->
+    <script>
+        (function ($) {
+            'use strict';
+
+            // Auto Highlight and Expand Active Menu Item
+            function activateSidebarRoute() {
+                var currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+                var currentHref = window.location.href.split('#')[0].split('?')[0].replace(/\/+$/, '');
+                var $sidebar = $('.sidebar-menu');
+                if (!$sidebar.length) return;
+
+                var bestMatch = null;
+                var maxMatchLen = 0;
+
+                // Loop through every link in sidebar
+                $sidebar.find('a').each(function () {
+                    var $link = $(this);
+                    var rawHref = $link.attr('href');
+                    if (!rawHref || rawHref === '#' || rawHref.startsWith('javascript:')) return;
+
+                    var linkHref = (this.href || '').split('#')[0].split('?')[0].replace(/\/+$/, '');
+                    var linkPath = (this.pathname || '').replace(/\/+$/, '') || '/';
+
+                    // 1. Exact Match (Highest Priority)
+                    if (currentHref === linkHref || currentPath === linkPath) {
+                        bestMatch = $link;
+                        maxMatchLen = 99999;
+                        return false; // Exact match found, stop looking
+                    }
+
+                    // 2. Prefix Match (for sub-routes like edit, create, show)
+                    // Ensure we don't accidentally match root "/" or "/admin" unless exact
+                    if (linkPath !== '/' && linkPath !== '/admin' && currentPath.indexOf(linkPath) === 0) {
+                        if (linkPath.length > maxMatchLen) {
+                            maxMatchLen = linkPath.length;
+                            bestMatch = $link;
+                        }
+                    }
+                });
+
+                if (bestMatch && bestMatch.length) {
+                    // Remove other active items inside submenus to prevent stale multi-highlights
+                    $sidebar.find('li.active:not(.treeview)').removeClass('active');
+                    $sidebar.find('a.active').removeClass('active');
+
+                    // Highlight the matched item
+                    bestMatch.addClass('active');
+                    var $parentLi = bestMatch.closest('li');
+                    $parentLi.addClass('active');
+
+                    // If inside treeview, open and expand all parent treeviews
+                    var $treeviews = bestMatch.parents('li.treeview');
+                    if ($treeviews.length) {
+                        $treeviews.each(function () {
+                            var $tv = $(this);
+                            $tv.addClass('active menu-open');
+                            var $menu = $tv.children('.treeview-menu');
+                            $menu.show().css('display', 'block');
+                            $tv.find('> a .pull-right-container .fa-angle-right').css('transform', 'rotate(90deg)');
+                        });
+                    }
+
+                    // Scroll the active menu item into view in the sidebar
+                    setTimeout(function () {
+                        var activeEl = bestMatch[0];
+                        var scrollContainer = document.querySelector('.multinav-scroll') || document.querySelector('.main-sidebar');
+                        if (activeEl && scrollContainer) {
+                            var rect = activeEl.getBoundingClientRect();
+                            var containerRect = scrollContainer.getBoundingClientRect();
+                            if (rect.top < containerRect.top || rect.bottom > containerRect.bottom) {
+                                activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    }, 200);
+                }
+            }
+
+            // Mobile Navigation & Backdrop Overlay Handlers
+            function initMobileDrawer() {
+                var $body = $('body');
+                var $overlay = $('#sidebarOverlay');
+                var $closeBtn = $('#sidebarMobileCloseBtn');
+
+                // Close mobile sidebar
+                function closeMobileMenu() {
+                    $body.removeClass('sidebar-open');
+                }
+
+                // Overlay click/touch closes sidebar
+                if ($overlay.length) {
+                    $overlay.on('click touchstart', function (e) {
+                        e.preventDefault();
+                        closeMobileMenu();
+                    });
+                }
+
+                // Close button inside sidebar
+                if ($closeBtn.length) {
+                    $closeBtn.on('click', function (e) {
+                        e.preventDefault();
+                        closeMobileMenu();
+                    });
+                }
+
+                // Close drawer when content-wrapper is clicked on mobile
+                $(document).on('click', '.content-wrapper', function () {
+                    if ($(window).width() <= 767 && $body.hasClass('sidebar-open')) {
+                        closeMobileMenu();
+                    }
+                });
+
+                // When user clicks a sidebar menu link on mobile, auto-close sidebar after navigation starts
+                $('.sidebar-menu').on('click', 'a', function () {
+                    var href = $(this).attr('href');
+                    if (href && href !== '#' && !href.startsWith('javascript:')) {
+                        // Immediately highlight clicked link
+                        $('.sidebar-menu li.active:not(.treeview)').removeClass('active');
+                        $('.sidebar-menu a.active').removeClass('active');
+                        $(this).addClass('active').closest('li').addClass('active');
+
+                        if ($(window).width() <= 767) {
+                            setTimeout(closeMobileMenu, 200);
+                        }
+                    }
+                });
+            }
+
+            // Run on Ready and Window Load
+            $(document).ready(function () {
+                activateSidebarRoute();
+                initMobileDrawer();
+            });
+
+            $(window).on('load', function () {
+                activateSidebarRoute();
+            });
+
+        })(jQuery);
     </script>
 
     @yield('script')

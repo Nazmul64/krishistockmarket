@@ -143,6 +143,7 @@ class SiteSettingController extends Controller
         }
 
         SiteSetting::updateOrCreate(['name' => 'title'], ['value' => $request->title ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'top_notice'], ['value' => $request->top_notice ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address1'], ['value' => $request->address1 ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address2'], ['value' => $request->address2 ?? '']);
         SiteSetting::updateOrCreate(['name' => 'phone1'], ['value' => $request->phone1 ?? '']);
@@ -157,6 +158,12 @@ class SiteSettingController extends Controller
         SiteSetting::updateOrCreate(['name' => 'terms_conditions'], ['value' => $request->terms_conditions ?? '']);
         SiteSetting::updateOrCreate(['name' => 'privacy_policy'], ['value' => $request->privacy_policy ?? '']);
         SiteSetting::updateOrCreate(['name' => 'about_us_full_text'], ['value' => $request->about_us_full_text ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'instagram_link'], ['value' => $request->instagram_link ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'youtube_link'], ['value' => $request->youtube_link ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'footer_about'], ['value' => $request->footer_about ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'footer_copyright'], ['value' => $request->footer_copyright ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'footer_developed_by'], ['value' => $request->footer_developed_by ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'footer_developed_by_url'], ['value' => $request->footer_developed_by_url ?? '']);
 
         return back()->with('success', 'Update Successfull');
     }
@@ -210,6 +217,40 @@ class SiteSettingController extends Controller
         }
 
         return back()->with('success', 'অফার ব্যানার সফলভাবে আপডেট করা হয়েছে');
+    }
+
+    public function NoticeSetting()
+    {
+        $current_notice = setting('top_notice') ?: (setting('notice') ?: '');
+        $notice_status = setting('notice_status') !== '0';
+        return view('admin.setting.notice', compact('current_notice', 'notice_status'));
+    }
+
+    public function NoticeSettingPost(Request $request)
+    {
+        $request->validate([
+            'top_notice' => 'required|string|max:1000',
+        ]);
+
+        SiteSetting::updateOrCreate(
+            ['name' => 'top_notice'],
+            ['value' => trim($request->input('top_notice'))]
+        );
+
+        SiteSetting::updateOrCreate(
+            ['name' => 'notice_status'],
+            ['value' => $request->has('notice_status') ? '1' : '0']
+        );
+
+        return back()->with('success', 'মারকুই নোটিশ সফলভাবে আপডেট করা হয়েছে!');
+    }
+
+    public function NoticeDelete()
+    {
+        SiteSetting::where('name', 'top_notice')->delete();
+        SiteSetting::where('name', 'notice')->delete();
+
+        return back()->with('success', 'মারকুই নোটিশ সফলভাবে মুছে ফেলা হয়েছে');
     }
 
     public function OfferBannerDelete()

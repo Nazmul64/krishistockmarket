@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets') }}/css/rtl.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets') }}/css/style.css">
     <link id="color" href="{{ asset('frontend/assets') }}/css/color-schemes/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/react-frontend.css') }}?v={{ file_exists(public_path('css/react-frontend.css')) ? filemtime(public_path('css/react-frontend.css')) : time() }}">
     <style>
         body, html {
             font-family: 'Hind Siliguri', 'Poppins', sans-serif !important;
@@ -79,15 +80,16 @@
             z-index: 10 !important;
         }
         .ownavigation a.navbar-brand img {
-            height: 52px !important;
-            max-height: 52px !important;
+            height: 75px !important;
+            max-height: 75px !important;
             width: auto !important;
+            min-width: 75px !important;
             display: block !important;
             position: static !important;
-            background: #fff;
-            padding: 4px 10px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: transparent !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
         }
         .ownavigation .navbar-nav .nav-link {
             font-family: 'Hind Siliguri', 'Poppins', sans-serif;
@@ -190,6 +192,7 @@
 </head>
 
 <body data-offset="200" data-spy="scroll" data-target=".ownavigation">
+    @if(!Route::is('/'))
     <!-- Loader -->
     <div id="site-loader" class="load-complete">
         <div class="loader">
@@ -203,245 +206,293 @@
         </div>
     </div><!-- Loader /- -->
 
-    <!-- Top Header Bar -->
-    <div class="top-header-bar d-none d-md-block">
+    <!-- Dynamic Marquee Notice Top Header Bar - Aligned with Container -->
+    <div class="top-marquee-notice-bar">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center flex-wrap" style="font-size: 13px;">
-                    @if(setting('phone1'))
-                        <a href="tel:{{ setting('phone1') }}" class="me-4"><i class="fa fa-phone text-info me-1"></i> {{ setting('phone1') }}</a>
-                    @endif
-                    @if(setting('email1'))
-                        <a href="mailto:{{ setting('email1') }}" class="me-4"><i class="fa fa-envelope text-info me-1"></i> {{ setting('email1') }}</a>
-                    @endif
-                    @if(setting('address1'))
-                        <span class="me-3 text-light"><i class="fa fa-map-marker text-info me-1"></i> {{ setting('address1') }}</span>
-                    @endif
+            <div class="d-flex align-items-center gap-3">
+                <!-- Notice Badge -->
+                <div class="marquee-badge-wrap d-flex align-items-center gap-2 flex-shrink-0">
+                    <span class="marquee-live-dot"></span>
+                    <i class="fa fa-bullhorn marquee-icon"></i>
+                    <span class="marquee-badge-title">নোটিশ:</span>
                 </div>
-                <div class="d-flex align-items-center">
-                    @if(setting('facbook_link'))
-                        <a href="{{ setting('facbook_link') }}" target="_blank" title="Facebook" class="me-3"><i class="fa fa-facebook"></i></a>
-                    @endif
-                    @if(setting('linkedin_link'))
-                        <a href="{{ setting('linkedin_link') }}" target="_blank" title="Linkedin" class="me-3"><i class="fa fa-linkedin"></i></a>
-                    @endif
-                    @if(setting('twitter_link'))
-                        <a href="{{ setting('twitter_link') }}" target="_blank" title="Twitter" class="me-3"><i class="fa fa-twitter"></i></a>
-                    @endif
-                    @auth
-                        <a href="{{ route('dashboard') }}" title="ড্যাশবোর্ড" class="fw-bold text-success ms-2"><i class="fa fa-user me-1"></i> ড্যাশবোর্ড</a>
-                    @else
-                        <a href="{{ route('login') }}" title="লগইন" class="me-3 ms-2"><i class="fa fa-sign-in me-1"></i> লগইন</a>
-                        <a href="{{ route('register') }}" title="রেজিস্ট্রেশন" class="text-info"><i class="fa fa-user-plus me-1"></i> রেজিস্ট্রেশন</a>
-                    @endauth
+
+                <!-- Scrolling Marquee Area -->
+                <div className="marquee-ticker-wrap flex-grow-1 overflow-hidden" style="overflow: hidden; width: 100%;">
+                    <marquee behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();" class="marquee-ticker-content">
+                        {{ setting('top_notice') ?: (setting('notice') ?: 'কৃষি পরিবারে স্বাগতম! আধুনিক ও নিরাপদ কৃষি বিনিয়োগের নির্ভরযোগ্য ডিজিটাল প্ল্যাটফর্ম।') }}
+                    </marquee>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Header Section -->
-    <header class="container-fluid no-left-padding no-right-padding header_s header_s1 sticky-top bg-white shadow-sm">
+    <!-- Golden Sticky Navbar Header -->
+    <header class="react-main-header golden-navbar sticky-top">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between header-inner-row">
+                <!-- Brand Logo -->
+                <a href="{{ route('/') }}" class="react-brand-logo">
+                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="{{ setting('title') }}" />
+                </a>
 
-        <!-- Menu Block -->
-        <div class="menu-block">
-            <!-- Container -->
-            <div class="container">
-                <nav class="navbar ownavigation navbar-expand-lg">
-                    <a class="navbar-brand" href="{{ route('/') }}">
-                        <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="Logo" />
-                    </a>
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                        data-target="#navbar3" aria-controls="navbar3" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbar3">
-                        <ul class="navbar-nav ms-auto align-items-center">
-                            <li class="{{ Route::is('/') ? 'active' : '' }}">
-                                <a class="nav-link" title="হোম" href="{{ route('/') }}">হোম</a>
-                            </li>
-                            <li class="{{ Route::is('about') ? 'active' : '' }}">
-                                <a class="nav-link" title="আমাদের সম্পর্কে" href="{{ route('about') }}">আমাদের সম্পর্কে</a>
-                            </li>
-                            <li class="{{ Route::is('stock.index') ? 'active' : '' }}">
-                                <a class="nav-link" title="স্টক মার্কেট" href="{{ route('stock.index') }}">স্টক মার্কেট</a>
-                            </li>
-                            <li class="{{ Route::is('gallery') ? 'active' : '' }}">
-                                <a class="nav-link" title="গ্যালারি" href="{{ route('gallery') }}">গ্যালারি</a>
-                            </li>
-                            <li class="{{ Route::is('contact') ? 'active' : '' }}">
-                                <a class="nav-link" title="যোগাযোগ" href="{{ route('contact') }}">যোগাযোগ</a>
-                            </li>
-                            <li class="{{ Route::is('terms') ? 'active' : '' }}">
-                                <a class="nav-link" title="টার্মস এন্ড কন্ডিশন" href="{{ route('terms') }}">টার্মস এন্ড কন্ডিশন</a>
-                            </li>
-                            <li class="{{ Route::is('privacy') ? 'active' : '' }}">
-                                <a class="nav-link" title="প্রাইভেসি এন্ড পলিসি" href="{{ route('privacy') }}">প্রাইভেসি এন্ড পলিসি</a>
-                            </li>
-                            @auth
-                                <li><a class="nav-link btn-nav-register" title="ড্যাশবোর্ড" href="{{ route('dashboard') }}"><i class="fa fa-tachometer me-1"></i> ড্যাশবোর্ড</a></li>
-                            @else
-                                <li><a class="nav-link btn-nav-register" title="লগইন" href="{{ route('login') }}"><i class="fa fa-sign-in me-1"></i> লগইন</a></li>
-                            @endauth
-                        </ul>
-                    </div>
+                <!-- Desktop Navigation Links -->
+                <nav class="d-none d-lg-flex align-items-center main-desktop-nav">
+                    <a href="{{ route('/') }}" class="desktop-nav-link-golden {{ Route::is('/') ? 'active' : '' }}">হোম</a>
+                    <a href="{{ route('about') }}" class="desktop-nav-link-golden {{ Route::is('about') ? 'active' : '' }}">আমাদের সম্পর্কে</a>
+                    <a href="{{ route('stock.index') }}" class="desktop-nav-link-golden {{ Route::is('stock.*') ? 'active' : '' }}">স্টক মার্কেট</a>
+                    <a href="{{ route('gallery') }}" class="desktop-nav-link-golden {{ Route::is('gallery') ? 'active' : '' }}">গ্যালারি</a>
+                    <a href="{{ route('contact') }}" class="desktop-nav-link-golden {{ Route::is('contact') ? 'active' : '' }}">যোগাযোগ</a>
+                    <a href="{{ route('terms') }}" class="desktop-nav-link-golden {{ Route::is('terms') ? 'active' : '' }}">টার্মস এন্ড কন্ডিশন</a>
+                    <a href="{{ route('privacy') }}" class="desktop-nav-link-golden {{ Route::is('privacy') ? 'active' : '' }}">প্রাইভেসি এন্ড পলিসি</a>
                 </nav>
 
-            </div><!-- Container /- -->
-        </div>
-        <!-- Menu Block /- -->
+                <!-- Desktop Golden Action Button -->
+                <div class="d-none d-lg-flex align-items-center gap-2">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="btn-golden-action">
+                            <i class="fa fa-tachometer me-2"></i> ড্যাশবোর্ড
+                        </a>
+                    @else
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('login') }}" class="btn-golden-action-outline">
+                                <i class="fa fa-sign-in me-1"></i> লগইন
+                            </a>
+                            <a href="{{ route('register.referlink') }}" class="btn-golden-action">
+                                <i class="fa fa-user-plus me-1"></i> রেজিস্ট্রেশন
+                            </a>
+                        </div>
+                    @endauth
+                </div>
 
-    </header><!-- Header Section /- -->
+                <!-- Mobile Toggle Button -->
+                <div class="d-flex d-lg-none align-items-center">
+                    <button
+                        type="button"
+                        class="mobile-nav-toggle-btn-golden"
+                        onclick="document.getElementById('bladeMobileDrawer').classList.toggle('open'); document.getElementById('bladeDrawerOverlay').classList.toggle('show');"
+                        aria-label="Toggle Navigation"
+                    >
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Slide-out Drawer for Blade Pages -->
+    <div id="bladeDrawerOverlay" class="mobile-drawer-overlay" onclick="document.getElementById('bladeMobileDrawer').classList.remove('open'); this.classList.remove('show');"></div>
+    <div id="bladeMobileDrawer" class="mobile-nav-drawer">
+        <div class="mobile-drawer-header golden-drawer-head">
+            <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="Logo" class="mobile-drawer-logo" />
+            <button class="mobile-drawer-close" onclick="document.getElementById('bladeMobileDrawer').classList.remove('open'); document.getElementById('bladeDrawerOverlay').classList.remove('show');">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <div class="mobile-drawer-body">
+            <div class="mobile-user-card mb-3">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa fa-tachometer"></i> ড্যাশবোর্ডে প্রবেশ করুন
+                    </a>
+                @else
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('login') }}" class="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
+                            <i class="fa fa-sign-in me-1"></i> লগইন
+                        </a>
+                        <a href="{{ route('register.referlink') }}" class="btn btn-golden-action w-50 py-2 text-center">
+                            <i class="fa fa-user-plus me-1"></i> রেজিস্টার
+                        </a>
+                    </div>
+                @endauth
+            </div>
+
+            <ul class="mobile-nav-list">
+                <li class="mobile-nav-item">
+                    <a href="{{ route('/') }}" class="mobile-nav-link {{ Route::is('/') ? 'active' : '' }}">
+                        <span>হোম</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('about') }}" class="mobile-nav-link {{ Route::is('about') ? 'active' : '' }}">
+                        <span>আমাদের সম্পর্কে</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('stock.index') }}" class="mobile-nav-link {{ Route::is('stock.*') ? 'active' : '' }}">
+                        <span>স্টক মার্কেট</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('gallery') }}" class="mobile-nav-link {{ Route::is('gallery') ? 'active' : '' }}">
+                        <span>গ্যালারি</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('contact') }}" class="mobile-nav-link {{ Route::is('contact') ? 'active' : '' }}">
+                        <span>যোগাযোগ</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('terms') }}" class="mobile-nav-link {{ Route::is('terms') ? 'active' : '' }}">
+                        <span>টার্মস এন্ড কন্ডিশন</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('privacy') }}" class="mobile-nav-link {{ Route::is('privacy') ? 'active' : '' }}">
+                        <span>প্রাইভেসি এন্ড পলিসি</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mobile-drawer-contact mt-4 pt-3 border-top">
+                <div class="small text-muted mb-2 fw-bold">জরুরী হেল্পলাইন:</div>
+                @if(setting('phone1'))
+                    <a href="tel:{{ setting('phone1') }}" class="d-block text-dark mb-2 small text-decoration-none">
+                        <i class="fa fa-phone text-warning me-2"></i> {{ setting('phone1') }}
+                    </a>
+                @endif
+                @if(setting('email1'))
+                    <a href="mailto:{{ setting('email1') }}" class="d-block text-dark small text-decoration-none" style="word-break: break-all;">
+                        <i class="fa fa-envelope text-warning me-2"></i> {{ setting('email1') }}
+                    </a>
+                @endif
+            </div>
+        </div>
+    </div>
+    @endif
 
     @yield("content")
-    <!-- Footer Main -->
-    <footer class="container-fluid no-left-padding no-right-padding footer-main footer-section2">
-        <!-- Main Footer Widgets (4 Columns) -->
-        <div class="container-fluid no-left-padding no-right-padding footer-widget" style="background: #1e242b; padding-top: 50px; padding-bottom: 30px;">
+
+    @if(!Route::is('/'))
+    <!-- Unified Modern Colorful Footer -->
+    <footer class="react-main-footer-colorful">
+        <div class="footer-glow-bar"></div>
+
+        <div class="footer-top-wrap py-5">
             <div class="container">
-                <div class="row">
-                    <!-- Column 1: About & Logo -->
-                    <div class="col-lg-3 col-md-6 col-sm-12 mb-4 mb-lg-0">
-                        <aside class="widget widget_about">
-                            <a class="ftr-logo d-inline-block mb-3" href="{{ route('/') }}">
-                                <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="Logo" style="max-height: 55px; background: #fff; padding: 5px 12px; border-radius: 8px;">
+                <div class="row g-4">
+                    <!-- Col 1: About -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="footer-col-content">
+                            <a href="{{ route('/') }}" class="footer-brand-logo d-inline-block mb-3">
+                                <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="{{ setting('title') }}" />
                             </a>
-                            <p style="color: #a0aab5; font-size: 14px; line-height: 1.6; margin-top: 15px; margin-bottom: 20px;">
-                                কৃষি পরিবার - আপনার কৃষি সেবা, স্টকের সঠিক মূল্য এবং আর্থিক সমৃদ্ধির নির্ভরযোগ্য ডিজিটাল মাধ্যম।
+                            <p class="footer-about-text">
+                                {{ setting('footer_about', 'কৃষি পরিবার - আপনার কৃষি সেবা, স্টকের সঠিক মূল্য এবং আর্থিক সমৃদ্ধির নির্ভরযোগ্য ডিজিটাল মাধ্যম।') }}
                             </p>
-                        </aside>
+                        </div>
                     </div>
 
-                    <!-- Column 2: Quick Links -->
-                    <div class="col-lg-3 col-md-6 col-sm-12 mb-4 mb-lg-0">
-                        <aside class="widget widget_links">
-                            <h3 class="widget-title" style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #1b88ce; display: inline-block; padding-bottom: 5px;">প্রয়োজনীয় লিঙ্ক</h3>
-                            <ul style="list-style: none; padding: 0; margin: 0;">
-                                <li style="margin-bottom: 8px;"><a href="{{ route('/') }}" style="color: #a0aab5; text-decoration: none; font-size: 14px; transition: color 0.2s;"><i class="fa fa-angle-right text-info me-2"></i> হোমপেজ</a></li>
-                                <li style="margin-bottom: 8px;"><a href="{{ route('about') }}" style="color: #a0aab5; text-decoration: none; font-size: 14px; transition: color 0.2s;"><i class="fa fa-angle-right text-info me-2"></i> আমাদের সম্পর্কে</a></li>
-                                <li style="margin-bottom: 8px;"><a href="{{ route('privacy') }}" style="color: #a0aab5; text-decoration: none; font-size: 14px; transition: color 0.2s;"><i class="fa fa-angle-right text-info me-2"></i> প্রাইভেসি পলিসি</a></li>
-                                <li style="margin-bottom: 8px;"><a href="{{ route('terms') }}" style="color: #a0aab5; text-decoration: none; font-size: 14px; transition: color 0.2s;"><i class="fa fa-angle-right text-info me-2"></i> টার্মস এন্ড কন্ডিশনস</a></li>
-                                <li style="margin-bottom: 8px;"><a href="{{ route('gallery') }}" style="color: #a0aab5; text-decoration: none; font-size: 14px; transition: color 0.2s;"><i class="fa fa-angle-right text-info me-2"></i> গ্যালারি</a></li>
-                                <li style="margin-bottom: 8px;"><a href="{{ route('contact') }}" style="color: #a0aab5; text-decoration: none; font-size: 14px; transition: color 0.2s;"><i class="fa fa-angle-right text-info me-2"></i> যোগাযোগ</a></li>
+                    <!-- Col 2: Quick Links -->
+                    <div class="col-6 col-md-6 col-lg-3">
+                        <div class="footer-col-content">
+                            <h4 class="footer-col-title">প্রয়োজনীয় লিঙ্ক</h4>
+                            <ul class="footer-links-list">
+                                <li><a href="{{ route('/') }}"><i class="fa fa-angle-right me-2 text-warning"></i> হোমপেজ</a></li>
+                                <li><a href="{{ route('about') }}"><i class="fa fa-angle-right me-2 text-warning"></i> আমাদের সম্পর্কে</a></li>
+                                <li><a href="{{ route('stock.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> স্টক মার্কেট</a></li>
+                                <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রোডাক্ট গ্যালারি</a></li>
+                                <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রাইভেসি পলিসি</a></li>
+                                <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> টার্মস এন্ড কন্ডিশন</a></li>
                             </ul>
-                        </aside>
+                        </div>
                     </div>
 
-                    <!-- Column 3: Contact Info & Support -->
-                    <div class="col-lg-3 col-md-6 col-sm-12 mb-4 mb-lg-0">
-                        <aside class="widget widget_contact_info">
-                            <h3 class="widget-title" style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #1b88ce; display: inline-block; padding-bottom: 5px;">যোগাযোগ করুন</h3>
-                            <ul style="list-style: none; padding: 0; margin: 0; color: #a0aab5; font-size: 14px;">
-                                <li style="margin-bottom: 12px; display: flex; align-items: flex-start;">
-                                    <i class="fa fa-map-marker text-info me-2" style="font-size: 16px; margin-top: 3px; margin-right: 10px;"></i>
-                                    <span>{{ setting('address1') }} {{ setting('address2') }}</span>
-                                </li>
-                                <li style="margin-bottom: 12px; display: flex; align-items: center;">
-                                    <i class="fa fa-phone text-info me-2" style="font-size: 16px; margin-right: 10px;"></i>
-                                    <span>{{ setting('phone1') }} / {{ setting('phone2') }}</span>
-                                </li>
-                                <li style="margin-bottom: 12px; display: flex; align-items: center;">
-                                    <i class="fa fa-envelope text-info me-2" style="font-size: 16px; margin-right: 10px;"></i>
-                                    <span>{{ setting('email1') }}</span>
-                                </li>
+                    <!-- Col 3: Contact Info -->
+                    <div class="col-6 col-md-6 col-lg-3">
+                        <div class="footer-col-content">
+                            <h4 class="footer-col-title">যোগাযোগ করুন</h4>
+                            <ul class="footer-contact-info-list">
+                                @if(setting('address1'))
+                                    <li>
+                                        <i class="fa fa-map-marker text-warning mt-1"></i>
+                                        <span>{{ setting('address1') }}@if(setting('address2') && setting('address2') !== setting('address1')), {{ setting('address2') }}@endif</span>
+                                    </li>
+                                @endif
+                                @if(setting('phone1'))
+                                    <li>
+                                        <i class="fa fa-phone text-warning mt-1"></i>
+                                        <a href="tel:{{ setting('phone1') }}">{{ setting('phone1') }}</a>
+                                    </li>
+                                @endif
+                                @if(setting('email1'))
+                                    <li>
+                                        <i class="fa fa-envelope text-warning mt-1"></i>
+                                        <a href="mailto:{{ setting('email1') }}" style="word-break: break-all; overflow-wrap: anywhere;">{{ setting('email1') }}</a>
+                                    </li>
+                                @endif
                             </ul>
-                        </aside>
+                        </div>
                     </div>
 
-                    <!-- Column 4: Social Media Icons -->
-                    <div class="col-lg-3 col-md-6 col-sm-12">
-                        <aside class="widget widget_social_media">
-                            <h3 class="widget-title" style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #1b88ce; display: inline-block; padding-bottom: 5px;">সোশ্যাল মিডিয়া</h3>
-                            <p style="color: #a0aab5; font-size: 13.5px; line-height: 1.5; margin-bottom: 18px;">আমাদের সাথে সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন ও সর্বশেষ আপডেট পান।</p>
-                            
-                            <style>
-                                .ftr-social-icons {
-                                    display: flex;
-                                    align-items: center;
-                                    gap: 12px;
-                                    flex-wrap: wrap;
-                                    padding: 0;
-                                    margin: 0;
-                                }
-                                .ftr-social-icon-btn {
-                                    width: 42px;
-                                    height: 42px;
-                                    display: inline-flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    border-radius: 50%;
-                                    color: #fff !important;
-                                    font-size: 18px;
-                                    text-decoration: none !important;
-                                    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-                                    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-                                }
-                                .ftr-social-icon-btn:hover {
-                                    transform: translateY(-4px) scale(1.08);
-                                }
-                                .ftr-social-icon-btn.fb { background: #1877f2; }
-                                .ftr-social-icon-btn.fb:hover { box-shadow: 0 6px 15px rgba(24, 119, 242, 0.45); }
-                                
-                                .ftr-social-icon-btn.insta { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
-                                .ftr-social-icon-btn.insta:hover { box-shadow: 0 6px 15px rgba(214, 36, 159, 0.45); }
-                                
-                                .ftr-social-icon-btn.tw { background: #1da1f2; }
-                                .ftr-social-icon-btn.tw:hover { box-shadow: 0 6px 15px rgba(29, 161, 242, 0.45); }
-                                
-                                .ftr-social-icon-btn.in { background: #0a66c2; }
-                                .ftr-social-icon-btn.in:hover { box-shadow: 0 6px 15px rgba(10, 102, 194, 0.45); }
-                            </style>
-
-                            <div class="ftr-social-icons">
+                    <!-- Col 4: Social Media -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="footer-col-content">
+                            <h4 class="footer-col-title">সোশ্যাল মিডিয়া</h4>
+                            <p class="footer-social-desc">
+                                আমাদের সাথে সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন ও সর্বশেষ আপডেট পান।
+                            </p>
+                            <div class="footer-social-buttons">
                                 @if(setting('facbook_link'))
-                                <a href="{{ setting('facbook_link') }}" target="_blank" class="ftr-social-icon-btn fb" title="Facebook">
-                                    <i class="fa fa-facebook"></i>
-                                </a>
+                                    <a href="{{ setting('facbook_link') }}" target="_blank" rel="noreferrer" class="ftr-btn fb" title="Facebook">
+                                        <i class="fa fa-facebook"></i>
+                                    </a>
                                 @endif
-
-                                <a href="https://instagram.com" target="_blank" class="ftr-social-icon-btn insta" title="Instagram">
-                                    <i class="fa fa-instagram"></i>
-                                </a>
-
+                                @if(setting('instagram_link'))
+                                    <a href="{{ setting('instagram_link') }}" target="_blank" rel="noreferrer" class="ftr-btn insta" title="Instagram">
+                                        <i class="fa fa-instagram"></i>
+                                    </a>
+                                @endif
                                 @if(setting('twitter_link'))
-                                <a href="{{ setting('twitter_link') }}" target="_blank" class="ftr-social-icon-btn tw" title="Twitter">
-                                    <i class="fa fa-twitter"></i>
-                                </a>
+                                    <a href="{{ setting('twitter_link') }}" target="_blank" rel="noreferrer" class="ftr-btn tw" title="Twitter">
+                                        <i class="fa fa-twitter"></i>
+                                    </a>
                                 @endif
-
                                 @if(setting('linkedin_link'))
-                                <a href="{{ setting('linkedin_link') }}" target="_blank" class="ftr-social-icon-btn in" title="LinkedIn">
-                                    <i class="fa fa-linkedin"></i>
-                                </a>
+                                    <a href="{{ setting('linkedin_link') }}" target="_blank" rel="noreferrer" class="ftr-btn in" title="LinkedIn">
+                                        <i class="fa fa-linkedin"></i>
+                                    </a>
                                 @endif
                             </div>
-                        </aside>
+                        </div>
                     </div>
-
                 </div>
             </div>
-        </div><!-- Top Footer /- -->
+        </div>
 
-        <!-- Bottom Footer -->
-        <div class="container-fluid no-left-padding no-right-padding bottom-footer" style="background: #161a1e; padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.08);">
+        <!-- Bottom Bar -->
+        <div class="footer-bottom-bar py-3">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6 text-center text-md-start">
-                        <p style="color: #94a3b8; font-size: 14px; margin: 0;">
-                            © {{ date('Y') }} <a href="{{ route('/') }}" style="color: #38bdf8; text-decoration: none; font-weight: 600;">iKrishiPoribar</a>. All Rights Reserved.
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-12 col-md-6 text-center text-md-start mb-2 mb-md-0">
+                        <p class="copyright-text mb-0">
+                            {{ setting('footer_copyright', '© '.date('Y').' iKrishiPoribar. All Rights Reserved.') }}
                         </p>
                     </div>
-                    <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
-                        <p style="color: #64748b; font-size: 13px; margin: 0;">
-                            Smart Agriculture & Stock Market Solutions
+                    <div class="col-12 col-md-6 text-center text-md-end">
+                        <p class="developed-by-text mb-0">
+                            @if(setting('footer_developed_by_url'))
+                                <a href="{{ setting('footer_developed_by_url') }}" target="_blank" rel="noreferrer" class="developed-by-link">
+                                    {{ setting('footer_developed_by', 'Smart Agriculture & Stock Market Solutions') }}
+                                </a>
+                            @else
+                                <span>{{ setting('footer_developed_by', 'Smart Agriculture & Stock Market Solutions') }}</span>
+                            @endif
                         </p>
                     </div>
                 </div>
             </div>
-        </div><!-- Bottom Footer /- -->
+        </div>
 
+        <!-- Floating Scroll to Top -->
+        <button type="button" class="scroll-to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Scroll to top">
+            <i class="fa fa-arrow-up"></i>
+        </button>
     </footer>
-    <!-- Footer Main /- -->
+    @endif
+
 
     <!-- JQuery v1.12.4 -->
     <script src="{{ asset('frontend/assets') }}/js/jquery-1.12.4.min.js"></script>
@@ -457,7 +508,7 @@
     <script type="text/javascript"
         src="{{ asset('frontend/assets') }}/revolution/js/jquery.themepunch.revolution.min.js"></script>
 
-    <!-- SLIDER REVOLUTION 5.0 EXTENSIONS  (Load Extensions only on Local File Systems !  The following part can be removed on Server for On Demand Loading) -->
+    <!-- SLIDER REVOLUTION 5.0 EXTENSIONS -->
     <script type="text/javascript"
         src="{{ asset('frontend/assets') }}/revolution/js/extensions/revolution.extension.actions.min.js"></script>
     <script type="text/javascript"
@@ -482,6 +533,9 @@
 
     <!-- Library - Theme JS -->
     <script src="{{ asset('frontend/assets') }}/js/functions.js"></script>
+
+    <!-- React Application Bundle -->
+    <script src="{{ asset('js/app.js') }}"></script>
 
     @include('components.chat-widget')
 

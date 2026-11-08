@@ -126,14 +126,20 @@
                         </div>
 
                         <div class="box-footer p-3 bg-white border-top">
-                            <form id="adminReplyForm" onsubmit="sendAdminReply(event)">
-                                @csrf
-                                <input type="hidden" id="activeSessionId" name="session_id" value="">
-                                <div class="input-group">
-                                    <input type="text" id="adminReplyInput" name="message" class="form-control form-control-lg" placeholder="এখানে উত্তর লিখুন..." disabled required autocomplete="off">
-                                    <button type="submit" class="btn btn-primary px-4 fw-bold" id="adminSendBtn" disabled><i class="fa fa-paper-plane me-1"></i> পাঠান</button>
+                            @if(auth()->user()->hasPermission('chat.reply'))
+                                <form id="adminReplyForm" onsubmit="sendAdminReply(event)">
+                                    @csrf
+                                    <input type="hidden" id="activeSessionId" name="session_id" value="">
+                                    <div class="input-group">
+                                        <input type="text" id="adminReplyInput" name="message" class="form-control form-control-lg" placeholder="এখানে উত্তর লিখুন..." disabled required autocomplete="off">
+                                        <button type="submit" class="btn btn-primary px-4 fw-bold" id="adminSendBtn" disabled><i class="fa fa-paper-plane me-1"></i> পাঠান</button>
+                                    </div>
+                                </form>
+                            @else
+                                <div class="p-3 bg-light rounded text-center border text-muted">
+                                    <i class="fa fa-eye me-1 text-info"></i> আপনি শুধু চ্যাট পর্যবেক্ষণ করতে পারেন (View-Only Mode)। কাস্টমারকে উত্তর দেওয়ার জন্য <span class="badge bg-warning text-dark">chat.reply</span> পারমিশন প্রয়োজন।
                                 </div>
-                            </form>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -148,14 +154,14 @@ let chatPollInterval = null;
 
 function loadAdminSession(sessionId, element) {
     currentActiveSession = sessionId;
-    document.getElementById('activeSessionId').value = sessionId;
+    if (document.getElementById('activeSessionId')) document.getElementById('activeSessionId').value = sessionId;
     
     // Highlight list item
     document.querySelectorAll('.session-item').forEach(el => el.classList.remove('active', 'bg-light'));
     if(element) element.classList.add('bg-light');
 
-    document.getElementById('adminReplyInput').disabled = false;
-    document.getElementById('adminSendBtn').disabled = false;
+    if (document.getElementById('adminReplyInput')) document.getElementById('adminReplyInput').disabled = false;
+    if (document.getElementById('adminSendBtn')) document.getElementById('adminSendBtn').disabled = false;
 
     fetchSessionMessages(sessionId);
 

@@ -118,6 +118,11 @@ class ChatController extends Controller
      */
     public function adminIndex(Request $request)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('chat.view')) {
+            abort(403, "Action Forbidden: 'chat.view' পারমিশন নেই।");
+        }
+
         $selectedRole = $request->query('role'); // 'user', 'employee', 'supplier', 'agent'
 
         $query = ChatMessage::select('session_id')
@@ -202,6 +207,11 @@ class ChatController extends Controller
      */
     public function adminFetchSession($sessionId)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('chat.view')) {
+            return response()->json(['status' => 'error', 'message' => "Action Forbidden: 'chat.view' পারমিশন নেই।"], 403);
+        }
+
         // Mark as read
         ChatMessage::where('session_id', $sessionId)
             ->where('sender_type', 'user')
@@ -223,6 +233,11 @@ class ChatController extends Controller
      */
     public function adminSendReply(Request $request)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('chat.reply')) {
+            return response()->json(['status' => 'error', 'message' => "Action Forbidden: 'chat.reply' পারমিশন নেই।"], 403);
+        }
+
         $request->validate([
             'session_id' => 'required|string',
             'message' => 'required|string|max:2000',

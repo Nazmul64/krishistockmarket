@@ -12,16 +12,23 @@ class SupplierChecker
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     * @param  \Closure  $next
+     * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            if (Auth::user()->role == "supplier") {
+            $user = Auth::user();
+            if (!$user->isActive()) {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'আপনার একাউন্টটি নিষ্ক্রিয় করা হয়েছে।');
+            }
+
+            if ($user->hasRole('supplier') || $user->hasRole('super_admin') || $user->hasRole('admin')) {
                 return $next($request);
             }
-            return redirect()->route('home');
+
+            return redirect()->route($user->getDashboardRoute())->with('error', 'সাপ্লায়ার প্যানেলে অন্য ব্যবহারকারীর প্রবেশের অনুমতি নেই।');
         }
 
         return redirect()->route('login');

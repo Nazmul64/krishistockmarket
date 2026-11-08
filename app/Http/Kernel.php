@@ -67,5 +67,9 @@ class Kernel extends HttpKernel
         'UserChacker' => \App\Http\Middleware\UserChacker::class,
         'EmployeeChacker' => \App\Http\Middleware\EmployeeChacker::class,
         'SupplierChecker' => \App\Http\Middleware\SupplierChecker::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
+        'permission' => \App\Http\Middleware\CheckPermission::class,
+        'authorize' => \App\Http\Middleware\CheckPermission::class,
+        'portal' => \App\Http\Middleware\PortalGuard::class,
     ];
 }

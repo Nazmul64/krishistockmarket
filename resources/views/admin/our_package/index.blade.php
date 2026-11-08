@@ -26,14 +26,22 @@
                             <form method="POST" action="{{ route('admin.our_packages.store') }}" enctype="multipart/form-data">
                                 @csrf
 
-                                <div class="form-group mb-4">
-                                    <label class="form-label fw-bold">প্যাকেজ ছবি (Package Image) <span class="text-danger">*</span></label>
-                                    <input type="file" class="form-control form-control-lg" name="image" required accept="image/*">
-                                    <small class="text-muted d-block mt-1">প্যাকেজের ছবি বা ব্যানার সিলেক্ট করুন (JPG, PNG, WEBP)</small>
-                                    @error('image') <span class="text-danger small">{{ $message }}</span> @enderror
-                                </div>
+                                @if(auth()->user()->hasPermission('packages.upload_image') || auth()->user()->hasPermission('packages.create'))
+                                    <div class="form-group mb-4">
+                                        <label class="form-label fw-bold">প্যাকেজ ছবি (Package Image) <span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control form-control-lg" name="image" required accept="image/*">
+                                        <small class="text-muted d-block mt-1">প্যাকেজের ছবি বা ব্যানার সিলেক্ট করুন (JPG, PNG, WEBP)</small>
+                                        @error('image') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    </div>
 
-                                <button type="submit" class="btn btn-success w-100 py-2 fs-15 fw-bold"><i class="fa fa-upload me-1"></i> আপলোড করুন</button>
+                                    <button type="submit" class="btn btn-success w-100 py-2 fs-15 fw-bold btn-upload"><i class="fa fa-upload me-1"></i> Upload Image / আপলোড করুন</button>
+                                @else
+                                    <div class="p-3 bg-light rounded text-center border">
+                                        <i class="fa fa-lock text-warning fa-2x mb-2 d-block"></i>
+                                        <p class="fw-bold text-dark mb-1">ছবি আপলোড অনুমতি নেই</p>
+                                        <p class="text-muted small mb-0">আপনার কাছে ছবি আপলোডের পারমিশন নেই (View-Only Mode)।</p>
+                                    </div>
+                                @endif
                             </form>
                         </div>
                     </div>
@@ -67,7 +75,11 @@
                                                 {{ $item->created_at ? $item->created_at->format('d M, Y - h:i A') : 'N/A' }}
                                             </td>
                                             <td class="text-center">
-                                                <a href="{{ route('admin.our_packages.destroy', $item->id) }}" class="btn btn-sm btn-danger px-3" onclick="return confirm('আপনি কি নিশ্চিত যে এই ইমেজটি ডিলিট করতে চান?')" title="Delete"><i class="fa fa-trash me-1"></i> ডিলিট</a>
+                                                @if(auth()->user()->hasPermission('packages.manage'))
+                                                    <a href="{{ route('admin.our_packages.destroy', $item->id) }}" class="btn btn-sm btn-danger px-3" onclick="return confirm('আপনি কি নিশ্চিত যে এই ইমেজটি ডিলিট করতে চান?')" title="Delete"><i class="fa fa-trash me-1"></i> ডিলিট</a>
+                                                @else
+                                                    <span class="badge bg-secondary-light text-muted small"><i class="fa fa-lock me-1"></i> Read-Only</span>
+                                                @endif
                                             </td>
                                         </tr>
                                         @empty

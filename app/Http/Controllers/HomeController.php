@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AdminBuyStock;
 use App\Models\BuyStock;
 use App\Models\SellStock;
 use App\Models\User;
@@ -23,48 +22,62 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show the application dashboard according to authenticated user's role.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\RedirectResponse
      */
-    public function index(){
+    public function index()
+    {
+        $user = Auth::user();
 
-        $user_info = User::where('id', Auth::user()->id)->first();
-        if ($user_info->role == "admin") {
-
-            $all_user = User::where('role', "user")->get();
-            $employee = User::where('role', "employee")->get();
-            $admin = User::where('role', "admin")->get();
-            $all_sell = SellStock::where("status",'aproved')->sum('selled_price');
-            $all_buy = BuyStock::where("status",'aproved')->sum('buyed_price');
-
-            return view('admin.admin-home',[
-                'all_user' => $all_user,
-                'employee' => $employee,
-                'admin' => $admin,
-                'all_sell' => $all_sell,
-                'all_buy' => $all_buy,
-            ]);
-        } elseif($user_info->role == "employee") {
-            return view('employee.employee-home');
-        } elseif($user_info->role == "supplier") {
-            return redirect()->route('supplier.dashboard');
-        } else {
-
-            $all_sell = SellStock::where('user_id', Auth::user()->id)->where("status",'aproved')->sum('selled_price');
-            $all_buy = BuyStock::where('user_id', Auth::user()->id)->where("status",'aproved')->sum('buyed_price');
-            $user_profit = UserProfite::where('user_id', Auth::user()->id)->sum('profit');
-            return view('users.user-home',[
-                'all_sell' => $all_sell,
-                'all_buy' => $all_buy,
-                'user_profit' => $user_profit,
-            ]);
+        // 1. Account status check
+        if (!$user->isActive()) {
+            Auth::logout();
+            return redirect()->route('login')->with('error', 'আপনার একাউন্টটি সাময়িকভাবে নিষ্ক্রিয় বা স্থগিত করা হয়েছে।');
         }
+
+        // 2. Strict Role-based Dashboard Redirection (No matching dashboards between roles)
+        if ($user->hasRole('super_admin') || $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->hasRole('manager')) {
+            return redirect()->route('manager.dashboard');
+        }
+
+        if ($user->hasRole('employee')) {
+            return redirect()->route('employee.dashboard');
+        }
+
+        if ($user->hasRole('staff')) {
+            return redirect()->route('staff.dashboard');
+        }
+
+        if ($user->hasRole('support_agent') || $user->hasRole('support_lead')) {
+            return redirect()->route('support.dashboard');
+        }
+
+        if ($user->hasRole('security_analyst')) {
+            return redirect()->route('security.dashboard');
+        }
+
+        if ($user->hasRole('auditor')) {
+            return redirect()->route('audit.dashboard');
+        }
+
+        if ($user->hasRole('supplier') || $user->hasRole('seller')) {
+            return redirect()->route('supplier.dashboard');
+        }
+
+        // 3. Customer / General User Dashboard
+        $all_sell = SellStock::where('user_id', $user->id)->where('status', 'aproved')->sum('selled_price');
+        $all_buy = BuyStock::where('user_id', $user->id)->where('status', 'aproved')->sum('buyed_price');
+        $user_profit = UserProfite::where('user_id', $user->id)->sum('profit');
+
+        return view('users.user-home', [
+            'all_sell'    => $all_sell,
+            'all_buy'     => $all_buy,
+            'user_profit' => $user_profit,
+        ]);
     }
-
-
-
-
-
-
 }

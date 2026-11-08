@@ -40,10 +40,9 @@
 
 
                                         <div class="form-group pb-4">
-
                                             <div class="row ">
                                                 <label class="col-lg-6 control-label text-lg-start pt-2"
-                                                    for="title">Title</label>
+                                                    for="title">Website Title (টাইটেল)</label>
                                                 <div class="col-lg-6">
                                                     <input type="text" class="form-control" id="title" name="title"
                                                         title="Enter Site Title" value="{{ setting('title') }}">
@@ -54,7 +53,18 @@
                                                     </span>
                                                 </div>
                                             </div>
+                                        </div>
 
+                                        <div class="form-group pb-4">
+                                            <div class="row ">
+                                                <label class="col-lg-6 control-label text-lg-start pt-2 text-primary fw-bold"
+                                                    for="top_notice"><i class="fa fa-bullhorn text-warning me-1"></i> Top Marquee Notice (শীর্ষ স্ক্রোলিং নোটিশ)</label>
+                                                <div class="col-lg-6">
+                                                    <textarea class="form-control" id="top_notice" name="top_notice" rows="2"
+                                                        placeholder="ওয়েবসাইটের শীর্ষে স্ক্রোল করার নোটিশ বা ঘোষণা লিখুন...">{{ setting('top_notice') ?: (setting('notice') ?: 'কৃষি পরিবারে স্বাগতম! আধুনিক ও নিরাপদ কৃষি বিনিয়োগের নির্ভরযোগ্য ডিজিটাল প্ল্যাটফর্ম।') }}</textarea>
+                                                    <small class="text-muted">এই নোটিশটি ওয়েবসাইটের একদম উপরে স্বয়ংক্রিয়ভাবে স্ক্রোল করবে।</small>
+                                                </div>
+                                            </div>
                                         </div>
 
 
@@ -330,6 +340,53 @@
                                             </div>
                                         </div>
 
+
+                                    <div class="col-12 my-3">
+                                        <hr>
+                                        <h4 class="text-primary fw-bold mb-3"><i class="fa fa-sliders me-2"></i> Footer & Branding Settings (ফুটার ও ব্র্যান্ডিং সেটিংস)</h4>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                        <div class="form-group pb-3">
+                                            <label class="form-label fw-bold" for="footer_about">Footer About Text (ফুটারে কোম্পানি পরিচিতি)</label>
+                                            <textarea class="form-control" id="footer_about" name="footer_about" rows="3" placeholder="ফুটার সম্পর্কে টেক্সট...">{{ setting('footer_about', 'কৃষি পরিবার - আপনার কৃষি সেবা, স্টকের সঠিক মূল্য এবং আর্থিক সমৃদ্ধির নির্ভরযোগ্য ডিজিটাল মাধ্যম।') }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                        <div class="form-group pb-3">
+                                            <label class="form-label fw-bold" for="footer_copyright">Footer Copyright Text (কপিরাইট টেক্সট)</label>
+                                            <input type="text" class="form-control" id="footer_copyright" name="footer_copyright" value="{{ setting('footer_copyright', '© '.date('Y').' iKrishiPoribar. All Rights Reserved.') }}" placeholder="© 2026 iKrishiPoribar. All Rights Reserved.">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                        <div class="form-group pb-3">
+                                            <label class="form-label fw-bold" for="footer_developed_by">Developed By / Sub-tagline (ডেভেলপড বাই / সাব-ট্যাগলাইন)</label>
+                                            <input type="text" class="form-control" id="footer_developed_by" name="footer_developed_by" value="{{ setting('footer_developed_by', 'Smart Agriculture & Stock Market Solutions') }}" placeholder="Developed by or Tagline">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                        <div class="form-group pb-3">
+                                            <label class="form-label fw-bold" for="footer_developed_by_url">Developed By Link URL (ডেভেলপারের ওয়েবসাইট/লিঙ্ক)</label>
+                                            <input type="url" class="form-control" id="footer_developed_by_url" name="footer_developed_by_url" value="{{ setting('footer_developed_by_url', '') }}" placeholder="https://yourwebsite.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                        <div class="form-group pb-3">
+                                            <label class="form-label fw-bold" for="instagram_link">Instagram Link</label>
+                                            <input type="url" class="form-control" id="instagram_link" name="instagram_link" value="{{ setting('instagram_link', '') }}" placeholder="https://instagram.com/...">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 mb-3">
+                                        <div class="form-group pb-3">
+                                            <label class="form-label fw-bold" for="youtube_link">YouTube Link</label>
+                                            <input type="url" class="form-control" id="youtube_link" name="youtube_link" value="{{ setting('youtube_link', '') }}" placeholder="https://youtube.com/...">
+                                        </div>
+                                    </div>
 
                                     <div class="col-12 my-3">
                                         <hr>

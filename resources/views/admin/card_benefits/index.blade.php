@@ -7,13 +7,13 @@
     <div class="container-full">
         <!-- Content Header -->
         <div class="content-header">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div>
-                    <h3 class="page-title fw-bold text-dark"><i class="fa fa-id-card me-2 text-primary"></i> কার্ড সুবিধা ম্যানেজমেন্ট (Card Benefits)</h3>
-                    <p class="text-muted mb-0">হোমপেজে প্রদর্শিত কৃষি এসএমই নরমাল (রেড) ও গোল্ডেন কার্ডের বিশেষ সুবিধাসমূহ পরিচালনা করুন</p>
+                    <h3 class="page-title fw-bold text-dark"><i class="fa fa-id-card me-2 text-warning"></i> কার্ড সুবিধা ম্যানেজমেন্ট (Card Benefits)</h3>
+                    <p class="text-muted mb-0">হোমপেজে প্রদর্শিত কৃষি এসএমই নরমাল (রেড) ও গোল্ডেন কার্ডের বিশেষ সুবিধাসমূহ পরিচালনা, এডিট ও ডিলিট করুন</p>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary shadow-sm px-4 py-2" data-bs-toggle="modal" data-bs-target="#addCardModal" data-toggle="modal" data-target="#addCardModal">
+                    <button type="button" class="btn btn-warning shadow-sm px-4 py-2 fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#addCardModal" data-toggle="modal" data-target="#addCardModal">
                         <i class="fa fa-plus-circle me-1"></i> নতুন কার্ড সুবিধা যোগ করুন
                     </button>
                 </div>
@@ -29,30 +29,131 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fa fa-exclamation-circle me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <!-- Summary Table of All Cards -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="box shadow-sm border-0 rounded-4">
+                        <div class="box-header with-border bg-light d-flex align-items-center justify-content-between py-3">
+                            <h4 class="box-title text-dark fw-bold mb-0">
+                                <i class="fa fa-list me-2 text-primary"></i> সকল কার্ডের তালিকা ({{ count($cards) }} টি কার্ড)
+                            </h4>
+                            <span class="badge bg-primary px-3 py-2">হোমপেজে লাইভ প্রদর্শিত</span>
+                        </div>
+                        <div class="box-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 50px;">#</th>
+                                            <th style="width: 90px;">কার্ড ছবি</th>
+                                            <th>কার্ডের নাম ও টাইপ</th>
+                                            <th>কালার / ব্যাজ</th>
+                                            <th>কার্ড ফি ও লিমিট</th>
+                                            <th>লভ্যাংশ ও নোটিশ</th>
+                                            <th style="width: 100px;">স্ট্যাটাস</th>
+                                            <th class="text-center" style="width: 180px;">অ্যাকশন</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($cards as $key => $card)
+                                        <tr>
+                                            <td class="fw-bold">{{ $key + 1 }}</td>
+                                            <td>
+                                                @if($card->image && file_exists(public_path($card->image)))
+                                                    <img src="{{ asset($card->image) }}" alt="{{ $card->card_name }}" style="width: 70px; height: 45px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff;">
+                                                @else
+                                                    <span class="badge bg-light text-muted border p-2"><i class="fa fa-id-card"></i> ছবি নেই</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <div class="fw-bold text-dark fs-15">{{ $card->card_name }}</div>
+                                                <small class="text-muted"><code class="text-primary">{{ strtoupper($card->card_type) }}</code> | {{ $card->card_number_sample ?: 'No Sample' }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge px-3 py-1 fw-bold text-white mb-1 d-inline-block" style="background: {{ $card->card_color_theme == 'gold' ? '#d97706' : ($card->card_color_theme == 'red' ? '#dc2626' : '#2563eb') }};">
+                                                    {{ $card->badge_text ?: 'মেম্বারশিপ' }}
+                                                </span>
+                                                <div class="small text-muted">থিম: {{ ucfirst($card->card_color_theme) }}</div>
+                                            </td>
+                                            <td>
+                                                <div class="small"><strong>ফি:</strong> {{ $card->card_fee ?: 'N/A' }}</div>
+                                                <div class="small text-success"><strong>লিমিট:</strong> {{ $card->investment_limit ?: 'N/A' }}</div>
+                                            </td>
+                                            <td>
+                                                <div class="small text-muted" style="max-width: 250px;">
+                                                    {{ Str::limit($card->monthly_profit ?: $card->withdrawal_notice ?: 'N/A', 60) }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge {{ $card->status == 1 ? 'bg-success' : 'bg-secondary' }} px-2 py-1">
+                                                    {{ $card->status == 1 ? 'সক্রিয়' : 'নিষ্ক্রিয়' }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="d-flex justify-content-center gap-2">
+                                                    <a href="{{ route('admin.card_benefits.edit', $card->id) }}" class="btn btn-sm btn-info text-white px-3 fw-bold" title="Edit Card">
+                                                        <i class="fa fa-edit me-1"></i> এডিট
+                                                    </a>
+                                                    <a href="{{ route('admin.card_benefits.delete', $card->id) }}" onclick="return confirm('আপনি কি নিশ্চিত এই কার্ড সুবিধা মুছে ফেলতে চান?')" class="btn btn-sm btn-danger px-3 fw-bold" title="Delete Card">
+                                                        <i class="fa fa-trash me-1"></i> ডিলিট
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center py-4 text-muted">
+                                                কোনো কার্ড সুবিধা তৈরি করা নেই। উপরের 'নতুন কার্ড সুবিধা যোগ করুন' বাটনে ক্লিক করে যোগ করুন।
+                                            </td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Visual Card Previews with Action Buttons -->
             <div class="row">
+                <div class="col-12 mb-3">
+                    <h4 class="fw-bold text-dark"><i class="fa fa-id-card-o me-2 text-warning"></i> কার্ডের প্রিভিউ ও বিস্তারিত তথ্য</h4>
+                </div>
+
                 @forelse($cards as $card)
                 <div class="col-lg-6 col-12 mb-4">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden" style="border: 2px solid {{ $card->card_color_theme == 'gold' ? '#eab308' : ($card->card_color_theme == 'red' ? '#ef4444' : '#3b82f6') }} !important;">
-                        <!-- Card Top Header -->
-                        <div class="card-header d-flex align-items-center justify-content-between text-white py-3" style="background: {{ $card->card_color_theme == 'gold' ? 'linear-gradient(135deg, #d97706, #b45309)' : ($card->card_color_theme == 'red' ? 'linear-gradient(135deg, #dc2626, #991b1b)' : 'linear-gradient(135deg, #2563eb, #1d4ed8)') }};">
+                    <div class="box shadow-sm border-0 rounded-4 overflow-hidden" style="border: 2px solid {{ $card->card_color_theme == 'gold' ? '#eab308' : ($card->card_color_theme == 'red' ? '#ef4444' : '#3b82f6') }} !important;">
+                        <!-- Card Header with Prominent Action Buttons -->
+                        <div class="box-header d-flex flex-wrap align-items-center justify-content-between text-white p-3" style="background: {{ $card->card_color_theme == 'gold' ? 'linear-gradient(135deg, #d97706, #b45309)' : ($card->card_color_theme == 'red' ? 'linear-gradient(135deg, #dc2626, #991b1b)' : 'linear-gradient(135deg, #2563eb, #1d4ed8)') }};">
                             <div>
                                 <span class="badge bg-white text-dark px-3 py-1 mb-1 fw-bold" style="border-radius: 20px;">
                                     <i class="fa fa-tag me-1"></i> {{ $card->badge_text ?: 'মেম্বারশিপ সুবিধা' }}
                                 </span>
-                                <h4 class="card-title fw-bold mb-0 text-white">{{ $card->card_name }}</h4>
+                                <h4 class="box-title fw-bold mb-0 text-white d-block mt-1">{{ $card->card_name }}</h4>
                             </div>
-                            <div class="text-end">
-                                <span class="badge {{ $card->status == 1 ? 'bg-success' : 'bg-secondary' }} px-3 py-2">
-                                    {{ $card->status == 1 ? 'সক্রিয় (Active)' : 'নিষ্ক্রিয় (Inactive)' }}
-                                </span>
+                            <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+                                <a href="{{ route('admin.card_benefits.edit', $card->id) }}" class="btn btn-sm btn-light text-dark fw-bold px-3 shadow-sm">
+                                    <i class="fa fa-edit text-primary me-1"></i> এডিট করুন
+                                </a>
+                                <a href="{{ route('admin.card_benefits.delete', $card->id) }}" onclick="return confirm('আপনি কি নিশ্চিত এই কার্ড সুবিধা মুছে ফেলতে চান?')" class="btn btn-sm btn-dark text-danger fw-bold px-3 shadow-sm bg-white">
+                                    <i class="fa fa-trash text-danger me-1"></i> ডিলিট
+                                </a>
                             </div>
                         </div>
 
-                        <div class="card-body p-4">
+                        <div class="box-body p-4 bg-white">
                             <div class="row align-items-center mb-4">
                                 <div class="col-md-5 text-center mb-3 mb-md-0">
                                     @if($card->image && file_exists(public_path($card->image)))
-                                        <img src="{{ asset($card->image) }}" alt="{{ $card->card_name }}" class="img-fluid rounded-3 shadow" style="max-height: 140px; object-fit: contain; border: 1px solid #e2e8f0;">
+                                        <img src="{{ asset($card->image) }}" alt="{{ $card->card_name }}" class="img-fluid rounded-3 shadow" style="max-height: 140px; object-fit: contain; border: 1px solid #e2e8f0; background: #fff; padding: 4px;">
                                     @else
                                         <div class="bg-light rounded-3 p-4 text-center border">
                                             <i class="fa fa-id-card text-muted fa-3x mb-2"></i>
@@ -67,6 +168,7 @@
                                         <li class="mb-1"><strong>মেয়াদ (Validity):</strong> <span class="text-dark fw-bold">{{ $card->validity ?: '12/2030' }}</span></li>
                                         <li class="mb-1"><strong>মেম্বারশিপ ফি:</strong> <span class="text-primary fw-bold">{{ $card->card_fee ?: 'N/A' }}</span></li>
                                         <li class="mb-1"><strong>বিনিয়োগ সীমা:</strong> <span class="text-success fw-bold">{{ $card->investment_limit ?: 'N/A' }}</span></li>
+                                        <li class="mb-1"><strong>স্ট্যাটাস:</strong> <span class="badge {{ $card->status == 1 ? 'bg-success' : 'bg-secondary' }}">{{ $card->status == 1 ? 'সক্রিয় (Active)' : 'নিষ্ক্রিয় (Inactive)' }}</span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -111,24 +213,24 @@
                                 @endif
                             </div>
 
-                            <!-- Buttons -->
-                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                <div>
-                                    <a href="{{ route('admin.card_benefits.edit', $card->id) }}" class="btn btn-sm btn-info text-white px-3 me-2">
+                            <!-- Bottom Action Buttons -->
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('admin.card_benefits.edit', $card->id) }}" class="btn btn-info text-white btn-sm px-3 fw-bold">
                                         <i class="fa fa-edit me-1"></i> এডিট করুন
                                     </a>
-                                    <a href="{{ route('admin.card_benefits.delete', $card->id) }}" onclick="return confirm('আপনি কি নিশ্চিত এই কার্ড সুবিধা মুছে ফেলতে চান?')" class="btn btn-sm btn-danger px-3">
+                                    <a href="{{ route('admin.card_benefits.delete', $card->id) }}" onclick="return confirm('আপনি কি নিশ্চিত এই কার্ড সুবিধা মুছে ফেলতে চান?')" class="btn btn-danger btn-sm px-3 fw-bold">
                                         <i class="fa fa-trash me-1"></i> ডিলিট
                                     </a>
                                 </div>
-                                <span class="small text-muted">ID: #{{ $card->id }}</span>
+                                <span class="small text-muted fw-bold">ID: #{{ $card->id }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 @empty
                 <div class="col-12">
-                    <div class="card p-5 text-center border-0 shadow-sm rounded-4">
+                    <div class="box p-5 text-center border-0 shadow-sm rounded-4">
                         <i class="fa fa-id-card fa-4x text-muted mb-3"></i>
                         <h4 class="text-muted">কোনো কার্ড সুবিধা তৈরি করা নেই</h4>
                         <p class="text-muted mb-4">উপরের 'নতুন কার্ড সুবিধা যোগ করুন' বাটনে ক্লিক করে গোল্ডেন বা রেড কার্ডের সুবিধা যুক্ত করুন।</p>
@@ -146,9 +248,9 @@
         <div class="modal-content border-0 shadow-lg rounded-4">
             <form action="{{ route('admin.card_benefits.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-warning text-dark">
                     <h5 class="modal-title fw-bold" id="addCardModalLabel"><i class="fa fa-plus-circle me-2"></i> নতুন কার্ড সুবিধা যোগ করুন</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
                     <!-- Quick Template Loader Banner -->
@@ -239,7 +341,7 @@
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label fw-bold">নিয়মাবলী ও সুবিধাসমূহ (প্রতি লাইনে একটি করে পয়েন্ট লিখুন) <span class="text-danger">*</span></label>
-                            <textarea name="facilities" id="modal_facilities" class="form-control" rows="8" placeholder="১। প্রথমে কৃষি স্টক মার্কেটের সদস্য হতে হবে।&#10;২। সদস্য হওয়ার জন্য নির্ধারিত ফি জমা দিতে হবে।&#10;৩। নাম, মোবাইল নাম্বার ও কার্ড দিয়ে রেজিস্ট্রেশন করতে হবে।" required></textarea>
+                            <textarea name="facilities" id="modal_facilities" class="form-control" rows="8" placeholder="১। প্রথমে ekrishisheba-র সদস্য হতে হবে।&#10;২। সদস্য হওয়ার জন্য নির্ধারিত ফি জমা দিতে হবে।&#10;৩। নাম, মোবাইল নাম্বার ও কার্ড দিয়ে রেজিস্ট্রেশন করতে হবে।" required></textarea>
                             <small class="text-muted">টিপস: প্রতিটি পয়েন্ট নতুন লাইনে এন্টার দিয়ে লিখুন।</small>
                         </div>
 
@@ -266,7 +368,7 @@
                 </div>
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">বন্ধ করুন</button>
-                    <button type="submit" class="btn btn-primary px-4"><i class="fa fa-save me-1"></i> সংরক্ষণ করুন</button>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold text-dark"><i class="fa fa-save me-1"></i> সংরক্ষণ করুন</button>
                 </div>
             </form>
         </div>
@@ -286,8 +388,8 @@
             limit: "সর্বনিম্ন ৫,০০০/- থেকে সর্বোচ্চ ৫০,০০০/- টাকা",
             profit: "ওয়েব সাইটে নিজ পছন্দনীয় প্রতিটি ক্রয় করার সাথে সাথে লভ্যাংশের অংশটি উত্তোলন করতে হবে।",
             notice: "বিনিয়োগ সম্পূর্ণ উত্তোলন করিতে চাইলে ১দিন আগে মেসেজ দিবেন",
-            shortDesc: "ক্ষুদ্র উদ্যোক্তাদের বেকারত্ব দূর করার লক্ষ্যে আমরা একটি বিকল্প 'কৃষি স্টক মার্কেট' নামে অনলাইন প্লাটফর্ম তৈরি করেছি। এখান ক্ষুদ্র উদ্যোগ ক্ষুদ্র পুঁজি দিয়ে একজন প্রত্যক্ষ কর্মকর্তা হওয়ার সুযোগ রয়েছে। আপনিও প্রত্যক্ষ শেয়ার বাৎসরিক কার্ড সংগ্রহ করতে পারেন।",
-            facilities: "১। প্রথমে কৃষি স্টক মার্কেটের সদস্য হতে হবে। নির্ধারিত এসএমই কার্ড সংগ্রহ করে।\n২। সদস্য হওয়ার জন্য ৩০০/- টাকা দিয়ে একটি কার্ড এবং ৫০/- টাকা দিয়ে কৃষি সেবা বই সংগ্রহ করতে হবে।\n৩। নাম, মোবাইল নাম্বার ও কার্ড দিয়ে রেজিস্ট্রেশন করতে হবে।\n৪। ওয়েব সাইটে নিজ পছন্দনীয় প্রতিটি ক্রয় করার সাথে সাথে লভ্যাংশের অংশটি উত্তোলন করতে হবে।\n৫। বিনিয়োগ সম্পূর্ণ উত্তোলন করিতে চাইলে ১দিন আগে মেসেজ দিবেন।\n৬। কৃষি স্টক মার্কেট কার্ড হোল্ডার ব্যতিত অন্য কেউ বিনিয়োগ করতে পারবে না।\n৭। সদস্যদের মধ্যে যারা ন্যায্যমূল্যে খাদ্যশস্য সরবরাহ করিবে তারা কৃষি স্টক মার্কেট নির্দিষ্ট এলাকা ভিত্তিক বিপণন এজেন্ট থেকে হোম ডেলিভারি গ্রহণ করিতে হবে এবং ক্রেতা হোম ডেলিভারি চাইলে কমপক্ষে ২দিন আগে কর্তৃপক্ষকে অবগত করিতে হবে।\n৮। কৃষি এসএমই স্টক মার্কেট কার্ড হোল্ডার ব্যতিত অন্য কেউ বিনিয়োগ করিতে পারিবে না এবং অন্যান্য সকল সুবিধা গ্রহণ করিতে পারিবে না। সর্বনিম্ন ৫০০০/- থেকে সর্বোচ্চ ৫০,০০০/- টাকার মধ্যে সীমাবদ্ধ থাকবে।",
+            shortDesc: "ক্ষুদ্র উদ্যোক্তাদের বেকারত্ব দূর করার লক্ষ্যে আমরা একটি বিকল্প 'ekrishisheba' নামে অনলাইন প্লাটফর্ম তৈরি করেছি। এখান ক্ষুদ্র উদ্যোগ ক্ষুদ্র পুঁজি দিয়ে একজন প্রত্যক্ষ কর্মকর্তা হওয়ার সুযোগ রয়েছে। আপনিও প্রত্যক্ষ শেয়ার বাৎসরিক কার্ড সংগ্রহ করতে পারেন।",
+            facilities: "১। প্রথমে ekrishisheba-র সদস্য হতে হবে। নির্ধারিত এসএমই কার্ড সংগ্রহ করে।\n২। সদস্য হওয়ার জন্য ৩০০/- টাকা দিয়ে একটি কার্ড এবং ৫০/- টাকা দিয়ে কৃষি সেবা বই সংগ্রহ করতে হবে।\n৩। নাম, মোবাইল নাম্বার ও কার্ড দিয়ে রেজিস্ট্রেশন করতে হবে।\n৪। ওয়েব সাইটে নিজ পছন্দনীয় প্রতিটি ক্রয় করার সাথে সাথে লভ্যাংশের অংশটি উত্তোলন করতে হবে।\n৫। বিনিয়োগ সম্পূর্ণ উত্তোলন করিতে চাইলে ১দিন আগে মেসেজ দিবেন।\n৬। ekrishisheba কার্ড হোল্ডার ব্যতিত অন্য কেউ বিনিয়োগ করতে পারবে না।\n৭। সদস্যদের মধ্যে যারা ন্যায্যমূল্যে খাদ্যশস্য সরবরাহ করিবে তারা ekrishisheba নির্দিষ্ট এলাকা ভিত্তিক বিপণন এজেন্ট থেকে হোম ডেলিভারি গ্রহণ করিতে হবে এবং ক্রেতা হোম ডেলিভারি চাইলে কমপক্ষে ২দিন আগে কর্তৃপক্ষকে অবগত করিতে হবে।\n৮। ekrishisheba এসএমই কার্ড হোল্ডার ব্যতিত অন্য কেউ বিনিয়োগ করিতে পারিবে না এবং অন্যান্য সকল সুবিধা গ্রহণ করিতে পারিবে না। সর্বনিম্ন ৫০০০/- থেকে সর্বোচ্চ ৫০,০০০/- টাকার মধ্যে সীমাবদ্ধ থাকবে।",
             btnText: "রেজিস্ট্রেশন করুন",
             btnUrl: "/register",
             order: 1
@@ -304,7 +406,7 @@
             profit: "৫০,০০০ টাকার মাসিক ২০০০-২৫০০/- এবং ১০০,০০০ টাকার ৪০০০-৫০০০/- টাকার মধ্যে সীমাবদ্ধ।",
             notice: "বিনিয়োগ সম্পূর্ণ উত্তোলন করিতে চাইলে ১মাস আগে মেসেজ দিবেন।",
             shortDesc: "আমরা ক্ষুদ্র উদ্যোক্তা তৈরীর নিমিত্তে গোল্ডেন কার্ড মেম্বারশিপ চালু করেছি। যা স্বল্প ও ক্ষুদ্র বিনিয়োগে করে নিজস্ব আইনিভাবে লাভবান হতে পারেন এবং আপনার পরিবারের সুযোগ-সুবিধা গ্রহণ করতে পারবেন এবং স্থায়ী সম্পদে প্রান্তিক হতে পারেন।",
-            facilities: "১। প্রথমে কৃষি স্টক মার্কেটের সদস্য হতে হবে। নির্ধারিত এসএমই গোল্ড কার্ড সংগ্রহ করে।\n২। সদস্য হওয়ার জন্য ১০০০/- টাকা দিয়ে একটি কার্ড এবং ৫০/- টাকা দিয়ে কৃষি সেবা বই সংগ্রহ করতে হবে।\n৩। নাম, মোবাইল নাম্বার ও কার্ড দিয়ে রেজিস্ট্রেশন করতে হবে।\n৪। গোল্ডেন মেম্বারশিপ বিনিয়োগ মাসিক লভ্যাংশ ৫০,০০০ টাকায় সর্বনিম্ন ২০০০-২৫০০ টাকার মধ্যে সীমাবদ্ধ। ১০০,০০০ টাকায় বিনিয়োগ ৪০০০-৫০০০ টাকার মধ্যে সীমাবদ্ধ।\n৫। বিনিয়োগ সম্পূর্ণ উত্তোলন করিতে চাইলে ১মাস আগে মেসেজ দিবেন।\n৬। গোল্ডেন মেম্বারশীপ কৃষি পরিবারের ফ্ল্যাট, প্লট, খামার কিস্তিতে বিনিয়োগ করে ক্রয় করতে পারবে।\n৭। সদস্যদের মধ্যে যারা ন্যায্যমূল্যে খাদ্যশস্য সরবরাহ করিবে তারা কৃষি স্টক মার্কেট নির্দিষ্ট এলাকা ভিত্তিক বিপণন এজেন্ট থেকে হোম ডেলিভারি গ্রহণ করা হবে।\n৮। কৃষি এসএমই স্টক মার্কেট কার্ড হোল্ডার ব্যতিত অন্য কেউ বিনিয়োগ করিতে পারিবে না এবং অন্যান্য সকল সুবিধা গ্রহণ করিতে পারিবে না। সর্বনিম্ন ৫০,০০০/- টাকা সর্বোচ্চ ১,০০,০০০/- টাকার মধ্যে বিনিয়োগ সীমাবদ্ধ থাকবে।\n৯। গোল্ড কার্ডধারী মেয়াদান্তে একটি বিনিয়োগ চুক্তিনামা হবে প্রতিষ্ঠানের নিজস্ব প্যাডে।",
+            facilities: "১। প্রথমে ekrishisheba-র সদস্য হতে হবে। নির্ধারিত এসএমই গোল্ড কার্ড সংগ্রহ করে।\n২। সদস্য হওয়ার জন্য ১০০০/- টাকা দিয়ে একটি কার্ড এবং ৫০/- টাকা দিয়ে কৃষি সেবা বই সংগ্রহ করতে হবে।\n৩। নাম, মোবাইল নাম্বার ও কার্ড দিয়ে রেজিস্ট্রেশন করতে হবে।\n৪। গোল্ডেন মেম্বারশিপ বিনিয়োগ মাসিক লভ্যাংশ ৫০,০০০ টাকায় সর্বনিম্ন ২০০০-২৫০০ টাকার মধ্যে সীমাবদ্ধ। ১০০,০০০ টাকায় বিনিয়োগ ৪০০০-৫০০০ টাকার মধ্যে সীমাবদ্ধ।\n৫। বিনিয়োগ সম্পূর্ণ উত্তোলন করিতে চাইলে ১মাস আগে মেসেজ দিবেন।\n৬। গোল্ডেন মেম্বারশীপ ekrishisheba-র ফ্ল্যাট, প্লট, খামার কিস্তিতে বিনিয়োগ করে ক্রয় করতে পারবে।\n৭। সদস্যদের মধ্যে যারা ন্যায্যমূল্যে খাদ্যশস্য সরবরাহ করিবে তারা ekrishisheba নির্দিষ্ট এলাকা ভিত্তিক বিপণন এজেন্ট থেকে হোম ডেলিভারি গ্রহণ করা হবে।\n৮। ekrishisheba এসএমই কার্ড হোল্ডার ব্যতিত অন্য কেউ বিনিয়োগ করিতে পারিবে না এবং অন্যান্য সকল সুবিধা গ্রহণ করিতে পারিবে না। সর্বনিম্ন ৫০,০০০/- টাকা সর্বোচ্চ ১,০০,০০০/- টাকার মধ্যে বিনিয়োগ সীমাবদ্ধ থাকবে।\n৯। গোল্ড কার্ডধারী মেয়াদান্তে একটি বিনিয়োগ চুক্তিনামা হবে প্রতিষ্ঠানের নিজস্ব প্যাডে।",
             btnText: "গোল্ড কার্ড নিন",
             btnUrl: "/register",
             order: 2

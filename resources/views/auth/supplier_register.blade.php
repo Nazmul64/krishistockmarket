@@ -7,7 +7,7 @@
 
     body {
         font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif !important;
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%) !important;
+        background: linear-gradient(135deg, #0b1120 0%, #1e1b4b 40%, #451a03 100%) !important;
         min-height: 100vh;
         margin: 0;
         padding: 0;
@@ -25,18 +25,18 @@
     .auth-card {
         width: 100%;
         max-width: 580px;
-        background: rgba(255, 255, 255, 0.96);
+        background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4),
-                    0 0 35px rgba(16, 185, 129, 0.25);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                    0 0 35px rgba(245, 158, 11, 0.25);
         overflow: hidden;
         margin: 0 auto;
     }
 
     .brand-header {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        background: linear-gradient(135deg, #b45309 0%, #ea580c 50%, #f59e0b 100%);
         padding: 32px 24px;
         text-align: center;
         color: #ffffff;
@@ -66,7 +66,7 @@
         border-radius: 50px;
         font-size: 13px;
         font-weight: 700;
-        color: #fef08a;
+        color: #fff;
         margin-top: 12px;
         border: 1px solid rgba(255, 255, 255, 0.35);
     }
@@ -132,34 +132,34 @@
     .custom-input:focus, .custom-textarea:focus {
         outline: none;
         background: #ffffff;
-        border-color: #10b981;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        border-color: #ea580c;
+        box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15);
     }
 
     .custom-input-group:focus-within .input-icon {
-        color: #10b981;
+        color: #ea580c;
     }
 
     .btn-register {
         width: 100%;
         height: 52px;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
         border: none;
         border-radius: 12px;
         color: #ffffff;
         font-size: 16px;
         font-weight: 700;
         letter-spacing: 0.5px;
-        box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+        box-shadow: 0 10px 20px -5px rgba(234, 88, 12, 0.4);
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 10px;
     }
 
     .btn-register:hover {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
         transform: translateY(-2px);
-        box-shadow: 0 14px 24px -5px rgba(16, 185, 129, 0.5);
+        box-shadow: 0 14px 24px -5px rgba(234, 88, 12, 0.5);
     }
 
     .auth-footer {
@@ -172,12 +172,13 @@
     }
 
     .auth-footer a {
-        color: #059669;
+        color: #ea580c;
         font-weight: 700;
         text-decoration: none;
     }
 
     .auth-footer a:hover {
+        color: #c2410c;
         text-decoration: underline;
     }
 

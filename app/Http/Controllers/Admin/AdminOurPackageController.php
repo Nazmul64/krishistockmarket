@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\OurPackage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -15,6 +17,11 @@ class AdminOurPackageController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('packages.view')) {
+            abort(403, "Action Forbidden: 'packages.view' পারমিশন নেই।");
+        }
+
         $packages = OurPackage::latest()->get();
         return view('admin.our_package.index', compact('packages'));
     }
@@ -24,6 +31,19 @@ class AdminOurPackageController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('packages.upload_image') && !$user->hasPermission('packages.create')) {
+            AuditLog::log(
+                'ACTION_FORBIDDEN',
+                $user,
+                null,
+                ['required_permission' => 'packages.upload_image'],
+                "Unauthorized package upload attempt by {$user->username}"
+            );
+
+            return back()->with('error', "Action Forbidden: 'packages.upload_image' পারমিশন নেই।");
+        }
+
         $request->validate([
             'image' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
         ]);
@@ -46,13 +66,21 @@ class AdminOurPackageController extends Controller
             $imageFile->move($uploadDir, $imgName);
         }
 
-        OurPackage::create([
-            'image' => 'upload/our_packages/' . $imgName,
+        $package = OurPackage::create([
+            'image'  => 'upload/our_packages/' . $imgName,
             'status' => 1,
         ]);
 
+        AuditLog::log(
+            'PACKAGE_UPLOADED',
+            $package,
+            null,
+            ['image' => $package->image],
+            "Package image uploaded by {$user->name}"
+        );
+
         $notification = [
-            'message' => 'Our Package image uploaded successfully!',
+            'message'    => 'Our Package image uploaded successfully!',
             'alert-type' => 'success'
         ];
 
@@ -64,6 +92,19 @@ class AdminOurPackageController extends Controller
      */
     public function destroy($id)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasPermission('packages.manage')) {
+            AuditLog::log(
+                'ACTION_FORBIDDEN',
+                $user,
+                null,
+                ['required_permission' => 'packages.manage'],
+                "Unauthorized package delete attempt by {$user->username}"
+            );
+
+            return back()->with('error', "Action Forbidden: 'packages.manage' পারমিশন নেই।");
+        }
+
         $package = OurPackage::findOrFail($id);
 
         if (!empty($package->image) && file_exists(public_path($package->image))) {
@@ -72,8 +113,16 @@ class AdminOurPackageController extends Controller
 
         $package->delete();
 
+        AuditLog::log(
+            'PACKAGE_DELETED',
+            $package,
+            $package->toArray(),
+            null,
+            "Package image deleted by {$user->name}"
+        );
+
         $notification = [
-            'message' => 'Our Package image deleted successfully!',
+            'message'    => 'Our Package image deleted successfully!',
             'alert-type' => 'success'
         ];
 

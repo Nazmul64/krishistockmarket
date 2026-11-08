@@ -40,6 +40,30 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin_guard' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'staff_guard' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'support_guard' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'security_guard' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'audit_guard' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'customer_guard' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*

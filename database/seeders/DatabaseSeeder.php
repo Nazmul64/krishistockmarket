@@ -20,6 +20,12 @@ class DatabaseSeeder extends Seeder
             MonthlyBazaarSeeder::class,
             EmployeeSeeder::class,
             SupplierSeeder::class,
+            CardBenefitSeeder::class,
+            UserTypeSeeder::class,
+            PermissionCatalogueSeeder::class,
+            RoleSeeder::class,
+            RbacUserSeeder::class,
+            RbacSampleDataSeeder::class,
         ]);
     }
 }
