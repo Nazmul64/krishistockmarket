@@ -203,13 +203,15 @@ body, html {
 .main-desktop-nav {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
+    margin: 0 10px;
+    flex-wrap: nowrap;
 }
 .desktop-nav-link-golden {
-    font-size: 14.5px;
+    font-size: 13.5px;
     font-weight: 700;
     color: #ffffff !important;
-    padding: 8px 14px;
+    padding: 7px 12px;
     border-radius: 20px;
     text-decoration: none;
     transition: all 0.25s ease;
@@ -222,42 +224,65 @@ body, html {
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(6px);
 }
+.header-auth-container {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+}
+.header-auth-buttons {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+}
+.header-auth-buttons .btn-golden-action-outline + .btn-golden-action {
+    margin-left: 14px !important;
+}
 .btn-golden-action {
-    background: #ffffff;
-    color: #d97706 !important;
-    padding: 9px 22px;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 800;
+    background: #ffffff !important;
+    color: #ea580c !important;
+    padding: 9px 22px !important;
+    border-radius: 25px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
     text-decoration: none !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.25s ease;
-    display: inline-flex;
-    align-items: center;
-    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.25s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1.5px solid #ffffff !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
 }
 .btn-golden-action:hover {
-    background: #0f172a;
+    background: #0f172a !important;
     color: #ffffff !important;
+    border-color: #0f172a !important;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
 }
 .btn-golden-action-outline {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1.5px solid #ffffff;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
     color: #ffffff !important;
-    padding: 8px 18px;
-    border-radius: 25px;
-    font-size: 14px;
-    font-weight: 700;
+    padding: 8px 20px !important;
+    border-radius: 25px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
     text-decoration: none !important;
-    transition: all 0.25s ease;
-    display: inline-flex;
-    align-items: center;
+    transition: all 0.25s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    cursor: pointer !important;
 }
 .btn-golden-action-outline:hover {
-    background: #ffffff;
-    color: #d97706 !important;
+    background: #ffffff !important;
+    color: #ea580c !important;
+    border-color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Mobile Nav Toggle Button - Strictly Pinned at Top Right Corner */

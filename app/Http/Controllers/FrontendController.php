@@ -143,6 +143,8 @@ class FrontendController extends Controller
 
         $site = [
             'title' => setting('title') ?: 'ekrishisheba',
+            'font_family' => setting('site_font_family') ?: 'Hind Siliguri',
+            'font_url' => getGoogleFontUrl(),
             'logo' => $logo ? asset('upload/images/backend/logo/' . $logo) : asset('assets/images/logo.png'),
             'favicon' => $favicon ? asset('upload/images/backend/logo/' . $favicon) : null,
             'top_notice' => setting('top_notice') ?: (setting('notice') ?: 'ekrishisheba-তে স্বাগতম! আধুনিক ও নিরাপদ কৃষি প্ল্যাটফর্ম।'),

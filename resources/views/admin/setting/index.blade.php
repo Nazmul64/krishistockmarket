@@ -67,6 +67,62 @@
                                             </div>
                                         </div>
 
+                                        <!-- ============================================== -->
+                                        <!-- 100 Font Families Selector & Live Font Preview -->
+                                        <!-- ============================================== -->
+                                        <div class="form-group pb-4 p-3 mb-4 rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1.5px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-radius: 12px;">
+                                            <div class="row align-items-center mb-2">
+                                                <div class="col-12">
+                                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                                        <label class="control-label text-dark fw-bold mb-0" for="site_font_family" style="font-size: 15px;">
+                                                            <i class="fa fa-font text-warning me-2"></i> Website Font Family (১০০+ ফন্ট ফ্যামিলি সিলেক্টর)
+                                                        </label>
+                                                        <span class="badge bg-primary px-3 py-1 font-size-12">১০০ প্রকার ফন্ট উপলভ্য</span>
+                                                    </div>
+                                                    <p class="text-muted font-size-12 mb-3">
+                                                        এডমিন থেকে যে কোনো ফন্ট সিলেক্ট করলে ওয়েবসাইটের বাংলা ও ইংরেজি সমস্ত টাইপোগ্রাফি সাথে সাথে সেই ফন্টে পরিবর্তিত হবে।
+                                                    </p>
+                                                </div>
+                                                <div class="col-12">
+                                                    @php
+                                                        $currentFont = setting('site_font_family') ?: 'Hind Siliguri';
+                                                        $fontList = config('fonts.families', []);
+                                                        $groupedFonts = [];
+                                                        foreach ($fontList as $fName => $fMeta) {
+                                                            $groupedFonts[$fMeta['category']][$fName] = $fMeta;
+                                                        }
+                                                    @endphp
+                                                    <select class="form-select form-control font-select-picker" id="site_font_family" name="site_font_family" style="font-size: 15px; height: 46px; border-radius: 10px; border: 1.5px solid #94a3b8; font-weight: 600;">
+                                                        @foreach($groupedFonts as $category => $items)
+                                                            <optgroup label="── {{ $category }} ({{ count($items) }}) ──">
+                                                                @foreach($items as $fName => $fMeta)
+                                                                    <option value="{{ $fName }}" {{ $currentFont === $fName ? 'selected' : '' }} data-query="{{ $fMeta['query'] ?? '' }}" data-fallback="{{ $fMeta['fallback'] }}">
+                                                                        {{ $fName }} {{ !empty($fMeta['bengali']) ? '★ [বাংলা সাপোর্টেড]' : '' }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Live Font Preview Box -->
+                                            <div class="mt-3 p-3 rounded-2" id="fontPreviewCard" style="background: #ffffff; border: 1.5px dashed #ea580c; border-radius: 10px;">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <small class="text-muted fw-bold font-size-11 text-uppercase">
+                                                        <i class="fa fa-eye text-info me-1"></i> লাইভ ফন্ট প্রিভিউ (Live Preview):
+                                                    </small>
+                                                    <span id="previewFontBadge" class="badge bg-warning text-dark font-size-11">{{ $currentFont }}</span>
+                                                </div>
+                                                <div id="previewSampleText" style="font-size: 18px; line-height: 1.5; color: #1e293b; transition: font-family 0.2s ease;">
+                                                    আমরা আধুনিক ও নিরাপদ কৃষি সেবায় বিশ্বাসী - ekrishisheba Digital Platform 2026
+                                                </div>
+                                                <div id="previewSampleNumbers" class="text-muted font-size-14 mt-1">
+                                                    ১২৩৪৫৬৭৮৯০ / 1234567890 (Aa Bb Cc Dd Ee Ff Gg)
+                                                </div>
+                                            </div>
+                                        </div>
+
 
                                         <div class="form-group pb-4">
                                             <div class="row ">
@@ -460,6 +516,42 @@
                 ['view', ['fullscreen', 'codeview']]
             ]
         });
+
+        // Interactive Font Family Live Preview Handlers
+        var fontSelect = document.getElementById('site_font_family');
+        var previewBox = document.getElementById('previewSampleText');
+        var previewNumbers = document.getElementById('previewSampleNumbers');
+        var previewBadge = document.getElementById('previewFontBadge');
+
+        function updateFontPreview(fontName) {
+            if (!fontName || !fontSelect) return;
+            var opt = fontSelect.querySelector('option[value="' + fontName + '"]');
+            var query = opt ? opt.getAttribute('data-query') : null;
+            var fallback = opt ? opt.getAttribute('data-fallback') : 'sans-serif';
+
+            if (query) {
+                var linkId = 'dyn-preview-' + fontName.replace(/[^a-zA-Z0-9]/g, '');
+                if (!document.getElementById(linkId)) {
+                    var link = document.createElement('link');
+                    link.id = linkId;
+                    link.rel = 'stylesheet';
+                    link.href = 'https://fonts.googleapis.com/css2?' + query + '&display=swap';
+                    document.head.appendChild(link);
+                }
+            }
+
+            var fullFont = "'" + fontName + "', 'Hind Siliguri', " + fallback;
+            if (previewBox) previewBox.style.fontFamily = fullFont;
+            if (previewNumbers) previewNumbers.style.fontFamily = fullFont;
+            if (previewBadge) previewBadge.textContent = fontName;
+        }
+
+        if (fontSelect) {
+            fontSelect.addEventListener('change', function () {
+                updateFontPreview(this.value);
+            });
+            updateFontPreview(fontSelect.value);
+        }
     });
 </script>
 @endsection

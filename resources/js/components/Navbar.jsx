@@ -90,13 +90,13 @@ export default function Navbar({ site, auth, routes }) {
                         </nav>
 
                         {/* Desktop Golden Action Button */}
-                        <div className="d-none d-lg-flex align-items-center gap-2">
+                        <div className="d-none d-lg-flex align-items-center header-auth-container">
                             {auth.is_authenticated ? (
                                 <a href={auth.dashboard_url} className="btn-golden-action">
                                     <i className="fa fa-tachometer me-2"></i> ড্যাশবোর্ড
                                 </a>
                             ) : (
-                                <div className="d-flex gap-2">
+                                <div className="header-auth-buttons">
                                     <a href={auth.login_url} className="btn-golden-action-outline">
                                         <i className="fa fa-sign-in me-1"></i> লগইন
                                     </a>

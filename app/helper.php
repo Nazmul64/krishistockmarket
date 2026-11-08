@@ -21,6 +21,44 @@ if (!function_exists('setting')) {
     }
 }
 
+if (!function_exists('getActiveFontConfig')) {
+    function getActiveFontConfig()
+    {
+        $allFonts = config('fonts.families', []);
+        $selectedName = setting('site_font_family') ?: 'Hind Siliguri';
+
+        if (isset($allFonts[$selectedName])) {
+            return array_merge($allFonts[$selectedName], ['key' => $selectedName]);
+        }
+
+        return [
+            'name' => 'Hind Siliguri',
+            'query' => 'family=Hind+Siliguri:wght@300;400;500;600;700',
+            'category' => 'Bengali & Multilingual',
+            'fallback' => 'sans-serif',
+            'bengali' => true,
+            'key' => 'Hind Siliguri',
+        ];
+    }
+}
+
+if (!function_exists('getGoogleFontUrl')) {
+    function getGoogleFontUrl()
+    {
+        $active = getActiveFontConfig();
+        $queries = [];
+
+        // Base font queries
+        $queries[] = 'family=Hind+Siliguri:wght@400;500;600;700';
+
+        if (!empty($active['query']) && $active['name'] !== 'Hind Siliguri') {
+            $queries[] = $active['query'];
+        }
+
+        return 'https://fonts.googleapis.com/css2?' . implode('&', $queries) . '&display=swap';
+    }
+}
+
 
 function StockAllPricing($id){
     $all_pricing = StockPrice::where('stock_id', $id)->orderBy('pricing_date','DESC')->paginate(15);

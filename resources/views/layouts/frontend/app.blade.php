@@ -27,8 +27,10 @@
     <link rel="apple-touch-icon-precomposed"
         href="{{ asset('frontend/assets') }}/images/apple-touch-icon-57x57-precomposed.png">
 
-    <!-- Library - Google Font Familys -->
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Dynamic Google Font Family loaded from Admin Settings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="{{ getGoogleFontUrl() }}" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets') }}/revolution/css/settings.css">
 
@@ -42,8 +44,15 @@
     <link id="color" href="{{ asset('frontend/assets') }}/css/color-schemes/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/react-frontend.css') }}?v={{ file_exists(public_path('css/react-frontend.css')) ? filemtime(public_path('css/react-frontend.css')) : time() }}">
     <style>
-        body, html {
-            font-family: 'Hind Siliguri', 'Poppins', sans-serif !important;
+        @php
+            $activeFont = getActiveFontConfig();
+            $fontFamilyCss = "'" . $activeFont['name'] . "', 'Hind Siliguri', " . $activeFont['fallback'];
+        @endphp
+        :root {
+            --site-font-family: {!! $fontFamilyCss !!};
+        }
+        body, html, h1, h2, h3, h4, h5, h6, p, a, span, button, input, select, textarea {
+            font-family: var(--site-font-family) !important;
         }
         .rev_slider > ul li.slider-shape .slotholder::before {
             display: none !important;
@@ -397,13 +406,13 @@
                 </nav>
 
                 <!-- Desktop Golden Action Button -->
-                <div class="d-none d-lg-flex align-items-center gap-2">
+                <div class="d-none d-lg-flex align-items-center header-auth-container">
                     @auth
                         <a href="{{ route('dashboard') }}" class="btn-golden-action">
                             <i class="fa fa-tachometer me-2"></i> ড্যাশবোর্ড
                         </a>
                     @else
-                        <div class="d-flex gap-2">
+                        <div class="header-auth-buttons">
                             <a href="{{ route('login') }}" class="btn-golden-action-outline">
                                 <i class="fa fa-sign-in me-1"></i> লগইন
                             </a>

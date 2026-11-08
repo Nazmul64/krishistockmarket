@@ -116,7 +116,22 @@
     <link rel="stylesheet" href="{{ asset('assets/main/css/modern_admin.css') }}?v={{ file_exists(public_path('assets/main/css/modern_admin.css')) ? filemtime(public_path('assets/main/css/modern_admin.css')) : time() }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Dynamic Font from Settings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="{{ getGoogleFontUrl() }}" rel="stylesheet">
+
     <style>
+        @php
+            $activeFont = getActiveFontConfig();
+            $fontFamilyCss = "'" . $activeFont['name'] . "', 'Hind Siliguri', " . $activeFont['fallback'];
+        @endphp
+        :root {
+            --site-font-family: {!! $fontFamilyCss !!};
+        }
+        body, html, h1, h2, h3, h4, h5, h6, .main-header, .sidebar-menu, .box-title, .page-title {
+            font-family: var(--site-font-family) !important;
+        }
         .main-header .logo {
             width: auto !important;
             min-width: 150px !important;
