@@ -364,21 +364,25 @@
     </div>
 
     @if(!Route::is('/'))
+    @php
+        $siteLang = request()->cookie('ekrishi_lang', 'en');
+        $isBn = ($siteLang === 'bn');
+    @endphp
     <!-- Dynamic Marquee Notice Top Header Bar - Aligned with Container -->
     <div class="top-marquee-notice-bar">
         <div class="container">
             <div class="d-flex align-items-center gap-3">
                 <!-- Notice Badge -->
                 <div class="marquee-badge-wrap d-flex align-items-center gap-2 flex-shrink-0">
-                    <span class="marquee-live-dot"></span>
+                    <span className="marquee-live-dot"></span>
                     <i class="fa fa-bullhorn marquee-icon"></i>
-                    <span class="marquee-badge-title">নোটিশ:</span>
+                    <span class="marquee-badge-title">{{ $isBn ? 'নোটিশ:' : 'Notice:' }}</span>
                 </div>
 
                 <!-- Scrolling Marquee Area -->
-                <div className="marquee-ticker-wrap flex-grow-1 overflow-hidden" style="overflow: hidden; width: 100%;">
+                <div class="marquee-ticker-wrap flex-grow-1 overflow-hidden" style="overflow: hidden; width: 100%;">
                     <marquee behavior="scroll" direction="left" scrollamount="5" onmouseover="this.stop();" onmouseout="this.start();" class="marquee-ticker-content">
-                        {{ setting('top_notice') ?: (setting('notice') ?: 'কৃষি পরিবারে স্বাগতম! আধুনিক ও নিরাপদ কৃষি বিনিয়োগের নির্ভরযোগ্য ডিজিটাল প্ল্যাটফর্ম।') }}
+                        {{ setting('top_notice') ?: (setting('notice') ?: ($isBn ? 'ekrishisheba-তে স্বাগতম! আধুনিক ও নিরাপদ কৃষি প্ল্যাটফর্ম।' : 'Welcome to ekrishisheba! Modern, safe & reliable digital agro platform.')) }}
                     </marquee>
                 </div>
             </div>
@@ -396,35 +400,93 @@
 
                 <!-- Desktop Navigation Links -->
                 <nav class="d-none d-lg-flex align-items-center main-desktop-nav">
-                    <a href="{{ route('/') }}" class="desktop-nav-link-golden {{ Route::is('/') ? 'active' : '' }}">হোম</a>
-                    <a href="{{ route('about') }}" class="desktop-nav-link-golden {{ Route::is('about') ? 'active' : '' }}">আমাদের সম্পর্কে</a>
-                    <a href="{{ route('stock.index') }}" class="desktop-nav-link-golden {{ Route::is('stock.*') ? 'active' : '' }}">স্টক মার্কেট</a>
-                    <a href="{{ route('gallery') }}" class="desktop-nav-link-golden {{ Route::is('gallery') ? 'active' : '' }}">গ্যালারি</a>
-                    <a href="{{ route('contact') }}" class="desktop-nav-link-golden {{ Route::is('contact') ? 'active' : '' }}">যোগাযোগ</a>
-                    <a href="{{ route('terms') }}" class="desktop-nav-link-golden {{ Route::is('terms') ? 'active' : '' }}">টার্মস এন্ড কন্ডিশন</a>
-                    <a href="{{ route('privacy') }}" class="desktop-nav-link-golden {{ Route::is('privacy') ? 'active' : '' }}">প্রাইভেসি এন্ড পলিসি</a>
+                    <a href="{{ route('/') }}" class="desktop-nav-link-golden {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
+                    <a href="{{ route('about') }}" class="desktop-nav-link-golden {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>
+                    <a href="{{ route('stock.index') }}" class="desktop-nav-link-golden {{ Route::is('stock.*') ? 'active' : '' }}">{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</a>
+                    <a href="{{ route('gallery') }}" class="desktop-nav-link-golden {{ Route::is('gallery') ? 'active' : '' }}">{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a>
+                    <a href="{{ route('contact') }}" class="desktop-nav-link-golden {{ Route::is('contact') ? 'active' : '' }}">{{ $isBn ? 'যোগাযোগ' : 'Contact' }}</a>
+                    <a href="{{ route('terms') }}" class="desktop-nav-link-golden {{ Route::is('terms') ? 'active' : '' }}">{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</a>
+                    <a href="{{ route('privacy') }}" class="desktop-nav-link-golden {{ Route::is('privacy') ? 'active' : '' }}">{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</a>
                 </nav>
+
+                <!-- Desktop Live Search & Language Switcher Group -->
+                <div class="d-none d-lg-flex align-items-center header-search-and-lang-wrap">
+                    <div class="header-search-wrap" id="bladeSearchWrap">
+                        <div class="header-search-box" id="bladeSearchBox">
+                            <i class="fa fa-search search-icon"></i>
+                            <input
+                                type="text"
+                                id="bladeSearchInput"
+                                class="header-search-input"
+                                placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড খুঁজুন...' : 'Search stocks, packages, cards...' }}"
+                                autocomplete="off"
+                            />
+                            <button type="button" id="bladeSearchClear" class="search-clear-btn" style="display: none;">
+                                <i class="fa fa-times-circle"></i>
+                            </button>
+                        </div>
+                        <div id="bladeSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
+                    </div>
+
+                    <!-- Language Switcher Pill [ EN | বাংলা ] -->
+                    <div class="header-lang-switcher-pill">
+                        <button
+                            type="button"
+                            class="lang-btn {{ !$isBn ? 'active' : '' }}"
+                            onclick="switchSiteLang('en')"
+                            title="English"
+                        >
+                            EN
+                        </button>
+                        <span class="lang-divider">|</span>
+                        <button
+                            type="button"
+                            class="lang-btn {{ $isBn ? 'active' : '' }}"
+                            onclick="switchSiteLang('bn')"
+                            title="বাংলা"
+                        >
+                            বাংলা
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Desktop Golden Action Button -->
                 <div class="d-none d-lg-flex align-items-center header-auth-container">
                     @auth
                         <a href="{{ route('dashboard') }}" class="btn-golden-action">
-                            <i class="fa fa-tachometer me-2"></i> ড্যাশবোর্ড
+                            <i class="fa fa-tachometer me-2"></i> {{ $isBn ? 'ড্যাশবোর্ড' : 'Dashboard' }}
                         </a>
                     @else
                         <div class="header-auth-buttons">
                             <a href="{{ route('login') }}" class="btn-golden-action-outline">
-                                <i class="fa fa-sign-in me-1"></i> লগইন
+                                <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
                             </a>
                             <a href="{{ route('register.referlink') }}" class="btn-golden-action">
-                                <i class="fa fa-user-plus me-1"></i> রেজিস্ট্রেশন
+                                <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্ট্রেশন' : 'Register' }}
                             </a>
                         </div>
                     @endauth
                 </div>
 
                 <!-- Mobile Toggle Button -->
-                <div class="d-flex d-lg-none align-items-center">
+                <div class="d-flex d-lg-none align-items-center gap-2">
+                    <div class="header-lang-switcher-pill mobile-lang-pill">
+                        <button
+                            type="button"
+                            class="lang-btn {{ !$isBn ? 'active' : '' }}"
+                            onclick="switchSiteLang('en')"
+                        >
+                            EN
+                        </button>
+                        <span class="lang-divider">|</span>
+                        <button
+                            type="button"
+                            class="lang-btn {{ $isBn ? 'active' : '' }}"
+                            onclick="switchSiteLang('bn')"
+                        >
+                            বাং
+                        </button>
+                    </div>
                     <button
                         type="button"
                         class="mobile-nav-toggle-btn-golden"
@@ -449,18 +511,55 @@
         </div>
 
         <div class="mobile-drawer-body">
+            <!-- Mobile Language Switcher Inside Drawer -->
+            <div class="mobile-drawer-lang-wrap mb-3 p-2 bg-slate-100 rounded text-center">
+                <span class="small text-muted me-2 fw-bold">Language / ভাষা:</span>
+                <div class="header-lang-switcher-pill d-inline-flex">
+                    <button
+                        type="button"
+                        class="lang-btn {{ !$isBn ? 'active' : '' }}"
+                        onclick="switchSiteLang('en')"
+                    >
+                        English
+                    </button>
+                    <span class="lang-divider">|</span>
+                    <button
+                        type="button"
+                        class="lang-btn {{ $isBn ? 'active' : '' }}"
+                        onclick="switchSiteLang('bn')"
+                    >
+                        বাংলা
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Box -->
+            <div class="mobile-search-holder mb-3 position-relative" id="bladeMobileSearchWrap">
+                <div class="header-search-box w-100">
+                    <i class="fa fa-search search-icon"></i>
+                    <input
+                        type="text"
+                        id="bladeMobileSearchInput"
+                        class="header-search-input"
+                        placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড খুঁজুন...' : 'Search stocks, packages, cards...' }}"
+                        autocomplete="off"
+                    />
+                </div>
+                <div id="bladeMobileSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
+            </div>
+
             <div class="mobile-user-card mb-3">
                 @auth
                     <a href="{{ route('dashboard') }}" class="btn btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                        <i class="fa fa-tachometer"></i> ড্যাশবোর্ডে প্রবেশ করুন
+                        <i class="fa fa-tachometer"></i> {{ $isBn ? 'ড্যাশবোর্ডে প্রবেশ করুন' : 'Go to Dashboard' }}
                     </a>
                 @else
                     <div class="d-flex gap-2">
                         <a href="{{ route('login') }}" class="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
-                            <i class="fa fa-sign-in me-1"></i> লগইন
+                            <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
                         </a>
                         <a href="{{ route('register.referlink') }}" class="btn btn-golden-action w-50 py-2 text-center">
-                            <i class="fa fa-user-plus me-1"></i> রেজিস্টার
+                            <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্টার' : 'Register' }}
                         </a>
                     </div>
                 @endauth
@@ -469,43 +568,43 @@
             <ul class="mobile-nav-list">
                 <li class="mobile-nav-item">
                     <a href="{{ route('/') }}" class="mobile-nav-link {{ Route::is('/') ? 'active' : '' }}">
-                        <span>হোম</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'হোম' : 'Home' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="{{ route('about') }}" class="mobile-nav-link {{ Route::is('about') ? 'active' : '' }}">
-                        <span>আমাদের সম্পর্কে</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="{{ route('stock.index') }}" class="mobile-nav-link {{ Route::is('stock.*') ? 'active' : '' }}">
-                        <span>স্টক মার্কেট</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="{{ route('gallery') }}" class="mobile-nav-link {{ Route::is('gallery') ? 'active' : '' }}">
-                        <span>গ্যালারি</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="{{ route('contact') }}" class="mobile-nav-link {{ Route::is('contact') ? 'active' : '' }}">
-                        <span>যোগাযোগ</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'যোগাযোগ' : 'Contact' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="{{ route('terms') }}" class="mobile-nav-link {{ Route::is('terms') ? 'active' : '' }}">
-                        <span>টার্মস এন্ড কন্ডিশন</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
                     <a href="{{ route('privacy') }}" class="mobile-nav-link {{ Route::is('privacy') ? 'active' : '' }}">
-                        <span>প্রাইভেসি এন্ড পলিসি</span><i class="fa fa-angle-right"></i>
+                        <span>{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
             </ul>
 
             <div class="mobile-drawer-contact mt-4 pt-3 border-top">
-                <div class="small text-muted mb-2 fw-bold">জরুরী হেল্পলাইন:</div>
+                <div class="small text-muted mb-2 fw-bold">{{ $isBn ? 'জরুরী হেল্পলাইন:' : 'Helpline:' }}</div>
                 @if(setting('phone1'))
                     <a href="tel:{{ setting('phone1') }}" class="d-block text-dark mb-2 small text-decoration-none">
                         <i class="fa fa-phone text-warning me-2"></i> {{ setting('phone1') }}
@@ -720,6 +819,125 @@
                 // Fallback timeout so preloader never stays stuck
                 setTimeout(dismissSitePreloader, 3000);
             }
+        })();
+
+        // Bilingual Language Switcher Function
+        function switchSiteLang(lang) {
+            try {
+                localStorage.setItem('ekrishi_lang', lang);
+                document.cookie = 'ekrishi_lang=' + encodeURIComponent(lang) + ';path=/;max-age=31536000';
+            } catch (e) {}
+            window.location.reload();
+        }
+
+        // Blade Pages Live Search Handler
+        (function () {
+            function bindBladeSearch(inputId, resultsId, clearId) {
+                var input = document.getElementById(inputId);
+                var results = document.getElementById(resultsId);
+                var clear = clearId ? document.getElementById(clearId) : null;
+                if (!input || !results) return;
+
+                var timer = null;
+
+                function doSearch(q) {
+                    if (!q || q.trim().length === 0) {
+                        results.style.display = 'none';
+                        results.innerHTML = '';
+                        if (clear) clear.style.display = 'none';
+                        return;
+                    }
+                    if (clear) clear.style.display = 'block';
+
+                    if (timer) clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        fetch('/api/live-search?q=' + encodeURIComponent(q.trim()))
+                            .then(function (res) { return res.json(); })
+                            .then(function (data) {
+                                if (!data || data.total === 0) {
+                                    results.innerHTML = '<div class="p-4 text-center text-muted"><p class="mb-0 small">No matching results for "' + q + '"</p></div>';
+                                    results.style.display = 'block';
+                                    return;
+                                }
+                                var html = '<div class="search-dropdown-body">';
+                                if (data.stocks && data.stocks.length) {
+                                    html += '<div class="search-group-section"><div class="search-group-title">Stocks & Products</div>';
+                                    data.stocks.forEach(function (s) {
+                                        html += '<a href="' + s.url + '" class="search-result-row text-decoration-none">';
+                                        html += '<div class="result-thumb-box"><img src="' + s.image + '" alt="' + s.title + '" /></div>';
+                                        html += '<div class="result-info-box flex-grow-1"><div class="result-title">' + s.title + '</div><div class="result-sub text-muted">' + s.subtitle + '</div></div>';
+                                        if (s.price) html += '<div class="result-price-badge">' + s.price + '</div>';
+                                        html += '</a>';
+                                    });
+                                    html += '</div>';
+                                }
+                                if (data.packages && data.packages.length) {
+                                    html += '<div class="search-group-section"><div class="search-group-title">Packages</div>';
+                                    data.packages.forEach(function (p) {
+                                        html += '<a href="' + p.url + '" class="search-result-row text-decoration-none">';
+                                        html += '<div class="result-thumb-box"><img src="' + p.image + '" alt="' + p.title + '" /></div>';
+                                        html += '<div class="result-info-box flex-grow-1"><div class="result-title">' + p.title + '</div><div class="result-sub text-muted">' + p.subtitle + '</div></div>';
+                                        html += '</a>';
+                                    });
+                                    html += '</div>';
+                                }
+                                if (data.cards && data.cards.length) {
+                                    html += '<div class="search-group-section"><div class="search-group-title">Membership Cards</div>';
+                                    data.cards.forEach(function (c) {
+                                        html += '<a href="' + c.url + '" class="search-result-row text-decoration-none">';
+                                        html += '<div class="result-thumb-box"><i class="fa fa-id-card text-muted"></i></div>';
+                                        html += '<div class="result-info-box flex-grow-1"><div class="result-title">' + c.title + '</div><div class="result-sub text-muted">' + c.subtitle + '</div></div>';
+                                        html += '</a>';
+                                    });
+                                    html += '</div>';
+                                }
+                                if (data.pages && data.pages.length) {
+                                    html += '<div class="search-group-section"><div class="search-group-title">Pages & Links</div>';
+                                    data.pages.forEach(function (pg) {
+                                        html += '<a href="' + pg.url + '" class="search-result-row text-decoration-none">';
+                                        html += '<div class="result-icon-circle"><i class="fa fa-link"></i></div>';
+                                        html += '<div class="result-info-box flex-grow-1"><div class="result-title">' + pg.title + '</div><div class="result-sub text-muted">' + pg.subtitle + '</div></div>';
+                                        html += '</a>';
+                                    });
+                                    html += '</div>';
+                                }
+                                html += '</div>';
+                                results.innerHTML = html;
+                                results.style.display = 'block';
+                            })
+                            .catch(function () {});
+                    }, 250);
+                }
+
+                input.addEventListener('input', function () { doSearch(input.value); });
+                input.addEventListener('focus', function () { if (input.value.trim().length > 0) doSearch(input.value); });
+
+                if (clear) {
+                    clear.addEventListener('click', function () {
+                        input.value = '';
+                        results.style.display = 'none';
+                        clear.style.display = 'none';
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                bindBladeSearch('bladeSearchInput', 'bladeSearchResults', 'bladeSearchClear');
+                bindBladeSearch('bladeMobileSearchInput', 'bladeMobileSearchResults', null);
+
+                document.addEventListener('click', function (e) {
+                    var deskWrap = document.getElementById('bladeSearchWrap');
+                    var deskRes = document.getElementById('bladeSearchResults');
+                    if (deskRes && deskWrap && !deskWrap.contains(e.target)) {
+                        deskRes.style.display = 'none';
+                    }
+                    var mobWrap = document.getElementById('bladeMobileSearchWrap');
+                    var mobRes = document.getElementById('bladeMobileSearchResults');
+                    if (mobRes && mobWrap && !mobWrap.contains(e.target)) {
+                        mobRes.style.display = 'none';
+                    }
+                });
+            });
         })();
     </script>
 

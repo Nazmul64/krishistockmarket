@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 
-export default function ProductGallery({ gallery = [], routes = {} }) {
+export default function ProductGallery({
+    gallery = [],
+    routes = {},
+    lang = 'en',
+    t = {}
+}) {
     const [selectedImage, setSelectedImage] = useState(null);
 
     if (!gallery || gallery.length === 0) return null;
@@ -11,13 +16,13 @@ export default function ProductGallery({ gallery = [], routes = {} }) {
                 {/* Header */}
                 <div className="section-head-wrap text-center mb-5">
                     <div className="section-pill-badge">
-                        <i className="fa fa-camera me-1"></i> ছবি ও ভিজ্যুয়াল
+                        <i className="fa fa-camera me-1"></i> {t.gallery_badge || 'Produce Gallery'}
                     </div>
                     <h2 className="section-main-title">
-                        <span className="text-gradient">প্রোডাক্ট</span> গ্যালারি
+                        {t.gallery_title || 'Fresh Agricultural Produce Gallery'}
                     </h2>
                     <p className="section-sub-title">
-                        আমাদের বিভিন্ন উচ্চমানসম্পন্ন কৃষি পণ্য, খামার ও স্টকের সংগৃহীত সেরা ছবিসমূহ
+                        {t.gallery_sub || 'Moments from our partner farms, fields, and high-quality harvested commodities.'}
                     </p>
                 </div>
 
@@ -50,7 +55,7 @@ export default function ProductGallery({ gallery = [], routes = {} }) {
                 {/* Browse all button */}
                 <div className="mt-4 pt-2">
                     <a href={routes.gallery || '/gallery'} className="btn-gallery-all">
-                        <span>সকল গ্যালারি পিকচার দেখুন</span>
+                        <span>{lang === 'bn' ? 'সকল গ্যালারি পিকচার দেখুন' : 'View Complete Gallery'}</span>
                         <i className="fa fa-chevron-right ms-2"></i>
                     </a>
                 </div>
@@ -58,8 +63,11 @@ export default function ProductGallery({ gallery = [], routes = {} }) {
 
             {/* Lightbox Modal */}
             {selectedImage && (
-                <div className="gallery-lightbox-overlay" onClick={() => setSelectedImage(null)}>
-                    <div className="lightbox-content-box" onClick={(e) => e.stopPropagation()}>
+                <div
+                    className="image-lightbox-overlay show"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <div className="image-lightbox-wrapper" onClick={(e) => e.stopPropagation()}>
                         <button
                             type="button"
                             className="lightbox-close-btn"
@@ -67,7 +75,11 @@ export default function ProductGallery({ gallery = [], routes = {} }) {
                         >
                             <i className="fa fa-times"></i>
                         </button>
-                        <img src={selectedImage} alt="Enlarged preview" className="lightbox-main-img" />
+                        <img
+                            src={selectedImage}
+                            alt="Gallery Large Preview"
+                            className="lightbox-full-img"
+                        />
                     </div>
                 </div>
             )}

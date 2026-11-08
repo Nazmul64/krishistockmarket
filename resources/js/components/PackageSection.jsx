@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-export default function PackageSection({ packages = [] }) {
+export default function PackageSection({
+    packages = [],
+    lang = 'en',
+    t = {}
+}) {
     const [activeIdx, setActiveIdx] = useState(0);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isPaused, setIsPaused] = useState(false);
@@ -73,13 +77,13 @@ export default function PackageSection({ packages = [] }) {
                 {/* Section Header */}
                 <div className="section-head-wrap text-center mb-4">
                     <span className="section-pill-badge">
-                        <i className="fa fa-gift me-1"></i> স্পেশাল প্যাকেজ
+                        <i className="fa fa-gift me-1"></i> {t.pkg_badge || 'Special Packages'}
                     </span>
                     <h2 className="section-main-title">
-                        <span className="text-gradient">আওয়ার প্যাকেজসমূহ</span> (Our Packages)
+                        {t.pkg_title || 'Our Exclusive Packages'}
                     </h2>
                     <p className="section-sub-title">
-                        আমাদের বিশেষ মেম্বারশিপ প্রসেস, ব্যবসায়িক প্যাকেজ ও অনন্য সুযোগ-সুবিধা উপভোগ করুন।
+                        {t.pkg_sub || 'Explore our profitable seasonal offers, business packages, and unique member benefits.'}
                     </p>
                 </div>
 
@@ -95,7 +99,7 @@ export default function PackageSection({ packages = [] }) {
                                 <div 
                                     className={`package-pure-image-card ${animating ? 'fade-transition' : ''}`}
                                     onClick={() => setSelectedImage(pkg.image)}
-                                    title="বড় করে দেখতে ক্লিক করুন"
+                                    title={t.pkg_view_hint || 'Click to zoom image'}
                                 >
                                     <div className="pkg-img-box">
                                         <img
@@ -118,7 +122,7 @@ export default function PackageSection({ packages = [] }) {
                         <>
                             <button
                                 type="button"
-                                className="pkg-slider-btn pkg-prev-btn"
+                                className="pkg-nav-btn pkg-prev-btn"
                                 onClick={triggerPrev}
                                 aria-label="Previous Package"
                             >
@@ -126,7 +130,7 @@ export default function PackageSection({ packages = [] }) {
                             </button>
                             <button
                                 type="button"
-                                className="pkg-slider-btn pkg-next-btn"
+                                className="pkg-nav-btn pkg-next-btn"
                                 onClick={triggerNext}
                                 aria-label="Next Package"
                             >
@@ -137,7 +141,7 @@ export default function PackageSection({ packages = [] }) {
 
                     {/* Pagination Dots */}
                     {totalPackages > slotsCount && (
-                        <div className="pkg-slider-dots text-center mt-4">
+                        <div className="package-slider-dots text-center mt-4">
                             {packages.map((_, idx) => (
                                 <button
                                     key={idx}
@@ -158,18 +162,25 @@ export default function PackageSection({ packages = [] }) {
                 </div>
             </div>
 
-            {/* Lightbox / Full View Modal for Package Image */}
+            {/* High-Res Image Lightbox Modal */}
             {selectedImage && (
-                <div className="pkg-lightbox-overlay" onClick={() => setSelectedImage(null)}>
-                    <div className="pkg-lightbox-content" onClick={(e) => e.stopPropagation()}>
+                <div 
+                    className="image-lightbox-overlay show"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <div className="image-lightbox-wrapper" onClick={(e) => e.stopPropagation()}>
                         <button 
                             type="button" 
-                            className="pkg-lightbox-close"
+                            className="lightbox-close-btn"
                             onClick={() => setSelectedImage(null)}
                         >
                             <i className="fa fa-times"></i>
                         </button>
-                        <img src={selectedImage} alt="Package Detail" className="pkg-lightbox-img" />
+                        <img 
+                            src={selectedImage} 
+                            alt="Package Large Preview" 
+                            className="lightbox-full-img" 
+                        />
                     </div>
                 </div>
             )}

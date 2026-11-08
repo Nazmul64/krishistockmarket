@@ -1,8 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-export default function Navbar({ site, auth, routes }) {
+export default function Navbar({
+    site = {},
+    auth = {},
+    routes = {},
+    stocks = [],
+    packages = [],
+    cardBenefits = [],
+    lang = 'en',
+    onSwitchLang = () => {},
+    t = {}
+}) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    // Search state
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [isSearching, setIsSearching] = useState(false);
+    const [searchResults, setSearchResults] = useState({
+        stocks: [],
+        packages: [],
+        cards: [],
+        pages: [],
+        total: 0
+    });
+
+    const searchWrapRef = useRef(null);
+    const mobileSearchWrapRef = useRef(null);
+    const debounceTimerRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -25,17 +51,317 @@ export default function Navbar({ site, auth, routes }) {
         }
     }, [mobileMenuOpen]);
 
+    // Close search dropdown on click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                searchWrapRef.current &&
+                !searchWrapRef.current.contains(event.target) &&
+                mobileSearchWrapRef.current &&
+                !mobileSearchWrapRef.current.contains(event.target)
+            ) {
+                setSearchOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
 
     const navLinks = [
-        { label: 'হোম', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
-        { label: 'আমাদের সম্পর্কে', url: routes.about || '/about', active: currentPath.includes('/about') },
-        { label: 'স্টক মার্কেট', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
-        { label: 'গ্যালারি', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
-        { label: 'যোগাযোগ', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
-        { label: 'টার্মস এন্ড কন্ডিশন', url: routes.terms || '/terms', active: currentPath.includes('/terms') },
-        { label: 'প্রাইভেসি এন্ড পলিসি', url: routes.privacy || '/privacy-policy', active: currentPath.includes('/privacy') },
+        { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
+        { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
+        { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
+        { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
+        { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
+        { label: t.terms || 'Terms & Conditions', url: routes.terms || '/terms', active: currentPath.includes('/terms') },
+        { label: t.privacy || 'Privacy Policy', url: routes.privacy || '/privacy-policy', active: currentPath.includes('/privacy') },
     ];
+
+    // Static pages lookup definition
+    const staticPages = [
+        { title: t.home || 'Home', subtitle: 'Main Homepage', url: routes.home || '/', keywords: 'home main index হোম ekrishisheba' },
+        { title: t.about || 'About Us', subtitle: 'Who We Are', url: routes.about || '/about', keywords: 'about us info কোম্পানি আমাদের সম্পর্কে' },
+        { title: t.stocks || 'Stock Market', subtitle: 'Live Rates & Trading', url: routes.stock_index || '/stocks', keywords: 'stocks market live price দর স্টক মার্কেট কৃষি পণ্য' },
+        { title: t.pkg_title || 'Our Packages', subtitle: 'Exclusive Packages', url: (routes.home || '/') + '#packages', keywords: 'packages offer discount প্যাকেজ আওয়ার প্যাকেজ' },
+        { title: t.card_title || 'Membership Cards', subtitle: 'SME & Gold Cards', url: (routes.home || '/') + '#card-benefits', keywords: 'cards sme gold card membership মেম্বারশিপ কার্ড গোল্ড' },
+        { title: t.gallery || 'Produce Gallery', subtitle: 'Farm & Commodity Photos', url: routes.gallery || '/gallery', keywords: 'gallery photo images ছবি গ্যালারি প্রোডাক্ট' },
+        { title: t.contact || 'Contact Us', subtitle: 'Support & Helpline', url: routes.contact || '/contact', keywords: 'contact support helpline যোগাযোগ হেল্পলাইন ফোন' },
+        { title: t.terms || 'Terms & Conditions', subtitle: 'Platform Policies', url: routes.terms || '/terms', keywords: 'terms conditions নিয়মাবলী শর্তাবলী টার্মস' },
+        { title: t.privacy || 'Privacy Policy', subtitle: 'User Data Security', url: routes.privacy || '/privacy-policy', keywords: 'privacy policy সিকিউরিটি প্রাইভেসি পলিসি' },
+        { title: t.login || 'Login', subtitle: 'Access Account', url: routes.login || '/login', keywords: 'login signin প্রবেশ লগইন একাউন্ট' },
+        { title: t.register || 'Register', subtitle: 'Create Account', url: routes.register || '/register', keywords: 'register signup registration নিবন্ধন রেজিস্ট্রেশন অ্যাকাউন্ট তৈরি' },
+    ];
+
+    // Instant local filter combined with backend search
+    const performSearch = (query) => {
+        const q = query.trim().toLowerCase();
+        if (!q) {
+            setSearchResults({ stocks: [], packages: [], cards: [], pages: [], total: 0 });
+            setSearchOpen(false);
+            return;
+        }
+
+        // 1. Filter local stocks
+        const matchedStocks = stocks.filter((s) => {
+            const name = (s.name || '').toLowerCase();
+            const cat = (s.category || '').toLowerCase();
+            return name.includes(q) || cat.includes(q);
+        }).slice(0, 5).map((s) => ({
+            id: s.id,
+            type: 'stock',
+            title: s.name,
+            subtitle: s.category || 'Agro Stock',
+            price: `৳${Number(s.selling_price || 0).toLocaleString('en-US')}`,
+            image: s.image,
+            url: s.details_url || `/stock/${s.id}`
+        }));
+
+        // 2. Filter local packages
+        const matchedPackages = packages.filter((p) => {
+            const title = (p.title || '').toLowerCase();
+            const desc = (p.description || '').toLowerCase();
+            return title.includes(q) || desc.includes(q);
+        }).slice(0, 4).map((p) => ({
+            id: p.id,
+            type: 'package',
+            title: p.title || 'Package',
+            subtitle: p.price ? `Price: ${p.price}` : 'Special Offer',
+            image: p.image,
+            url: (routes.home || '/') + '#packages'
+        }));
+
+        // 3. Filter local cards
+        const matchedCards = cardBenefits.filter((c) => {
+            const name = (c.card_name || '').toLowerCase();
+            const type = (c.card_type || '').toLowerCase();
+            const desc = (c.short_description || '').toLowerCase();
+            return name.includes(q) || type.includes(q) || desc.includes(q);
+        }).slice(0, 3).map((c) => ({
+            id: c.id,
+            type: 'card',
+            title: c.card_name,
+            subtitle: c.badge_text || c.card_type || 'Membership Card',
+            image: c.image,
+            url: (routes.home || '/') + '#card-benefits'
+        }));
+
+        // 4. Filter static pages
+        const matchedPages = staticPages.filter((p) => {
+            const title = (p.title || '').toLowerCase();
+            const sub = (p.subtitle || '').toLowerCase();
+            const kw = (p.keywords || '').toLowerCase();
+            return title.includes(q) || sub.includes(q) || kw.includes(q);
+        }).slice(0, 4);
+
+        const localTotal = matchedStocks.length + matchedPackages.length + matchedCards.length + matchedPages.length;
+
+        setSearchResults({
+            stocks: matchedStocks,
+            packages: matchedPackages,
+            cards: matchedCards,
+            pages: matchedPages,
+            total: localTotal
+        });
+        setSearchOpen(true);
+
+        // Debounced Deep Search from API
+        if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = setTimeout(async () => {
+            try {
+                setIsSearching(true);
+                const searchApiUrl = routes.live_search || '/api/live-search';
+                const res = await fetch(`${searchApiUrl}?q=${encodeURIComponent(query)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && typeof data.total !== 'undefined') {
+                        setSearchResults({
+                            stocks: data.stocks && data.stocks.length > 0 ? data.stocks : matchedStocks,
+                            packages: data.packages && data.packages.length > 0 ? data.packages : matchedPackages,
+                            cards: data.cards && data.cards.length > 0 ? data.cards : matchedCards,
+                            pages: data.pages && data.pages.length > 0 ? data.pages : matchedPages,
+                            total: data.total || localTotal
+                        });
+                    }
+                }
+            } catch (err) {
+                // Keep local results if network error
+            } finally {
+                setIsSearching(false);
+            }
+        }, 300);
+    };
+
+    const handleSearchChange = (e) => {
+        const val = e.target.value;
+        setSearchQuery(val);
+        performSearch(val);
+    };
+
+    const clearSearch = () => {
+        setSearchQuery('');
+        setSearchResults({ stocks: [], packages: [], cards: [], pages: [], total: 0 });
+        setSearchOpen(false);
+    };
+
+    const handleResultClick = (url) => {
+        setSearchOpen(false);
+        setMobileMenuOpen(false);
+        if (url) {
+            window.location.href = url;
+        }
+    };
+
+    // Render results dropdown items
+    const renderSearchResultsDropdown = () => (
+        <div className="header-search-dropdown-menu">
+            <div className="search-dropdown-header d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
+                <span className="small text-muted fw-bold">
+                    {isSearching ? (
+                        <span><i className="fa fa-spinner fa-spin me-1 text-warning"></i> Searching...</span>
+                    ) : (
+                        <span>Results ({searchResults.total})</span>
+                    )}
+                </span>
+                <button
+                    type="button"
+                    className="btn btn-sm btn-link text-muted p-0 text-decoration-none"
+                    onClick={() => setSearchOpen(false)}
+                >
+                    <i className="fa fa-times"></i>
+                </button>
+            </div>
+
+            <div className="search-dropdown-body">
+                {searchResults.total === 0 ? (
+                    <div className="p-4 text-center text-muted">
+                        <i className="fa fa-search fa-2x mb-2 text-warning opacity-75"></i>
+                        <p className="mb-0 small">{t.search_no_results} "{searchQuery}"</p>
+                    </div>
+                ) : (
+                    <>
+                        {/* Stocks */}
+                        {searchResults.stocks && searchResults.stocks.length > 0 && (
+                            <div className="search-group-section">
+                                <div className="search-group-title">
+                                    <i className="fa fa-line-chart me-1 text-success"></i> {t.stocks_group}
+                                </div>
+                                {searchResults.stocks.map((item) => (
+                                    <div
+                                        key={`stock-${item.id}`}
+                                        className="search-result-row"
+                                        onClick={() => handleResultClick(item.url)}
+                                    >
+                                        <div className="result-thumb-box">
+                                            {item.image ? (
+                                                <img src={item.image} alt={item.title} />
+                                            ) : (
+                                                <i className="fa fa-cubes text-muted"></i>
+                                            )}
+                                        </div>
+                                        <div className="result-info-box flex-grow-1">
+                                            <div className="result-title">{item.title}</div>
+                                            <div className="result-sub text-muted small">{item.subtitle}</div>
+                                        </div>
+                                        {item.price && (
+                                            <div className="result-price-badge">
+                                                {item.price}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Packages */}
+                        {searchResults.packages && searchResults.packages.length > 0 && (
+                            <div className="search-group-section">
+                                <div className="search-group-title">
+                                    <i className="fa fa-gift me-1 text-warning"></i> {t.packages_group}
+                                </div>
+                                {searchResults.packages.map((item) => (
+                                    <div
+                                        key={`pkg-${item.id}`}
+                                        className="search-result-row"
+                                        onClick={() => handleResultClick(item.url)}
+                                    >
+                                        <div className="result-thumb-box">
+                                            {item.image ? (
+                                                <img src={item.image} alt={item.title} />
+                                            ) : (
+                                                <i className="fa fa-gift text-muted"></i>
+                                            )}
+                                        </div>
+                                        <div className="result-info-box flex-grow-1">
+                                            <div className="result-title">{item.title}</div>
+                                            <div className="result-sub text-muted small">{item.subtitle}</div>
+                                        </div>
+                                        <i className="fa fa-angle-right text-muted"></i>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Membership Cards */}
+                        {searchResults.cards && searchResults.cards.length > 0 && (
+                            <div className="search-group-section">
+                                <div className="search-group-title">
+                                    <i className="fa fa-credit-card me-1 text-primary"></i> {t.cards_group}
+                                </div>
+                                {searchResults.cards.map((item) => (
+                                    <div
+                                        key={`card-${item.id}`}
+                                        className="search-result-row"
+                                        onClick={() => handleResultClick(item.url)}
+                                    >
+                                        <div className="result-thumb-box">
+                                            {item.image ? (
+                                                <img src={item.image} alt={item.title} />
+                                            ) : (
+                                                <i className="fa fa-id-card text-muted"></i>
+                                            )}
+                                        </div>
+                                        <div className="result-info-box flex-grow-1">
+                                            <div className="result-title">{item.title}</div>
+                                            <div className="result-sub text-muted small">{item.subtitle}</div>
+                                        </div>
+                                        <i className="fa fa-angle-right text-muted"></i>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Static Pages */}
+                        {searchResults.pages && searchResults.pages.length > 0 && (
+                            <div className="search-group-section">
+                                <div className="search-group-title">
+                                    <i className="fa fa-link me-1 text-info"></i> {t.pages_group}
+                                </div>
+                                {searchResults.pages.map((item, idx) => (
+                                    <div
+                                        key={`page-${idx}`}
+                                        className="search-result-row"
+                                        onClick={() => handleResultClick(item.url)}
+                                    >
+                                        <div className="result-icon-circle">
+                                            <i className={`fa ${item.icon || 'fa-file-text-o'}`}></i>
+                                        </div>
+                                        <div className="result-info-box flex-grow-1">
+                                            <div className="result-title">{item.title}</div>
+                                            <div className="result-sub text-muted small">{item.subtitle}</div>
+                                        </div>
+                                        <i className="fa fa-arrow-right text-muted small"></i>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+        </div>
+    );
 
     return (
         <>
@@ -47,7 +373,7 @@ export default function Navbar({ site, auth, routes }) {
                         <div className="marquee-badge-wrap d-flex align-items-center gap-2 flex-shrink-0">
                             <span className="marquee-live-dot"></span>
                             <i className="fa fa-bullhorn marquee-icon"></i>
-                            <span className="marquee-badge-title">নোটিশ:</span>
+                            <span className="marquee-badge-title">{t.notice_badge}</span>
                         </div>
 
                         {/* Scrolling Marquee Area - Full Width */}
@@ -60,7 +386,7 @@ export default function Navbar({ site, auth, routes }) {
                                 onMouseOut={(e) => e.target.start()}
                                 className="marquee-ticker-content"
                             >
-                                {site.top_notice || 'কৃষি পরিবারে স্বাগতম! আধুনিক ও নিরাপদ কৃষি বিনিয়োগের নির্ভরযোগ্য ডিজিটাল প্ল্যাটফর্ম।'}
+                                {site.top_notice || t.default_notice}
                             </marquee>
                         </div>
                     </div>
@@ -76,7 +402,7 @@ export default function Navbar({ site, auth, routes }) {
                             <img src={site.logo} alt={site.title} />
                         </a>
 
-                        {/* Desktop Navigation Links with White Text */}
+                        {/* Desktop Navigation Links with High-Contrast White Text */}
                         <nav className="d-none d-lg-flex align-items-center main-desktop-nav">
                             {navLinks.map((item, index) => (
                                 <a
@@ -89,26 +415,98 @@ export default function Navbar({ site, auth, routes }) {
                             ))}
                         </nav>
 
-                        {/* Desktop Golden Action Button */}
+                        {/* Desktop Search Box + Language Switcher (Right in the circled red navbar area) */}
+                        <div className="d-none d-lg-flex align-items-center header-search-and-lang-wrap">
+                            {/* Interactive Search Box */}
+                            <div className="header-search-wrap" ref={searchWrapRef}>
+                                <div className={`header-search-box ${searchOpen ? 'focused' : ''}`}>
+                                    <i className="fa fa-search search-icon"></i>
+                                    <input
+                                        type="text"
+                                        className="header-search-input"
+                                        placeholder={t.search_placeholder}
+                                        value={searchQuery}
+                                        onChange={handleSearchChange}
+                                        onFocus={() => { if (searchQuery.trim().length > 0) setSearchOpen(true); }}
+                                        onKeyDown={(e) => { if (e.key === 'Escape') setSearchOpen(false); }}
+                                    />
+                                    {searchQuery ? (
+                                        <button
+                                            type="button"
+                                            className="search-clear-btn"
+                                            onClick={clearSearch}
+                                            aria-label="Clear Search"
+                                        >
+                                            <i className="fa fa-times-circle"></i>
+                                        </button>
+                                    ) : null}
+                                </div>
+
+                                {/* Results Popover Dropdown */}
+                                {searchOpen && renderSearchResultsDropdown()}
+                            </div>
+
+                            {/* Language Switcher Pill [ EN | বাংলা ] */}
+                            <div className="header-lang-switcher-pill">
+                                <button
+                                    type="button"
+                                    className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+                                    onClick={() => onSwitchLang('en')}
+                                    title="Switch to English (Default)"
+                                >
+                                    EN
+                                </button>
+                                <span className="lang-divider">|</span>
+                                <button
+                                    type="button"
+                                    className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
+                                    onClick={() => onSwitchLang('bn')}
+                                    title="বাংলা ভাষায় পরিবর্তন করুন"
+                                >
+                                    বাংলা
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Desktop Golden Action / Auth Buttons */}
                         <div className="d-none d-lg-flex align-items-center header-auth-container">
                             {auth.is_authenticated ? (
                                 <a href={auth.dashboard_url} className="btn-golden-action">
-                                    <i className="fa fa-tachometer me-2"></i> ড্যাশবোর্ড
+                                    <i className="fa fa-tachometer me-2"></i> {t.dashboard}
                                 </a>
                             ) : (
                                 <div className="header-auth-buttons">
                                     <a href={auth.login_url} className="btn-golden-action-outline">
-                                        <i className="fa fa-sign-in me-1"></i> লগইন
+                                        <i className="fa fa-sign-in me-1"></i> {t.login}
                                     </a>
                                     <a href={auth.register_url} className="btn-golden-action">
-                                        <i className="fa fa-user-plus me-1"></i> রেজিস্ট্রেশন
+                                        <i className="fa fa-user-plus me-1"></i> {t.register}
                                     </a>
                                 </div>
                             )}
                         </div>
 
                         {/* Mobile Toggle Button - Strictly pinned on far right of header */}
-                        <div className="d-flex d-lg-none align-items-center">
+                        <div className="d-flex d-lg-none align-items-center gap-2">
+                            {/* Mobile Language Switcher Pill */}
+                            <div className="header-lang-switcher-pill mobile-lang-pill">
+                                <button
+                                    type="button"
+                                    className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+                                    onClick={() => onSwitchLang('en')}
+                                >
+                                    EN
+                                </button>
+                                <span className="lang-divider">|</span>
+                                <button
+                                    type="button"
+                                    className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
+                                    onClick={() => onSwitchLang('bn')}
+                                >
+                                    বাং
+                                </button>
+                            </div>
+
                             <button
                                 type="button"
                                 className={`mobile-nav-toggle-btn-golden ${mobileMenuOpen ? 'active' : ''}`}
@@ -133,19 +531,66 @@ export default function Navbar({ site, auth, routes }) {
                 </div>
 
                 <div className="mobile-drawer-body">
+                    {/* Mobile Language Switcher Inside Drawer */}
+                    <div className="mobile-drawer-lang-wrap mb-3 p-2 bg-slate-100 rounded text-center">
+                        <span className="small text-muted me-2 fw-bold">Language / ভাষা:</span>
+                        <div className="header-lang-switcher-pill d-inline-flex">
+                            <button
+                                type="button"
+                                className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+                                onClick={() => onSwitchLang('en')}
+                            >
+                                English
+                            </button>
+                            <span className="lang-divider">|</span>
+                            <button
+                                type="button"
+                                className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
+                                onClick={() => onSwitchLang('bn')}
+                            >
+                                বাংলা
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Mobile Search Box */}
+                    <div className="mobile-search-holder mb-3" ref={mobileSearchWrapRef}>
+                        <div className="header-search-box w-100">
+                            <i className="fa fa-search search-icon"></i>
+                            <input
+                                type="text"
+                                className="header-search-input"
+                                placeholder={t.search_placeholder}
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                onFocus={() => { if (searchQuery.trim().length > 0) setSearchOpen(true); }}
+                            />
+                            {searchQuery && (
+                                <button
+                                    type="button"
+                                    className="search-clear-btn"
+                                    onClick={clearSearch}
+                                >
+                                    <i className="fa fa-times-circle"></i>
+                                </button>
+                            )}
+                        </div>
+                        {searchOpen && renderSearchResultsDropdown()}
+                    </div>
+
                     {/* User Quick Info */}
                     <div className="mobile-user-card mb-3">
                         {auth.is_authenticated ? (
                             <a href={auth.dashboard_url} className="btn btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                                <i className="fa fa-tachometer"></i> ড্যাশবোর্ডে প্রবেশ করুন
+                                <i className="fa fa-tachometer"></i> {t.dashboard}
                             </a>
                         ) : (
                             <div className="d-flex gap-2">
                                 <a href={auth.login_url} className="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
-                                    <i className="fa fa-sign-in me-1"></i> লগইন
+                                    <i className="fa fa-sign-in me-1"></i> {t.login}
                                 </a>
                                 <a href={auth.register_url} className="btn btn-golden-action w-50 py-2 text-center">
-                                    <i className="fa fa-user-plus me-1"></i> রেজিস্টার
+                                    <i className="fa fa-user-plus me-1"></i> {t.register}
                                 </a>
                             </div>
                         )}
@@ -169,7 +614,7 @@ export default function Navbar({ site, auth, routes }) {
 
                     {/* Quick Contacts inside Mobile Drawer */}
                     <div className="mobile-drawer-contact mt-4 pt-3 border-top">
-                        <div className="small text-muted mb-2 fw-bold">জরুরী হেল্পলাইন:</div>
+                        <div className="small text-muted mb-2 fw-bold">Contact & Helpline:</div>
                         {site.phone1 && (
                             <a href={`tel:${site.phone1}`} className="d-block text-dark mb-2 small text-decoration-none">
                                 <i className="fa fa-phone text-warning me-2"></i> {site.phone1}

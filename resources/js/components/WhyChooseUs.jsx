@@ -1,7 +1,35 @@
 import React from 'react';
 
-export default function WhyChooseUs({ features = [] }) {
-    const defaultFeatures = [
+export default function WhyChooseUs({
+    features = [],
+    lang = 'en',
+    t = {}
+}) {
+    const defaultFeaturesEn = [
+        {
+            id: 1,
+            title: '100% Secure & Trusted',
+            description: 'All transactions, savings, and investments maintain bank-grade security, transparency, and compliance.',
+            icon: 'fa-shield',
+            color: '#1b88ce',
+        },
+        {
+            id: 2,
+            title: 'Smart Stock Monitoring',
+            description: 'Daily and weekly real-time commodity price tracking, profit-loss insights, and accurate market trends.',
+            icon: 'fa-line-chart',
+            color: '#10b981',
+        },
+        {
+            id: 3,
+            title: '24/7 Dedicated Support',
+            description: 'Our experienced agro-support representatives are always ready to answer your questions and assist your investments.',
+            icon: 'fa-headphones',
+            color: '#f59e0b',
+        },
+    ];
+
+    const defaultFeaturesBn = [
         {
             id: 1,
             title: '১০০% নিরাপদ ও বিশ্বস্ত',
@@ -25,7 +53,9 @@ export default function WhyChooseUs({ features = [] }) {
         },
     ];
 
-    const activeFeatures = features && features.length > 0 ? features : defaultFeatures;
+    const activeFeatures = (features && features.length > 0)
+        ? features
+        : (lang === 'bn' ? defaultFeaturesBn : defaultFeaturesEn);
 
     return (
         <section className="why-choose-section py-5" id="features">
@@ -33,13 +63,13 @@ export default function WhyChooseUs({ features = [] }) {
                 {/* Header */}
                 <div className="section-head-wrap text-center mb-5">
                     <div className="section-pill-badge">
-                        <i className="fa fa-diamond me-1"></i> আমাদের বিশেষত্ব
+                        <i className="fa fa-diamond me-1"></i> {t.why_badge || 'Key Benefits'}
                     </div>
                     <h2 className="section-main-title">
-                        <span className="text-gradient">কেন কৃষি পরিবার</span> বেছে নেবেন?
+                        {t.why_title || 'Why Choose ekrishisheba'}
                     </h2>
                     <p className="section-sub-title">
-                        কৃষি ও ব্যবসা খাতের জন্য আমাদের বিশ্বস্ত সেবা, আধুনিক সুযোগ-সুবিধা ও নির্ভরযোগ্য ডিজিটাল প্ল্যাটফর্ম
+                        {t.why_sub || 'Our core advantages, transparent services, and technological solutions.'}
                     </p>
                 </div>
 

@@ -187,6 +187,7 @@ class FrontendController extends Controller
             'contact_send' => route('contact.send'),
             'terms' => route('terms'),
             'privacy' => route('privacy'),
+            'live_search' => route('api.live_search'),
             'csrf_token' => csrf_token(),
         ];
 
@@ -213,5 +214,132 @@ class FrontendController extends Controller
     public function apiHomepageData()
     {
         return response()->json($this->getHomepageData());
+    }
+
+    public function apiLiveSearch(Request $request)
+    {
+        $q = trim((string)$request->get('q', ''));
+        if (mb_strlen($q) < 1) {
+            return response()->json([
+                'query' => $q,
+                'total' => 0,
+                'stocks' => [],
+                'packages' => [],
+                'cards' => [],
+                'pages' => [],
+            ]);
+        }
+
+        $term = '%' . $q . '%';
+
+        // 1. Stocks
+        $stocks = Stock::where('stock_name', 'like', $term)
+            ->orWhere('description', 'like', $term)
+            ->latest()
+            ->take(6)
+            ->get()
+            ->map(function ($s) {
+                $gallery = StockGallery::where('stock_id', $s->id)->first();
+                $image = $gallery ? asset('upload/stock_images/' . $gallery->image) : asset('upload/images/backend/logo/' . (setting('logo') ?: 'default-logo.png'));
+                $last_price = function_exists('StockLastPricing') ? StockLastPricing($s->id) : null;
+                $selling_price = $last_price ? (float)$last_price->selling_price : 0;
+                $buying_price = $last_price ? (float)$last_price->buying_price : 0;
+                return [
+                    'id' => $s->id,
+                    'type' => 'stock',
+                    'title' => $s->stock_name,
+                    'subtitle' => $s->description ? \Illuminate\Support\Str::limit(strip_tags($s->description), 35) : 'Agro Commodity',
+                    'price' => '৳' . number_format($selling_price, 2),
+                    'buying_price' => '৳' . number_format($buying_price, 2),
+                    'image' => $image,
+                    'url' => route('stock.detials', $s->id),
+                ];
+            });
+
+        // 2. Packages
+        $packages = OurPackage::where('status', 1)
+            ->where(function ($sub) use ($term) {
+                $sub->where('title', 'like', $term)
+                    ->orWhere('description', 'like', $term);
+            })
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($pkg) {
+                return [
+                    'id' => $pkg->id,
+                    'type' => 'package',
+                    'title' => $pkg->title ?? 'Package',
+                    'subtitle' => $pkg->price ? ('Price: ' . $pkg->price) : 'Exclusive Package',
+                    'image' => asset($pkg->image),
+                    'url' => route('/') . '#packages',
+                ];
+            });
+
+        // 3. Membership Cards
+        $cards = CardBenefit::where('status', 1)
+            ->where(function ($sub) use ($term) {
+                $sub->where('card_name', 'like', $term)
+                    ->orWhere('card_type', 'like', $term)
+                    ->orWhere('short_description', 'like', $term);
+            })
+            ->orderBy('order_num', 'asc')
+            ->take(4)
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'id' => $c->id,
+                    'type' => 'card',
+                    'title' => $c->card_name,
+                    'subtitle' => $c->badge_text ?: $c->card_type,
+                    'image' => $c->image ? asset($c->image) : null,
+                    'url' => route('/') . '#card-benefits',
+                ];
+            });
+
+        // 4. Static Pages & Portals
+        $pageDefinitions = [
+            ['title_en' => 'Home', 'title_bn' => 'হোম', 'keywords' => 'home main index হোম ekrishisheba', 'url' => route('/')],
+            ['title_en' => 'About Us', 'title_bn' => 'আমাদের সম্পর্কে', 'keywords' => 'about us company info আমাদের সম্পর্কে', 'url' => route('about')],
+            ['title_en' => 'Stock Market', 'title_bn' => 'স্টক মার্কেট', 'keywords' => 'stock market live price রেট স্টক মার্কেট বাজার দর', 'url' => route('stock.index')],
+            ['title_en' => 'Our Packages', 'title_bn' => 'প্যাকেজসমূহ', 'keywords' => 'package offer discount প্যাকেজ আওয়ার প্যাকেজসমূহ', 'url' => route('/') . '#packages'],
+            ['title_en' => 'Membership Cards', 'title_bn' => 'মেম্বারশিপ কার্ড', 'keywords' => 'card sme gold golden membership মেম্বারশিপ কার্ড এসএমই গোল্ড', 'url' => route('/') . '#card-benefits'],
+            ['title_en' => 'Produce Gallery', 'title_bn' => 'প্রোডাক্ট গ্যালারি', 'keywords' => 'gallery photo images ছবি গ্যালারি প্রোডাক্ট', 'url' => route('gallery')],
+            ['title_en' => 'Contact Us', 'title_bn' => 'যোগাযোগ', 'keywords' => 'contact support helpline ফোন ইমেইল যোগাযোগ হেল্পলাইন', 'url' => route('contact')],
+            ['title_en' => 'Terms & Conditions', 'title_bn' => 'টার্মস এন্ড কন্ডিশন', 'keywords' => 'terms conditions rules নিয়মাবলী শর্তাবলী টার্মস', 'url' => route('terms')],
+            ['title_en' => 'Privacy Policy', 'title_bn' => 'প্রাইভেসি পলিসি', 'keywords' => 'privacy policy security গোপনীয়তা প্রাইভেসি পলিসি', 'url' => route('privacy')],
+            ['title_en' => 'Login', 'title_bn' => 'লগইন', 'keywords' => 'login signin প্রবেশ লগইন একাউন্ট', 'url' => route('login')],
+            ['title_en' => 'Register', 'title_bn' => 'রেজিস্ট্রেশন', 'keywords' => 'register signup join নিবন্ধন রেজিস্ট্রেশন অ্যাকাউন্ট তৈরি', 'url' => route('register')],
+        ];
+
+        $pages = [];
+        $lowerQ = mb_strtolower($q);
+        foreach ($pageDefinitions as $p) {
+            if (
+                mb_stripos(mb_strtolower($p['title_en']), $lowerQ) !== false ||
+                mb_stripos(mb_strtolower($p['title_bn']), $lowerQ) !== false ||
+                mb_stripos(mb_strtolower($p['keywords']), $lowerQ) !== false
+            ) {
+                $pages[] = [
+                    'type' => 'page',
+                    'title' => $p['title_en'],
+                    'title_bn' => $p['title_bn'],
+                    'subtitle' => 'Site Page / Navigation',
+                    'url' => $p['url'],
+                    'icon' => 'fa-external-link',
+                ];
+            }
+        }
+
+        $total = count($stocks) + count($packages) + count($cards) + count($pages);
+
+        return response()->json([
+            'query' => $q,
+            'total' => $total,
+            'stocks' => $stocks,
+            'packages' => $packages,
+            'cards' => $cards,
+            'pages' => $pages,
+        ]);
     }
 }

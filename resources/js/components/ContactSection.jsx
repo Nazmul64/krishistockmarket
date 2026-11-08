@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 
-export default function ContactSection({ site = {}, routes = {} }) {
+export default function ContactSection({
+    site = {},
+    routes = {},
+    lang = 'en',
+    t = {}
+}) {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -45,7 +50,7 @@ export default function ContactSection({ site = {}, routes = {} }) {
             if (res.ok) {
                 setStatus({
                     submitting: false,
-                    success: 'আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে! আমাদের প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন।',
+                    success: t.contact_success || (lang === 'bn' ? 'আপনার বার্তাটি সফলভাবে পাঠানো হয়েছে! আমাদের প্রতিনিধি শীঘ্রই আপনার সাথে যোগাযোগ করবেন।' : 'Thank you! Your message has been sent successfully. Our team will contact you shortly.'),
                     error: null,
                 });
                 setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
@@ -54,14 +59,14 @@ export default function ContactSection({ site = {}, routes = {} }) {
                 setStatus({
                     submitting: false,
                     success: null,
-                    error: data.message || 'মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে ফোন নম্বরে সরাসরি যোগাযোগ করুন।',
+                    error: data.message || (lang === 'bn' ? 'মেসেজ পাঠাতে সমস্যা হয়েছে। অনুগ্রহ করে ফোন নম্বরে সরাসরি যোগাযোগ করুন।' : 'Failed to send message. Please reach us directly via helpline.'),
                 });
             }
         } catch (err) {
             setStatus({
                 submitting: false,
                 success: null,
-                error: 'নেটওয়ার্ক সংযোগ ত্রুটি। পুনরায় চেষ্টা করুন।',
+                error: lang === 'bn' ? 'নেটওয়ার্ক সংযোগ ত্রুটি। পুনরায় চেষ্টা করুন।' : 'Network connection error. Please try again.',
             });
         }
     };
@@ -72,13 +77,13 @@ export default function ContactSection({ site = {}, routes = {} }) {
                 {/* Header */}
                 <div className="section-head-wrap text-center mb-4 mb-md-5">
                     <div className="section-pill-badge">
-                        <i className="fa fa-envelope me-1"></i> সরাসরি যোগাযোগ
+                        <i className="fa fa-envelope me-1"></i> {t.contact_badge || 'Contact Us'}
                     </div>
                     <h2 className="section-main-title">
-                        <span className="text-gradient">আমাদের সাথে</span> যোগাযোগ করুন
+                        {t.contact_title || 'Get in Touch With Our Team'}
                     </h2>
                     <p className="section-sub-title">
-                        যেকোনো জিজ্ঞাসা, মতামত বা সহযোগিতার জন্য নিচের ফর্মে বার্তা পাঠান কিংবা সরাসরি হেল্পলাইনে কল করুন।
+                        {t.contact_sub || 'Have any questions or need investment guidance? Feel free to write to us.'}
                     </p>
                 </div>
 
@@ -92,7 +97,7 @@ export default function ContactSection({ site = {}, routes = {} }) {
                                         <i className="fa fa-phone"></i>
                                     </div>
                                     <div className="quick-details">
-                                        <h6>হেল্পলাইন নম্বর</h6>
+                                        <h6>{lang === 'bn' ? 'হেল্পলাইন নম্বর' : 'Helpline Number'}</h6>
                                         <div className="d-flex flex-column gap-1 mt-1">
                                             <a href={`tel:${site.phone1}`}>{site.phone1}</a>
                                             {site.phone2 && site.phone2 !== site.phone1 && (
@@ -109,7 +114,7 @@ export default function ContactSection({ site = {}, routes = {} }) {
                                         <i className="fa fa-envelope"></i>
                                     </div>
                                     <div className="quick-details">
-                                        <h6>অফিসিয়াল ইমেইল</h6>
+                                        <h6>{lang === 'bn' ? 'অফিসিয়াল ইমেইল' : 'Official Email'}</h6>
                                         <div className="d-flex flex-column gap-1 mt-1">
                                             <a href={`mailto:${site.email1}`} style={{ wordBreak: 'break-all' }}>{site.email1}</a>
                                             {site.email2 && site.email2 !== site.email1 && (
@@ -126,7 +131,7 @@ export default function ContactSection({ site = {}, routes = {} }) {
                                         <i className="fa fa-map-marker"></i>
                                     </div>
                                     <div className="quick-details">
-                                        <h6>অফিস ঠিকানা</h6>
+                                        <h6>{lang === 'bn' ? 'অফিস ঠিকানা' : 'Office Address'}</h6>
                                         <p className="mb-0 text-slate-700 mt-1">
                                             {site.address1}
                                             {site.address2 && site.address2 !== site.address1 ? `, ${site.address2}` : ''}
@@ -156,63 +161,63 @@ export default function ContactSection({ site = {}, routes = {} }) {
 
                             <form onSubmit={handleSubmit} className="row g-3">
                                 <div className="col-12 col-md-6 mb-2">
-                                    <label className="contact-field-label">আপনার নাম <span className="text-danger">*</span></label>
+                                    <label className="contact-field-label">{t.contact_name || 'Your Name'} <span className="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         name="name"
                                         required
                                         className="form-control contact-input"
-                                        placeholder="আপনার পূর্ণ নাম লিখুন (Enter your name)"
+                                        placeholder={lang === 'bn' ? 'আপনার পূর্ণ নাম লিখুন' : 'Enter your full name'}
                                         value={formData.name}
                                         onChange={handleChange}
                                     />
                                 </div>
 
                                 <div className="col-12 col-md-6 mb-2">
-                                    <label className="contact-field-label">ফোন নম্বর <span className="text-danger">*</span></label>
+                                    <label className="contact-field-label">{t.contact_phone || 'Phone Number'} <span className="text-danger">*</span></label>
                                     <input
                                         type="text"
                                         name="phone"
                                         required
                                         className="form-control contact-input"
-                                        placeholder="ফোন নম্বর লিখুন (017xxxxxxxx)"
+                                        placeholder={lang === 'bn' ? 'ফোন নম্বর লিখুন (017xxxxxxxx)' : 'Phone number (e.g. 017xxxxxxxx)'}
                                         value={formData.phone}
                                         onChange={handleChange}
                                     />
                                 </div>
 
                                 <div className="col-12 col-md-6 mb-2">
-                                    <label className="contact-field-label">ইমেইল এড্রেস</label>
+                                    <label className="contact-field-label">{t.contact_email || 'Email Address'}</label>
                                     <input
                                         type="email"
                                         name="email"
                                         className="form-control contact-input"
-                                        placeholder="ইমেইল এড্রেস লিখুন (youremail@example.com)"
+                                        placeholder={lang === 'bn' ? 'ইমেইল এড্রেস লিখুন' : 'Email address (youremail@example.com)'}
                                         value={formData.email}
                                         onChange={handleChange}
                                     />
                                 </div>
 
                                 <div className="col-12 col-md-6 mb-2">
-                                    <label className="contact-field-label">বার্তা বিষয় (Subject)</label>
+                                    <label className="contact-field-label">{t.contact_subject || 'Subject'}</label>
                                     <input
                                         type="text"
                                         name="subject"
                                         className="form-control contact-input"
-                                        placeholder="বার্তার বিষয় লিখুন (Subject)"
+                                        placeholder={lang === 'bn' ? 'বার্তার বিষয় লিখুন' : 'Subject of inquiry'}
                                         value={formData.subject}
                                         onChange={handleChange}
                                     />
                                 </div>
 
                                 <div className="col-12 mb-3">
-                                    <label className="contact-field-label">আপনার বার্তাটি লিখুন <span className="text-danger">*</span></label>
+                                    <label className="contact-field-label">{t.contact_msg || 'Your Message'} <span className="text-danger">*</span></label>
                                     <textarea
                                         name="message"
                                         required
                                         rows={4}
                                         className="form-control contact-input"
-                                        placeholder="আপনার বার্তা বা জিজ্ঞাসা বিস্তারিত লিখুন..."
+                                        placeholder={lang === 'bn' ? 'আপনার বার্তা বা জিজ্ঞাসা বিস্তারিত লিখুন...' : 'Write your detailed message here...'}
                                         value={formData.message}
                                         onChange={handleChange}
                                     ></textarea>
@@ -227,11 +232,11 @@ export default function ContactSection({ site = {}, routes = {} }) {
                                         {status.submitting ? (
                                              <>
                                                 <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                                                <span>বার্তা পাঠানো হচ্ছে...</span>
+                                                <span>{lang === 'bn' ? 'বার্তা পাঠানো হচ্ছে...' : 'Sending Message...'}</span>
                                             </>
                                         ) : (
                                             <>
-                                                <span>মেসেজ পাঠান</span>
+                                                <span>{t.contact_send || 'Send Message'}</span>
                                                 <i className="fa fa-paper-plane ms-2"></i>
                                             </>
                                         )}

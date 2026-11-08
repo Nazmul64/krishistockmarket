@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import BrochureModal from './BrochureModal';
 
-export default function MembershipCards({ cardBenefits = [], routes = {} }) {
+export default function MembershipCards({
+    cardBenefits = [],
+    routes = {},
+    lang = 'en',
+    t = {}
+}) {
     const [selectedBrochureCard, setSelectedBrochureCard] = useState(null);
     const [activeIdx, setActiveIdx] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
@@ -67,6 +72,9 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
         const isGold = card.card_color_theme === 'gold' || card.card_type === 'gold';
         const isRed = card.card_color_theme === 'red' || card.card_type === 'red';
         const themeClass = isGold ? 'card-theme-gold' : (isRed ? 'card-theme-red' : 'card-theme-blue');
+        const defaultBadge = isGold 
+            ? (lang === 'bn' ? 'গোল্ডেন মেম্বারশিপ' : 'Golden Membership') 
+            : (lang === 'bn' ? 'নরমাল মেম্বারশিপ' : 'Normal Membership');
 
         return (
             <div key={key} className={`${visibleCards.length === 1 ? 'col-12 col-md-8 col-lg-6' : 'col-12 col-md-6'} mb-3`}>
@@ -75,11 +83,11 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                     <div className="card-box-header p-3 p-md-4 border-bottom">
                         <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
                             <span className="membership-badge-pill">
-                                <i className="fa fa-star me-1"></i> {card.badge_text || (isGold ? 'গোল্ডেন মেম্বারশিপ' : 'নরমাল মেম্বারশিপ')}
+                                <i className="fa fa-star me-1"></i> {card.badge_text || defaultBadge}
                             </span>
                             {card.validity && (
                                 <span className="validity-badge">
-                                    <i className="fa fa-calendar-check-o me-1"></i> মেয়াদ: {card.validity}
+                                    <i className="fa fa-calendar-check-o me-1"></i> {t.card_validity || 'Validity:'} {card.validity}
                                 </span>
                             )}
                         </div>
@@ -97,7 +105,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                         <div 
                             className="card-flyer-image-holder"
                             onClick={() => card.brochure_image ? setSelectedBrochureCard(card) : (card.image ? setSelectedBrochureCard({ ...card, brochure_image: card.image }) : null)}
-                            title="ব্রোশিউর বড় করে দেখতে ক্লিক করুন"
+                            title={t.card_brochure_btn || 'View Official Brochure'}
                         >
                             {card.image ? (
                                 <img
@@ -121,7 +129,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                     className="btn-brochure-modal-trigger"
                                     onClick={() => setSelectedBrochureCard(card.brochure_image ? card : { ...card, brochure_image: card.image })}
                                 >
-                                    <i className="fa fa-eye me-1"></i> অফিসিয়াল ব্রোশিউর / লিফলেট দেখুন
+                                    <i className="fa fa-eye me-1"></i> {t.card_brochure_btn || 'View Official Brochure / Leaflet'}
                                 </button>
                             </div>
                         )}
@@ -143,7 +151,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                 <div className="spec-info-row">
                                     <div className="spec-title">
                                         <i className="fa fa-receipt text-warning me-2"></i>
-                                        <span>সদস্য ফি:</span>
+                                        <span>{t.card_fee || 'Member Fee:'}</span>
                                     </div>
                                     <div className="spec-val fw-bold">{card.card_fee}</div>
                                 </div>
@@ -153,7 +161,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                 <div className="spec-info-row highlight-green">
                                     <div className="spec-title">
                                         <i className="fa fa-line-chart text-success me-2"></i>
-                                        <span>বিনিয়োগ সীমা:</span>
+                                        <span>{t.card_invest_limit || 'Investment Limit:'}</span>
                                     </div>
                                     <div className="spec-val text-success fw-bold">{card.investment_limit}</div>
                                 </div>
@@ -163,7 +171,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                 <div className="spec-info-row">
                                     <div className="spec-title">
                                         <i className="fa fa-coins text-warning me-2"></i>
-                                        <span>লভ্যাংশ বিবরণ:</span>
+                                        <span>{t.card_profit || 'Profit Details:'}</span>
                                     </div>
                                     <div className="spec-val">{card.monthly_profit}</div>
                                 </div>
@@ -173,7 +181,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                 <div className="spec-info-row highlight-red">
                                     <div className="spec-title">
                                         <i className="fa fa-clock-o text-danger me-2"></i>
-                                        <span>উত্তোলন নোটিশ:</span>
+                                        <span>{t.card_withdrawal || 'Withdrawal Notice:'}</span>
                                     </div>
                                     <div className="spec-val text-danger">{card.withdrawal_notice}</div>
                                 </div>
@@ -184,7 +192,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                         <div className="card-rules-facilities mb-3 flex-grow-1">
                             <h5 className="rules-section-title mb-2">
                                 <i className="fa fa-check-square-o text-amber-500 me-2"></i>
-                                নিয়মাবলী ও বিশেষ সুবিধাসমূহ:
+                                {t.card_facilities || 'Rules & Special Privileges:'}
                             </h5>
                             {Array.isArray(card.facilities) && card.facilities.length > 0 ? (
                                 <div className="rules-scrollable-box">
@@ -198,7 +206,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                     </ul>
                                 </div>
                             ) : (
-                                <p className="text-muted small mb-0">কোনো নিয়ম বা সুবিধা তালিকাভুক্ত নেই</p>
+                                <p className="text-muted small mb-0">{t.card_no_rules || 'No rules or facilities listed'}</p>
                             )}
                         </div>
 
@@ -208,7 +216,7 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                                 href={card.action_button_url || routes.register_url || '/user/register'}
                                 className="btn-card-register-cta w-100 text-center"
                             >
-                                <span>{card.action_button_text || 'রেজিস্ট্রেশন করুন'}</span>
+                                <span>{card.action_button_text || t.card_apply_btn || 'Apply for Card'}</span>
                                 <i className="fa fa-arrow-right ms-2"></i>
                             </a>
                         </div>
@@ -224,13 +232,13 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                 {/* Header */}
                 <div className="section-head-wrap text-center mb-4">
                     <div className="section-pill-badge">
-                        <i className="fa fa-id-card me-1"></i> কৃষি পরিবার মেম্বারশিপ কার্ড
+                        <i className="fa fa-id-card me-1"></i> {t.card_badge || 'Card Membership'}
                     </div>
                     <h2 className="section-main-title">
-                        <span className="text-gradient">কার্ড বিশেষ সুবিধাসমূহ</span> ও বিনিয়োগ নিয়মাবলী
+                        {t.card_title || 'e-Krishi SME & Gold Cards'}
                     </h2>
                     <p className="section-sub-title">
-                        কৃষি এসএমই কার্ড ও গোল্ডেন মেম্বারশিপ কার্ডের বিশেষ সুযোগ-সুবিধা, সর্বোচ্চ লাভ ও এক্সক্লুসিভ অফারসমূহ
+                        {t.card_sub || 'Enjoy privileged agro facilities, regular returns, and institutional benefits with our official cards.'}
                     </p>
                 </div>
 

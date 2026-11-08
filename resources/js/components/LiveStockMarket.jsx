@@ -1,6 +1,11 @@
 import React from 'react';
 
-export default function LiveStockMarket({ stocks = [], routes = {} }) {
+export default function LiveStockMarket({
+    stocks = [],
+    routes = {},
+    lang = 'en',
+    t = {}
+}) {
     // Generate an aesthetic SVG mini sparkline path for real-time stock rate visualization
     const renderMiniChart = (id, isUp = true) => {
         // Unique variations based on id
@@ -20,10 +25,10 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
             <div className="stock-sparkline-wrap">
                 <div className="d-flex justify-content-between align-items-center mb-1">
                     <span className="sparkline-title">
-                        <i className="fa fa-line-chart text-success me-1"></i> লাইভ প্রাইস ট্রেন্ড (Live Trend)
+                        <i className="fa fa-line-chart text-success me-1"></i> {t.stock_trend || 'Live Price Trend'}
                     </span>
                     <span className="sparkline-badge text-success">
-                        <i className="fa fa-caret-up me-1"></i>মার্কেট সক্রিয়
+                        <i className="fa fa-caret-up me-1"></i>{t.stock_active || 'Market Active'}
                     </span>
                 </div>
                 <svg viewBox="0 0 200 45" className="stock-sparkline-svg" preserveAspectRatio="none">
@@ -48,13 +53,13 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                 <div className="section-head-wrap text-center mb-4 mb-md-5">
                     <div className="section-pill-badge">
                         <span className="live-pulsing-badge"></span>
-                        <span>রিয়েল-টাইম মার্কেট ফিড</span>
+                        <span>{t.stock_badge || 'Real-Time Market Feed'}</span>
                     </div>
                     <h2 className="section-main-title">
-                        লাইভ কৃষি স্টক ও বাজার দর
+                        {t.stock_title || 'Live Agriculture Stock & Market Rates'}
                     </h2>
                     <p className="section-sub-title">
-                        দৈনিক আপডেটকৃত কৃষি পণ্যের ক্রয় ও বিক্রয় মূল্য পর্যবেক্ষণ করুন এবং নির্ভরযোগ্য সিদ্ধান্তে বিনিয়োগ করুন।
+                        {t.stock_sub || 'Monitor daily commodity buying and selling prices to make confident investment decisions.'}
                     </p>
                 </div>
 
@@ -77,11 +82,11 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                                         {/* Floating Glassmorphic Live Tag */}
                                         <div className="stock-floating-live-badge">
                                             <span className="live-dot-green"></span>
-                                            <span>লাইভ</span>
+                                            <span>{lang === 'bn' ? 'লাইভ' : 'LIVE'}</span>
                                         </div>
                                         {/* Category Badge */}
                                         <div className="stock-floating-cat-badge">
-                                            {stock.category || 'কৃষি পণ্য'}
+                                            {stock.category || (lang === 'bn' ? 'কৃষি পণ্য' : 'Agro Commodity')}
                                         </div>
                                     </div>
 
@@ -98,10 +103,10 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                                         {/* Stock Availability Info */}
                                         <div className="stock-avail-info mb-3">
                                             <span className="avail-label">
-                                                <i className="fa fa-cubes text-warning me-1"></i> মজুদ পরিমাণ:
+                                                <i className="fa fa-cubes text-warning me-1"></i> {t.stock_avail || 'Available:'}
                                             </span>
                                             <span className="avail-value-badge">
-                                                {stock.is_unlimited ? 'আনলিমিটেড' : `${stock.quantity} ${stock.unit || 'কেজি'}`}
+                                                {stock.is_unlimited ? (t.stock_unlimited || 'Unlimited') : `${stock.quantity} ${stock.unit || (lang === 'bn' ? 'কেজি' : 'KG')}`}
                                             </span>
                                         </div>
 
@@ -112,7 +117,7 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                                         <div className="stock-price-grid mt-3 mb-3">
                                             <div className="price-col selling-col">
                                                 <span className="price-label">
-                                                    <i className="fa fa-tag me-1"></i> বিক্রয় মূল্য
+                                                    <i className="fa fa-tag me-1"></i> {t.stock_selling || 'Selling Rate'}
                                                 </span>
                                                 <span className="price-val text-emerald">
                                                     ৳{Number(stock.selling_price || 0).toLocaleString('en-US')}
@@ -120,7 +125,7 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                                             </div>
                                             <div className="price-col buying-col">
                                                 <span className="price-label">
-                                                    <i className="fa fa-shopping-bag me-1"></i> ক্রয় মূল্য
+                                                    <i className="fa fa-shopping-bag me-1"></i> {t.stock_buying || 'Buying Rate'}
                                                 </span>
                                                 <span className="price-val text-sky">
                                                     ৳{Number(stock.buying_price || 0).toLocaleString('en-US')}
@@ -133,7 +138,7 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                                             href={stock.details_url}
                                             className="btn-stock-view"
                                         >
-                                            <span>বিস্তারিত দেখুন</span>
+                                            <span>{t.stock_view || 'View Details'}</span>
                                             <i className="fa fa-arrow-right"></i>
                                         </a>
                                     </div>
@@ -144,14 +149,14 @@ export default function LiveStockMarket({ stocks = [], routes = {} }) {
                 ) : (
                     <div className="empty-stock-state text-center py-5">
                         <i className="fa fa-cubes fa-3x text-muted mb-3"></i>
-                        <h5>কোনো স্টক পণ্য পাওয়া যায়নি</h5>
+                        <h5>{t.stock_no_data || 'No stock commodities available at the moment.'}</h5>
                     </div>
                 )}
 
                 {/* Section Bottom Button */}
                 <div className="text-center mt-4 mt-md-5">
                     <a href={routes.stock_index || '/stocks'} className="btn-browse-all-stocks">
-                        <span>সকল স্টক ও পূর্ণ মার্কেট রেট দেখুন</span>
+                        <span>{lang === 'bn' ? 'সকল স্টক ও পূর্ণ মার্কেট রেট দেখুন' : 'View All Stocks & Complete Market Rates'}</span>
                         <i className="fa fa-chevron-right ms-2"></i>
                     </a>
                 </div>

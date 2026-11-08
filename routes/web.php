@@ -63,6 +63,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\FrontendController::class, 'index'])->name('/');
 Route::get('/api/home-data', [\App\Http\Controllers\FrontendController::class, 'apiHomepageData'])->name('api.home_data');
+Route::get('/api/live-search', [\App\Http\Controllers\FrontendController::class, 'apiLiveSearch'])->name('api.live_search');
 Route::get('/about', function () {return view('frontend.about-us');})->name('about');
 Route::get('/gallery', function () {return view('frontend.gallery');})->name('gallery');
 Route::get('/contact', function () {return view('frontend.contact');})->name('contact');

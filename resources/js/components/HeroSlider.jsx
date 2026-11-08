@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-export default function HeroSlider({ sliders = [], offerBanner = null, routes = {} }) {
+export default function HeroSlider({
+    sliders = [],
+    offerBanner = null,
+    routes = {},
+    lang = 'en',
+    t = {}
+}) {
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const defaultSliders = [
@@ -91,13 +97,13 @@ export default function HeroSlider({ sliders = [], offerBanner = null, routes = 
                                     <div className="offer-banner-img-wrap">
                                         <img src={offerBanner.image} alt={offerBanner.title} />
                                         <div className="offer-badge-float">
-                                            <i className="fa fa-bolt me-1"></i> স্পেশাল অফার
+                                            <i className="fa fa-bolt me-1"></i> {lang === 'bn' ? 'স্পেশাল অফার' : 'Special Offer'}
                                         </div>
                                     </div>
                                     <div className="offer-banner-caption">
                                         <h4 className="offer-title">{offerBanner.title}</h4>
                                         <span className="offer-cta-text">
-                                            বিস্তারিত জানুন <i className="fa fa-arrow-right ms-1"></i>
+                                            {lang === 'bn' ? 'বিস্তারিত জানুন' : 'Learn More'} <i className="fa fa-arrow-right ms-1"></i>
                                         </span>
                                     </div>
                                 </a>
@@ -115,8 +121,8 @@ export default function HeroSlider({ sliders = [], offerBanner = null, routes = 
                                     <i className="fa fa-leaf"></i>
                                 </div>
                                 <div className="highlight-text">
-                                    <h5>প্রাকৃতিক ও খাঁটি পণ্য</h5>
-                                    <p>সরাসরি কৃষকের মাঠ থেকে</p>
+                                    <h5>{t.hl_1_title || (lang === 'bn' ? 'প্রাকৃতিক ও খাঁটি পণ্য' : 'Natural & Pure Products')}</h5>
+                                    <p>{t.hl_1_sub || (lang === 'bn' ? 'সরাসরি কৃষকের মাঠ থেকে' : "Directly from farmer's fields")}</p>
                                 </div>
                             </div>
                         </div>
@@ -126,8 +132,8 @@ export default function HeroSlider({ sliders = [], offerBanner = null, routes = 
                                     <i className="fa fa-line-chart"></i>
                                 </div>
                                 <div className="highlight-text">
-                                    <h5>লাইভ স্টক রেট</h5>
-                                    <p>প্রতিদিনের রিয়েল-টাইম দর</p>
+                                    <h5>{t.hl_2_title || (lang === 'bn' ? 'লাইভ স্টক রেট' : 'Live Stock Rates')}</h5>
+                                    <p>{t.hl_2_sub || (lang === 'bn' ? 'প্রতিদিনের রিয়েল-টাইম দর' : 'Real-time daily rates')}</p>
                                 </div>
                             </div>
                         </div>
@@ -137,8 +143,8 @@ export default function HeroSlider({ sliders = [], offerBanner = null, routes = 
                                     <i className="fa fa-shield"></i>
                                 </div>
                                 <div className="highlight-text">
-                                    <h5>নিরাপদ বিনিয়োগ</h5>
-                                    <p>১০০% সুরক্ষিত লেনদেন</p>
+                                    <h5>{t.hl_3_title || (lang === 'bn' ? 'নিরাপদ বিনিয়োগ' : 'Secure Investment')}</h5>
+                                    <p>{t.hl_3_sub || (lang === 'bn' ? '১০০% সুরক্ষিত লেনদেন' : '100% Protected transactions')}</p>
                                 </div>
                             </div>
                         </div>
@@ -148,8 +154,8 @@ export default function HeroSlider({ sliders = [], offerBanner = null, routes = 
                                     <i className="fa fa-credit-card"></i>
                                 </div>
                                 <div className="highlight-text">
-                                    <h5>এসএমই ও গোল্ড কার্ড</h5>
-                                    <p>বিশেষ বোনাস ও সুবিধা</p>
+                                    <h5>{t.hl_4_title || (lang === 'bn' ? 'এসএমই ও গোল্ড কার্ড' : 'SME & Gold Cards')}</h5>
+                                    <p>{t.hl_4_sub || (lang === 'bn' ? 'বিশেষ বোনাস ও সুবিধা' : 'Special bonuses & perks')}</p>
                                 </div>
                             </div>
                         </div>

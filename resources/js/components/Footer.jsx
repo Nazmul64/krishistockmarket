@@ -1,12 +1,17 @@
 import React from 'react';
 
-export default function Footer({ site = {}, routes = {} }) {
+export default function Footer({
+    site = {},
+    routes = {},
+    lang = 'en',
+    t = {}
+}) {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const currentYear = new Date().getFullYear();
-    const copyrightText = site.footer_copyright || `© ${currentYear} ekrishisheba. All Rights Reserved.`;
+    const copyrightText = site.footer_copyright || `© ${currentYear} ekrishisheba. ${t.footer_rights || 'All Rights Reserved.'}`;
     const developedByText = site.footer_developed_by || 'ekrishisheba';
     const developedByUrl = site.footer_developed_by_url || '#';
 
@@ -26,7 +31,7 @@ export default function Footer({ site = {}, routes = {} }) {
                                     <img src={site.logo} alt={site.title} />
                                 </a>
                                 <p className="footer-about-text">
-                                    {site.footer_about || site.about_us_text || 'ekrishisheba - আপনার কৃষি সেবা, পণ্যের সঠিক মূল্য এবং আর্থিক সমৃদ্ধির নির্ভরযোগ্য ডিজিটাল মাধ্যম।'}
+                                    {site.footer_about || site.about_us_text || t.footer_about_desc || 'ekrishisheba - Your trusted agro investment and real-time market trading digital platform.'}
                                 </p>
                             </div>
                         </div>
@@ -34,14 +39,14 @@ export default function Footer({ site = {}, routes = {} }) {
                         {/* Col 2: Quick Links */}
                         <div className="col-6 col-md-6 col-lg-3">
                             <div className="footer-col-content">
-                                <h4 className="footer-col-title">প্রয়োজনীয় লিঙ্ক</h4>
+                                <h4 className="footer-col-title">{t.footer_links_title || 'Quick Links'}</h4>
                                 <ul className="footer-links-list">
-                                    <li><a href={routes.home || '/'}><i className="fa fa-angle-right me-2 text-warning"></i> হোমপেজ</a></li>
-                                    <li><a href={routes.about || '/about'}><i className="fa fa-angle-right me-2 text-warning"></i> আমাদের সম্পর্কে</a></li>
-                                    <li><a href={routes.stock_index || '/stocks'}><i className="fa fa-angle-right me-2 text-warning"></i> স্টক মার্কেট</a></li>
-                                    <li><a href={routes.gallery || '/gallery'}><i className="fa fa-angle-right me-2 text-warning"></i> প্রোডাক্ট গ্যালারি</a></li>
-                                    <li><a href={routes.privacy || '/privacy-policy'}><i className="fa fa-angle-right me-2 text-warning"></i> প্রাইভেসি পলিসি</a></li>
-                                    <li><a href={routes.terms || '/terms'}><i className="fa fa-angle-right me-2 text-warning"></i> টার্মস এন্ড কন্ডিশন</a></li>
+                                    <li><a href={routes.home || '/'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.home || 'Home'}</a></li>
+                                    <li><a href={routes.about || '/about'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.about || 'About Us'}</a></li>
+                                    <li><a href={routes.stock_index || '/stocks'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.stocks || 'Stock Market'}</a></li>
+                                    <li><a href={routes.gallery || '/gallery'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.gallery || 'Produce Gallery'}</a></li>
+                                    <li><a href={routes.privacy || '/privacy-policy'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.privacy || 'Privacy Policy'}</a></li>
+                                    <li><a href={routes.terms || '/terms'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.terms || 'Terms & Conditions'}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -49,7 +54,7 @@ export default function Footer({ site = {}, routes = {} }) {
                         {/* Col 3: Contact Info */}
                         <div className="col-6 col-md-6 col-lg-3">
                             <div className="footer-col-content">
-                                <h4 className="footer-col-title">যোগাযোগ করুন</h4>
+                                <h4 className="footer-col-title">{t.footer_contact_title || 'Contact Info'}</h4>
                                 <ul className="footer-contact-info-list">
                                     {site.address1 && (
                                         <li>
@@ -66,46 +71,58 @@ export default function Footer({ site = {}, routes = {} }) {
                                             <a href={`tel:${site.phone1}`}>{site.phone1}</a>
                                         </li>
                                     )}
+                                    {site.phone2 && site.phone2 !== site.phone1 && (
+                                        <li>
+                                            <i className="fa fa-phone text-warning"></i>
+                                            <a href={`tel:${site.phone2}`}>{site.phone2}</a>
+                                        </li>
+                                    )}
                                     {site.email1 && (
                                         <li>
                                             <i className="fa fa-envelope text-warning"></i>
-                                            <a href={`mailto:${site.email1}`} style={{ wordBreak: 'break-all', overflowWrap: 'anywhere' }}>{site.email1}</a>
+                                            <a href={`mailto:${site.email1}`}>{site.email1}</a>
+                                        </li>
+                                    )}
+                                    {site.email2 && site.email2 !== site.email1 && (
+                                        <li>
+                                            <i className="fa fa-envelope text-warning"></i>
+                                            <a href={`mailto:${site.email2}`}>{site.email2}</a>
                                         </li>
                                     )}
                                 </ul>
                             </div>
                         </div>
 
-                        {/* Col 4: Social Media */}
+                        {/* Col 4: Social & Trust */}
                         <div className="col-12 col-md-6 col-lg-3">
                             <div className="footer-col-content">
-                                <h4 className="footer-col-title">সোশ্যাল মিডিয়া</h4>
-                                <p className="footer-social-desc">
-                                    আমাদের সাথে সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন ও সর্বশেষ আপডেট পান।
+                                <h4 className="footer-col-title">{lang === 'bn' ? 'সোশ্যাল মিডিয়া' : 'Social Media & Security'}</h4>
+                                <p className="small text-slate-400 mb-3">
+                                    {lang === 'bn' ? 'আমাদের সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন এবং প্রতিদিনের স্টক রেট ও কৃষি অফারের সাথে আপডেট থাকুন।' : 'Connect with us on social channels to stay updated with daily stock rates and member offers.'}
                                 </p>
-                                <div className="footer-social-buttons">
+                                <div className="footer-social-links-row d-flex align-items-center gap-2">
                                     {site.facebook && (
-                                        <a href={site.facebook} target="_blank" rel="noreferrer" className="ftr-btn fb" title="Facebook">
+                                        <a href={site.facebook} target="_blank" rel="noopener noreferrer" className="footer-social-icon fb" title="Facebook">
                                             <i className="fa fa-facebook"></i>
                                         </a>
                                     )}
-                                    {site.instagram && (
-                                        <a href={site.instagram} target="_blank" rel="noreferrer" className="ftr-btn insta" title="Instagram">
-                                            <i className="fa fa-instagram"></i>
-                                        </a>
-                                    )}
                                     {site.twitter && (
-                                        <a href={site.twitter} target="_blank" rel="noreferrer" className="ftr-btn tw" title="Twitter">
+                                        <a href={site.twitter} target="_blank" rel="noopener noreferrer" className="footer-social-icon tw" title="Twitter">
                                             <i className="fa fa-twitter"></i>
                                         </a>
                                     )}
                                     {site.linkedin && (
-                                        <a href={site.linkedin} target="_blank" rel="noreferrer" className="ftr-btn in" title="LinkedIn">
+                                        <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="footer-social-icon in" title="LinkedIn">
                                             <i className="fa fa-linkedin"></i>
                                         </a>
                                     )}
+                                    {site.instagram && (
+                                        <a href={site.instagram} target="_blank" rel="noopener noreferrer" className="footer-social-icon ig" title="Instagram">
+                                            <i className="fa fa-instagram"></i>
+                                        </a>
+                                    )}
                                     {site.youtube && (
-                                        <a href={site.youtube} target="_blank" rel="noreferrer" className="ftr-btn yt" title="YouTube">
+                                        <a href={site.youtube} target="_blank" rel="noopener noreferrer" className="footer-social-icon yt" title="YouTube">
                                             <i className="fa fa-youtube-play"></i>
                                         </a>
                                     )}
@@ -116,38 +133,28 @@ export default function Footer({ site = {}, routes = {} }) {
                 </div>
             </div>
 
-            {/* Bottom Bar with Dynamic Copyright and Developed By */}
+            {/* Bottom Sub-Footer Bar */}
             <div className="footer-bottom-bar py-3">
                 <div className="container">
-                    <div className="row align-items-center justify-content-between">
-                        <div className="col-12 col-md-6 text-center text-md-start mb-2 mb-md-0">
-                            <p className="copyright-text mb-0">
-                                {copyrightText}
-                            </p>
+                    <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 text-center text-md-start">
+                        <div className="footer-copy-text small text-slate-400">
+                            {copyrightText}
                         </div>
-                        <div className="col-12 col-md-6 text-center text-md-end">
-                            <p className="developed-by-text mb-0">
-                                {developedByUrl && developedByUrl !== '#' ? (
-                                    <a href={developedByUrl} target="_blank" rel="noreferrer" className="developed-by-link">
-                                        {developedByText}
-                                    </a>
-                                ) : (
-                                    <span>{developedByText}</span>
-                                )}
-                            </p>
+                        <div className="footer-dev-text small text-slate-400">
+                            {lang === 'bn' ? 'কারিগরি সহায়তায়:' : 'Developed by:'} <a href={developedByUrl} target="_blank" rel="noopener noreferrer" className="text-warning text-decoration-none fw-bold">{developedByText}</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Floating Back to Top Button */}
+            {/* Floating Scroll to Top Button */}
             <button
                 type="button"
                 className="scroll-to-top-btn"
                 onClick={scrollToTop}
                 aria-label="Scroll to top"
             >
-                <i className="fa fa-arrow-up"></i>
+                <i className="fa fa-chevron-up"></i>
             </button>
         </footer>
     );
