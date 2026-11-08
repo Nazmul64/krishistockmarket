@@ -2766,3 +2766,29 @@ body.dark-theme .mobile-nav-link:hover {
     color: #ea580c !important;
 }
 
+/* ==========================================================================
+   CONTACT PAGE GOOGLE MAP RESPONSIVE STYLING
+   ========================================================================== */
+.contact-map-responsive-container {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    position: relative;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+}
+
+.contact-map-responsive-container iframe {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 400px !important;
+    border: none !important;
+    display: block;
+}
+
+[data-theme="dark"] .contact-map-responsive-container,
+body.dark-theme .contact-map-responsive-container {
+    filter: brightness(0.92) contrast(1.08);
+}
+
+

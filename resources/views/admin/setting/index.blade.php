@@ -395,7 +395,79 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <!-- /.col (right column) -->
 
+                                    <!-- ============================================== -->
+                                    <!-- Google Map Embed Location Setting Card -->
+                                    <!-- ============================================== -->
+                                    <div id="google_map_card" class="col-12 my-3">
+                                        <div class="card border-2 shadow-sm rounded-4" style="border: 2px solid #ea580c !important; border-radius: 14px; background: linear-gradient(135deg, #ffffff 0%, #fffbf5 100%);">
+                                            <div class="card-header bg-white py-3 px-4 d-flex align-items-center justify-content-between border-bottom" style="border-radius: 14px 14px 0 0;">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 44px; height: 44px; min-width: 44px; background: #fee2e2; color: #dc2626;">
+                                                        <i class="fa fa-map-marker fs-4"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="fw-bold mb-1 text-dark">
+                                                            গুগল ম্যাপ লোকেশন সেটিংস (Google Map Embed Location)
+                                                        </h5>
+                                                        <p class="text-muted mb-0 font-size-12">
+                                                            কন্টাক্ট পেইজে (Contact Us) আপনার অফিসের সুনির্দিষ্ট লোকেশন ম্যাপে প্রদর্শনের জন্য এখানে গুগল ম্যাপের এমবেড কোড (Embed HTML Code) দিন।
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <span class="badge bg-danger px-3 py-2 font-size-12">
+                                                    <i class="fa fa-globe me-1"></i> কন্টাক্ট পেইজ ম্যাপ
+                                                </span>
+                                            </div>
+
+                                            <div class="card-body p-4">
+                                                <div class="row g-4 align-items-start">
+                                                    <div class="col-lg-7">
+                                                        <label class="form-label fw-bold text-dark mb-2" for="google_map_embed">
+                                                            <i class="fa fa-code text-danger me-1"></i> গুগল ম্যাপ এমবেড কোড (Iframe Embed Code / Map URL):
+                                                        </label>
+                                                        <textarea
+                                                            class="form-control font-monospace"
+                                                            id="google_map_embed"
+                                                            name="google_map_embed"
+                                                            rows="5"
+                                                            placeholder='<iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'
+                                                            style="font-size: 13px; line-height: 1.5; border: 1.5px solid #cbd5e1; border-radius: 10px;"
+                                                        >{{ setting('google_map_embed') }}</textarea>
+
+                                                        <div class="mt-3 p-3 rounded-3" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+                                                            <h6 class="fw-bold text-slate-800 mb-2 font-size-13">
+                                                                <i class="fa fa-question-circle text-primary me-1"></i> গুগল ম্যাপ থেকে এমবেড কোড পাওয়ার নিয়ম:
+                                                            </h6>
+                                                            <ol class="mb-0 text-muted font-size-12 ps-3" style="line-height: 1.8;">
+                                                                <li><a href="https://www.google.com/maps" target="_blank" class="fw-bold text-primary">Google Maps (maps.google.com)</a> ওয়েবসাইটে গিয়ে আপনার অফিস/প্রতিষ্ঠানের ঠিকানা সার্চ করুন।</li>
+                                                                <li>লোকেশন আসার পর <strong>Share (শেয়ার)</strong> বাটনে ক্লিক করুন।</li>
+                                                                <li>পপ-আপ থেকে <strong>Embed a map (ম্যাপ এমবেড করুন)</strong> ট্যাবে যান।</li>
+                                                                <li><strong>COPY HTML</strong> বাটনে ক্লিক করে কোডটি কপি করুন এবং উপরের বক্সে পেস্ট করে নিচে <strong>Update Settings</strong> চাপুন।</li>
+                                                            </ol>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-5">
+                                                        <label class="form-label fw-bold text-dark mb-2">
+                                                            <i class="fa fa-eye text-success me-1"></i> লাইভ ম্যাপ প্রিভিউ (Live Map Preview):
+                                                        </label>
+                                                        <div id="admin_map_preview_box" class="rounded-3 border overflow-hidden" style="min-height: 250px; height: 250px; background: #f8fafc; position: relative;">
+                                                            <div class="d-flex flex-column align-items-center justify-content-center h-100 p-4 text-center text-muted">
+                                                                <i class="fa fa-map-o fs-1 text-secondary mb-2"></i>
+                                                                <span>লোকেশন লোড হচ্ছে...</span>
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted d-block mt-2">
+                                                            বামে কোড পেস্ট করলে এখানে সরাসরি লাইভ প্রিভিউ দেখতে পাবেন।
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div class="col-12 my-3">
                                         <hr>
@@ -551,6 +623,41 @@
                 updateFontPreview(this.value);
             });
             updateFontPreview(fontSelect.value);
+        }
+
+        // Live Google Map Preview Handler
+        var mapTextarea = document.getElementById('google_map_embed');
+        var mapPreviewBox = document.getElementById('admin_map_preview_box');
+
+        function renderAdminMapPreview() {
+            if (!mapTextarea || !mapPreviewBox) return;
+            var val = mapTextarea.value.trim();
+            if (!val) {
+                var defAddr = '{{ urlencode(setting("address1") ?: "Narsingdi, Dhaka, Bangladesh") }}';
+                mapPreviewBox.innerHTML = '<iframe src="https://maps.google.com/maps?q=' + defAddr + '&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0; width:100%; height:100%; min-height:250px;" allowfullscreen="" loading="lazy"></iframe>';
+                return;
+            }
+            if (val.indexOf('<iframe') !== -1) {
+                // Ensure width and height are 100%
+                var cleanHtml = val.replace(/width="[^"]*"/gi, 'width="100%"').replace(/height="[^"]*"/gi, 'height="100%"');
+                mapPreviewBox.innerHTML = cleanHtml;
+                var ifr = mapPreviewBox.querySelector('iframe');
+                if (ifr) {
+                    ifr.style.width = '100%';
+                    ifr.style.height = '100%';
+                    ifr.style.minHeight = '250px';
+                    ifr.style.border = '0';
+                }
+            } else if (val.indexOf('http://') === 0 || val.indexOf('https://') === 0) {
+                mapPreviewBox.innerHTML = '<iframe src="' + val + '" width="100%" height="100%" style="border:0; width:100%; height:100%; min-height:250px;" allowfullscreen="" loading="lazy"></iframe>';
+            } else {
+                mapPreviewBox.innerHTML = '<iframe src="https://maps.google.com/maps?q=' + encodeURIComponent(val) + '&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0; width:100%; height:100%; min-height:250px;" allowfullscreen="" loading="lazy"></iframe>';
+            }
+        }
+
+        if (mapTextarea) {
+            renderAdminMapPreview();
+            mapTextarea.addEventListener('input', renderAdminMapPreview);
         }
     });
 </script>

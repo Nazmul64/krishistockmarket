@@ -792,6 +792,12 @@
                                             <span>Pages (About, Privacy, Terms)</span>
                                         </a>
                                     </li>
+                                    <li class="">
+                                        <a href="{{ route('setting.index') }}#google_map_card">
+                                            <i class="ti-more"></i>
+                                            <span class="text-danger fw-bold"><i class="fa fa-map-marker me-1"></i> Google Map (গুগল ম্যাপ সেটিংস)</span>
+                                        </a>
+                                    </li>
                                     <li class="{{ (optional(Request::route())->getName() == 'setting.notice') ? 'active' : '' }}">
                                         <a href="{{ route('setting.notice') }}">
                                             <i class="ti-more"></i>

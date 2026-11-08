@@ -145,6 +145,7 @@ class SiteSettingController extends Controller
         SiteSetting::updateOrCreate(['name' => 'title'], ['value' => $request->title ?? '']);
         SiteSetting::updateOrCreate(['name' => 'site_font_family'], ['value' => $request->site_font_family ?? 'Hind Siliguri']);
         SiteSetting::updateOrCreate(['name' => 'top_notice'], ['value' => $request->top_notice ?? '']);
+        SiteSetting::updateOrCreate(['name' => 'google_map_embed'], ['value' => $request->google_map_embed ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address1'], ['value' => $request->address1 ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address2'], ['value' => $request->address2 ?? '']);
         SiteSetting::updateOrCreate(['name' => 'phone1'], ['value' => $request->phone1 ?? '']);
