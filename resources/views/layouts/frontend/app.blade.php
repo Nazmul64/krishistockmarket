@@ -1,5 +1,10 @@
+@php
+    $siteTheme = request()->cookie('ekrishi_theme', 'light');
+    $siteLang = request()->cookie('ekrishi_lang', 'en');
+    $isBn = ($siteLang === 'bn');
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ $siteTheme }}">
 
 <head>
     <meta charset="utf-8">
@@ -339,7 +344,7 @@
     </style>
 </head>
 
-<body data-offset="200" data-spy="scroll" data-target=".ownavigation">
+<body class="{{ $siteTheme === 'dark' ? 'dark-theme' : '' }}" data-offset="200" data-spy="scroll" data-target=".ownavigation">
     <!-- Premium ekrishisheba Animated Preloader with Main Logo -->
     <div id="site-preloader" class="ekrishi-preloader-wrap">
         <div class="ekrishi-preloader-inner">
@@ -392,42 +397,35 @@
     <!-- Golden Sticky Navbar Header -->
     <header class="react-main-header golden-navbar sticky-top">
         <div class="container">
-            <div class="d-flex align-items-center justify-content-between header-inner-row">
+            <div class="d-flex align-items-center justify-content-between header-inner-row gap-3">
                 <!-- Brand Logo -->
-                <a href="{{ route('/') }}" class="react-brand-logo">
+                <a href="{{ route('/') }}" class="react-brand-logo flex-shrink-0">
                     <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="{{ setting('title') }}" />
                 </a>
 
-                <!-- Desktop Navigation Links -->
-                <nav class="d-none d-lg-flex align-items-center main-desktop-nav">
-                    <a href="{{ route('/') }}" class="desktop-nav-link-golden {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
-                    <a href="{{ route('about') }}" class="desktop-nav-link-golden {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>
-                    <a href="{{ route('stock.index') }}" class="desktop-nav-link-golden {{ Route::is('stock.*') ? 'active' : '' }}">{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</a>
-                    <a href="{{ route('gallery') }}" class="desktop-nav-link-golden {{ Route::is('gallery') ? 'active' : '' }}">{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a>
-                    <a href="{{ route('contact') }}" class="desktop-nav-link-golden {{ Route::is('contact') ? 'active' : '' }}">{{ $isBn ? 'যোগাযোগ' : 'Contact' }}</a>
-                    <a href="{{ route('terms') }}" class="desktop-nav-link-golden {{ Route::is('terms') ? 'active' : '' }}">{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</a>
-                    <a href="{{ route('privacy') }}" class="desktop-nav-link-golden {{ Route::is('privacy') ? 'active' : '' }}">{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</a>
-                </nav>
+                <!-- Prominent Search Bar with Attached Search Button -->
+                <div class="d-none d-lg-flex flex-grow-1 justify-content-center search-container-col" id="bladeSearchWrap">
+                    <form class="header-search-bar-unified w-100" id="bladeSearchForm" onsubmit="event.preventDefault();">
+                        <input
+                            type="text"
+                            id="bladeSearchInput"
+                            class="unified-search-input"
+                            placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড বা সেবা খুঁজুন...' : 'Search stocks, packages, cards...' }}"
+                            autocomplete="off"
+                        />
+                        <button type="button" id="bladeSearchClear" class="search-clear-inline-btn" style="display: none;">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                        <button type="submit" class="unified-search-submit-btn">
+                            <i class="fa fa-search me-1"></i>
+                            <span>{{ $isBn ? 'Search' : 'Search' }}</span>
+                        </button>
+                    </form>
+                    <div id="bladeSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
+                </div>
 
-                <!-- Desktop Live Search & Language Switcher Group -->
-                <div class="d-none d-lg-flex align-items-center header-search-and-lang-wrap">
-                    <div class="header-search-wrap" id="bladeSearchWrap">
-                        <div class="header-search-box" id="bladeSearchBox">
-                            <i class="fa fa-search search-icon"></i>
-                            <input
-                                type="text"
-                                id="bladeSearchInput"
-                                class="header-search-input"
-                                placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড খুঁজুন...' : 'Search stocks, packages, cards...' }}"
-                                autocomplete="off"
-                            />
-                            <button type="button" id="bladeSearchClear" class="search-clear-btn" style="display: none;">
-                                <i class="fa fa-times-circle"></i>
-                            </button>
-                        </div>
-                        <div id="bladeSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
-                    </div>
-
+                <!-- Right Action Icons: Language Pill + Dark Mode Moon/Sun + Auth Buttons -->
+                <div class="d-none d-lg-flex align-items-center header-right-actions gap-2 flex-shrink-0">
                     <!-- Language Switcher Pill [ EN | বাংলা ] -->
                     <div class="header-lang-switcher-pill">
                         <button
@@ -448,28 +446,56 @@
                             বাংলা
                         </button>
                     </div>
+
+                    <!-- Dark / Black Mode Toggle Button -->
+                    <button
+                        type="button"
+                        class="header-theme-toggle-btn {{ $siteTheme === 'dark' ? 'is-dark' : '' }}"
+                        onclick="switchSiteTheme('{{ $siteTheme === 'dark' ? 'light' : 'dark' }}')"
+                        title="{{ $siteTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode / ব্ল্যাক মোড' }}"
+                        aria-label="Toggle Theme"
+                    >
+                        @if($siteTheme === 'dark')
+                            <i class="fa fa-sun-o theme-icon-sun"></i>
+                        @else
+                            <i class="fa fa-moon-o theme-icon-moon"></i>
+                        @endif
+                    </button>
+
+                    <!-- Auth / Dashboard Buttons -->
+                    <div class="header-auth-buttons">
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="btn-golden-action">
+                                <i class="fa fa-tachometer me-2"></i> {{ $isBn ? 'ড্যাশবোর্ড' : 'Dashboard' }}
+                            </a>
+                        @else
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="{{ route('login') }}" class="btn-golden-action-outline">
+                                    <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
+                                </a>
+                                <a href="{{ route('register.referlink') }}" class="btn-golden-action">
+                                    <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্ট্রেশন' : 'Register' }}
+                                </a>
+                            </div>
+                        @endauth
+                    </div>
                 </div>
 
-                <!-- Desktop Golden Action Button -->
-                <div class="d-none d-lg-flex align-items-center header-auth-container">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="btn-golden-action">
-                            <i class="fa fa-tachometer me-2"></i> {{ $isBn ? 'ড্যাশবোর্ড' : 'Dashboard' }}
-                        </a>
-                    @else
-                        <div class="header-auth-buttons">
-                            <a href="{{ route('login') }}" class="btn-golden-action-outline">
-                                <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
-                            </a>
-                            <a href="{{ route('register.referlink') }}" class="btn-golden-action">
-                                <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্ট্রেশন' : 'Register' }}
-                            </a>
-                        </div>
-                    @endauth
-                </div>
-
-                <!-- Mobile Toggle Button -->
+                <!-- Mobile Header Controls -->
                 <div class="d-flex d-lg-none align-items-center gap-2">
+                    <button
+                        type="button"
+                        class="header-theme-toggle-btn mobile-theme-btn {{ $siteTheme === 'dark' ? 'is-dark' : '' }}"
+                        onclick="switchSiteTheme('{{ $siteTheme === 'dark' ? 'light' : 'dark' }}')"
+                        aria-label="Toggle Theme"
+                    >
+                        @if($siteTheme === 'dark')
+                            <i class="fa fa-sun-o"></i>
+                        @else
+                            <i class="fa fa-moon-o"></i>
+                        @endif
+                    </button>
+
                     <div class="header-lang-switcher-pill mobile-lang-pill">
                         <button
                             type="button"
@@ -487,6 +513,7 @@
                             বাং
                         </button>
                     </div>
+
                     <button
                         type="button"
                         class="mobile-nav-toggle-btn-golden"
@@ -496,6 +523,23 @@
                         <i class="fa fa-bars"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Sub-Navigation Strip (Desktop Menu below Main Header) -->
+        <div class="header-sub-nav-bar d-none d-lg-block">
+            <div class="container">
+                <nav class="d-flex align-items-center sub-nav-links-row">
+                    <a href="{{ route('/') }}" class="sub-nav-link-item {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
+                    <a href="{{ route('about') }}" class="sub-nav-link-item {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>
+                    <a href="{{ route('stock.index') }}" class="sub-nav-link-item {{ Route::is('stock.*') ? 'active' : '' }}">{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</a>
+                    <a href="{{ route('/') }}#packages" class="sub-nav-link-item">{{ $isBn ? 'প্যাকেজসমূহ' : 'Our Packages' }}</a>
+                    <a href="{{ route('/') }}#card-benefits" class="sub-nav-link-item">{{ $isBn ? 'মেম্বারশিপ কার্ড' : 'Membership Cards' }}</a>
+                    <a href="{{ route('gallery') }}" class="sub-nav-link-item {{ Route::is('gallery') ? 'active' : '' }}">{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a>
+                    <a href="{{ route('contact') }}" class="sub-nav-link-item {{ Route::is('contact') ? 'active' : '' }}">{{ $isBn ? 'যোগাযোগ' : 'Contact' }}</a>
+                    <a href="{{ route('terms') }}" class="sub-nav-link-item {{ Route::is('terms') ? 'active' : '' }}">{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</a>
+                    <a href="{{ route('privacy') }}" class="sub-nav-link-item {{ Route::is('privacy') ? 'active' : '' }}">{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</a>
+                </nav>
             </div>
         </div>
     </header>
@@ -533,18 +577,20 @@
                 </div>
             </div>
 
-            <!-- Mobile Search Box -->
+            <!-- Mobile Search Box with Integrated Search Button -->
             <div class="mobile-search-holder mb-3 position-relative" id="bladeMobileSearchWrap">
-                <div class="header-search-box w-100">
-                    <i class="fa fa-search search-icon"></i>
+                <form class="header-search-bar-unified w-100" onsubmit="event.preventDefault();">
                     <input
                         type="text"
                         id="bladeMobileSearchInput"
-                        class="header-search-input"
-                        placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড খুঁজুন...' : 'Search stocks, packages, cards...' }}"
+                        class="unified-search-input"
+                        placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড বা সেবা খুঁজুন...' : 'Search stocks, packages, cards...' }}"
                         autocomplete="off"
                     />
-                </div>
+                    <button type="submit" class="unified-search-submit-btn px-3">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
                 <div id="bladeMobileSearchResults" class="header-search-dropdown-menu" style="display: none;"></div>
             </div>
 
@@ -826,6 +872,15 @@
             try {
                 localStorage.setItem('ekrishi_lang', lang);
                 document.cookie = 'ekrishi_lang=' + encodeURIComponent(lang) + ';path=/;max-age=31536000';
+            } catch (e) {}
+            window.location.reload();
+        }
+
+        // Dark / Black Mode Theme Switcher Function
+        function switchSiteTheme(theme) {
+            try {
+                localStorage.setItem('ekrishi_theme', theme);
+                document.cookie = 'ekrishi_theme=' + encodeURIComponent(theme) + ';path=/;max-age=31536000';
             } catch (e) {}
             window.location.reload();
         }

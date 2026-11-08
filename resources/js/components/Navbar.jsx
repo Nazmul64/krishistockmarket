@@ -9,6 +9,8 @@ export default function Navbar({
     cardBenefits = [],
     lang = 'en',
     onSwitchLang = () => {},
+    theme = 'light',
+    onToggleTheme = () => {},
     t = {}
 }) {
     const [scrolled, setScrolled] = useState(false);
@@ -74,6 +76,8 @@ export default function Navbar({
         { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
         { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
         { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
+        { label: t.pkg_title || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
+        { label: t.card_title || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
         { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
         { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
         { label: t.terms || 'Terms & Conditions', url: routes.terms || '/terms', active: currentPath.includes('/terms') },
@@ -198,6 +202,14 @@ export default function Navbar({
         const val = e.target.value;
         setSearchQuery(val);
         performSearch(val);
+    };
+
+    const handleSearchSubmit = (e) => {
+        if (e) e.preventDefault();
+        if (searchQuery.trim().length > 0) {
+            performSearch(searchQuery);
+            setSearchOpen(true);
+        }
     };
 
     const clearSearch = () => {
@@ -365,7 +377,7 @@ export default function Navbar({
 
     return (
         <>
-            {/* Top Marquee Notice Header Bar - Aligned with Grid Container */}
+            {/* Top Marquee Notice Header Bar - Running as requested */}
             <div className="top-marquee-notice-bar">
                 <div className="container">
                     <div className="d-flex align-items-center gap-3">
@@ -393,59 +405,53 @@ export default function Navbar({
                 </div>
             </div>
 
-            {/* Main Golden Navbar Header */}
+            {/* Main Header Row: Logo + Prominent Search Bar with Attached Search Button + Language + Dark Mode + Auth */}
             <header className={`react-main-header golden-navbar ${scrolled ? 'header-scrolled shadow-lg' : ''}`}>
                 <div className="container">
-                    <div className="d-flex align-items-center justify-content-between header-inner-row">
+                    <div className="d-flex align-items-center justify-content-between header-inner-row gap-3">
                         {/* Brand Logo */}
-                        <a href={routes.home || '/'} className="react-brand-logo">
+                        <a href={routes.home || '/'} className="react-brand-logo flex-shrink-0">
                             <img src={site.logo} alt={site.title} />
                         </a>
 
-                        {/* Desktop Navigation Links with High-Contrast White Text */}
-                        <nav className="d-none d-lg-flex align-items-center main-desktop-nav">
-                            {navLinks.map((item, index) => (
-                                <a
-                                    key={index}
-                                    href={item.url}
-                                    className={`desktop-nav-link-golden ${item.active ? 'active' : ''}`}
+                        {/* Center Prominent Search Bar with Attached Search Button (Modeled from Reference Image) */}
+                        <div className="d-none d-lg-flex flex-grow-1 justify-content-center search-container-col" ref={searchWrapRef}>
+                            <form className="header-search-bar-unified w-100" onSubmit={handleSearchSubmit}>
+                                <input
+                                    type="text"
+                                    className="unified-search-input"
+                                    placeholder={t.search_placeholder}
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    onFocus={() => { if (searchQuery.trim().length > 0) setSearchOpen(true); }}
+                                    onKeyDown={(e) => { if (e.key === 'Escape') setSearchOpen(false); }}
+                                />
+                                {searchQuery ? (
+                                    <button
+                                        type="button"
+                                        className="search-clear-inline-btn"
+                                        onClick={clearSearch}
+                                        aria-label="Clear Search"
+                                    >
+                                        <i className="fa fa-times-circle"></i>
+                                    </button>
+                                ) : null}
+                                <button
+                                    type="submit"
+                                    className="unified-search-submit-btn"
+                                    onClick={handleSearchSubmit}
                                 >
-                                    {item.label}
-                                </a>
-                            ))}
-                        </nav>
+                                    <i className="fa fa-search me-1"></i>
+                                    <span>{t.search_btn || 'Search'}</span>
+                                </button>
+                            </form>
 
-                        {/* Desktop Search Box + Language Switcher (Right in the circled red navbar area) */}
-                        <div className="d-none d-lg-flex align-items-center header-search-and-lang-wrap">
-                            {/* Interactive Search Box */}
-                            <div className="header-search-wrap" ref={searchWrapRef}>
-                                <div className={`header-search-box ${searchOpen ? 'focused' : ''}`}>
-                                    <i className="fa fa-search search-icon"></i>
-                                    <input
-                                        type="text"
-                                        className="header-search-input"
-                                        placeholder={t.search_placeholder}
-                                        value={searchQuery}
-                                        onChange={handleSearchChange}
-                                        onFocus={() => { if (searchQuery.trim().length > 0) setSearchOpen(true); }}
-                                        onKeyDown={(e) => { if (e.key === 'Escape') setSearchOpen(false); }}
-                                    />
-                                    {searchQuery ? (
-                                        <button
-                                            type="button"
-                                            className="search-clear-btn"
-                                            onClick={clearSearch}
-                                            aria-label="Clear Search"
-                                        >
-                                            <i className="fa fa-times-circle"></i>
-                                        </button>
-                                    ) : null}
-                                </div>
+                            {/* Dropdown Menu Popup */}
+                            {searchOpen && renderSearchResultsDropdown()}
+                        </div>
 
-                                {/* Results Popover Dropdown */}
-                                {searchOpen && renderSearchResultsDropdown()}
-                            </div>
-
+                        {/* Right Action Icons: Language Pill + Dark Mode Moon/Sun + Auth Buttons */}
+                        <div className="d-none d-lg-flex align-items-center header-right-actions gap-2 flex-shrink-0">
                             {/* Language Switcher Pill [ EN | বাংলা ] */}
                             <div className="header-lang-switcher-pill">
                                 <button
@@ -466,28 +472,53 @@ export default function Navbar({
                                     বাংলা
                                 </button>
                             </div>
+
+                            {/* Black Mode / Dark Mode Toggle Button (Moon 🌙 in light mode, Sun ☀️ in dark mode) */}
+                            <button
+                                type="button"
+                                className={`header-theme-toggle-btn ${theme === 'dark' ? 'is-dark' : ''}`}
+                                onClick={onToggleTheme}
+                                title={theme === 'dark' ? (t.theme_light || 'Switch to Light Mode') : (t.theme_dark || 'Switch to Dark Mode / ব্ল্যাক মোড')}
+                                aria-label="Toggle Black/Dark Mode"
+                            >
+                                {theme === 'dark' ? (
+                                    <i className="fa fa-sun-o theme-icon-sun"></i>
+                                ) : (
+                                    <i className="fa fa-moon-o theme-icon-moon"></i>
+                                )}
+                            </button>
+
+                            {/* Auth / Dashboard Buttons */}
+                            <div className="header-auth-buttons">
+                                {auth.is_authenticated ? (
+                                    <a href={auth.dashboard_url} className="btn-golden-action">
+                                        <i className="fa fa-tachometer me-2"></i> {t.dashboard}
+                                    </a>
+                                ) : (
+                                    <div className="d-flex align-items-center gap-2">
+                                        <a href={auth.login_url} className="btn-golden-action-outline">
+                                            <i className="fa fa-sign-in me-1"></i> {t.login}
+                                        </a>
+                                        <a href={auth.register_url} className="btn-golden-action">
+                                            <i className="fa fa-user-plus me-1"></i> {t.register}
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
-                        {/* Desktop Golden Action / Auth Buttons */}
-                        <div className="d-none d-lg-flex align-items-center header-auth-container">
-                            {auth.is_authenticated ? (
-                                <a href={auth.dashboard_url} className="btn-golden-action">
-                                    <i className="fa fa-tachometer me-2"></i> {t.dashboard}
-                                </a>
-                            ) : (
-                                <div className="header-auth-buttons">
-                                    <a href={auth.login_url} className="btn-golden-action-outline">
-                                        <i className="fa fa-sign-in me-1"></i> {t.login}
-                                    </a>
-                                    <a href={auth.register_url} className="btn-golden-action">
-                                        <i className="fa fa-user-plus me-1"></i> {t.register}
-                                    </a>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Mobile Toggle Button - Strictly pinned on far right of header */}
+                        {/* Mobile Header Controls */}
                         <div className="d-flex d-lg-none align-items-center gap-2">
+                            {/* Mobile Dark Mode Toggle */}
+                            <button
+                                type="button"
+                                className={`header-theme-toggle-btn mobile-theme-btn ${theme === 'dark' ? 'is-dark' : ''}`}
+                                onClick={onToggleTheme}
+                                aria-label="Toggle Theme"
+                            >
+                                {theme === 'dark' ? <i className="fa fa-sun-o"></i> : <i className="fa fa-moon-o"></i>}
+                            </button>
+
                             {/* Mobile Language Switcher Pill */}
                             <div className="header-lang-switcher-pill mobile-lang-pill">
                                 <button
@@ -518,6 +549,23 @@ export default function Navbar({
                         </div>
                     </div>
                 </div>
+
+                {/* Sub-Navigation Strip (Desktop Navigation Bar below header with active highlights) */}
+                <div className="header-sub-nav-bar d-none d-lg-block">
+                    <div className="container">
+                        <nav className="d-flex align-items-center sub-nav-links-row">
+                            {navLinks.map((item, index) => (
+                                <a
+                                    key={index}
+                                    href={item.url}
+                                    className={`sub-nav-link-item ${item.active ? 'active' : ''}`}
+                                >
+                                    {item.label}
+                                </a>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
             </header>
 
             {/* Mobile Slide-out Drawer */}
@@ -531,35 +579,50 @@ export default function Navbar({
                 </div>
 
                 <div className="mobile-drawer-body">
-                    {/* Mobile Language Switcher Inside Drawer */}
-                    <div className="mobile-drawer-lang-wrap mb-3 p-2 bg-slate-100 rounded text-center">
-                        <span className="small text-muted me-2 fw-bold">Language / ভাষা:</span>
-                        <div className="header-lang-switcher-pill d-inline-flex">
+                    {/* Theme & Language Switchers in Mobile Drawer */}
+                    <div className="d-flex align-items-center justify-content-between mb-3 p-2 bg-slate-100 rounded mobile-pref-card">
+                        <div className="d-flex align-items-center gap-2">
+                            <span className="small text-muted fw-bold">Theme:</span>
                             <button
                                 type="button"
-                                className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
-                                onClick={() => onSwitchLang('en')}
+                                className={`btn btn-sm ${theme === 'dark' ? 'btn-dark' : 'btn-light'} border`}
+                                onClick={onToggleTheme}
                             >
-                                English
+                                {theme === 'dark' ? (
+                                    <span><i className="fa fa-sun-o text-warning me-1"></i> Light</span>
+                                ) : (
+                                    <span><i className="fa fa-moon-o me-1"></i> Dark</span>
+                                )}
                             </button>
-                            <span className="lang-divider">|</span>
-                            <button
-                                type="button"
-                                className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
-                                onClick={() => onSwitchLang('bn')}
-                            >
-                                বাংলা
-                            </button>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                            <span className="small text-muted fw-bold">Lang:</span>
+                            <div className="header-lang-switcher-pill d-inline-flex">
+                                <button
+                                    type="button"
+                                    className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+                                    onClick={() => onSwitchLang('en')}
+                                >
+                                    EN
+                                </button>
+                                <span className="lang-divider">|</span>
+                                <button
+                                    type="button"
+                                    className={`lang-btn ${lang === 'bn' ? 'active' : ''}`}
+                                    onClick={() => onSwitchLang('bn')}
+                                >
+                                    বাং
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Mobile Search Box */}
+                    {/* Mobile Search Box with Integrated Search Button */}
                     <div className="mobile-search-holder mb-3" ref={mobileSearchWrapRef}>
-                        <div className="header-search-box w-100">
-                            <i className="fa fa-search search-icon"></i>
+                        <form className="header-search-bar-unified w-100" onSubmit={handleSearchSubmit}>
                             <input
                                 type="text"
-                                className="header-search-input"
+                                className="unified-search-input"
                                 placeholder={t.search_placeholder}
                                 value={searchQuery}
                                 onChange={handleSearchChange}
@@ -568,13 +631,20 @@ export default function Navbar({
                             {searchQuery && (
                                 <button
                                     type="button"
-                                    className="search-clear-btn"
+                                    className="search-clear-inline-btn"
                                     onClick={clearSearch}
                                 >
                                     <i className="fa fa-times-circle"></i>
                                 </button>
                             )}
-                        </div>
+                            <button
+                                type="submit"
+                                className="unified-search-submit-btn px-3"
+                                onClick={handleSearchSubmit}
+                            >
+                                <i className="fa fa-search"></i>
+                            </button>
+                        </form>
                         {searchOpen && renderSearchResultsDropdown()}
                     </div>
 

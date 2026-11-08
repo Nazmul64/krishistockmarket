@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HeroSlider from './components/HeroSlider';
 import LiveStockMarket from './components/LiveStockMarket';
@@ -9,13 +9,26 @@ import ProductGallery from './components/ProductGallery';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import { translations, getInitialLang, saveLang } from './utils/translations';
+import { getInitialTheme, saveTheme, applyTheme } from './utils/theme';
 
 export default function HomeApp({ data = {} }) {
     const [lang, setLang] = useState(getInitialLang());
+    const [theme, setTheme] = useState(getInitialTheme());
+
+    // Apply theme on mount
+    useEffect(() => {
+        applyTheme(theme);
+    }, [theme]);
 
     const handleSwitchLang = (newLang) => {
         setLang(newLang);
         saveLang(newLang);
+    };
+
+    const handleToggleTheme = () => {
+        const next = theme === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+        saveTheme(next);
     };
 
     const t = translations[lang] || translations.en;
@@ -33,7 +46,7 @@ export default function HomeApp({ data = {} }) {
 
     return (
         <div className="react-homepage-wrapper">
-            {/* Topbar & Sticky Navigation with Live Search & Language Switcher */}
+            {/* Topbar & Sticky Navigation with Live Search, Language Switcher & Dark Mode */}
             <Navbar
                 site={site}
                 auth={auth}
@@ -43,6 +56,8 @@ export default function HomeApp({ data = {} }) {
                 cardBenefits={cardBenefits}
                 lang={lang}
                 onSwitchLang={handleSwitchLang}
+                theme={theme}
+                onToggleTheme={handleToggleTheme}
                 t={t}
             />
 
