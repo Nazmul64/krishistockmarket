@@ -92,8 +92,8 @@ export default function MembershipCards({ cardBenefits = [], routes = {} }) {
                         )}
                     </div>
 
-                    {/* Card Visual Flyer Image */}
-                    <div className="card-box-visual p-3 text-center bg-slate-50 border-bottom">
+                    {/* Card Visual Flyer Image - 100% Full Width */}
+                    <div className="card-box-visual p-2 p-md-3 text-center bg-slate-50 border-bottom">
                         <div 
                             className="card-flyer-image-holder"
                             onClick={() => card.brochure_image ? setSelectedBrochureCard(card) : (card.image ? setSelectedBrochureCard({ ...card, brochure_image: card.image }) : null)}
