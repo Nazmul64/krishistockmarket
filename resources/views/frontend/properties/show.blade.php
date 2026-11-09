@@ -41,33 +41,75 @@
         <div class="row g-4">
             <!-- Left Column: Media & Specifications -->
             <div class="col-lg-8">
-                <div class="property-show-card bg-white rounded-4 p-4 shadow-sm mb-4">
-                    <!-- Featured Image -->
-                    <div class="rounded-4 overflow-hidden position-relative mb-4" style="max-height: 460px;">
+                <div class="property-show-card bg-white rounded-4 p-4 shadow-sm mb-4" style="border-radius: 20px;">
+                    <!-- Featured Image Banner with Gradient & Overlay Content -->
+                    <div class="property-detail-banner-wrap mb-4 shadow-sm" style="height: 420px; position: relative; overflow: hidden; border-radius: 16px; background: #0f172a;">
+                        <!-- Background Image -->
                         <img src="{{ $property->featured_image ?: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop&q=60' }}" 
                              alt="{{ $property->property_name }}" 
-                             class="w-100 h-100" 
-                             style="object-fit: cover;">
-                        <span class="position-absolute top-0 start-0 m-3 badge bg-dark px-3 py-2 fs-6">
-                            {{ $property->property_type_name }}
-                        </span>
-                        <span class="position-absolute top-0 end-0 m-3 badge bg-success px-3 py-2 fs-6">
-                            {{ $isBn ? ($property->status === 'available' ? 'বিক্রয়যোগ্য' : ucfirst($property->status)) : ucfirst($property->status) }}
-                        </span>
-                    </div>
+                             style="width: 100%; height: 100%; object-fit: cover; display: block;">
 
-                    <!-- Title & Code -->
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                        <span class="badge bg-light text-muted border font-monospace">{{ $property->property_code }}</span>
-                        <span class="text-muted small"><i class="fa fa-calendar me-1"></i> {{ $isBn ? 'তালিকাভুক্ত: ' : 'Listed: ' }}{{ $property->created_at->format('d M, Y') }}</span>
+                        <!-- Gradient Dark Overlay for Ultra Readability -->
+                        <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.45) 40%, rgba(15, 23, 42, 0.95) 100%); pointer-events: none;"></div>
+
+                        <!-- Top Badges -->
+                        <div style="position: absolute; top: 18px; left: 18px; z-index: 5;">
+                            <span class="badge px-3 py-2 fw-bold" style="background: rgba(15, 23, 42, 0.85); color: #ffffff !important; font-size: 13px; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 8px;">
+                                <i class="fa fa-tag me-1 text-warning"></i> {{ $property->property_type_name }}
+                            </span>
+                        </div>
+                        <div style="position: absolute; top: 18px; right: 18px; z-index: 5;">
+                            @if($property->status === 'available')
+                                <span class="badge bg-success text-white px-3 py-2 fw-bold shadow-sm" style="font-size: 13px; border-radius: 8px;">
+                                    <i class="fa fa-check-circle me-1"></i> {{ $isBn ? 'বিক্রয়যোগ্য' : 'Available' }}
+                                </span>
+                            @elseif($property->status === 'reserved')
+                                <span class="badge bg-warning text-dark px-3 py-2 fw-bold shadow-sm" style="font-size: 13px; border-radius: 8px;">
+                                    <i class="fa fa-clock-o me-1"></i> {{ $isBn ? 'রিজার্ভড' : 'Reserved' }}
+                                </span>
+                            @else
+                                <span class="badge bg-secondary text-white px-3 py-2 fw-bold shadow-sm" style="font-size: 13px; border-radius: 8px;">
+                                    {{ ucfirst($property->status) }}
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- Bottom Content: Code, Title, Location (ALL WHITE, ZERO OVERLAP) -->
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 28px; z-index: 5;">
+                            <!-- Code & Date Pill -->
+                            <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                                <span class="badge font-monospace px-2 py-1" style="background: rgba(255, 255, 255, 0.18); color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.35); font-size: 12px; letter-spacing: 0.5px;">
+                                    {{ $property->property_code }}
+                                </span>
+                                <span class="small" style="color: #cbd5e1 !important;">
+                                    <i class="fa fa-calendar me-1"></i> {{ $isBn ? 'তালিকাভুক্ত: ' : 'Listed: ' }}{{ $property->created_at->format('d M, Y') }}
+                                </span>
+                            </div>
+
+                            <!-- Title (Bold White) -->
+                            <h1 class="fw-bold mb-2 text-white" style="font-size: 1.75rem; line-height: 1.35; color: #ffffff !important; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);">
+                                {{ $property->property_name }}
+                            </h1>
+
+                            <!-- Location Info (Clear White/Light) -->
+                            <div class="d-flex align-items-center flex-wrap gap-2" style="color: #f1f5f9 !important; font-size: 14px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
+                                <span>
+                                    <i class="fa fa-map-marker text-danger me-1"></i>
+                                    {{ $property->mouza ? ($isBn ? 'মৌজা: ' : 'Mouza: ') . $property->mouza . ', ' : '' }}
+                                    {{ $property->upazila ? $property->upazila . ', ' : '' }}
+                                    {{ $property->district }}, {{ $property->division }}
+                                </span>
+                                @if($property->dag_number)
+                                    <span style="opacity: 0.7;">•</span>
+                                    <span>{{ $isBn ? 'দাগ: ' : 'Dag: ' }}{{ $property->dag_number }}</span>
+                                @endif
+                                @if($property->khatian_number)
+                                    <span style="opacity: 0.7;">•</span>
+                                    <span>{{ $isBn ? 'খতিয়ান: ' : 'Khatian: ' }}{{ $property->khatian_number }}</span>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="fw-bold property-show-title mb-3">{{ $property->property_name }}</h2>
-                    <p class="text-muted fs-6 mb-4">
-                        <i class="fa fa-map-marker text-danger me-2"></i>
-                        {{ $property->mouza ? ($isBn ? 'মৌজা: ' : 'Mouza: ') . $property->mouza . ', ' : '' }}
-                        {{ $property->upazila ? $property->upazila . ', ' : '' }}
-                        {{ $property->district }}, {{ $property->division }}
-                    </p>
 
                     <!-- Key Land / Property Records Grid -->
                     <h5 class="fw-bold property-section-heading mb-3 border-bottom pb-2">
@@ -346,6 +388,23 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
+/* Modern Banner Wrap Styles */
+.property-detail-banner-wrap {
+    height: 420px;
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    background: #0f172a;
+}
+@media (max-width: 768px) {
+    .property-detail-banner-wrap {
+        height: 360px !important;
+    }
+    .property-detail-banner-wrap h1 {
+        font-size: 1.35rem !important;
+    }
+}
+
 /* Modern Spec Boxes */
 .property-spec-box {
     background: #f8fafc;
