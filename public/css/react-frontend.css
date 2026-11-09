@@ -2561,6 +2561,20 @@ header.golden-navbar.header-scrolled {
     border-radius: 3px;
 }
 
+.sub-nav-highlight-btn {
+    background: rgba(22, 163, 74, 0.12) !important;
+    color: #15803d !important;
+    border: 1px solid rgba(22, 163, 74, 0.35) !important;
+    border-radius: 20px !important;
+    padding: 6px 14px !important;
+    font-weight: 700 !important;
+}
+
+.sub-nav-highlight-btn:hover {
+    background: #16a34a !important;
+    color: #ffffff !important;
+}
+
 /* ==========================================================================
    FULL BLACK MODE / DARK THEME ENGINE
    When customer clicks black mode, the entire system turns black & text turns white

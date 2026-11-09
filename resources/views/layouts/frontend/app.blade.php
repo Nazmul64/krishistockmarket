@@ -503,6 +503,11 @@
                     <a href="{{ route('/') }}" class="sub-nav-link-item {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
                     <a href="{{ route('about') }}" class="sub-nav-link-item {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>
                     <a href="{{ route('stock.index') }}" class="sub-nav-link-item {{ Route::is('stock.*') ? 'active' : '' }}">{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</a>
+                    <a href="{{ route('properties.index') }}" class="sub-nav-link-item {{ Route::is('properties.*') ? 'active' : '' }}" style="background: rgba(22, 163, 74, 0.1); border-radius: 20px; padding: 4px 12px; border: 1px solid rgba(22, 163, 74, 0.3);">
+                        <i class="fa fa-map-marker text-success me-1"></i>
+                        <span class="fw-bold">{{ $isBn ? 'জমি ও প্রপার্টি' : 'Land & Properties' }}</span>
+                        <span class="badge bg-danger ms-1 small" style="font-size: 10px; vertical-align: middle;">New</span>
+                    </a>
                     <a href="{{ route('/') }}#packages" class="sub-nav-link-item">{{ $isBn ? 'প্যাকেজসমূহ' : 'Our Packages' }}</a>
                     <a href="{{ route('/') }}#card-benefits" class="sub-nav-link-item">{{ $isBn ? 'মেম্বারশিপ কার্ড' : 'Membership Cards' }}</a>
                     <a href="{{ route('gallery') }}" class="sub-nav-link-item {{ Route::is('gallery') ? 'active' : '' }}">{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a>
@@ -621,6 +626,12 @@
                 <li class="mobile-nav-item">
                     <a href="{{ route('stock.index') }}" class="mobile-nav-link {{ Route::is('stock.*') ? 'active' : '' }}">
                         <span>{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('properties.index') }}" class="mobile-nav-link {{ Route::is('properties.*') ? 'active' : '' }}">
+                        <span><i class="fa fa-map-marker text-success me-2"></i>{{ $isBn ? 'জমি ও প্রপার্টি' : 'Land & Properties' }} <span class="badge bg-danger ms-1">New</span></span>
+                        <i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">

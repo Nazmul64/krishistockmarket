@@ -5,6 +5,7 @@ export const translations = {
         home: "Home",
         about: "About Us",
         stocks: "Stock Market",
+        properties: "Land & Properties",
         packages_nav: "Our Packages",
         cards_nav: "Membership Cards",
         gallery: "Gallery",
@@ -105,6 +106,7 @@ export const translations = {
         home: "হোম",
         about: "আমাদের সম্পর্কে",
         stocks: "স্টক মার্কেট",
+        properties: "জমি ও প্রপার্টি",
         packages_nav: "প্যাকেজসমূহ",
         cards_nav: "মেম্বারশিপ কার্ড",
         gallery: "গ্যালারি",
@@ -219,4 +221,3 @@ export const saveLang = (lang) => {
         document.cookie = `ekrishi_lang=${lang};path=/;max-age=31536000`;
     }
 };
-

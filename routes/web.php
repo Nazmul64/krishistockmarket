@@ -62,6 +62,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [\App\Http\Controllers\FrontendController::class, 'index'])->name('/');
+Route::get('/properties', [\App\Http\Controllers\PropertyFrontendController::class, 'index'])->name('properties.index');
+Route::get('/properties/{id}', [\App\Http\Controllers\PropertyFrontendController::class, 'show'])->name('properties.show');
+Route::post('/properties/inquiry', [\App\Http\Controllers\PropertyFrontendController::class, 'submitInquiry'])->name('properties.inquiry');
 Route::get('/api/home-data', [\App\Http\Controllers\FrontendController::class, 'apiHomepageData'])->name('api.home_data');
 Route::get('/api/live-search', [\App\Http\Controllers\FrontendController::class, 'apiLiveSearch'])->name('api.live_search');
 Route::get('/about', function () {return view('frontend.about-us');})->name('about');
@@ -214,6 +217,7 @@ Route::group(['prefix' => 'admin/real-estate', 'middleware' => ['auth', 'role:su
     Route::get('/hub', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'index'])->name('admin.landshare.hub');
     Route::get('/', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'index'])->name('admin.real_estate.hub');
     Route::get('/properties', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'properties'])->name('admin.properties.index');
+    Route::post('/properties/store', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'storeProperty'])->name('admin.properties.store');
     Route::get('/units', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'units'])->name('admin.properties.units');
     Route::get('/projects', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'projects'])->name('admin.projects.index');
     Route::get('/investments/offers', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'investments'])->name('admin.investments.offers');

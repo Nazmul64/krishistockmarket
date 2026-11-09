@@ -76,6 +76,13 @@ export default function Navbar({
         { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
         { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
         { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
+        { 
+            label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 
+            url: routes.properties || '/properties', 
+            active: currentPath.includes('/properties'),
+            badge: 'New',
+            highlight: true
+        },
         { label: t.packages_nav || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
         { label: t.cards_nav || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
         { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
@@ -532,9 +539,10 @@ export default function Navbar({
                                 <a
                                     key={index}
                                     href={item.url}
-                                    className={`sub-nav-link-item ${item.active ? 'active' : ''}`}
+                                    className={`sub-nav-link-item ${item.active ? 'active' : ''} ${item.highlight ? 'sub-nav-highlight-btn' : ''}`}
                                 >
                                     {item.label}
+                                    {item.badge && <span className="badge bg-danger ms-1" style={{ fontSize: '10px', verticalAlign: 'middle' }}>{item.badge}</span>}
                                 </a>
                             ))}
                         </nav>
@@ -662,7 +670,10 @@ export default function Navbar({
                                     className={`mobile-nav-link ${item.active ? 'active' : ''}`}
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    <span>{item.label}</span>
+                                    <span>
+                                        {item.label}
+                                        {item.badge && <span className="badge bg-danger ms-1" style={{ fontSize: '10px' }}>{item.badge}</span>}
+                                    </span>
                                     <i className="fa fa-angle-right"></i>
                                 </a>
                             </li>
