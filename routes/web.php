@@ -209,6 +209,24 @@ Route::group(['prefix' => 'admin/rbac', 'middleware' => ['auth', 'role:super_adm
     Route::post('/fraud/update/{id}', [\App\Http\Controllers\Admin\RbacManagementController::class, 'updateFraudCase'])->name('admin.rbac.fraud.update');
 });
 
+// Admin Real Estate & Property Management (LandShare ERP)
+Route::group(['prefix' => 'admin/real-estate', 'middleware' => ['auth', 'role:super_admin,admin']], function () {
+    Route::get('/hub', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'index'])->name('admin.landshare.hub');
+    Route::get('/properties', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'properties'])->name('admin.properties.index');
+    Route::get('/units', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'units'])->name('admin.properties.units');
+    Route::get('/projects', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'projects'])->name('admin.projects.index');
+    Route::get('/investments/offers', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'investments'])->name('admin.investments.offers');
+    Route::get('/investors', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'investors'])->name('admin.investors.index');
+    Route::get('/sales-bookings', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'salesBookings'])->name('admin.sales.bookings');
+    Route::get('/profit-reconciliation', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'profit'])->name('admin.profit.reconciliation');
+    Route::get('/accounting', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'accounting'])->name('admin.property.accounting');
+    Route::get('/payments', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'payments'])->name('admin.property.payments');
+    Route::get('/rentals', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'rentals'])->name('admin.rentals.index');
+    Route::get('/land-owners', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'landOwners'])->name('admin.land_owners.index');
+    Route::get('/brokers', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'brokers'])->name('admin.brokers.index');
+    Route::get('/legal-documents', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'legalDocuments'])->name('admin.legal.documents');
+});
+
 
 // Admin Route
 Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {

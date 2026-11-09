@@ -366,6 +366,64 @@
                             </li>
                         @endif
 
+                        <!-- ================================= Real Estate & Property Management (LandShare ERP) -->
+                        @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">রিয়েল এস্টেট ও প্রপার্টি (LandShare ERP)</li>
+                            <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'admin.properties') || Str::contains(optional(Request::route())->getName(), 'admin.projects') || Str::contains(optional(Request::route())->getName(), 'admin.landshare') ? 'menu-open active' : '' }}">
+                                <a href="#">
+                                    <i class="ti-home text-success"></i>
+                                    <span>প্রপার্টি ও জমি ব্যবস্থাপনা</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.landshare.hub' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.landshare.hub') }}"><i class="ti-dashboard text-danger"></i> রিয়েল এস্টেট কন্ট্রোল হাব</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.properties.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.properties.index') }}"><i class="ti-layers-alt text-success"></i> জমি ও প্রপার্টি ক্যাটালগ</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.properties.units' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.properties.units') }}"><i class="ti-layout-grid2 text-primary"></i> ফ্ল্যাট ও একক ইউনিট</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.projects.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.projects.index') }}"><i class="ti-folder text-warning"></i> প্রকল্প সমূহ (Projects)</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.investments.offers' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.investments.offers') }}"><i class="ti-stats-up text-info"></i> বিনিয়োগ অফারসমূহ</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.investors.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.investors.index') }}"><i class="ti-user text-primary"></i> বিনিয়োগকারী ও KYC</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.sales.bookings' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.sales.bookings') }}"><i class="ti-shopping-cart text-danger"></i> বিক্রি, বুকিং ও কিস্তি</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.profit.reconciliation' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.profit.reconciliation') }}"><i class="ti-money text-success"></i> মুনাফা বণ্টন ইঞ্জিন</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.property.accounting' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.property.accounting') }}"><i class="ti-receipt text-warning"></i> ডাবল-এন্ট্রি হিসাব</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.property.payments' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.property.payments') }}"><i class="ti-credit-card text-info"></i> পেমেন্ট ভেরিফিকেশন</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.rentals.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.rentals.index') }}"><i class="ti-id-badge text-primary"></i> ভাড়া ও ভাড়াটিয়া লিজ</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.land_owners.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.land_owners.index') }}"><i class="ti-hand-point-right text-warning"></i> জমি মালিক পার্টনারশিপ</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.brokers.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.brokers.index') }}"><i class="ti-medall text-success"></i> ব্রোকার ও কমিশন নেটওয়ার্ক</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.legal.documents' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.legal.documents') }}"><i class="ti-files text-secondary"></i> দলিল ও পরচা ভল্ট</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+
                         <!-- ================================= Manager Dedicated Menu -->
                         @if (Auth::user()->hasRole('manager'))
                             <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">ম্যানেজার মেনু</li>
