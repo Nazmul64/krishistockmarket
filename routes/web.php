@@ -104,6 +104,12 @@ Route::get('/login', [App\Http\Controllers\Auth\PortalLoginController::class, 's
 Route::post('/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'customer')->name('login.post');
 Route::post('/logout', [App\Http\Controllers\Auth\PortalLoginController::class, 'logout'])->defaults('portal', 'customer')->name('logout');
 
+// Password Reset Routes
+Route::get('/password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
+
 // Registration routes
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'registerPost'])->name('register.submit');

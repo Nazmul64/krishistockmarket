@@ -301,7 +301,7 @@
                         <span>মনে রাখুন (Remember Me)</span>
                     </label>
 
-                    @if($portal === 'customer')
+                    @if($portal === 'customer' && Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="text-decoration-none small fw-bold text-muted">
                             পাসওয়ার্ড ভুলে গেছেন?
                         </a>
