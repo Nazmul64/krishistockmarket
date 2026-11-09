@@ -132,6 +132,13 @@
         body, html, h1, h2, h3, h4, h5, h6, .main-header, .sidebar-menu, .box-title, .page-title {
             font-family: var(--site-font-family) !important;
         }
+        .main-header {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 1030 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+        }
         .main-header .logo {
             width: auto !important;
             min-width: 150px !important;

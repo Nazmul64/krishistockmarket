@@ -993,6 +993,17 @@
                         mobRes.style.display = 'none';
                     }
                 });
+                // Sticky Navbar Scroll Elevation
+                window.addEventListener('scroll', function () {
+                    var hdr = document.getElementById('bladeMainHeader');
+                    if (hdr) {
+                        if (window.scrollY > 25) {
+                            hdr.classList.add('header-scrolled', 'shadow-lg');
+                        } else {
+                            hdr.classList.remove('header-scrolled', 'shadow-lg');
+                        }
+                    }
+                }, { passive: true });
             });
         })();
     </script>

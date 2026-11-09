@@ -408,7 +408,7 @@ export default function Navbar({
             </div>
 
             {/* Main Header Row: Logo + Prominent Full-Width Search Bar + Language + Dark Mode + Auth */}
-            <header className={`react-main-header golden-navbar ${scrolled ? 'header-scrolled shadow-lg' : ''}`}>
+            <header className={`react-main-header golden-navbar sticky-top ${scrolled ? 'header-scrolled shadow-lg' : ''}`}>
                 <div className="container">
                     <div className="d-flex align-items-center justify-content-between header-inner-row">
                         {/* Brand Logo */}
