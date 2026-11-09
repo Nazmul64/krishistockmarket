@@ -39,17 +39,22 @@
                     </div>
                 @empty
                     <div class="col-12 text-center py-5">
-                        <div class="p-5 bg-white rounded-4 border max-w-md mx-auto shadow-sm">
-                            <i class="fa fa-picture-o fa-3x text-slate-400 mb-3"></i>
-                            <h5 class="text-slate-600">গ্যালারিতে এখনো কোনো ছবি যোগ করা হয়নি</h5>
+                        <div class="p-5 bg-white rounded-4 border max-w-md mx-auto shadow-sm" style="max-width: 520px;">
+                            <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: #f1f5f9; color: #94a3b8;">
+                                <i class="fa fa-picture-o fa-2x"></i>
+                            </div>
+                            <h4 class="fw-bold text-dark mb-2">গ্যালারিতে এখনো কোনো ছবি যোগ করা হয়নি</h4>
+                            <p class="text-muted small mb-0">আমাদের খামার, প্রজেক্ট ও মাঠ পর্যায়ের কার্যক্রমের স্থিরচিত্র খুব শীঘ্রই এখানে আপলোড করা হবে।</p>
                         </div>
                     </div>
                 @endforelse
             </div>
 
-            <div class="mt-5 d-flex justify-content-center">
-                {{ $gallery_images->links('frontend.pagination.custom-pagination') }}
-            </div>
+            @if($gallery_images->hasPages())
+                <div class="mt-5 d-flex justify-content-center">
+                    {{ $gallery_images->links('frontend.pagination.custom-pagination') }}
+                </div>
+            @endif
         </div>
     </main>
 </div>

@@ -1,3 +1,4 @@
+@if ($paginator->hasPages())
 <nav class="ow-pagination">
     <ul class="pagination justify-content-center">
 
@@ -49,8 +50,9 @@
                     Next
                     <i class="fa fa-angle-double-right"></i>
                 </a>
-        </li>
+            </li>
         @endif
 
     </ul>
 </nav>
+@endif

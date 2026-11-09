@@ -410,7 +410,7 @@
                             type="text"
                             id="bladeSearchInput"
                             class="unified-search-input"
-                            placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড বা সেবা খুঁজুন...' : 'Search stocks, packages, cards...' }}"
+                            placeholder="{{ $isBn ? 'জমি, ফ্ল্যাট, পণ্য, প্যাকেজ বা সেবা খুঁজুন...' : 'Search land, properties, packages, stocks...' }}"
                             autocomplete="off"
                         />
                         <button type="button" id="bladeSearchClear" class="search-clear-inline-btn" style="display: none;">
@@ -602,7 +602,7 @@
                         type="text"
                         id="bladeMobileSearchInput"
                         class="unified-search-input"
-                        placeholder="{{ $isBn ? 'পণ্য, প্যাকেজ, কার্ড বা সেবা খুঁজুন...' : 'Search stocks, packages, cards...' }}"
+                        placeholder="{{ $isBn ? 'জমি, ফ্ল্যাট, পণ্য, প্যাকেজ বা সেবা খুঁজুন...' : 'Search land, properties, packages, stocks...' }}"
                         autocomplete="off"
                     />
                     <button type="submit" class="unified-search-submit-btn px-3">

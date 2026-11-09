@@ -72,27 +72,31 @@
                     </h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-3 col-6">
-                            <div class="bg-light p-3 rounded-3 text-center border">
-                                <small class="text-muted d-block">মোট আয়তন</small>
-                                <span class="fw-bold fs-6 text-dark">{{ number_format($property->total_area, 2) }} {{ $property->measurement_unit }}</span>
+                            <div class="property-spec-box">
+                                <i class="fa fa-expand text-success spec-icon"></i>
+                                <span class="spec-label">মোট আয়তন</span>
+                                <span class="spec-value">{{ number_format($property->total_area, 2) }} {{ $property->measurement_unit }}</span>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
-                            <div class="bg-light p-3 rounded-3 text-center border">
-                                <small class="text-muted d-block">দাগ নম্বর</small>
-                                <span class="fw-bold fs-6 text-dark">{{ $property->dag_number ?: 'যাচাইকৃত' }}</span>
+                            <div class="property-spec-box">
+                                <i class="fa fa-map-o text-primary spec-icon"></i>
+                                <span class="spec-label">দাগ নম্বর</span>
+                                <span class="spec-value">{{ $property->dag_number ?: 'যাচাইকৃত' }}</span>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
-                            <div class="bg-light p-3 rounded-3 text-center border">
-                                <small class="text-muted d-block">খতিয়ান নম্বর</small>
-                                <span class="fw-bold fs-6 text-dark">{{ $property->khatian_number ?: 'নামজারি রেডি' }}</span>
+                            <div class="property-spec-box">
+                                <i class="fa fa-file-text-o text-warning spec-icon"></i>
+                                <span class="spec-label">খতিয়ান নম্বর</span>
+                                <span class="spec-value">{{ $property->khatian_number ?: 'নামজারি রেডি' }}</span>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
-                            <div class="bg-light p-3 rounded-3 text-center border">
-                                <small class="text-muted d-block">জেএল / মৌজা</small>
-                                <span class="fw-bold fs-6 text-dark">{{ $property->jl_number ?: ($property->mouza ?: 'অনুমোদিত') }}</span>
+                            <div class="property-spec-box">
+                                <i class="fa fa-map-marker text-danger spec-icon"></i>
+                                <span class="spec-label">জেএল / মৌজা</span>
+                                <span class="spec-value">{{ $property->jl_number ?: ($property->mouza ?: 'অনুমোদিত') }}</span>
                             </div>
                         </div>
                     </div>
@@ -112,9 +116,9 @@
                         </h5>
                         <div class="d-flex flex-wrap gap-2 mb-4">
                             @foreach(explode(',', $property->features) as $feature)
-                                <span class="property-amenity-pill" style="display: inline-flex; align-items: center; background: #ecfdf5 !important; color: #065f46 !important; border: 1.5px solid #a7f3d0 !important; font-size: 14px; font-weight: 700; padding: 7px 16px; border-radius: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                                    <i class="fa fa-check-circle text-success me-2" style="font-size: 15px;"></i>
-                                    <span style="color: #065f46 !important;">{{ trim($feature) }}</span>
+                                <span class="property-amenity-pill">
+                                    <i class="fa fa-check-circle text-success me-2"></i>
+                                    <span>{{ trim($feature) }}</span>
                                 </span>
                             @endforeach
                         </div>
@@ -122,68 +126,104 @@
                 </div>
             </div>
 
-            <!-- Right Column: Pricing & Booking Application Card -->
+            <!-- Right Column: Pricing & Modern Booking Application Card -->
             <div class="col-lg-4">
-                <div class="bg-white rounded-4 p-4 shadow-sm sticky-top" style="top: 90px; border: 2px solid #10b981;">
-                    <div class="text-center pb-3 border-bottom mb-3">
-                        <div class="small text-muted fw-bold text-uppercase">নির্ধারিত বিক্রয় মূল্য</div>
-                        <h2 class="fw-extrabold text-success font-monospace mb-1">
+                <div class="booking-application-card sticky-top" style="top: 90px;">
+                    <!-- Pricing Header Banner -->
+                    <div class="booking-card-header">
+                        <div class="small fw-bold text-uppercase mb-1" style="color: #a7f3d0; font-size: 12px; letter-spacing: 0.5px;">নির্ধারিত বিক্রয় মূল্য</div>
+                        <h2 class="booking-price-text mb-2">
                             ৳ {{ number_format($property->selling_price) }}
                         </h2>
                         @if($property->booking_amount > 0)
-                            <span class="badge bg-warning text-dark px-3 py-1 font-monospace">
-                                বুকিং মানি: ৳ {{ number_format($property->booking_amount) }}
+                            <span class="booking-badge-pill">
+                                <i class="fa fa-bookmark me-1 text-warning"></i> বুকিং মানি: ৳ {{ number_format($property->booking_amount) }}
                             </span>
                         @endif
                     </div>
 
-                    <!-- Direct Inquiry / Booking Form -->
-                    <h5 class="fw-bold text-dark mb-3">
-                        <i class="fa fa-send text-primary me-2"></i> সরাসরি বুকিং বা সাইট ভিজিট আবেদন
-                    </h5>
-                    <form action="{{ route('properties.inquiry') }}" method="POST" onsubmit="handleAjaxBookingSubmit(event, this)">
-                        @csrf
-                        <input type="hidden" name="property_id" value="{{ $property->id }}">
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">আপনার নাম <span class="text-danger">*</span></label>
-                            <input type="text" name="customer_name" required class="form-control" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="আপনার নাম লিখুন">
+                    <!-- Direct Inquiry / Booking Form Body -->
+                    <div class="p-4 bg-white">
+                        <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                            <div class="booking-icon-circle">
+                                <i class="fa fa-paper-plane text-success"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0">সরাসরি বুকিং বা সাইট ভিজিট</h6>
+                                <small class="text-muted">দ্রুত কনফার্মেশনের জন্য ফর্ম পূরণ করুন</small>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">মোবাইল নম্বর <span class="text-danger">*</span></label>
-                            <input type="text" name="customer_phone" required class="form-control" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="০১xxxxxxxxx">
+                        <form action="{{ route('properties.inquiry') }}" method="POST" onsubmit="handleAjaxBookingSubmit(event, this)">
+                            @csrf
+                            <input type="hidden" name="property_id" value="{{ $property->id }}">
+
+                            <!-- Name -->
+                            <div class="form-group-modern mb-3">
+                                <label class="form-label-modern">
+                                    <i class="fa fa-user text-success me-1"></i> আপনার নাম <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="customer_name" required class="form-control-modern" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="আপনার নাম লিখুন">
+                            </div>
+
+                            <!-- Mobile -->
+                            <div class="form-group-modern mb-3">
+                                <label class="form-label-modern">
+                                    <i class="fa fa-phone text-success me-1"></i> মোবাইল নম্বর <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="customer_phone" required class="form-control-modern" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="০১xxxxxxxxx">
+                            </div>
+
+                            <!-- Inquiry Type (Circled by user) -->
+                            <div class="form-group-modern mb-3">
+                                <label class="form-label-modern">
+                                    <i class="fa fa-tags text-success me-1"></i> আবেদনের ধরন <span class="text-danger">*</span>
+                                </label>
+                                <div class="custom-select-wrap">
+                                    <select name="inquiry_type" class="form-select-modern" required>
+                                        <option value="site_visit" selected>📍 সাইট পরিদর্শন (Site Visit)</option>
+                                        <option value="booking_request">📝 সরাসরি বুকিং আবেদন (Booking)</option>
+                                        <option value="price_inquiry">💬 মূল্য ও কিস্তি আলোচনা (Inquiry)</option>
+                                    </select>
+                                    <i class="fa fa-chevron-down custom-select-arrow"></i>
+                                </div>
+                            </div>
+
+                            <!-- Preferred Date -->
+                            <div class="form-group-modern mb-3">
+                                <label class="form-label-modern">
+                                    <i class="fa fa-calendar text-success me-1"></i> পরিদর্শনের পছন্দের তারিখ
+                                </label>
+                                <input type="date" name="preferred_date" class="form-control-modern" min="{{ date('Y-m-d') }}">
+                            </div>
+
+                            <!-- Note/Message -->
+                            <div class="form-group-modern mb-3">
+                                <label class="form-label-modern">
+                                    <i class="fa fa-commenting-o text-success me-1"></i> নোট / বার্তা
+                                </label>
+                                <textarea name="message" rows="2" class="form-control-modern" placeholder="আপনার কোনো নির্দিষ্ট জিজ্ঞাসা থাকলে লিখুন..."></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-submit-booking w-100 py-3 fw-bold">
+                                <i class="fa fa-send me-1"></i> আবেদন সাবমিট করুন
+                            </button>
+                        </form>
+
+                        <div class="booking-security-note mt-3 text-center">
+                            <i class="fa fa-shield text-success me-1"></i> আপনার তথ্য সম্পূর্ণ সুরক্ষিত ও গোপনীয় রাখা হবে।
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">আবেদনের ধরন <span class="text-danger">*</span></label>
-                            <select name="inquiry_type" class="form-select" required>
-                                <option value="site_visit" selected>সাইট পরিদর্শন (Site Visit)</option>
-                                <option value="booking_request">সরাসরি বুকিং আবেদন (Booking)</option>
-                                <option value="price_inquiry">মূল্য ও কিস্তি আলোচনা</option>
-                            </select>
+                        <!-- Direct Contact Options -->
+                        <div class="d-flex gap-2 mt-3 pt-3 border-top">
+                            <a href="tel:01700000000" class="btn-contact-action flex-fill text-dark">
+                                <i class="fa fa-phone text-success me-1"></i> সরাসরি কল
+                            </a>
+                            <a href="https://wa.me/8801700000000" target="_blank" class="btn-contact-action flex-fill text-success">
+                                <i class="fa fa-whatsapp me-1"></i> হোয়াটসঅ্যাপ
+                            </a>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">পরিদর্শনের পছন্দের তারিখ</label>
-                            <input type="date" name="preferred_date" class="form-control" min="{{ date('Y-m-d') }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">নোট / বার্তা</label>
-                            <textarea name="message" rows="2" class="form-control" placeholder="আপনার কোনো নির্দিষ্ট জিজ্ঞাসা থাকলে লিখুন..."></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow">
-                            <i class="fa fa-check me-1"></i> আবেদন সাবমিট করুন
-                        </button>
-                    </form>
-
-                    <div class="mt-4 pt-3 border-top text-center">
-                        <small class="text-muted d-block mb-1">জরুরী প্রয়োজনে হেল্পলাইন:</small>
-                        <a href="tel:01700000000" class="fw-bold text-dark text-decoration-none">
-                            <i class="fa fa-phone text-warning me-1"></i> হটলাইন: ০১৭০০-০০০০০০
-                        </a>
                     </div>
                 </div>
             </div>
@@ -291,6 +331,206 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
+/* Modern Spec Boxes */
+.property-spec-box {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+.property-spec-box:hover {
+    border-color: #10b981;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.1);
+    transform: translateY(-2px);
+}
+.spec-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+.spec-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+}
+.spec-value {
+    font-size: 14px;
+    color: #0f172a;
+    font-weight: 800;
+}
+
+/* Modern Amenity Pills */
+.property-amenity-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #ecfdf5 !important;
+    color: #065f46 !important;
+    border: 1.5px solid #a7f3d0 !important;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 8px 18px;
+    border-radius: 50px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+}
+.property-amenity-pill:hover {
+    background: #d1fae5 !important;
+    border-color: #6ee7b7 !important;
+    transform: translateY(-1px);
+}
+
+/* Modern Right Booking Card */
+.booking-application-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+.booking-card-header {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+    color: #ffffff;
+    padding: 22px 20px;
+    text-align: center;
+}
+.booking-price-text {
+    font-size: 1.95rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    font-family: monospace;
+}
+.booking-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fef08a;
+    border: 1px solid rgba(254, 240, 138, 0.35);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 50px;
+}
+.booking-icon-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* Modern Form Controls */
+.form-group-modern {
+    position: relative;
+}
+.form-label-modern {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+.form-control-modern {
+    width: 100%;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #0f172a;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    outline: none;
+}
+.form-control-modern:focus {
+    background: #ffffff;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+.custom-select-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.form-select-modern {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 36px 10px 14px;
+    font-size: 14px;
+    color: #0f172a;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+.form-select-modern:focus {
+    background: #ffffff;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+.custom-select-arrow {
+    position: absolute;
+    right: 14px;
+    pointer-events: none;
+    color: #64748b;
+    font-size: 13px;
+}
+.btn-submit-booking {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    transition: all 0.25s ease;
+}
+.btn-submit-booking:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
+    color: #ffffff;
+}
+.booking-security-note {
+    font-size: 12px;
+    color: #64748b;
+}
+.btn-contact-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.btn-contact-action:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+/* Toast Styles */
 .property-toast-wrap {
     position: fixed;
     top: 95px;

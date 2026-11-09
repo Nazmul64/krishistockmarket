@@ -65,38 +65,100 @@
 </div>
 
 <!-- Search & Category Filter Navigation Bar -->
-<div class="py-3 bg-white border-bottom shadow-sm sticky-top" style="top: 74px; z-index: 99;" id="propertyListSection">
+<div class="property-search-section py-3 bg-white border-bottom shadow-sm sticky-top" style="top: 74px; z-index: 99;" id="propertyListSection">
     <div class="container">
-        <form action="{{ route('properties.index') }}" method="GET" class="row g-2 align-items-center">
-            <div class="col-md-5 col-12">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fa fa-search text-muted"></i></span>
-                    <input type="text" name="q" value="{{ request('q') }}" class="form-control border-start-0" placeholder="প্রপার্টির নাম, জেলা, থানা, দাগ বা মৌজা লিখুন...">
+        <!-- Integrated Modern Search Bar Box -->
+        <form action="{{ route('properties.index') }}" method="GET" class="property-search-form" id="propertySearchFilterForm">
+            <!-- Hidden input to preserve category filter -->
+            <input type="hidden" name="type" id="filterPropertyTypeInput" value="{{ request('type', 'all') }}">
+
+            <div class="row g-2 align-items-center">
+                <!-- Search Input with icon, clear button, and embedded submit -->
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="property-search-input-wrap">
+                        <i class="fa fa-search property-search-icon"></i>
+                        <input type="text" 
+                               name="q" 
+                               id="propertySearchInput"
+                               value="{{ request('q') }}" 
+                               class="property-search-input" 
+                               placeholder="প্রপার্টির নাম, এলাকা (ঢাকা/পূর্বাচল), দাগ বা খতিয়ান নম্বর লিখুন..." 
+                               autocomplete="off">
+                        @if(request('q'))
+                            <a href="{{ route('properties.index', ['type' => request('type'), 'district' => request('district'), 'sort' => request('sort')]) }}" 
+                               class="property-search-clear-btn" 
+                               title="মুছে ফেলুন">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
+                        @endif
+                        <button type="submit" class="property-search-submit-btn">
+                            <i class="fa fa-search me-1"></i> <span>অনুসন্ধান</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- District Dropdown -->
+                <div class="col-lg-3 col-md-3 col-6">
+                    <div class="property-filter-select-wrap">
+                        <i class="fa fa-map-marker property-select-icon text-danger"></i>
+                        <select name="district" class="property-filter-select" onchange="document.getElementById('propertySearchFilterForm').submit()">
+                            <option value="all">সকল জেলা / এলাকা</option>
+                            @foreach($districts as $dst)
+                                <option value="{{ $dst }}" {{ request('district') == $dst ? 'selected' : '' }}>{{ $dst }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sort Dropdown -->
+                <div class="col-lg-3 col-md-3 col-6">
+                    <div class="property-filter-select-wrap">
+                        <i class="fa fa-sort-amount-desc property-select-icon text-success"></i>
+                        <select name="sort" class="property-filter-select" onchange="document.getElementById('propertySearchFilterForm').submit()">
+                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>নতুন প্রপার্টি আগে</option>
+                            <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>মূল্য: কম থেকে বেশি</option>
+                            <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>মূল্য: বেশি থেকে কম</option>
+                            <option value="area_desc" {{ request('sort') == 'area_desc' ? 'selected' : '' }}>আয়তন: বড় থেকে ছোট</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-5 col-8">
-                <div class="d-flex gap-2 overflow-auto py-1" style="white-space: nowrap;">
-                    <a href="{{ route('properties.index') }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ !request('type') || request('type') == 'all' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
-                        সব প্রপার্টি
-                    </a>
-                    <a href="{{ route('properties.index', ['type' => 'প্লট', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'প্লট' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
-                        প্লট
-                    </a>
-                    <a href="{{ route('properties.index', ['type' => 'জমি', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'জমি' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
-                        জমি / ফার্ম
-                    </a>
-                    <a href="{{ route('properties.index', ['type' => 'ফ্ল্যাট', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'ফ্ল্যাট' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
-                        ফ্ল্যাট
-                    </a>
-                    <a href="{{ route('properties.index', ['type' => 'বাণিজ্যিক', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'বাণিজ্যিক' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
-                        বাণিজ্যিক স্পেস
-                    </a>
+
+            <!-- Category Filter Pills Bar (Horizontal Scrollable) -->
+            <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2 overflow-auto py-1 property-category-scroll" style="white-space: nowrap;">
+                    <button type="button" 
+                            onclick="selectPropertyCategory('all')" 
+                            class="property-cat-pill {{ !request('type') || request('type') == 'all' ? 'active' : '' }}">
+                        <i class="fa fa-th-large me-1"></i> সব প্রপার্টি
+                    </button>
+                    <button type="button" 
+                            onclick="selectPropertyCategory('প্লট')" 
+                            class="property-cat-pill {{ request('type') == 'প্লট' ? 'active' : '' }}">
+                        <i class="fa fa-map-signs me-1"></i> আবাসিক প্লট
+                    </button>
+                    <button type="button" 
+                            onclick="selectPropertyCategory('জমি')" 
+                            class="property-cat-pill {{ request('type') == 'জমি' ? 'active' : '' }}">
+                        <i class="fa fa-tree me-1"></i> জমি ও কৃষি খামার
+                    </button>
+                    <button type="button" 
+                            onclick="selectPropertyCategory('ফ্ল্যাট')" 
+                            class="property-cat-pill {{ request('type') == 'ফ্ল্যাট' ? 'active' : '' }}">
+                        <i class="fa fa-building-o me-1"></i> ফ্ল্যাট / অ্যাপার্টমেন্ট
+                    </button>
+                    <button type="button" 
+                            onclick="selectPropertyCategory('বাণিজ্যিক')" 
+                            class="property-cat-pill {{ request('type') == 'বাণিজ্যিক' ? 'active' : '' }}">
+                        <i class="fa fa-briefcase me-1"></i> বাণিজ্যিক স্পেস
+                    </button>
                 </div>
-            </div>
-            <div class="col-md-2 col-4 text-end">
-                <button type="submit" class="btn btn-dark w-100 btn-sm py-2 fw-bold">
-                    <i class="fa fa-filter me-1"></i> ফিল্টার
-                </button>
+
+                @if(request('q') || (request('type') && request('type') !== 'all') || (request('district') && request('district') !== 'all') || (request('sort') && request('sort') !== 'latest'))
+                    <a href="{{ route('properties.index') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold">
+                        <i class="fa fa-refresh me-1"></i> ফিল্টার রিসেট
+                    </a>
+                @endif
             </div>
         </form>
     </div>
@@ -269,32 +331,32 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label small fw-bold">আপনার নাম <span class="text-danger">*</span></label>
-                            <input type="text" name="customer_name" required class="form-control" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="আপনার পূর্ণ নাম লিখুন">
+                            <label class="form-label small fw-bold"><i class="fa fa-user text-success me-1"></i> আপনার নাম <span class="text-danger">*</span></label>
+                            <input type="text" name="customer_name" required class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="আপনার পূর্ণ নাম লিখুন">
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-bold">মোবাইল নম্বর <span class="text-danger">*</span></label>
-                            <input type="text" name="customer_phone" required class="form-control" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="০১xxxxxxxxx">
+                            <label class="form-label small fw-bold"><i class="fa fa-phone text-success me-1"></i> মোবাইল নম্বর <span class="text-danger">*</span></label>
+                            <input type="text" name="customer_phone" required class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="০১xxxxxxxxx">
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-bold">ইমেইল (যদি থাকে)</label>
-                            <input type="email" name="customer_email" class="form-control" value="{{ Auth::check() ? Auth::user()->email : '' }}" placeholder="email@example.com">
+                            <label class="form-label small fw-bold"><i class="fa fa-envelope-o text-success me-1"></i> ইমেইল (যদি থাকে)</label>
+                            <input type="email" name="customer_email" class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->email : '' }}" placeholder="email@example.com">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold">আবেদনের ধরন <span class="text-danger">*</span></label>
-                            <select name="inquiry_type" class="form-select" required>
-                                <option value="site_visit" selected>সাইট পরিদর্শন (Site Visit)</option>
-                                <option value="booking_request">সরাসরি বুকিং আবেদন (Booking)</option>
-                                <option value="price_inquiry">বিস্তারিত ও মূল্য আলোচনা</option>
+                            <label class="form-label small fw-bold"><i class="fa fa-tags text-success me-1"></i> আবেদনের ধরন <span class="text-danger">*</span></label>
+                            <select name="inquiry_type" class="form-select rounded-3" required>
+                                <option value="site_visit" selected>📍 সাইট পরিদর্শন (Site Visit)</option>
+                                <option value="booking_request">📝 সরাসরি বুকিং আবেদন (Booking)</option>
+                                <option value="price_inquiry">💬 বিস্তারিত ও মূল্য আলোচনা (Inquiry)</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold">পছন্দের তারিখ</label>
-                            <input type="date" name="preferred_date" class="form-control" min="{{ date('Y-m-d') }}">
+                            <label class="form-label small fw-bold"><i class="fa fa-calendar text-success me-1"></i> পছন্দের তারিখ</label>
+                            <input type="date" name="preferred_date" class="form-control rounded-3" min="{{ date('Y-m-d') }}">
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-bold">আপনার কোনো প্রশ্ন বা বিশেষ নোট</label>
-                            <textarea name="message" rows="2" class="form-control" placeholder="যেমন: শুক্রবারে সাইট ভিজিট করতে চাই অথবা কিস্তি সুবিধা জানতে চাই..."></textarea>
+                            <label class="form-label small fw-bold"><i class="fa fa-commenting-o text-success me-1"></i> আপনার কোনো প্রশ্ন বা বিশেষ নোট</label>
+                            <textarea name="message" rows="2" class="form-control rounded-3" placeholder="যেমন: শুক্রবারে সাইট ভিজিট করতে চাই অথবা কিস্তি সুবিধা জানতে চাই..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -416,6 +478,17 @@ function handleAjaxBookingSubmit(e, form) {
     });
 }
 
+function selectPropertyCategory(cat) {
+    var input = document.getElementById('filterPropertyTypeInput');
+    if (input) {
+        input.value = cat;
+    }
+    var form = document.getElementById('propertySearchFilterForm');
+    if (form) {
+        form.submit();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     @if(session('success'))
         showPropertyToast("{{ session('success') }}", '');
@@ -424,6 +497,137 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
+/* Modern Unified Real Estate Search & Filter Styles */
+.property-search-section {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0;
+}
+.property-search-input-wrap {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 50px;
+    padding: 4px 6px 4px 18px;
+    transition: all 0.25s ease;
+}
+.property-search-input-wrap:focus-within {
+    background: #ffffff;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+}
+.property-search-icon {
+    color: #64748b;
+    font-size: 16px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+.property-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14.5px;
+    color: #0f172a;
+    font-weight: 500;
+}
+.property-search-input::placeholder {
+    color: #94a3b8;
+    font-size: 13.5px;
+}
+.property-search-clear-btn {
+    color: #94a3b8;
+    background: none;
+    border: none;
+    padding: 0 10px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    text-decoration: none;
+}
+.property-search-clear-btn:hover {
+    color: #ef4444;
+}
+.property-search-submit-btn {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+.property-search-submit-btn:hover {
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4);
+}
+.property-filter-select-wrap {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    padding: 7px 14px;
+    transition: all 0.25s ease;
+}
+.property-filter-select-wrap:focus-within {
+    background: #ffffff;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+.property-select-icon {
+    font-size: 15px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.property-filter-select {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 13.5px;
+    color: #1e293b;
+    font-weight: 600;
+    cursor: pointer;
+}
+.property-category-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+.property-category-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.property-cat-pill {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1.5px solid #e2e8f0;
+    padding: 7px 18px;
+    border-radius: 50px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+.property-cat-pill:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+.property-cat-pill.active {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    color: #ffffff !important;
+    border-color: #15803d !important;
+    box-shadow: 0 3px 10px rgba(22, 163, 74, 0.35);
+}
 .property-toast-wrap {
     position: fixed;
     top: 95px;

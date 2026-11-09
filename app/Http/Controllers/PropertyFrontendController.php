@@ -48,19 +48,44 @@ class PropertyFrontendController extends Controller
             $query->where('property_type_name', 'like', "%{$type}%");
         }
 
+        // District filter
+        if ($request->filled('district') && $request->input('district') !== 'all') {
+            $district = trim($request->input('district'));
+            $query->where('district', 'like', "%{$district}%");
+        }
+
         // Price range filter
         if ($request->filled('max_price')) {
             $query->where('selling_price', '<=', (float) $request->input('max_price'));
         }
 
-        $properties = $query->latest()->paginate(9)->withQueryString();
+        // Sorting
+        $sort = $request->input('sort', 'latest');
+        if ($sort === 'price_asc') {
+            $query->orderBy('selling_price', 'asc');
+        } elseif ($sort === 'price_desc') {
+            $query->orderBy('selling_price', 'desc');
+        } elseif ($sort === 'area_desc') {
+            $query->orderBy('total_area', 'desc');
+        } else {
+            $query->latest();
+        }
+
+        $properties = $query->paginate(9)->withQueryString();
         $totalProperties = Property::where('status', '!=', 'draft')->count();
         $activeProjects = Project::where('status', 'active')->take(3)->get();
+        $districts = Property::where('status', '!=', 'draft')
+            ->whereNotNull('district')
+            ->where('district', '!=', '')
+            ->distinct()
+            ->pluck('district');
 
         return view('frontend.properties.index', compact(
             'properties',
             'totalProperties',
             'activeProjects',
+            'districts',
+            'sort',
             'isBn',
             'siteTheme'
         ));
