@@ -535,11 +535,11 @@
                     <div class="small text-muted mb-2 fw-bold text-center">
                         {{ $isBn ? 'একাউন্টে প্রবেশ করুন অথবা নিবন্ধন করুন' : 'Sign in to account or register' }}
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <a href="{{ route('login') }}" class="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
+                    <div class="d-flex align-items-center">
+                        <a href="{{ route('login') }}" class="mobile-drawer-btn-login flex-fill text-center py-2 text-decoration-none" style="margin-right: 10px;">
                             <i class="fa fa-sign-in me-1"></i> {{ $isBn ? 'লগইন' : 'Login' }}
                         </a>
-                        <a href="{{ route('register.referlink') }}" class="btn btn-golden-action w-50 py-2 text-center">
+                        <a href="{{ route('register.referlink') }}" class="mobile-drawer-btn-register flex-fill text-center py-2 text-decoration-none">
                             <i class="fa fa-user-plus me-1"></i> {{ $isBn ? 'রেজিস্টার' : 'Register' }}
                         </a>
                     </div>

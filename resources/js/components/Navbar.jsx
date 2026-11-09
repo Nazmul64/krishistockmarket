@@ -565,10 +565,10 @@ export default function Navbar({
                                     {lang === 'bn' ? 'একাউন্টে প্রবেশ করুন অথবা নিবন্ধন করুন' : 'Sign in to account or register'}
                                 </div>
                                 <div className="d-flex align-items-center">
-                                    <a href={auth.login_url} className="btn-golden-action-outline flex-fill text-center py-2 text-decoration-none" style={{ marginRight: '10px' }}>
+                                    <a href={auth.login_url} className="mobile-drawer-btn-login flex-fill text-center py-2 text-decoration-none" style={{ marginRight: '10px' }}>
                                         <i className="fa fa-sign-in me-1"></i> {t.login}
                                     </a>
-                                    <a href={auth.register_url} className="btn-golden-action flex-fill text-center py-2 text-decoration-none">
+                                    <a href={auth.register_url} className="mobile-drawer-btn-register flex-fill text-center py-2 text-decoration-none">
                                         <i className="fa fa-user-plus me-1"></i> {t.register}
                                     </a>
                                 </div>
@@ -651,24 +651,6 @@ export default function Navbar({
                             </button>
                         </form>
                         {searchOpen && renderSearchResultsDropdown()}
-                    </div>
-
-                    {/* User Quick Info */}
-                    <div className="mobile-user-card mb-3">
-                        {auth.is_authenticated ? (
-                            <a href={auth.dashboard_url} className="btn btn-golden-action w-100 py-2 d-flex align-items-center justify-content-center gap-2">
-                                <i className="fa fa-tachometer"></i> {t.dashboard}
-                            </a>
-                        ) : (
-                            <div className="d-flex gap-2">
-                                <a href={auth.login_url} className="btn btn-outline-warning w-50 py-2 text-center text-dark fw-bold">
-                                    <i className="fa fa-sign-in me-1"></i> {t.login}
-                                </a>
-                                <a href={auth.register_url} className="btn btn-golden-action w-50 py-2 text-center">
-                                    <i className="fa fa-user-plus me-1"></i> {t.register}
-                                </a>
-                            </div>
-                        )}
                     </div>
 
                     {/* Nav Links List */}
