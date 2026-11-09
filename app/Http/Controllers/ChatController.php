@@ -63,19 +63,26 @@ class ChatController extends Controller
             'is_read' => false,
         ]);
 
-        // Generate AI Assistant Reply
-        $aiReplyText = $this->generateAiReply(trim($request->input('message')));
+        // Check if an admin has already replied in this conversation session
+        $hasAdminReplied = ChatMessage::where('session_id', $sessionId)
+            ->where('sender_type', 'admin')
+            ->exists();
 
-        if ($aiReplyText) {
-            ChatMessage::create([
-                'session_id' => $sessionId,
-                'user_id' => null,
-                'sender_type' => 'bot',
-                'sender_name' => 'কৃষি পরিবার AI Assistant',
-                'user_role' => $userRole,
-                'message' => $aiReplyText,
-                'is_read' => true,
-            ]);
+        // Only generate AI Bot reply if NO real admin has replied yet in this session
+        if (!$hasAdminReplied) {
+            $aiReplyText = $this->generateAiReply(trim($request->input('message')));
+
+            if ($aiReplyText) {
+                ChatMessage::create([
+                    'session_id' => $sessionId,
+                    'user_id' => null,
+                    'sender_type' => 'bot',
+                    'sender_name' => 'কৃষি পরিবার AI Assistant',
+                    'user_role' => $userRole,
+                    'message' => $aiReplyText,
+                    'is_read' => true,
+                ]);
+            }
         }
 
         $messages = ChatMessage::where('session_id', $sessionId)

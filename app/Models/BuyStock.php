@@ -10,4 +10,9 @@ class BuyStock extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class, 'stock_id');
+    }
 }

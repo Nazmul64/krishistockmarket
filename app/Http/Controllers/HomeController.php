@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BuyStock;
+use App\Models\Deposit;
+use App\Models\MonthlyBazaarOrder;
 use App\Models\SellStock;
 use App\Models\User;
 use App\Models\UserProfite;
@@ -74,10 +76,22 @@ class HomeController extends Controller
         $all_buy = BuyStock::where('user_id', $user->id)->where('status', 'aproved')->sum('buyed_price');
         $user_profit = UserProfite::where('user_id', $user->id)->sum('profit');
 
+        $active_stocks_count = BuyStock::where('user_id', $user->id)->where('status', 'aproved')->count();
+        $bazaar_orders_count = MonthlyBazaarOrder::where('user_id', $user->id)->count();
+
+        $recent_bazaar_orders = MonthlyBazaarOrder::where('user_id', $user->id)->with('item')->latest()->take(5)->get();
+        $recent_buystocks = BuyStock::where('user_id', $user->id)->with('stock')->latest()->take(5)->get();
+        $recent_deposits = Deposit::where('user_id', $user->id)->latest()->take(5)->get();
+
         return view('users.user-home', [
-            'all_sell'    => $all_sell,
-            'all_buy'     => $all_buy,
-            'user_profit' => $user_profit,
+            'all_sell'             => $all_sell,
+            'all_buy'              => $all_buy,
+            'user_profit'          => $user_profit,
+            'active_stocks_count'  => $active_stocks_count,
+            'bazaar_orders_count'  => $bazaar_orders_count,
+            'recent_bazaar_orders' => $recent_bazaar_orders,
+            'recent_buystocks'     => $recent_buystocks,
+            'recent_deposits'      => $recent_deposits,
         ]);
     }
 }

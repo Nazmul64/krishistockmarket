@@ -16,7 +16,7 @@
                 <button onclick="toggleKrishiChat()" style="background: transparent; border: none; color: #ffffff; font-size: 18px; cursor: pointer; padding: 0;"><i class="fa fa-chevron-left"></i></button>
                 <div>
                     <h5 style="margin: 0; font-size: 17px; font-weight: 700; color: #ffffff; letter-spacing: 0.3px;">Customer Support</h5>
-                    <small style="font-size: 11px; opacity: 0.9; color: #ffedd5;"><i class="fa fa-circle" style="font-size: 8px; color: #22c55e; margin-right: 4px;"></i> Online | AI Assistant Active</small>
+                    <small id="krishi-chat-substatus" style="font-size: 11px; opacity: 0.9; color: #ffedd5;"><i class="fa fa-circle" style="font-size: 8px; color: #22c55e; margin-right: 4px;"></i> Online | AI Assistant Active</small>
                 </div>
             </div>
             <button onclick="toggleKrishiChat()" style="background: rgba(255,255,255,0.2); border: none; color: #ffffff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;"><i class="fa fa-times" style="font-size: 14px;"></i></button>
@@ -134,6 +134,18 @@ function formatChatText(str) {
 function renderChatMessages(messages) {
     const container = document.getElementById('krishi-chat-messages-container');
     container.innerHTML = '';
+
+    const hasAdmin = messages.some(m => m.sender_type === 'admin');
+    const subStatus = document.getElementById('krishi-chat-substatus');
+    const quickChips = document.getElementById('krishi-quick-chips');
+
+    if (hasAdmin) {
+        if (subStatus) subStatus.innerHTML = '<i class="fa fa-circle" style="font-size: 8px; color: #22c55e; margin-right: 4px;"></i> Online | সাপোর্ট প্রতিনিধি যুক্ত আছেন';
+        if (quickChips) quickChips.style.display = 'none';
+    } else {
+        if (subStatus) subStatus.innerHTML = '<i class="fa fa-circle" style="font-size: 8px; color: #22c55e; margin-right: 4px;"></i> Online | AI Assistant Active';
+        if (quickChips) quickChips.style.display = 'flex';
+    }
 
     messages.forEach(msg => {
         const isUser = msg.sender_type === 'user';
