@@ -11,6 +11,11 @@ class BuyStock extends Model
 
     protected $guarded = [];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function stock()
     {
         return $this->belongsTo(Stock::class, 'stock_id');

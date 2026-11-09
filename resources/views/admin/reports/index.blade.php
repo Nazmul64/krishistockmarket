@@ -5,10 +5,10 @@
     <div class="container-full">
         <!-- Content Header -->
         <div class="content-header">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div>
-                    <h4 class="page-title">Reports & Analytics (আর্থিক ও সার্বিক রিপোর্টসমূহ)</h4>
-                    <p class="text-muted mb-0">দৈনিক, সাপ্তাহিক, মাসিক এবং কাস্টম তারিখ অনুযায়ী সমন্বিত রিপোর্ট ও খতিয়ান</p>
+                    <h4 class="page-title text-primary"><i class="fa fa-calculator me-2"></i> Reports & Analytics (কেন্দ্রীয় আর্থিক ও বাণিজ্যিক হিসাব)</h4>
+                    <p class="text-muted mb-0">দৈনিক, সাপ্তাহিক, মাসিক এবং কাস্টম ফিল্টার অনুযায়ী কেনাবেচা, প্রপার্টি, স্টক ও প্ল্যাটফর্ম ক্যাশ-ফ্লো রিপোর্ট</p>
                 </div>
             </div>
         </div>
@@ -39,16 +39,55 @@
                 </div>
             </div>
 
+            <!-- Grand Financial Summary Hero Banner -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm text-white" style="background: linear-gradient(135deg, #0d3b66 0%, #001e3d 100%) !important; border-radius: 14px;">
+                        <div class="card-body p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 border-end-md mb-3 mb-md-0">
+                                    <small class="text-white-50 text-uppercase fw-bold">প্ল্যাটফর্ম সার্বিক টার্নওভার (Grand Turnover)</small>
+                                    <h2 class="fw-bold text-warning mb-1">৳{{ number_format($grandTotalTurnover, 2) }}</h2>
+                                    <small class="text-white-50">ডিপোজিট + স্টক কেনা + বাজার বিক্রয় + প্রপার্টি বুকিং</small>
+                                </div>
+                                <div class="col-md-4 border-end-md mb-3 mb-md-0 ps-md-4">
+                                    <small class="text-white-50 text-uppercase fw-bold">নেট ওয়ালেট রিজার্ভ (Vault Reserve)</small>
+                                    <h2 class="fw-bold {{ $netVaultReserve >= 0 ? 'text-success' : 'text-danger' }} mb-1">৳{{ number_format($netVaultReserve, 2) }}</h2>
+                                    <small class="text-white-50">অনুমোদিত ডিপোজিট - অনুমোদিত উইথড্র</small>
+                                </div>
+                                <div class="col-md-4 ps-md-4">
+                                    <small class="text-white-50 text-uppercase fw-bold">জমি ও প্রপার্টি পোর্টফোলিও মূল্য</small>
+                                    <h2 class="fw-bold text-info mb-1">৳{{ number_format($totalPropertyValuation, 2) }}</h2>
+                                    <small class="text-white-50">মোট বুকিং ভলিউম: ৳{{ number_format($totalPropertyBookings, 2) }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Financial & System Metrics Cards -->
             <div class="row mb-4">
                 <div class="col-xl-3 col-md-6 mb-3">
                     <div class="card border-0 shadow-sm bg-primary text-white h-100">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <small class="text-uppercase opacity-75 d-block">মোট ডিপোজিট (Approved Deposits)</small>
+                                <small class="text-uppercase opacity-75 d-block">মোট অনুমোদিত ডিপোজিট</small>
                                 <h3 class="fw-bold mb-0">৳{{ number_format($totalApprovedDeposits, 2) }}</h3>
                             </div>
-                            <i class="fa fa-money fa-3x opacity-50"></i>
+                            <i class="fa fa-university fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="card border-0 shadow-sm bg-danger text-white h-100">
+                        <div class="card-body p-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-uppercase opacity-75 d-block">মোট অনুমোদিত উত্তোলন</small>
+                                <h3 class="fw-bold mb-0">৳{{ number_format($totalApprovedWithdraws, 2) }}</h3>
+                            </div>
+                            <i class="fa fa-credit-card fa-3x opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -57,7 +96,7 @@
                     <div class="card border-0 shadow-sm bg-success text-white h-100">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <small class="text-uppercase opacity-75 d-block">মোট স্টক বিক্রয় (Stock Purchase)</small>
+                                <small class="text-uppercase opacity-75 d-block">স্টক মার্কেট ক্রয় লেনদেন</small>
                                 <h3 class="fw-bold mb-0">৳{{ number_format($totalStockPurchases, 2) }}</h3>
                             </div>
                             <i class="fa fa-cubes fa-3x opacity-50"></i>
@@ -69,31 +108,19 @@
                     <div class="card border-0 shadow-sm bg-info text-white h-100">
                         <div class="card-body p-3 d-flex align-items-center justify-content-between">
                             <div>
-                                <small class="text-uppercase opacity-75 d-block">মাসিক বাজার মোট লেনদেন</small>
+                                <small class="text-uppercase opacity-75 d-block">মাসিক বাজার মোট বিক্রয়</small>
                                 <h3 class="fw-bold mb-0">৳{{ number_format($totalMonthlyBazaarSales, 2) }}</h3>
                             </div>
                             <i class="fa fa-shopping-basket fa-3x opacity-50"></i>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-xl-3 col-md-6 mb-3">
-                    <div class="card border-0 shadow-sm bg-dark text-white h-100">
-                        <div class="card-body p-3 d-flex align-items-center justify-content-between">
-                            <div>
-                                <small class="text-uppercase opacity-75 d-block">বিপণন এজেন্ট মোট বিক্রয়</small>
-                                <h3 class="fw-bold mb-0">৳{{ number_format($totalAgentSales, 2) }}</h3>
-                            </div>
-                            <i class="fa fa-line-chart fa-3x opacity-50"></i>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Customer Overview Row -->
+            <!-- Customer & Commercial Overview Row -->
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <div class="box shadow-sm">
+                    <div class="box shadow-sm h-100">
                         <div class="box-header with-border bg-light">
                             <h5 class="box-title text-dark mb-0"><i class="fa fa-users me-2 text-info"></i> কাস্টমার সমারি (Customer Overview)</h5>
                         </div>
@@ -117,23 +144,27 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="box shadow-sm">
+                    <div class="box shadow-sm h-100">
                         <div class="box-header with-border bg-light">
-                            <h5 class="box-title text-dark mb-0"><i class="fa fa-calculator me-2 text-warning"></i> আর্থিক হিসাব সমীকরণ</h5>
+                            <h5 class="box-title text-dark mb-0"><i class="fa fa-calculator me-2 text-warning"></i> বাণিজ্যিক খাত অনুযায়ী লেনদেন</h5>
                         </div>
                         <div class="box-body">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    মোট অনুমোদিত ডিপোজিট সংগ্রহ:
-                                    <strong class="text-success fs-6">৳{{ number_format($totalApprovedDeposits, 2) }}</strong>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    স্টক বিক্রয় সংগ্রহ:
-                                    <strong class="text-primary fs-6">৳{{ number_format($totalStockPurchases, 2) }}</strong>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
                                     খাদ্যপণ্য/মাসিক বাজার বিক্রয় সংগ্রহ:
-                                    <strong class="text-info fs-6">৳{{ number_format($totalMonthlyBazaarSales, 2) }}</strong>
+                                    <strong class="text-success fs-6">৳{{ number_format($totalMonthlyBazaarSales, 2) }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    জমি ও প্রপার্টি বুকিং সংগ্রহ:
+                                    <strong class="text-primary fs-6">৳{{ number_format($totalPropertyBookings, 2) }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    স্টক বিক্রয়/ক্রয় বাণিজ্য:
+                                    <strong class="text-info fs-6">৳{{ number_format($totalStockPurchases, 2) }}</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    বিপণন এজেন্ট বিক্রয়:
+                                    <strong class="text-dark fs-6">৳{{ number_format($totalAgentSales, 2) }}</strong>
                                 </li>
                             </ul>
                         </div>

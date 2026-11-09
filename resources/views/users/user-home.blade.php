@@ -367,7 +367,7 @@
                 </div>
 
                 <!-- Tile 1: Deposit Money -->
-                <div class="col-6 col-md-4 col-xl-2">
+                <div class="col-6 col-md-4 col-xl-3">
                     <a href="{{ route('user.deposit.index') }}" class="action-tile">
                         <div class="action-icon-wrap" style="background: #ecfdf5; color: #059669;">
                             <i class="fa fa-plus-circle"></i>
@@ -378,7 +378,7 @@
                 </div>
 
                 <!-- Tile 2: Stock Market -->
-                <div class="col-6 col-md-4 col-xl-2">
+                <div class="col-6 col-md-4 col-xl-3">
                     <a href="{{ route('stock.index') }}" class="action-tile">
                         <div class="action-icon-wrap" style="background: #eff6ff; color: #2563eb;">
                             <i class="fa fa-line-chart"></i>
@@ -389,7 +389,7 @@
                 </div>
 
                 <!-- Tile 3: Monthly Bazaar -->
-                <div class="col-6 col-md-4 col-xl-2">
+                <div class="col-6 col-md-4 col-xl-3">
                     <a href="{{ route('user.monthly_bazaar.index') }}" class="action-tile">
                         <div class="action-icon-wrap" style="background: #fffbeb; color: #d97706;">
                             <i class="fa fa-shopping-basket"></i>
@@ -400,7 +400,7 @@
                 </div>
 
                 <!-- Tile 4: Wallet Ledger -->
-                <div class="col-6 col-md-4 col-xl-2">
+                <div class="col-6 col-md-4 col-xl-3">
                     <a href="{{ route('user.wallet.ledger') }}" class="action-tile">
                         <div class="action-icon-wrap" style="background: #f0fdfa; color: #0d9488;">
                             <i class="fa fa-list-alt"></i>
@@ -410,8 +410,31 @@
                     </a>
                 </div>
 
-                <!-- Tile 5: My Stocks -->
-                <div class="col-6 col-md-4 col-xl-2">
+                <!-- Tile 5: Land & Properties (New) -->
+                <div class="col-6 col-md-4 col-xl-3">
+                    <a href="{{ route('properties.index') }}" target="_blank" class="action-tile position-relative">
+                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 10px;">New</span>
+                        <div class="action-icon-wrap" style="background: #ecfdf5; color: #059669;">
+                            <i class="fa fa-map-signs"></i>
+                        </div>
+                        <div class="action-title">জমি ও প্রপার্টি</div>
+                        <div class="action-subtitle">প্লট, ফ্ল্যাট ও শেয়ার</div>
+                    </a>
+                </div>
+
+                <!-- Tile 6: My Property Bookings (New) -->
+                <div class="col-6 col-md-4 col-xl-3">
+                    <a href="{{ route('user.properties.my_bookings') }}" class="action-tile">
+                        <div class="action-icon-wrap" style="background: #eff6ff; color: #1d4ed8;">
+                            <i class="fa fa-bookmark"></i>
+                        </div>
+                        <div class="action-title">আমার প্রপার্টি বুকিং</div>
+                        <div class="action-subtitle">সাইট ভিজিট ও আবেদন</div>
+                    </a>
+                </div>
+
+                <!-- Tile 7: My Stocks -->
+                <div class="col-6 col-md-4 col-xl-3">
                     <a href="{{ route('userbuystocklist') }}" class="action-tile">
                         <div class="action-icon-wrap" style="background: #f5f3ff; color: #7c3aed;">
                             <i class="fa fa-cubes"></i>
@@ -421,8 +444,8 @@
                     </a>
                 </div>
 
-                <!-- Tile 6: My Bazaar Orders -->
-                <div class="col-6 col-md-4 col-xl-2">
+                <!-- Tile 8: My Bazaar Orders -->
+                <div class="col-6 col-md-4 col-xl-3">
                     <a href="{{ route('user.monthly_bazaar.my_orders') }}" class="action-tile">
                         <div class="action-icon-wrap" style="background: #fdf2f8; color: #db2777;">
                             <i class="fa fa-truck"></i>
@@ -525,6 +548,11 @@
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="deposit-tab" data-bs-toggle="pill" data-bs-target="#deposit-tab-pane" type="button" role="tab">
                                         <i class="fa fa-history me-1"></i> ডিপোজিট রেকর্ড ({{ count($recent_deposits) }})
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="property-tab" data-bs-toggle="pill" data-bs-target="#property-tab-pane" type="button" role="tab">
+                                        <i class="fa fa-map-signs me-1"></i> জমি ও প্রপার্টি ({{ $property_inquiries_count ?? 0 }})
                                     </button>
                                 </li>
                             </ul>
@@ -718,6 +746,93 @@
                                 <div class="p-3 text-end bg-light border-top">
                                     <a href="{{ route('user.wallet.ledger') }}" class="small fw-bold text-dark text-decoration-none">
                                         সম্পূর্ণ ওয়ালেট হিস্ট্রি দেখুন <i class="fa fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Recent Property Inquiries & Visits -->
+                            <div class="tab-pane fade" id="property-tab-pane" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table custom-dash-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>প্রপার্টি</th>
+                                                <th>আবেদনের ধরন</th>
+                                                <th>পছন্দের তারিখ</th>
+                                                <th>স্ট্যাটাস</th>
+                                                <th>তারিখ</th>
+                                                <th class="text-end">অ্যাকশন</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($recent_property_inquiries as $inq)
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="me-2 text-success">
+                                                                <i class="fa fa-map-signs fa-lg"></i>
+                                                            </div>
+                                                            <div>
+                                                                <strong class="d-block text-dark">{{ $inq->property ? $inq->property->property_name : 'সাধারণ অনুসন্ধান' }}</strong>
+                                                                <small class="text-muted font-monospace">{{ $inq->inquiry_code }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @if($inq->inquiry_type === 'site_visit')
+                                                            <span class="badge bg-info bg-opacity-10 text-info border border-info">সাইট পরিদর্শন</span>
+                                                        @elseif($inq->inquiry_type === 'booking_request')
+                                                            <span class="badge bg-success bg-opacity-10 text-success border border-success">বুকিং আবেদন</span>
+                                                        @else
+                                                            <span class="badge bg-secondary">{{ ucfirst($inq->inquiry_type) }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($inq->preferred_date)
+                                                            <small class="fw-bold text-dark">{{ date('d M, Y', strtotime($inq->preferred_date)) }}</small>
+                                                        @else
+                                                            <small class="text-muted">-</small>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($inq->status === 'confirmed')
+                                                            <span class="badge-status badge-status-approved"><i class="fa fa-check-circle"></i> নিশ্চিত</span>
+                                                        @elseif($inq->status === 'scheduled')
+                                                            <span class="badge-status badge-status-approved" style="background: #e0f2fe; color: #0284c7;"><i class="fa fa-calendar"></i> শিডিউলড</span>
+                                                        @elseif($inq->status === 'pending')
+                                                            <span class="badge-status badge-status-pending"><i class="fa fa-clock-o"></i> অপেক্ষমাণ</span>
+                                                        @else
+                                                            <span class="badge-status badge-status-cancelled">{{ ucfirst($inq->status) }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <small class="text-muted">{{ $inq->created_at->format('d M, Y') }}</small>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <a href="{{ route('user.properties.my_bookings') }}" class="btn btn-sm btn-outline-success">
+                                                            দেখুন
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center py-4 text-muted">
+                                                        <i class="fa fa-map-signs fa-2x mb-2 text-secondary opacity-50 d-block"></i>
+                                                        বর্তমানে কোনো প্রপার্টি আবেদন নেই।
+                                                        <div class="mt-2">
+                                                            <a href="{{ route('properties.index') }}" target="_blank" class="btn btn-sm btn-success rounded-pill px-3">
+                                                                প্রপার্টি ব্রাউজ করুন
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="p-3 text-end bg-light border-top">
+                                    <a href="{{ route('user.properties.my_bookings') }}" class="small fw-bold text-dark text-decoration-none">
+                                        সকল প্রপার্টি আবেদন ও বুকিং দেখুন <i class="fa fa-arrow-right ms-1"></i>
                                     </a>
                                 </div>
                             </div>

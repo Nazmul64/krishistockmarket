@@ -71,7 +71,7 @@
 <div class="property-search-section py-3 bg-white border-bottom shadow-sm sticky-top" style="top: 74px; z-index: 99;" id="propertyListSection">
     <div class="container">
         <!-- Integrated Modern Search Bar Box -->
-        <form action="{{ route('properties.index') }}" method="GET" class="property-search-form" id="propertySearchFilterForm">
+        <form action="{{ route('properties.index') }}" method="GET" class="property-search-form" id="propertySearchFilterForm" onsubmit="handleAjaxSearchSubmit(event)">
             <!-- Hidden input to preserve category filter -->
             <input type="hidden" name="type" id="filterPropertyTypeInput" value="{{ request('type', 'all') }}">
 
@@ -79,7 +79,7 @@
                 <!-- Search Input with icon, clear button, and embedded submit -->
                 <div class="col-lg-6 col-md-6 col-12">
                     <div class="property-search-input-wrap">
-                        <i class="fa fa-search property-search-icon"></i>
+                        <i class="fa fa-search property-search-icon" id="propertySearchIcon"></i>
                         <input type="text" 
                                name="q" 
                                id="propertySearchInput"
@@ -87,13 +87,14 @@
                                class="property-search-input" 
                                placeholder="{{ $isBn ? 'প্রপার্টির নাম, এলাকা (ঢাকা/পূর্বাচল), দাগ বা খতিয়ান নম্বর লিখুন...' : 'Search by property name, location, dag or khatian no...' }}" 
                                autocomplete="off">
-                        @if(request('q'))
-                            <a href="{{ route('properties.index', ['type' => request('type'), 'district' => request('district'), 'sort' => request('sort')]) }}" 
-                               class="property-search-clear-btn" 
-                               title="{{ $isBn ? 'মুছে ফেলুন' : 'Clear' }}">
-                                <i class="fa fa-times-circle"></i>
-                            </a>
-                        @endif
+                        <button type="button" 
+                                id="propertySearchClearBtn" 
+                                class="property-search-clear-btn" 
+                                style="{{ request('q') ? 'display: block;' : 'display: none;' }}" 
+                                onclick="clearPropertySearch()" 
+                                title="{{ $isBn ? 'মুছে ফেলুন' : 'Clear' }}">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
                         <button type="submit" class="property-search-submit-btn">
                             <i class="fa fa-search me-1"></i> <span>{{ $isBn ? 'অনুসন্ধান' : 'Search' }}</span>
                         </button>
@@ -104,7 +105,7 @@
                 <div class="col-lg-3 col-md-3 col-6">
                     <div class="property-filter-select-wrap">
                         <i class="fa fa-map-marker property-select-icon text-danger"></i>
-                        <select name="district" class="property-filter-select" onchange="document.getElementById('propertySearchFilterForm').submit()">
+                        <select name="district" id="propertyDistrictSelect" class="property-filter-select" onchange="fetchPropertiesViaAjax()">
                             <option value="all">{{ $isBn ? 'সকল জেলা / এলাকা' : 'All Districts / Areas' }}</option>
                             @foreach($districts as $dst)
                                 <option value="{{ $dst }}" {{ request('district') == $dst ? 'selected' : '' }}>{{ $dst }}</option>
@@ -117,7 +118,7 @@
                 <div class="col-lg-3 col-md-3 col-6">
                     <div class="property-filter-select-wrap">
                         <i class="fa fa-sort-amount-desc property-select-icon text-success"></i>
-                        <select name="sort" class="property-filter-select" onchange="document.getElementById('propertySearchFilterForm').submit()">
+                        <select name="sort" id="propertySortSelect" class="property-filter-select" onchange="fetchPropertiesViaAjax()">
                             <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>{{ $isBn ? 'নতুন প্রপার্টি আগে' : 'Newest First' }}</option>
                             <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>{{ $isBn ? 'মূল্য: কম থেকে বেশি' : 'Price: Low to High' }}</option>
                             <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>{{ $isBn ? 'মূল্য: বেশি থেকে কম' : 'Price: High to Low' }}</option>
@@ -129,39 +130,44 @@
 
             <!-- Category Filter Pills Bar (Horizontal Scrollable) -->
             <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top flex-wrap gap-2">
-                <div class="d-flex align-items-center gap-2 overflow-auto py-1 property-category-scroll" style="white-space: nowrap;">
+                <div class="d-flex align-items-center gap-2 overflow-auto py-1 property-category-scroll" id="propertyCategoryPills" style="white-space: nowrap;">
                     <button type="button" 
+                            data-cat="all"
                             onclick="selectPropertyCategory('all')" 
                             class="property-cat-pill {{ !request('type') || request('type') == 'all' ? 'active' : '' }}">
                         <i class="fa fa-th-large me-1"></i> {{ $isBn ? 'সব প্রপার্টি' : 'All Properties' }}
                     </button>
                     <button type="button" 
+                            data-cat="প্লট"
                             onclick="selectPropertyCategory('প্লট')" 
                             class="property-cat-pill {{ request('type') == 'প্লট' ? 'active' : '' }}">
                         <i class="fa fa-map-signs me-1"></i> {{ $isBn ? 'আবাসিক প্লট' : 'Residential Plots' }}
                     </button>
                     <button type="button" 
+                            data-cat="জমি"
                             onclick="selectPropertyCategory('জমি')" 
                             class="property-cat-pill {{ request('type') == 'জমি' ? 'active' : '' }}">
                         <i class="fa fa-tree me-1"></i> {{ $isBn ? 'জমি ও কৃষি খামার' : 'Agro & Farm Land' }}
                     </button>
                     <button type="button" 
+                            data-cat="ফ্ল্যাট"
                             onclick="selectPropertyCategory('ফ্ল্যাট')" 
                             class="property-cat-pill {{ request('type') == 'ফ্ল্যাট' ? 'active' : '' }}">
                         <i class="fa fa-building-o me-1"></i> {{ $isBn ? 'ফ্ল্যাট / অ্যাপার্টমেন্ট' : 'Flats / Apartments' }}
                     </button>
                     <button type="button" 
+                            data-cat="বাণিজ্যিক"
                             onclick="selectPropertyCategory('বাণিজ্যিক')" 
                             class="property-cat-pill {{ request('type') == 'বাণিজ্যিক' ? 'active' : '' }}">
                         <i class="fa fa-briefcase me-1"></i> {{ $isBn ? 'বাণিজ্যিক স্পেস' : 'Commercial Space' }}
                     </button>
                 </div>
 
-                @if(request('q') || (request('type') && request('type') !== 'all') || (request('district') && request('district') !== 'all') || (request('sort') && request('sort') !== 'latest'))
-                    <a href="{{ route('properties.index') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold">
+                <div id="propertyFilterResetWrap" style="{{ request('q') || (request('type') && request('type') !== 'all') || (request('district') && request('district') !== 'all') || (request('sort') && request('sort') !== 'latest') ? 'display: block;' : 'display: none;' }}">
+                    <button type="button" onclick="resetAllPropertyFilters()" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold">
                         <i class="fa fa-refresh me-1"></i> {{ $isBn ? 'ফিল্টার রিসেট' : 'Reset Filters' }}
-                    </a>
-                @endif
+                    </button>
+                </div>
             </div>
         </form>
     </div>
@@ -173,142 +179,38 @@
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
                 <h4 class="fw-bold text-dark mb-1">{{ $isBn ? 'উপলব্ধ জমি ও প্রপার্টি তালিকা' : 'Available Land & Property Listings' }}</h4>
-                <p class="text-muted small mb-0">{{ $isBn ? 'সর্বমোট ' . $properties->total() . ' টি সাইট প্রদর্শিত হচ্ছে' : 'Showing ' . $properties->total() . ' total available sites' }}</p>
+                <p class="text-muted small mb-0" id="propertyCountText">{{ $isBn ? 'সর্বমোট ' . $properties->total() . ' টি সাইট প্রদর্শিত হচ্ছে' : 'Showing ' . $properties->total() . ' total available sites' }}</p>
             </div>
-            @if(request('q') || request('type'))
-                <a href="{{ route('properties.index') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+            <div id="propertyFilterClearWrap" style="{{ request('q') || (request('type') && request('type') !== 'all') ? 'display: block;' : 'display: none;' }}">
+                <button type="button" onclick="resetAllPropertyFilters()" class="btn btn-sm btn-outline-danger rounded-pill px-3">
                     <i class="fa fa-times me-1"></i> {{ $isBn ? 'ফিল্টার মুছুন' : 'Clear Filters' }}
-                </a>
+                </button>
+            </div>
+        </div>
+
+        <div class="position-relative" id="propertiesListGridContainer" style="min-height: 380px;">
+            <!-- Subtle Loading Overlay during AJAX search -->
+            <div id="propertiesLoadingOverlay" style="display: none; position: absolute; inset: 0; background: rgba(248, 250, 252, 0.7); z-index: 10; backdrop-filter: blur(2px); border-radius: 16px; align-items: center; justify-content: center;">
+                <div class="text-center p-4">
+                    <div class="spinner-border text-success" role="status" style="width: 2.8rem; height: 2.8rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div class="mt-2 fw-bold text-dark">{{ $isBn ? 'প্রপার্টি তথ্য অনুসন্ধান হচ্ছে...' : 'Searching properties...' }}</div>
+                </div>
+            </div>
+
+            <!-- Main Listing Grid -->
+            <div class="row g-4" id="propertiesListGrid">
+                @include('frontend.properties.partials.property_grid', ['properties' => $properties, 'isBn' => $isBn])
+            </div>
+        </div>
+
+        <!-- Pagination Container -->
+        <div id="propertyPaginationContainer" class="d-flex justify-content-center mt-5">
+            @if($properties->hasPages())
+                {{ $properties->links() }}
             @endif
         </div>
-
-        <div class="row g-4">
-            @forelse($properties as $item)
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="card property-card h-100 border-0 rounded-4 shadow-sm overflow-hidden property-card-hover" style="transition: transform 0.25s ease, box-shadow 0.25s ease;">
-                        <!-- Property Image with Badges -->
-                        <div class="position-relative" style="height: 220px; overflow: hidden; background: #e2e8f0;">
-                            <img src="{{ $item->featured_image ?: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop&q=60' }}" 
-                                 alt="{{ $item->property_name }}" 
-                                 class="w-100 h-100" 
-                                 style="object-fit: cover; transition: transform 0.4s ease;">
-                            
-                            <!-- Badges -->
-                            <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
-                                <span class="badge px-2 py-1 rounded" style="background: rgba(15, 23, 42, 0.85) !important; color: #ffffff !important;">
-                                    {{ $item->property_type_name }}
-                                </span>
-                                @if($item->is_featured)
-                                    <span class="badge bg-warning text-dark px-2 py-1 rounded fw-bold">
-                                        <i class="fa fa-star me-1"></i> {{ $isBn ? 'স্পেশাল অফার' : 'Special Offer' }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="position-absolute top-0 end-0 m-3">
-                                @if($item->status === 'available')
-                                    <span class="badge bg-success text-white px-2 py-1 rounded-pill shadow-sm">
-                                        {{ $isBn ? 'বিক্রয়যোগ্য' : 'Available' }}
-                                    </span>
-                                @elseif($item->status === 'reserved')
-                                    <span class="badge bg-warning text-dark px-2 py-1 rounded-pill shadow-sm">
-                                        {{ $isBn ? 'রিজার্ভড' : 'Reserved' }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            <!-- Area Badge at Bottom-Right of Image -->
-                            <div class="position-absolute bottom-0 end-0 m-3 px-3 py-1 rounded-3 small fw-bold" style="background: rgba(15, 23, 42, 0.85) !important; color: #ffffff !important;">
-                                <i class="fa fa-expand me-1 text-warning"></i> {{ number_format($item->total_area, 2) }} {{ $item->measurement_unit }}
-                            </div>
-                        </div>
-
-                        <!-- Card Body -->
-                        <div class="card-body property-card-body p-4 d-flex flex-column">
-                            <div class="small text-muted font-monospace mb-1">{{ $item->property_code }}</div>
-                            <h5 class="fw-bold mb-2" style="font-size: 1.15rem; line-height: 1.4;">
-                                <a href="{{ route('properties.show', $item->id) }}" class="property-title-link text-decoration-none hover-primary">
-                                    {{ $item->property_name }}
-                                </a>
-                            </h5>
-
-                            <!-- Location Info -->
-                            <div class="d-flex align-items-center text-muted small mb-3">
-                                <i class="fa fa-map-marker text-danger me-2 fs-6"></i>
-                                <span>{{ $item->upazila ? $item->upazila . ', ' : '' }}{{ $item->district }}</span>
-                                @if($item->dag_number)
-                                    <span class="mx-1">•</span>
-                                    <span>{{ $isBn ? 'দাগ: ' : 'Dag: ' }}{{ $item->dag_number }}</span>
-                                @endif
-                            </div>
-
-                            <!-- Highlights / Description -->
-                            @if($item->features)
-                                <div class="p-2 rounded-3 mb-3 small text-truncate property-feature-preview" style="background: rgba(16, 185, 129, 0.08); color: #065f46; border: 1px solid rgba(16, 185, 129, 0.2);">
-                                    <i class="fa fa-check text-success me-1"></i> {{ $item->features }}
-                                </div>
-                            @elseif($item->description)
-                                <p class="text-muted small mb-3 text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                    {{ $item->description }}
-                                </p>
-                            @endif
-
-                            <div class="mt-auto pt-3 border-top">
-                                <!-- Price Row -->
-                                <div class="d-flex align-items-end justify-content-between mb-3">
-                                    <div>
-                                        <div class="small text-muted">{{ $isBn ? 'সর্বমোট বিক্রয়মূল্য:' : 'Total Price:' }}</div>
-                                        <div class="fw-bold font-monospace text-success fs-5">
-                                            ৳ {{ number_format($item->selling_price) }}
-                                        </div>
-                                    </div>
-                                    @if($item->booking_amount > 0)
-                                        <div class="text-end">
-                                            <div class="small text-muted">{{ $isBn ? 'বুকিং ডিপোজিট:' : 'Booking Deposit:' }}</div>
-                                            <div class="fw-bold font-monospace text-primary">
-                                                ৳ {{ number_format($item->booking_amount) }}
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <!-- Action Buttons -->
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <a href="{{ route('properties.show', $item->id) }}" class="btn btn-outline-dark btn-sm w-100 py-2 fw-bold">
-                                            <i class="fa fa-eye me-1"></i> {{ $isBn ? 'বিস্তারিত' : 'Details' }}
-                                        </a>
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" 
-                                                class="btn btn-success btn-sm w-100 py-2 fw-bold"
-                                                onclick="openBookingModal('{{ $item->id }}', '{{ addslashes($item->property_name) }}', '{{ number_format($item->selling_price) }}')">
-                                            <i class="fa fa-paper-plane me-1"></i> {{ $isBn ? 'বুকিং / সাইট' : 'Book / Visit' }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-12 py-5 text-center">
-                    <div class="p-5 bg-white rounded-4 shadow-sm property-empty-box">
-                        <i class="fa fa-map-o fa-4x text-muted mb-3 opacity-50"></i>
-                        <h4 class="fw-bold text-dark">{{ $isBn ? 'কোনো প্রপার্টি খুঁজে পাওয়া যায়নি!' : 'No Properties Found!' }}</h4>
-                        <p class="text-muted">{{ $isBn ? 'আপনার খোঁজের সাথে মিল রেখে বর্তমানে কোনো প্রপার্টি নেই। অনুগ্রহ করে অন্য ফিল্টার চেষ্টা করুন।' : 'No properties matched your search filters. Please try searching with different keywords.' }}</p>
-                        <a href="{{ route('properties.index') }}" class="btn btn-success fw-bold px-4 rounded-pill">{{ $isBn ? 'সকল প্রপার্টি দেখুন' : 'View All Properties' }}</a>
-                    </div>
-                </div>
-            @endforelse
-        </div>
-
-        <!-- Pagination -->
-        @if($properties->hasPages())
-            <div class="d-flex justify-content-center mt-5">
-                {{ $properties->links() }}
-            </div>
-        @endif
     </div>
 </div>
 
@@ -483,19 +385,200 @@ function handleAjaxBookingSubmit(e, form) {
 
 function selectPropertyCategory(cat) {
     var input = document.getElementById('filterPropertyTypeInput');
-    if (input) {
-        input.value = cat;
+    if (input) input.value = cat;
+
+    // Update active class on category pills
+    var pills = document.querySelectorAll('#propertyCategoryPills .property-cat-pill');
+    pills.forEach(function(pill) {
+        if (pill.getAttribute('data-cat') === cat) {
+            pill.classList.add('active');
+        } else {
+            pill.classList.remove('active');
+        }
+    });
+
+    fetchPropertiesViaAjax();
+}
+
+var propertySearchTimer = null;
+var activeFetchAbortController = null;
+
+function fetchPropertiesViaAjax(targetUrl) {
+    var loadingOverlay = document.getElementById('propertiesLoadingOverlay');
+    var gridEl = document.getElementById('propertiesListGrid');
+    var paginationContainer = document.getElementById('propertyPaginationContainer');
+    var countTextEl = document.getElementById('propertyCountText');
+    var searchIcon = document.getElementById('propertySearchIcon');
+    var clearBtn = document.getElementById('propertySearchClearBtn');
+    var resetWrap = document.getElementById('propertyFilterResetWrap');
+    var clearWrap = document.getElementById('propertyFilterClearWrap');
+
+    var searchInput = document.getElementById('propertySearchInput');
+    var typeInput = document.getElementById('filterPropertyTypeInput');
+    var districtSelect = document.getElementById('propertyDistrictSelect');
+    var sortSelect = document.getElementById('propertySortSelect');
+
+    var qVal = searchInput ? searchInput.value.trim() : '';
+    var typeVal = typeInput ? typeInput.value : 'all';
+    var districtVal = districtSelect ? districtSelect.value : 'all';
+    var sortVal = sortSelect ? sortSelect.value : 'latest';
+
+    // Show/hide clear search input button
+    if (clearBtn) {
+        clearBtn.style.display = qVal.length > 0 ? 'block' : 'none';
     }
-    var form = document.getElementById('propertySearchFilterForm');
-    if (form) {
-        form.submit();
+
+    // Show/hide reset buttons if any filter active
+    var hasActiveFilters = qVal.length > 0 || (typeVal && typeVal !== 'all') || (districtVal && districtVal !== 'all') || (sortVal && sortVal !== 'latest');
+    if (resetWrap) resetWrap.style.display = hasActiveFilters ? 'block' : 'none';
+    if (clearWrap) clearWrap.style.display = (qVal.length > 0 || (typeVal && typeVal !== 'all')) ? 'block' : 'none';
+
+    // Show loading overlay and spinner
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    if (searchIcon) {
+        searchIcon.className = 'fa fa-circle-o-notch fa-spin property-search-icon text-success';
     }
+
+    var fetchUrl = targetUrl;
+    if (!fetchUrl) {
+        var params = new URLSearchParams();
+        if (qVal) params.append('q', qVal);
+        if (typeVal && typeVal !== 'all') params.append('type', typeVal);
+        if (districtVal && districtVal !== 'all') params.append('district', districtVal);
+        if (sortVal && sortVal !== 'latest') params.append('sort', sortVal);
+
+        var queryString = params.toString();
+        fetchUrl = "{{ route('properties.index') }}" + (queryString ? '?' + queryString : '');
+    }
+
+    if (activeFetchAbortController) {
+        activeFetchAbortController.abort();
+    }
+    activeFetchAbortController = new AbortController();
+
+    fetch(fetchUrl, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        signal: activeFetchAbortController.signal
+    })
+    .then(function(res) {
+        return res.json();
+    })
+    .then(function(data) {
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (searchIcon) {
+            searchIcon.className = 'fa fa-search property-search-icon';
+        }
+
+        if (data && data.status === 'success') {
+            if (gridEl) {
+                gridEl.innerHTML = data.html;
+            }
+            if (paginationContainer) {
+                paginationContainer.innerHTML = data.pagination || '';
+                bindPaginationClicks();
+            }
+            if (countTextEl && data.count_text) {
+                countTextEl.innerText = data.count_text;
+            }
+
+            // Sync URL in address bar without reload
+            if (window.history && window.history.pushState) {
+                window.history.pushState({ path: fetchUrl }, '', fetchUrl);
+            }
+        }
+    })
+    .catch(function(err) {
+        if (err.name === 'AbortError') return;
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (searchIcon) {
+            searchIcon.className = 'fa fa-search property-search-icon';
+        }
+    });
+}
+
+function clearPropertySearch() {
+    var searchInput = document.getElementById('propertySearchInput');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    fetchPropertiesViaAjax();
+}
+
+function resetAllPropertyFilters() {
+    var searchInput = document.getElementById('propertySearchInput');
+    if (searchInput) searchInput.value = '';
+
+    var typeInput = document.getElementById('filterPropertyTypeInput');
+    if (typeInput) typeInput.value = 'all';
+
+    var districtSelect = document.getElementById('propertyDistrictSelect');
+    if (districtSelect) districtSelect.value = 'all';
+
+    var sortSelect = document.getElementById('propertySortSelect');
+    if (sortSelect) sortSelect.value = 'latest';
+
+    var pills = document.querySelectorAll('#propertyCategoryPills .property-cat-pill');
+    pills.forEach(function(pill) {
+        if (pill.getAttribute('data-cat') === 'all') {
+            pill.classList.add('active');
+        } else {
+            pill.classList.remove('active');
+        }
+    });
+
+    fetchPropertiesViaAjax();
+}
+
+function handleAjaxSearchSubmit(e) {
+    if (e) e.preventDefault();
+    fetchPropertiesViaAjax();
+}
+
+function bindPaginationClicks() {
+    var container = document.getElementById('propertyPaginationContainer');
+    if (!container) return;
+    var links = container.querySelectorAll('a');
+    links.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var href = link.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                var listSec = document.getElementById('propertyListSection');
+                if (listSec) {
+                    listSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                fetchPropertiesViaAjax(href);
+            }
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     @if(session('success'))
         showPropertyToast("{{ session('success') }}", '');
     @endif
+
+    // Live search debouncing
+    var searchInput = document.getElementById('propertySearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            if (propertySearchTimer) clearTimeout(propertySearchTimer);
+            propertySearchTimer = setTimeout(function() {
+                fetchPropertiesViaAjax();
+            }, 300);
+        });
+    }
+
+    bindPaginationClicks();
+
+    // Browser back/forward navigation support
+    window.addEventListener('popstate', function() {
+        fetchPropertiesViaAjax(window.location.href);
+    });
 });
 </script>
 
@@ -863,6 +946,14 @@ body.dark-theme .modal-footer,
 html[data-theme="dark"] .modal-footer {
     background: #0b1120 !important;
     border-color: #1e293b !important;
+}
+body.dark-theme #propertiesLoadingOverlay,
+html[data-theme="dark"] #propertiesLoadingOverlay {
+    background: rgba(15, 23, 42, 0.78) !important;
+}
+body.dark-theme #propertiesLoadingOverlay .text-dark,
+html[data-theme="dark"] #propertiesLoadingOverlay .text-dark {
+    color: #f8fafc !important;
 }
 </style>
 @endsection

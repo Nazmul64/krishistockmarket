@@ -551,6 +551,13 @@ Route::group(['prefix' => 'user', 'middleware' => 'UserChacker'], function () {
     Route::post('/deposit/post', [UserDepositController::class, 'store'])->name('user.deposit.post');
     Route::get('/wallet/ledger', [UserWalletController::class, 'ledger'])->name('user.wallet.ledger');
 
+    // Customer Land & Property Routes
+    Route::prefix('properties')->name('user.properties.')->group(function() {
+        Route::get('/my-bookings', [\App\Http\Controllers\Users\UserPropertyController::class, 'myBookings'])->name('my_bookings');
+        Route::get('/investments', [\App\Http\Controllers\Users\UserPropertyController::class, 'investments'])->name('investments');
+        Route::post('/cancel-inquiry/{id}', [\App\Http\Controllers\Users\UserPropertyController::class, 'cancelInquiry'])->name('cancel_inquiry');
+    });
+
 });
 
 

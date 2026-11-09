@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BuyStock;
 use App\Models\Deposit;
 use App\Models\MonthlyBazaarOrder;
+use App\Models\PropertyInquiry;
 use App\Models\SellStock;
 use App\Models\User;
 use App\Models\UserProfite;
@@ -83,15 +84,33 @@ class HomeController extends Controller
         $recent_buystocks = BuyStock::where('user_id', $user->id)->with('stock')->latest()->take(5)->get();
         $recent_deposits = Deposit::where('user_id', $user->id)->latest()->take(5)->get();
 
+        // Real Estate Property Inquiries
+        $userPhone = $user->phone;
+        $recent_property_inquiries = PropertyInquiry::where(function($q) use ($user, $userPhone) {
+            $q->where('user_id', $user->id);
+            if (!empty($userPhone)) {
+                $q->orWhere('customer_phone', $userPhone);
+            }
+        })->with('property')->latest()->take(5)->get();
+
+        $property_inquiries_count = PropertyInquiry::where(function($q) use ($user, $userPhone) {
+            $q->where('user_id', $user->id);
+            if (!empty($userPhone)) {
+                $q->orWhere('customer_phone', $userPhone);
+            }
+        })->count();
+
         return view('users.user-home', [
-            'all_sell'             => $all_sell,
-            'all_buy'              => $all_buy,
-            'user_profit'          => $user_profit,
-            'active_stocks_count'  => $active_stocks_count,
-            'bazaar_orders_count'  => $bazaar_orders_count,
-            'recent_bazaar_orders' => $recent_bazaar_orders,
-            'recent_buystocks'     => $recent_buystocks,
-            'recent_deposits'      => $recent_deposits,
+            'all_sell'                  => $all_sell,
+            'all_buy'                   => $all_buy,
+            'user_profit'               => $user_profit,
+            'active_stocks_count'       => $active_stocks_count,
+            'bazaar_orders_count'       => $bazaar_orders_count,
+            'recent_bazaar_orders'      => $recent_bazaar_orders,
+            'recent_buystocks'          => $recent_buystocks,
+            'recent_deposits'           => $recent_deposits,
+            'recent_property_inquiries' => $recent_property_inquiries,
+            'property_inquiries_count'  => $property_inquiries_count,
         ]);
     }
 }

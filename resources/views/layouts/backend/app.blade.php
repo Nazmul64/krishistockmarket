@@ -1017,6 +1017,36 @@
                                 </ul>
                             </li>
 
+                            <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'user.properties.') ? 'menu-open' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-map-signs text-success me-2"></i>
+                                    <span>জমি ও প্রপার্টি (Properties)</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ str_contains(optional(Request::route())->getName() ?? '', 'user.properties.') ? 'd-block' : '' }}">
+                                    <li class="">
+                                        <a href="{{ route('properties.index') }}" target="_blank">
+                                            <i class="ti-more"></i>
+                                            <span>প্রপার্টি ক্যাটালগ (Browse)</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.properties.my_bookings') ? 'active' : '' }}">
+                                        <a href="{{ route('user.properties.my_bookings') }}">
+                                            <i class="ti-more"></i>
+                                            <span>আমার আবেদন ও বুকিং</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.properties.investments') ? 'active' : '' }}">
+                                        <a href="{{ route('user.properties.investments') }}">
+                                            <i class="ti-more"></i>
+                                            <span>আমার শেয়ার ও বিনিয়োগ</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="{{ (optional(Request::route())->getName() == 'user.deposit.index') ? 'menu-open' : '' }}">
                                 <a href="{{ route('user.deposit.index') }}">
                                     

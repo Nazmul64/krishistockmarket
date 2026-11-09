@@ -15,4 +15,9 @@ class PropertyInquiry extends Model
     {
         return $this->belongsTo(Property::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -80,6 +80,17 @@ class PropertyFrontendController extends Controller
             ->distinct()
             ->pluck('district');
 
+        // Instant AJAX Real-time Search & Filter Response
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json([
+                'status' => 'success',
+                'total' => $properties->total(),
+                'count_text' => $isBn ? ('সর্বমোট ' . $properties->total() . ' টি সাইট প্রদর্শিত হচ্ছে') : ('Showing ' . $properties->total() . ' total available sites'),
+                'html' => view('frontend.properties.partials.property_grid', compact('properties', 'isBn'))->render(),
+                'pagination' => $properties->hasPages() ? $properties->links()->render() : '',
+            ]);
+        }
+
         return view('frontend.properties.index', compact(
             'properties',
             'totalProperties',
@@ -135,6 +146,7 @@ class PropertyFrontendController extends Controller
         $inquiryCode = 'INQ-' . strtoupper(Str::random(6)) . '-' . rand(100, 999);
 
         $inquiry = PropertyInquiry::create([
+            'user_id' => Auth::id(),
             'property_id' => $request->input('property_id'),
             'inquiry_code' => $inquiryCode,
             'customer_name' => trim($request->input('customer_name')),
