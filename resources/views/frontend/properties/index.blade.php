@@ -1,6 +1,26 @@
 @extends('layouts.frontend.app')
 
 @section('content')
+<!-- Floating Animated Toast Notification for Booking / Inquiries -->
+<div id="propertyToastNotification" class="property-toast-wrap" style="display: none;">
+    <div class="property-toast-box">
+        <div class="toast-icon-wrap">
+            <i class="fa fa-check-circle toast-check-icon"></i>
+        </div>
+        <div class="toast-content-wrap">
+            <div class="toast-title">🎉 আবেদন সফলভাবে গৃহীত হয়েছে!</div>
+            <div class="toast-message" id="toastMessageText">আমাদের কাস্টমার রিপ্রেজেন্টেটিভ খুব শীঘ্রই যোগাযোগ করবেন।</div>
+            <div class="toast-tracking-badge" id="toastTrackingCode"></div>
+        </div>
+        <button type="button" class="toast-close-btn" onclick="hidePropertyToast()">
+            <i class="fa fa-times"></i>
+        </button>
+        <div class="toast-progress-bar">
+            <div class="toast-progress-fill" id="toastProgressFill"></div>
+        </div>
+    </div>
+</div>
+
 <!-- Hero Section for Properties -->
 <div class="properties-hero-banner py-5" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%); color: #ffffff; position: relative;">
     <div class="container py-4">
@@ -12,21 +32,21 @@
                 <h1 class="fw-extrabold display-5 mb-3 text-white">
                     জমি, প্লট ও প্রপার্টি ক্যাটালগ
                 </h1>
-                <p class="lead text-slate-300 mb-4" style="color: #cbd5e1; font-size: 1.15rem;">
+                <p class="lead mb-4" style="color: #cbd5e1; font-size: 1.15rem;">
                     নিরাপদ ও লাভজনক রিয়েল এস্টেট বিনিয়োগ। যাচাইকৃত জমি, আবাসিক প্লট, ফ্ল্যাট ও বাণিজ্যিক স্পেস কিনুন অথবা আকর্ষণীয় কিস্তিতে বুকিং দিন।
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 px-3 py-2 rounded-3 border border-white border-opacity-10">
-                        <i class="fa fa-check-circle text-success fs-5"></i>
-                        <span class="small">খতিয়ান ও দাগ ভেরিফাইড</span>
+                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important;">
+                        <i class="fa fa-check-circle text-warning fs-5"></i>
+                        <span class="small fw-bold" style="color: #ffffff !important; font-size: 13.5px;">খতিয়ান ও দাগ ভেরিফাইড</span>
                     </div>
-                    <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 px-3 py-2 rounded-3 border border-white border-opacity-10">
-                        <i class="fa fa-check-circle text-success fs-5"></i>
-                        <span class="small">সহজ কিস্তি সুবিধা</span>
+                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important;">
+                        <i class="fa fa-check-circle text-warning fs-5"></i>
+                        <span class="small fw-bold" style="color: #ffffff !important; font-size: 13.5px;">সহজ কিস্তি সুবিধা</span>
                     </div>
-                    <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 px-3 py-2 rounded-3 border border-white border-opacity-10">
-                        <i class="fa fa-check-circle text-success fs-5"></i>
-                        <span class="small">দ্রুত সাফ-কবলা রেজিস্ট্রি</span>
+                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important;">
+                        <i class="fa fa-check-circle text-warning fs-5"></i>
+                        <span class="small fw-bold" style="color: #ffffff !important; font-size: 13.5px;">দ্রুত সাফ-কবলা রেজিস্ট্রি</span>
                     </div>
                 </div>
             </div>
@@ -56,19 +76,19 @@
             </div>
             <div class="col-md-5 col-8">
                 <div class="d-flex gap-2 overflow-auto py-1" style="white-space: nowrap;">
-                    <a href="{{ route('properties.index') }}" class="btn btn-sm {{ !request('type') || request('type') == 'all' ? 'btn-success text-white' : 'btn-outline-secondary' }} rounded-pill px-3">
+                    <a href="{{ route('properties.index') }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ !request('type') || request('type') == 'all' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
                         সব প্রপার্টি
                     </a>
-                    <a href="{{ route('properties.index', ['type' => 'প্লট', 'q' => request('q')]) }}" class="btn btn-sm {{ request('type') == 'প্লট' ? 'btn-success text-white' : 'btn-outline-secondary' }} rounded-pill px-3">
+                    <a href="{{ route('properties.index', ['type' => 'প্লট', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'প্লট' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
                         প্লট
                     </a>
-                    <a href="{{ route('properties.index', ['type' => 'জমি', 'q' => request('q')]) }}" class="btn btn-sm {{ request('type') == 'জমি' ? 'btn-success text-white' : 'btn-outline-secondary' }} rounded-pill px-3">
+                    <a href="{{ route('properties.index', ['type' => 'জমি', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'জমি' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
                         জমি / ফার্ম
                     </a>
-                    <a href="{{ route('properties.index', ['type' => 'ফ্ল্যাট', 'q' => request('q')]) }}" class="btn btn-sm {{ request('type') == 'ফ্ল্যাট' ? 'btn-success text-white' : 'btn-outline-secondary' }} rounded-pill px-3">
+                    <a href="{{ route('properties.index', ['type' => 'ফ্ল্যাট', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'ফ্ল্যাট' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
                         ফ্ল্যাট
                     </a>
-                    <a href="{{ route('properties.index', ['type' => 'বাণিজ্যিক', 'q' => request('q')]) }}" class="btn btn-sm {{ request('type') == 'বাণিজ্যিক' ? 'btn-success text-white' : 'btn-outline-secondary' }} rounded-pill px-3">
+                    <a href="{{ route('properties.index', ['type' => 'বাণিজ্যিক', 'q' => request('q')]) }}" class="btn btn-sm rounded-pill px-3 py-2 text-decoration-none" style="{{ request('type') == 'বাণিজ্যিক' ? 'background: #16a34a !important; color: #ffffff !important; border: 1.5px solid #16a34a !important; font-weight: 700;' : 'background: #f1f5f9 !important; color: #1e293b !important; border: 1.5px solid #cbd5e1 !important; font-weight: 700;' }}">
                         বাণিজ্যিক স্পেস
                     </a>
                 </div>
@@ -85,13 +105,6 @@
 <!-- Main Property Listing Section -->
 <div class="py-5" style="background-color: #f8fafc; min-height: 600px;">
     <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
                 <h4 class="fw-bold text-dark mb-1">উপলব্ধ জমি ও প্রপার্টি তালিকা</h4>
@@ -244,7 +257,7 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('properties.inquiry') }}" method="POST">
+            <form id="propertyBookingModalForm" action="{{ route('properties.inquiry') }}" method="POST" onsubmit="handleAjaxBookingSubmit(event, this)">
                 @csrf
                 <input type="hidden" name="property_id" id="modalPropertyId">
                 <div class="modal-body p-4">
@@ -287,7 +300,7 @@
                 </div>
                 <div class="modal-footer bg-light py-3 px-4">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="submit" class="btn btn-success fw-bold px-4">
+                    <button type="submit" id="modalSubmitBtn" class="btn btn-success fw-bold px-4">
                         <i class="fa fa-send me-1"></i> আবেদন সাবমিট করুন
                     </button>
                 </div>
@@ -297,6 +310,54 @@
 </div>
 
 <script>
+var toastTimer = null;
+
+function showPropertyToast(message, trackingCode) {
+    var toastWrap = document.getElementById('propertyToastNotification');
+    var msgEl = document.getElementById('toastMessageText');
+    var codeEl = document.getElementById('toastTrackingCode');
+    var progressEl = document.getElementById('toastProgressFill');
+
+    if (!toastWrap || !msgEl) return;
+
+    msgEl.innerText = message || 'আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে। আমাদের প্রতিনিধি দ্রুত যোগাযোগ করবেন।';
+    if (codeEl) {
+        if (trackingCode) {
+            codeEl.innerText = 'ট্র্যাকিং কোড: ' + trackingCode;
+            codeEl.style.display = 'inline-block';
+        } else {
+            codeEl.style.display = 'none';
+        }
+    }
+
+    if (progressEl) {
+        progressEl.style.transition = 'none';
+        progressEl.style.width = '100%';
+        setTimeout(function() {
+            progressEl.style.transition = 'width 5s linear';
+            progressEl.style.width = '0%';
+        }, 50);
+    }
+
+    toastWrap.style.display = 'block';
+    toastWrap.style.animation = 'toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+        hidePropertyToast();
+    }, 5200);
+}
+
+function hidePropertyToast() {
+    var toastWrap = document.getElementById('propertyToastNotification');
+    if (toastWrap) {
+        toastWrap.style.animation = 'toastSlideOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+        setTimeout(function() {
+            toastWrap.style.display = 'none';
+        }, 400);
+    }
+}
+
 function openBookingModal(id, name, price) {
     document.getElementById('modalPropertyId').value = id;
     document.getElementById('modalPropertyName').innerText = name;
@@ -304,9 +365,172 @@ function openBookingModal(id, name, price) {
     var modal = new bootstrap.Modal(document.getElementById('customerInquiryModal'));
     modal.show();
 }
+
+function handleAjaxBookingSubmit(e, form) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var originalBtnHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i> আবেদন পাঠানো হচ্ছে...';
+    }
+
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(function(res) {
+        return res.json();
+    })
+    .then(function(data) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+
+        // Close modal if open
+        var modalEl = document.getElementById('customerInquiryModal');
+        if (modalEl) {
+            var modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+        }
+
+        form.reset();
+
+        // Trigger Toaster Notification
+        var msg = data.message || 'আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে!';
+        var code = data.inquiry_code || (data.inquiry ? data.inquiry.inquiry_code : '');
+        showPropertyToast(msg, code);
+    })
+    .catch(function(err) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+        form.submit(); // fallback to standard submit
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    @if(session('success'))
+        showPropertyToast("{{ session('success') }}", '');
+    @endif
+});
 </script>
 
 <style>
+.property-toast-wrap {
+    position: fixed;
+    top: 95px;
+    right: 25px;
+    z-index: 9999999;
+    max-width: 440px;
+    width: calc(100% - 40px);
+    pointer-events: none;
+}
+.property-toast-box {
+    pointer-events: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1.5px solid #86efac;
+    border-left: 6px solid #16a34a;
+    padding: 16px 20px 20px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+}
+.toast-icon-wrap {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #16a34a;
+    font-size: 22px;
+}
+.toast-content-wrap {
+    flex-grow: 1;
+}
+.toast-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+.toast-message {
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.45;
+    margin-bottom: 6px;
+}
+.toast-tracking-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #0f172a;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+.toast-close-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    margin-left: 6px;
+    line-height: 1;
+}
+.toast-close-btn:hover {
+    color: #0f172a;
+}
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #f1f5f9;
+}
+.toast-progress-fill {
+    height: 100%;
+    background: #16a34a;
+    width: 100%;
+}
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes toastSlideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+}
 .property-card-hover:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 25px rgba(0,0,0,0.12) !important;

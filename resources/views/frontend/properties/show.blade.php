@@ -1,6 +1,26 @@
 @extends('layouts.frontend.app')
 
 @section('content')
+<!-- Floating Animated Toast Notification for Booking / Inquiries -->
+<div id="propertyToastNotification" class="property-toast-wrap" style="display: none;">
+    <div class="property-toast-box">
+        <div class="toast-icon-wrap">
+            <i class="fa fa-check-circle toast-check-icon"></i>
+        </div>
+        <div class="toast-content-wrap">
+            <div class="toast-title">🎉 আবেদন সফলভাবে গৃহীত হয়েছে!</div>
+            <div class="toast-message" id="toastMessageText">আমাদের কাস্টমার রিপ্রেজেন্টেটিভ খুব শীঘ্রই যোগাযোগ করবেন।</div>
+            <div class="toast-tracking-badge" id="toastTrackingCode"></div>
+        </div>
+        <button type="button" class="toast-close-btn" onclick="hidePropertyToast()">
+            <i class="fa fa-times"></i>
+        </button>
+        <div class="toast-progress-bar">
+            <div class="toast-progress-fill" id="toastProgressFill"></div>
+        </div>
+    </div>
+</div>
+
 <div class="py-4 bg-light border-bottom">
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -15,13 +35,6 @@
 
 <div class="py-5" style="background-color: #f8fafc;">
     <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm mb-4" role="alert">
-                <i class="fa fa-check-circle me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="row g-4">
             <!-- Left Column: Media & Specifications -->
             <div class="col-lg-8">
@@ -88,7 +101,7 @@
                     <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
                         <i class="fa fa-align-left text-success me-2"></i> বিস্তারিত বিবরণ
                     </h5>
-                    <p class="text-slate-700 lead mb-4" style="line-height: 1.8; font-size: 1.05rem;">
+                    <p class="text-slate-700 lead mb-4" style="line-height: 1.8; font-size: 1.05rem; color: #334155;">
                         {{ $property->description ?: 'প্রপার্টিটি ১০০% ভেটিং ও লিগ্যাল ক্লিয়ারেন্স সম্পন্ন। বিদ্যুৎ, রাস্তা ও ইউটিলিটি সংযোগ বিদ্যমান। সাইট পরিদর্শনের জন্য বুকিং আবেদন করুন।' }}
                     </p>
 
@@ -99,8 +112,9 @@
                         </h5>
                         <div class="d-flex flex-wrap gap-2 mb-4">
                             @foreach(explode(',', $property->features) as $feature)
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
-                                    <i class="fa fa-check-circle me-1"></i> {{ trim($feature) }}
+                                <span class="property-amenity-pill" style="display: inline-flex; align-items: center; background: #ecfdf5 !important; color: #065f46 !important; border: 1.5px solid #a7f3d0 !important; font-size: 14px; font-weight: 700; padding: 7px 16px; border-radius: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                    <i class="fa fa-check-circle text-success me-2" style="font-size: 15px;"></i>
+                                    <span style="color: #065f46 !important;">{{ trim($feature) }}</span>
                                 </span>
                             @endforeach
                         </div>
@@ -127,7 +141,7 @@
                     <h5 class="fw-bold text-dark mb-3">
                         <i class="fa fa-send text-primary me-2"></i> সরাসরি বুকিং বা সাইট ভিজিট আবেদন
                     </h5>
-                    <form action="{{ route('properties.inquiry') }}" method="POST">
+                    <form action="{{ route('properties.inquiry') }}" method="POST" onsubmit="handleAjaxBookingSubmit(event, this)">
                         @csrf
                         <input type="hidden" name="property_id" value="{{ $property->id }}">
 
@@ -176,4 +190,213 @@
         </div>
     </div>
 </div>
+
+<script>
+var toastTimer = null;
+
+function showPropertyToast(message, trackingCode) {
+    var toastWrap = document.getElementById('propertyToastNotification');
+    var msgEl = document.getElementById('toastMessageText');
+    var codeEl = document.getElementById('toastTrackingCode');
+    var progressEl = document.getElementById('toastProgressFill');
+
+    if (!toastWrap || !msgEl) return;
+
+    msgEl.innerText = message || 'আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে। আমাদের প্রতিনিধি দ্রুত যোগাযোগ করবেন।';
+    if (codeEl) {
+        if (trackingCode) {
+            codeEl.innerText = 'ট্র্যাকিং কোড: ' + trackingCode;
+            codeEl.style.display = 'inline-block';
+        } else {
+            codeEl.style.display = 'none';
+        }
+    }
+
+    if (progressEl) {
+        progressEl.style.transition = 'none';
+        progressEl.style.width = '100%';
+        setTimeout(function() {
+            progressEl.style.transition = 'width 5s linear';
+            progressEl.style.width = '0%';
+        }, 50);
+    }
+
+    toastWrap.style.display = 'block';
+    toastWrap.style.animation = 'toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+        hidePropertyToast();
+    }, 5200);
+}
+
+function hidePropertyToast() {
+    var toastWrap = document.getElementById('propertyToastNotification');
+    if (toastWrap) {
+        toastWrap.style.animation = 'toastSlideOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+        setTimeout(function() {
+            toastWrap.style.display = 'none';
+        }, 400);
+    }
+}
+
+function handleAjaxBookingSubmit(e, form) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var originalBtnHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i> আবেদন পাঠানো হচ্ছে...';
+    }
+
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(function(res) {
+        return res.json();
+    })
+    .then(function(data) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+
+        form.reset();
+
+        // Trigger Animated Toaster Notification
+        var msg = data.message || 'আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে!';
+        var code = data.inquiry_code || (data.inquiry ? data.inquiry.inquiry_code : '');
+        showPropertyToast(msg, code);
+    })
+    .catch(function(err) {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+        }
+        form.submit(); // fallback
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    @if(session('success'))
+        showPropertyToast("{{ session('success') }}", '');
+    @endif
+});
+</script>
+
+<style>
+.property-toast-wrap {
+    position: fixed;
+    top: 95px;
+    right: 25px;
+    z-index: 9999999;
+    max-width: 440px;
+    width: calc(100% - 40px);
+    pointer-events: none;
+}
+.property-toast-box {
+    pointer-events: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1.5px solid #86efac;
+    border-left: 6px solid #16a34a;
+    padding: 16px 20px 20px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+}
+.toast-icon-wrap {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #dcfce7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #16a34a;
+    font-size: 22px;
+}
+.toast-content-wrap {
+    flex-grow: 1;
+}
+.toast-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+.toast-message {
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.45;
+    margin-bottom: 6px;
+}
+.toast-tracking-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #0f172a;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+.toast-close-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    margin-left: 6px;
+    line-height: 1;
+}
+.toast-close-btn:hover {
+    color: #0f172a;
+}
+.toast-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #f1f5f9;
+}
+.toast-progress-fill {
+    height: 100%;
+    background: #16a34a;
+    width: 100%;
+}
+@keyframes toastSlideIn {
+    from {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes toastSlideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+}
+</style>
 @endsection

@@ -124,10 +124,14 @@ class PropertyFrontendController extends Controller
         $property = $inquiry->property;
         $propName = $property ? $property->property_name : 'জমি ও প্রপার্টি';
 
-        if ($request->wantsJson()) {
+        if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'status' => 'success',
                 'message' => "ধন্যবাদ {$inquiry->customer_name}! আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে (ট্র্যাকিং কোড: {$inquiryCode})। আমাদের টিম দ্রুত আপনার সাথে যোগাযোগ করবে।",
+                'inquiry' => $inquiry,
+                'inquiry_code' => $inquiryCode
+            ]);
+        }
                 'inquiry' => $inquiry
             ]);
         }
