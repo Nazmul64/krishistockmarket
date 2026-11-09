@@ -9,7 +9,7 @@
                     <i class="fa fa-handshake-o text-info me-2"></i> ব্রোকার ও সেলস এজেন্ট নেটওয়ার্ক (Broker & Agent Management)
                 </h3>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.real_estate.hub') }}">LandShare ERP</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.landshare.hub') }}">LandShare ERP</a></li>
                     <li class="breadcrumb-item active">ব্রোকার ও এজেন্ট তালিকা</li>
                 </ol>
             </div>
@@ -160,3 +160,4 @@
     </div>
 </div>
 @endsection
+

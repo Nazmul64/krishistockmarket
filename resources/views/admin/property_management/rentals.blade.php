@@ -9,7 +9,7 @@
                     <i class="fa fa-key text-warning me-2"></i> রেন্টাল ও ভাড়াটিয়া ব্যবস্থাপনা (Rental & Tenant Management)
                 </h3>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.real_estate.hub') }}">LandShare ERP</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.landshare.hub') }}">LandShare ERP</a></li>
                     <li class="breadcrumb-item active">রেন্টাল ও লিজ চুক্তি</li>
                 </ol>
             </div>
@@ -203,3 +203,4 @@
     </div>
 </div>
 @endsection
+

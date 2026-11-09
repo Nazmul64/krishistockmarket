@@ -9,7 +9,7 @@
                     <i class="fa fa-user-circle text-success me-2"></i> জমির মালিক ও বিক্রেতা ব্যবস্থাপনা (Land Owners & Sellers)
                 </h3>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.real_estate.hub') }}">LandShare ERP</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.landshare.hub') }}">LandShare ERP</a></li>
                     <li class="breadcrumb-item active">জমির মালিক তালিকা</li>
                 </ol>
             </div>
@@ -167,3 +167,4 @@
     </div>
 </div>
 @endsection
+

@@ -9,7 +9,7 @@
                     <i class="fa fa-file-pdf-o text-danger me-2"></i> লিগ্যাল ও ডকুমেন্ট ভল্ট (Legal & Documents Vault)
                 </h3>
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.real_estate.hub') }}">LandShare ERP</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.landshare.hub') }}">LandShare ERP</a></li>
                     <li class="breadcrumb-item active">দলিল ও আইনি রেকর্ড ভল্ট</li>
                 </ol>
             </div>
@@ -181,3 +181,4 @@
     </div>
 </div>
 @endsection
+

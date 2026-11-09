@@ -212,6 +212,7 @@ Route::group(['prefix' => 'admin/rbac', 'middleware' => ['auth', 'role:super_adm
 // Admin Real Estate & Property Management (LandShare ERP)
 Route::group(['prefix' => 'admin/real-estate', 'middleware' => ['auth', 'role:super_admin,admin']], function () {
     Route::get('/hub', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'index'])->name('admin.landshare.hub');
+    Route::get('/', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'index'])->name('admin.real_estate.hub');
     Route::get('/properties', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'properties'])->name('admin.properties.index');
     Route::get('/units', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'units'])->name('admin.properties.units');
     Route::get('/projects', [\App\Http\Controllers\Admin\AdminPropertyManagementController::class, 'projects'])->name('admin.projects.index');
