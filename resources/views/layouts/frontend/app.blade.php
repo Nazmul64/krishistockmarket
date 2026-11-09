@@ -483,7 +483,7 @@
                 </div>
 
                 <!-- Mobile Header Controls - Clean Hamburger Toggle Only -->
-                <div class="d-flex d-lg-none align-items-center">
+                <div class="mobile-header-controls d-flex d-lg-none align-items-center">
                     <button
                         type="button"
                         class="mobile-nav-toggle-btn-golden"

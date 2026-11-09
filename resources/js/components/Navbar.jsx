@@ -511,7 +511,7 @@ export default function Navbar({
                         </div>
 
                         {/* Mobile Header Controls - Clean Hamburger Toggle Only */}
-                        <div className="d-flex d-lg-none align-items-center">
+                        <div className="mobile-header-controls d-flex d-lg-none align-items-center">
                             <button
                                 type="button"
                                 className={`mobile-nav-toggle-btn-golden ${mobileMenuOpen ? 'active' : ''}`}

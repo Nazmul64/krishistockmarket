@@ -28,8 +28,15 @@ body, html {
     font-family: 'Hind Siliguri', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     color: var(--text-main);
     background-color: #f8fafc;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+    max-width: 100vw;
     scroll-behavior: smooth;
+}
+
+.react-homepage-wrapper {
+    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* ==========================================================================
@@ -2014,18 +2021,21 @@ body, html {
 /* ==========================================================================
    PROMINENT SEARCH BAR (EXPANDS TO FILL AVAILABLE SPACE ON LARGE SCREENS)
    ========================================================================== */
-.search-container-col {
-    position: relative;
-    flex: 1 1 auto !important;
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 18px !important;
-    min-width: 200px;
+@media (min-width: 992px) {
+    .search-container-col {
+        display: flex !important;
+        position: relative;
+        flex: 1 1 auto !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 18px !important;
+        min-width: 200px;
+    }
 }
 
 @media (max-width: 991.98px) {
     .search-container-col {
-        margin: 0 10px !important;
+        display: none !important;
     }
 }
 
@@ -2241,32 +2251,95 @@ body, html {
    HEADER RIGHT ACTIONS: LANGUAGE, THEME TOGGLE & AUTH BUTTONS SPACING
    Guarantees generous spacing across all browsers & Bootstrap versions
    ========================================================================== */
-.header-right-actions {
-    display: flex !important;
-    align-items: center !important;
-    gap: 16px !important;
-    flex-shrink: 0 !important;
+@media (min-width: 992px) {
+    .header-right-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .header-right-actions .header-lang-switcher-pill {
+        margin-right: 16px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .header-right-actions .header-theme-toggle-btn {
+        margin-right: 16px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .header-right-actions .header-auth-buttons {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 14px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .header-right-actions .header-auth-buttons .btn-golden-action-outline {
+        margin-right: 14px !important;
+    }
+
+    .mobile-header-controls,
+    .mobile-nav-toggle-btn-golden {
+        display: none !important;
+    }
 }
 
-.header-right-actions .header-lang-switcher-pill {
-    margin-right: 16px !important;
-    flex-shrink: 0 !important;
-}
+/* Mobile & Tablet Header (< 992px): Strictly Logo on Left, Toggle Menu on Right */
+@media (max-width: 991.98px) {
+    .header-right-actions {
+        display: none !important;
+    }
 
-.header-right-actions .header-theme-toggle-btn {
-    margin-right: 16px !important;
-    flex-shrink: 0 !important;
-}
+    .search-container-col {
+        display: none !important;
+    }
 
-.header-right-actions .header-auth-buttons {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 14px !important;
-    flex-shrink: 0 !important;
-}
+    .header-sub-nav-bar {
+        display: none !important;
+    }
 
-.header-right-actions .header-auth-buttons .btn-golden-action-outline {
-    margin-right: 14px !important;
+    .header-inner-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 56px !important;
+    }
+
+    .react-brand-logo {
+        flex-shrink: 0 !important;
+        max-width: calc(100% - 60px) !important;
+    }
+
+    .react-brand-logo img {
+        height: 48px !important;
+        max-height: 48px !important;
+        width: auto !important;
+        object-fit: contain;
+    }
+
+    .mobile-header-controls {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+
+    .mobile-nav-toggle-btn-golden {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
 }
 
 /* ==========================================================================
