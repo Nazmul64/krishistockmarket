@@ -132,9 +132,6 @@ class PropertyFrontendController extends Controller
                 'inquiry_code' => $inquiryCode
             ]);
         }
-                'inquiry' => $inquiry
-            ]);
-        }
 
         return redirect()->back()->with('success', "ধন্যবাদ! {$propName}-এর জন্য আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে (কোড: {$inquiryCode})। আমাদের প্রতিনিধি খুব শীঘ্রই যোগাযোগ করবেন।");
     }

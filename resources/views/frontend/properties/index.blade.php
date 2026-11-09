@@ -35,18 +35,18 @@
                 <p class="lead mb-4" style="color: #cbd5e1; font-size: 1.15rem;">
                     নিরাপদ ও লাভজনক রিয়েল এস্টেট বিনিয়োগ। যাচাইকৃত জমি, আবাসিক প্লট, ফ্ল্যাট ও বাণিজ্যিক স্পেস কিনুন অথবা আকর্ষণীয় কিস্তিতে বুকিং দিন।
                 </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important;">
-                        <i class="fa fa-check-circle text-warning fs-5"></i>
-                        <span class="small fw-bold" style="color: #ffffff !important; font-size: 13.5px;">খতিয়ান ও দাগ ভেরিফাইড</span>
+                <div class="d-flex flex-wrap gap-2 pt-2">
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important; padding: 7px 18px; border-radius: 50px;">
+                        <i class="fa fa-check-circle text-warning" style="font-size: 16px;"></i>
+                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">খতিয়ান ও দাগ ভেরিফাইড</span>
                     </div>
-                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important;">
-                        <i class="fa fa-check-circle text-warning fs-5"></i>
-                        <span class="small fw-bold" style="color: #ffffff !important; font-size: 13.5px;">সহজ কিস্তি সুবিধা</span>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important; padding: 7px 18px; border-radius: 50px;">
+                        <i class="fa fa-check-circle text-warning" style="font-size: 16px;"></i>
+                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">সহজ কিস্তি সুবিধা</span>
                     </div>
-                    <div class="d-flex align-items-center gap-2 px-3 py-2 rounded-pill" style="background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important;">
-                        <i class="fa fa-check-circle text-warning fs-5"></i>
-                        <span class="small fw-bold" style="color: #ffffff !important; font-size: 13.5px;">দ্রুত সাফ-কবলা রেজিস্ট্রি</span>
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important; padding: 7px 18px; border-radius: 50px;">
+                        <i class="fa fa-check-circle text-warning" style="font-size: 16px;"></i>
+                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">দ্রুত সাফ-কবলা রেজিস্ট্রি</span>
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                             
                             <!-- Badges -->
                             <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1">
-                                <span class="badge bg-dark bg-opacity-75 text-white px-2 py-1 rounded">
+                                <span class="badge px-2 py-1 rounded" style="background: rgba(15, 23, 42, 0.85) !important; color: #ffffff !important;">
                                     {{ $item->property_type_name }}
                                 </span>
                                 @if($item->is_featured)
@@ -153,7 +153,7 @@
                             </div>
 
                             <!-- Area Badge at Bottom-Right of Image -->
-                            <div class="position-absolute bottom-0 end-0 m-3 bg-dark bg-opacity-80 text-white px-3 py-1 rounded-3 small fw-bold">
+                            <div class="position-absolute bottom-0 end-0 m-3 px-3 py-1 rounded-3 small fw-bold" style="background: rgba(15, 23, 42, 0.85) !important; color: #ffffff !important;">
                                 <i class="fa fa-expand me-1 text-warning"></i> {{ number_format($item->total_area, 2) }} {{ $item->measurement_unit }}
                             </div>
                         </div>
