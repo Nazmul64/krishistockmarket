@@ -64,13 +64,21 @@ class ChatController extends Controller
         ]);
 
         // Check if an admin has already replied in this conversation session
-        $hasAdminReplied = ChatMessage::where('session_id', $sessionId)
-            ->where('sender_type', 'admin')
-            ->exists();
+        $hasAdminReplied = ChatMessage::where(function($q) use ($sessionId, $userId) {
+            $q->where('session_id', $sessionId);
+            if ($userId) {
+                $userSessions = ChatMessage::where('user_id', $userId)->pluck('session_id')->unique();
+                if ($userSessions->isNotEmpty()) {
+                    $q->orWhereIn('session_id', $userSessions);
+                }
+            }
+        })
+        ->where('sender_type', 'admin')
+        ->exists();
 
         // Only generate AI Bot reply if NO real admin has replied yet in this session
         if (!$hasAdminReplied) {
-            $aiReplyText = $this->generateAiReply(trim($request->input('message')));
+            $aiReplyText = $this->generateAiReply(trim($request->input('message')), $sessionId);
 
             if ($aiReplyText) {
                 ChatMessage::create([
@@ -99,9 +107,22 @@ class ChatController extends Controller
     /**
      * Generate smart Bengali/English AI response based on keyword detection.
      */
-    private function generateAiReply($text)
+    private function generateAiReply($text, $sessionId = null)
     {
         $lower = mb_strtolower($text, 'UTF-8');
+
+        // Check previous bot messages in this session so we never spam
+        $previousBotReplies = $sessionId ? ChatMessage::where('session_id', $sessionId)->where('sender_type', 'bot')->pluck('message')->toArray() : [];
+        $hasGreeted = false;
+        $hasSentFallback = false;
+        foreach ($previousBotReplies as $prev) {
+            if (Str::contains($prev, 'আসসালামু আলাইকুম')) {
+                $hasGreeted = true;
+            }
+            if (Str::contains($prev, 'ধন্যবাদ আপনার বার্তার জন্য')) {
+                $hasSentFallback = true;
+            }
+        }
 
         if (Str::contains($lower, ['স্টক', 'শেয়ার', 'স্টক রেট', 'দাম', 'stock', 'rate', 'price'])) {
             return "🤖 **কৃষি পরিবার স্টক মার্কেট তথ্য:**\nআমাদের প্ল্যাটফর্মে দৈনিক স্টক রেট এবং মার্কেট আপডেট পেতে উপরের 'স্টক মার্কেট' পেজটি ভিজিট করুন। আপনার কোনো নির্দিষ্ট স্টক ক্রয়/বিক্রয় সংক্রান্ত হেল্প লাগলে আমাদের এডমিন প্রতিনিধি খুব শীঘ্রই চ্যাটে যুক্ত হবেন।";
@@ -124,10 +145,18 @@ class ChatController extends Controller
         }
 
         if (Str::contains($lower, ['hi', 'hello', 'হাই', 'হ্যালো', 'সালাম', 'assalamu', 'salam'])) {
+            if ($hasGreeted) {
+                return null; // Don't repeat greeting repeatedly
+            }
             return "🤖 **আসসালামু আলাইকুম!** কৃষি পরিবার লাইভ সাপোর্ট হেল্পডেস্কে আপনাকে স্বাগতম। আপনাকে কীভাবে সাহায্য করতে পারি?";
         }
 
-        return "🤖 ধন্যবাদ আপনার বার্তার জন্য! আমাদের কৃষি পরিবার সাপোর্ট এডমিন প্রতিনিধি খুব শীঘ্রই আপনার প্রশ্নের উত্তর দেবেন। আপতত যেকোনো তথ্য পেতে 'স্টক মার্কেট', 'মাসিক বাজার' বা 'যোগাযোগ' ভিজিট করতে পারেন।";
+        // If fallback message was already sent in this session, do not spam it
+        if ($hasSentFallback) {
+            return null;
+        }
+
+        return "🤖 ধন্যবাদ আপনার বার্তার জন্য! আমাদের কৃষি পরিবার সাপোর্ট এডমিন প্রতিনিধি খুব শীঘ্রই আপনার প্রশ্নের উত্তর দেবেন। আপাতত যেকোনো তথ্য পেতে 'স্টক মার্কেট', 'মাসিক বাজার' বা 'যোগাযোগ' ভিজিট করতে পারেন।";
     }
 
     /**
