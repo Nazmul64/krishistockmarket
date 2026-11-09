@@ -1,6 +1,9 @@
 @extends('layouts.frontend.app')
 
 @section('content')
+@php
+    $isBn = $isBn ?? (request()->cookie('ekrishi_lang', 'en') === 'bn');
+@endphp
 <!-- Floating Animated Toast Notification for Booking / Inquiries -->
 <div id="propertyToastNotification" class="property-toast-wrap" style="display: none;">
     <div class="property-toast-box">
@@ -8,8 +11,8 @@
             <i class="fa fa-check-circle toast-check-icon"></i>
         </div>
         <div class="toast-content-wrap">
-            <div class="toast-title">🎉 আবেদন সফলভাবে গৃহীত হয়েছে!</div>
-            <div class="toast-message" id="toastMessageText">আমাদের কাস্টমার রিপ্রেজেন্টেটিভ খুব শীঘ্রই যোগাযোগ করবেন।</div>
+            <div class="toast-title">🎉 {{ $isBn ? 'আবেদন সফলভাবে গৃহীত হয়েছে!' : 'Application Successfully Submitted!' }}</div>
+            <div class="toast-message" id="toastMessageText">{{ $isBn ? 'আমাদের কাস্টমার রিপ্রেজেন্টেটিভ খুব শীঘ্রই যোগাযোগ করবেন।' : 'Our customer representative will reach out to you shortly.' }}</div>
             <div class="toast-tracking-badge" id="toastTrackingCode"></div>
         </div>
         <button type="button" class="toast-close-btn" onclick="hidePropertyToast()">
@@ -27,36 +30,36 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <span class="badge bg-warning text-dark px-3 py-2 fw-bold text-uppercase mb-3 rounded-pill">
-                    <i class="fa fa-shield me-1"></i> ১০০% নিষ্কণ্টক ও আইনি যাচাইকৃত প্রপার্টি
+                    <i class="fa fa-shield me-1"></i> {{ $isBn ? '১০০% নিষ্কণ্টক ও আইনি যাচাইকৃত প্রপার্টি' : '100% Verified & Legal Clearance Properties' }}
                 </span>
                 <h1 class="fw-extrabold display-5 mb-3 text-white">
-                    জমি, প্লট ও প্রপার্টি ক্যাটালগ
+                    {{ $isBn ? 'জমি, প্লট ও প্রপার্টি ক্যাটালগ' : 'Land, Plots & Properties Catalog' }}
                 </h1>
                 <p class="lead mb-4" style="color: #cbd5e1; font-size: 1.15rem;">
-                    নিরাপদ ও লাভজনক রিয়েল এস্টেট বিনিয়োগ। যাচাইকৃত জমি, আবাসিক প্লট, ফ্ল্যাট ও বাণিজ্যিক স্পেস কিনুন অথবা আকর্ষণীয় কিস্তিতে বুকিং দিন।
+                    {{ $isBn ? 'নিরাপদ ও লাভজনক রিয়েল এস্টেট বিনিয়োগ। যাচাইকৃত জমি, আবাসিক প্লট, ফ্ল্যাট ও বাণিজ্যিক স্পেস কিনুন অথবা আকর্ষণীয় কিস্তিতে বুকিং দিন।' : 'Secure & profitable real estate investment. Buy verified land, residential plots, flats, and commercial spaces or book with easy installments.' }}
                 </p>
                 <div class="d-flex flex-wrap gap-2 pt-2">
                     <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important; padding: 7px 18px; border-radius: 50px;">
                         <i class="fa fa-check-circle text-warning" style="font-size: 16px;"></i>
-                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">খতিয়ান ও দাগ ভেরিফাইড</span>
+                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">{{ $isBn ? 'খতিয়ান ও দাগ ভেরিফাইড' : 'Khatian & Dag Verified' }}</span>
                     </div>
                     <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important; padding: 7px 18px; border-radius: 50px;">
                         <i class="fa fa-check-circle text-warning" style="font-size: 16px;"></i>
-                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">সহজ কিস্তি সুবিধা</span>
+                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">{{ $isBn ? 'সহজ কিস্তি সুবিধা' : 'Easy Installment Plans' }}</span>
                     </div>
                     <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.16) !important; border: 1.5px solid rgba(255, 255, 255, 0.35) !important; padding: 7px 18px; border-radius: 50px;">
                         <i class="fa fa-check-circle text-warning" style="font-size: 16px;"></i>
-                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">দ্রুত সাফ-কবলা রেজিস্ট্রি</span>
+                        <span style="color: #ffffff !important; font-size: 14px; font-weight: 700;">{{ $isBn ? 'দ্রুত সাফ-কবলা রেজিস্ট্রি' : 'Fast Registry & Mutation' }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 d-none d-lg-block text-end">
-                <div class="bg-white p-4 rounded-4 shadow-lg text-dark text-start" style="border: 2px solid #f59e0b;">
-                    <div class="small text-muted fw-bold text-uppercase mb-1">মোট উপলব্ধ প্রপার্টি</div>
-                    <h2 class="fw-bold text-success mb-2">{{ $totalProperties }}+ টি সাইট</h2>
-                    <p class="small text-muted mb-3">ঢাকা, পূর্বাচল, উত্তরা, মিরপুর ও সাভারে প্রস্তুত প্রপার্টি সরাসরি পরিদর্শন করুন।</p>
+                <div class="property-stat-box bg-white p-4 rounded-4 shadow-lg text-dark text-start" style="border: 2px solid #f59e0b;">
+                    <div class="small text-muted fw-bold text-uppercase mb-1">{{ $isBn ? 'মোট উপলব্ধ প্রপার্টি' : 'Total Available Properties' }}</div>
+                    <h2 class="fw-bold text-success mb-2">{{ $totalProperties }}+ {{ $isBn ? 'টি সাইট' : 'Sites' }}</h2>
+                    <p class="small text-muted mb-3">{{ $isBn ? 'ঢাকা, পূর্বাচল, উত্তরা, মিরপুর ও সাভারে প্রস্তুত প্রপার্টি সরাসরি পরিদর্শন করুন।' : 'Inspect ready verified properties across Dhaka, Purbachal, Uttara, Mirpur, and Savar.' }}</p>
                     <a href="#propertyListSection" class="btn btn-warning w-100 fw-bold py-2">
-                        <i class="fa fa-arrow-down me-1"></i> প্রপার্টি সমূহ দেখুন
+                        <i class="fa fa-arrow-down me-1"></i> {{ $isBn ? 'প্রপার্টি সমূহ দেখুন' : 'Explore Properties' }}
                     </a>
                 </div>
             </div>
@@ -82,17 +85,17 @@
                                id="propertySearchInput"
                                value="{{ request('q') }}" 
                                class="property-search-input" 
-                               placeholder="প্রপার্টির নাম, এলাকা (ঢাকা/পূর্বাচল), দাগ বা খতিয়ান নম্বর লিখুন..." 
+                               placeholder="{{ $isBn ? 'প্রপার্টির নাম, এলাকা (ঢাকা/পূর্বাচল), দাগ বা খতিয়ান নম্বর লিখুন...' : 'Search by property name, location, dag or khatian no...' }}" 
                                autocomplete="off">
                         @if(request('q'))
                             <a href="{{ route('properties.index', ['type' => request('type'), 'district' => request('district'), 'sort' => request('sort')]) }}" 
                                class="property-search-clear-btn" 
-                               title="মুছে ফেলুন">
+                               title="{{ $isBn ? 'মুছে ফেলুন' : 'Clear' }}">
                                 <i class="fa fa-times-circle"></i>
                             </a>
                         @endif
                         <button type="submit" class="property-search-submit-btn">
-                            <i class="fa fa-search me-1"></i> <span>অনুসন্ধান</span>
+                            <i class="fa fa-search me-1"></i> <span>{{ $isBn ? 'অনুসন্ধান' : 'Search' }}</span>
                         </button>
                     </div>
                 </div>
@@ -102,7 +105,7 @@
                     <div class="property-filter-select-wrap">
                         <i class="fa fa-map-marker property-select-icon text-danger"></i>
                         <select name="district" class="property-filter-select" onchange="document.getElementById('propertySearchFilterForm').submit()">
-                            <option value="all">সকল জেলা / এলাকা</option>
+                            <option value="all">{{ $isBn ? 'সকল জেলা / এলাকা' : 'All Districts / Areas' }}</option>
                             @foreach($districts as $dst)
                                 <option value="{{ $dst }}" {{ request('district') == $dst ? 'selected' : '' }}>{{ $dst }}</option>
                             @endforeach
@@ -115,10 +118,10 @@
                     <div class="property-filter-select-wrap">
                         <i class="fa fa-sort-amount-desc property-select-icon text-success"></i>
                         <select name="sort" class="property-filter-select" onchange="document.getElementById('propertySearchFilterForm').submit()">
-                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>নতুন প্রপার্টি আগে</option>
-                            <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>মূল্য: কম থেকে বেশি</option>
-                            <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>মূল্য: বেশি থেকে কম</option>
-                            <option value="area_desc" {{ request('sort') == 'area_desc' ? 'selected' : '' }}>আয়তন: বড় থেকে ছোট</option>
+                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>{{ $isBn ? 'নতুন প্রপার্টি আগে' : 'Newest First' }}</option>
+                            <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>{{ $isBn ? 'মূল্য: কম থেকে বেশি' : 'Price: Low to High' }}</option>
+                            <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>{{ $isBn ? 'মূল্য: বেশি থেকে কম' : 'Price: High to Low' }}</option>
+                            <option value="area_desc" {{ request('sort') == 'area_desc' ? 'selected' : '' }}>{{ $isBn ? 'আয়তন: বড় থেকে ছোট' : 'Area: Largest First' }}</option>
                         </select>
                     </div>
                 </div>
@@ -130,33 +133,33 @@
                     <button type="button" 
                             onclick="selectPropertyCategory('all')" 
                             class="property-cat-pill {{ !request('type') || request('type') == 'all' ? 'active' : '' }}">
-                        <i class="fa fa-th-large me-1"></i> সব প্রপার্টি
+                        <i class="fa fa-th-large me-1"></i> {{ $isBn ? 'সব প্রপার্টি' : 'All Properties' }}
                     </button>
                     <button type="button" 
                             onclick="selectPropertyCategory('প্লট')" 
                             class="property-cat-pill {{ request('type') == 'প্লট' ? 'active' : '' }}">
-                        <i class="fa fa-map-signs me-1"></i> আবাসিক প্লট
+                        <i class="fa fa-map-signs me-1"></i> {{ $isBn ? 'আবাসিক প্লট' : 'Residential Plots' }}
                     </button>
                     <button type="button" 
                             onclick="selectPropertyCategory('জমি')" 
                             class="property-cat-pill {{ request('type') == 'জমি' ? 'active' : '' }}">
-                        <i class="fa fa-tree me-1"></i> জমি ও কৃষি খামার
+                        <i class="fa fa-tree me-1"></i> {{ $isBn ? 'জমি ও কৃষি খামার' : 'Agro & Farm Land' }}
                     </button>
                     <button type="button" 
                             onclick="selectPropertyCategory('ফ্ল্যাট')" 
                             class="property-cat-pill {{ request('type') == 'ফ্ল্যাট' ? 'active' : '' }}">
-                        <i class="fa fa-building-o me-1"></i> ফ্ল্যাট / অ্যাপার্টমেন্ট
+                        <i class="fa fa-building-o me-1"></i> {{ $isBn ? 'ফ্ল্যাট / অ্যাপার্টমেন্ট' : 'Flats / Apartments' }}
                     </button>
                     <button type="button" 
                             onclick="selectPropertyCategory('বাণিজ্যিক')" 
                             class="property-cat-pill {{ request('type') == 'বাণিজ্যিক' ? 'active' : '' }}">
-                        <i class="fa fa-briefcase me-1"></i> বাণিজ্যিক স্পেস
+                        <i class="fa fa-briefcase me-1"></i> {{ $isBn ? 'বাণিজ্যিক স্পেস' : 'Commercial Space' }}
                     </button>
                 </div>
 
                 @if(request('q') || (request('type') && request('type') !== 'all') || (request('district') && request('district') !== 'all') || (request('sort') && request('sort') !== 'latest'))
                     <a href="{{ route('properties.index') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1 fw-bold">
-                        <i class="fa fa-refresh me-1"></i> ফিল্টার রিসেট
+                        <i class="fa fa-refresh me-1"></i> {{ $isBn ? 'ফিল্টার রিসেট' : 'Reset Filters' }}
                     </a>
                 @endif
             </div>
@@ -165,16 +168,16 @@
 </div>
 
 <!-- Main Property Listing Section -->
-<div class="py-5" style="background-color: #f8fafc; min-height: 600px;">
+<div class="property-main-listing-wrap py-5" style="background-color: #f8fafc; min-height: 600px;">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
-                <h4 class="fw-bold text-dark mb-1">উপলব্ধ জমি ও প্রপার্টি তালিকা</h4>
-                <p class="text-muted small mb-0">সর্বমোট {{ $properties->total() }} টি সাইট প্রদর্শিত হচ্ছে</p>
+                <h4 class="fw-bold text-dark mb-1">{{ $isBn ? 'উপলব্ধ জমি ও প্রপার্টি তালিকা' : 'Available Land & Property Listings' }}</h4>
+                <p class="text-muted small mb-0">{{ $isBn ? 'সর্বমোট ' . $properties->total() . ' টি সাইট প্রদর্শিত হচ্ছে' : 'Showing ' . $properties->total() . ' total available sites' }}</p>
             </div>
             @if(request('q') || request('type'))
-                <a href="{{ route('properties.index') }}" class="btn btn-sm btn-outline-danger">
-                    <i class="fa fa-times me-1"></i> ফিল্টার মুছুন
+                <a href="{{ route('properties.index') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                    <i class="fa fa-times me-1"></i> {{ $isBn ? 'ফিল্টার মুছুন' : 'Clear Filters' }}
                 </a>
             @endif
         </div>
@@ -182,7 +185,7 @@
         <div class="row g-4">
             @forelse($properties as $item)
                 <div class="col-lg-4 col-md-6 col-12">
-                    <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden property-card-hover" style="transition: transform 0.25s ease, box-shadow 0.25s ease;">
+                    <div class="card property-card h-100 border-0 rounded-4 shadow-sm overflow-hidden property-card-hover" style="transition: transform 0.25s ease, box-shadow 0.25s ease;">
                         <!-- Property Image with Badges -->
                         <div class="position-relative" style="height: 220px; overflow: hidden; background: #e2e8f0;">
                             <img src="{{ $item->featured_image ?: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop&q=60' }}" 
@@ -197,7 +200,7 @@
                                 </span>
                                 @if($item->is_featured)
                                     <span class="badge bg-warning text-dark px-2 py-1 rounded fw-bold">
-                                        <i class="fa fa-star me-1"></i> স্পেশাল অফার
+                                        <i class="fa fa-star me-1"></i> {{ $isBn ? 'স্পেশাল অফার' : 'Special Offer' }}
                                     </span>
                                 @endif
                             </div>
@@ -205,11 +208,11 @@
                             <div class="position-absolute top-0 end-0 m-3">
                                 @if($item->status === 'available')
                                     <span class="badge bg-success text-white px-2 py-1 rounded-pill shadow-sm">
-                                        বিক্রয়যোগ্য
+                                        {{ $isBn ? 'বিক্রয়যোগ্য' : 'Available' }}
                                     </span>
                                 @elseif($item->status === 'reserved')
                                     <span class="badge bg-warning text-dark px-2 py-1 rounded-pill shadow-sm">
-                                        রিজার্ভড
+                                        {{ $isBn ? 'রিজার্ভড' : 'Reserved' }}
                                     </span>
                                 @endif
                             </div>
@@ -221,10 +224,10 @@
                         </div>
 
                         <!-- Card Body -->
-                        <div class="card-body p-4 d-flex flex-column">
+                        <div class="card-body property-card-body p-4 d-flex flex-column">
                             <div class="small text-muted font-monospace mb-1">{{ $item->property_code }}</div>
-                            <h5 class="fw-bold text-dark mb-2" style="font-size: 1.15rem; line-height: 1.4;">
-                                <a href="{{ route('properties.show', $item->id) }}" class="text-dark text-decoration-none hover-primary">
+                            <h5 class="fw-bold mb-2" style="font-size: 1.15rem; line-height: 1.4;">
+                                <a href="{{ route('properties.show', $item->id) }}" class="property-title-link text-decoration-none hover-primary">
                                     {{ $item->property_name }}
                                 </a>
                             </h5>
@@ -235,13 +238,13 @@
                                 <span>{{ $item->upazila ? $item->upazila . ', ' : '' }}{{ $item->district }}</span>
                                 @if($item->dag_number)
                                     <span class="mx-1">•</span>
-                                    <span>দাগ: {{ $item->dag_number }}</span>
+                                    <span>{{ $isBn ? 'দাগ: ' : 'Dag: ' }}{{ $item->dag_number }}</span>
                                 @endif
                             </div>
 
                             <!-- Highlights / Description -->
                             @if($item->features)
-                                <div class="bg-light p-2 rounded-3 mb-3 small text-slate-700 text-truncate">
+                                <div class="p-2 rounded-3 mb-3 small text-truncate property-feature-preview" style="background: rgba(16, 185, 129, 0.08); color: #065f46; border: 1px solid rgba(16, 185, 129, 0.2);">
                                     <i class="fa fa-check text-success me-1"></i> {{ $item->features }}
                                 </div>
                             @elseif($item->description)
@@ -254,14 +257,14 @@
                                 <!-- Price Row -->
                                 <div class="d-flex align-items-end justify-content-between mb-3">
                                     <div>
-                                        <div class="small text-muted">সর্বমোট বিক্রয়মূল্য:</div>
+                                        <div class="small text-muted">{{ $isBn ? 'সর্বমোট বিক্রয়মূল্য:' : 'Total Price:' }}</div>
                                         <div class="fw-bold font-monospace text-success fs-5">
                                             ৳ {{ number_format($item->selling_price) }}
                                         </div>
                                     </div>
                                     @if($item->booking_amount > 0)
                                         <div class="text-end">
-                                            <div class="small text-muted">বুকিং ডিপোজিট:</div>
+                                            <div class="small text-muted">{{ $isBn ? 'বুকিং ডিপোজিট:' : 'Booking Deposit:' }}</div>
                                             <div class="fw-bold font-monospace text-primary">
                                                 ৳ {{ number_format($item->booking_amount) }}
                                             </div>
@@ -273,14 +276,14 @@
                                 <div class="row g-2">
                                     <div class="col-6">
                                         <a href="{{ route('properties.show', $item->id) }}" class="btn btn-outline-dark btn-sm w-100 py-2 fw-bold">
-                                            <i class="fa fa-eye me-1"></i> বিস্তারিত
+                                            <i class="fa fa-eye me-1"></i> {{ $isBn ? 'বিস্তারিত' : 'Details' }}
                                         </a>
                                     </div>
                                     <div class="col-6">
                                         <button type="button" 
                                                 class="btn btn-success btn-sm w-100 py-2 fw-bold"
                                                 onclick="openBookingModal('{{ $item->id }}', '{{ addslashes($item->property_name) }}', '{{ number_format($item->selling_price) }}')">
-                                            <i class="fa fa-paper-plane me-1"></i> বুকিং / সাইট
+                                            <i class="fa fa-paper-plane me-1"></i> {{ $isBn ? 'বুকিং / সাইট' : 'Book / Visit' }}
                                         </button>
                                     </div>
                                 </div>
@@ -290,11 +293,11 @@
                 </div>
             @empty
                 <div class="col-12 py-5 text-center">
-                    <div class="p-5 bg-white rounded-4 shadow-sm">
+                    <div class="p-5 bg-white rounded-4 shadow-sm property-empty-box">
                         <i class="fa fa-map-o fa-4x text-muted mb-3 opacity-50"></i>
-                        <h4 class="fw-bold text-dark">কোনো প্রপার্টি খুঁজে পাওয়া যায়নি!</h4>
-                        <p class="text-muted">আপনার খোঁজের সাথে মিল রেখে বর্তমানে কোনো প্রপার্টি নেই। অনুগ্রহ করে অন্য ফিল্টার চেষ্টা করুন।</p>
-                        <a href="{{ route('properties.index') }}" class="btn btn-success fw-bold px-4">সকল প্রপার্টি দেখুন</a>
+                        <h4 class="fw-bold text-dark">{{ $isBn ? 'কোনো প্রপার্টি খুঁজে পাওয়া যায়নি!' : 'No Properties Found!' }}</h4>
+                        <p class="text-muted">{{ $isBn ? 'আপনার খোঁজের সাথে মিল রেখে বর্তমানে কোনো প্রপার্টি নেই। অনুগ্রহ করে অন্য ফিল্টার চেষ্টা করুন।' : 'No properties matched your search filters. Please try searching with different keywords.' }}</p>
+                        <a href="{{ route('properties.index') }}" class="btn btn-success fw-bold px-4 rounded-pill">{{ $isBn ? 'সকল প্রপার্টি দেখুন' : 'View All Properties' }}</a>
                     </div>
                 </div>
             @endforelse
@@ -312,10 +315,10 @@
 <!-- Customer Site Visit / Booking Modal -->
 <div class="modal fade" id="customerInquiryModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="modal-header bg-success text-white py-3 px-4">
                 <h5 class="modal-title fw-bold mb-0">
-                    <i class="fa fa-calendar-check-o me-2"></i> সাইট পরিদর্শন বা বুকিং আবেদন
+                    <i class="fa fa-calendar-check-o me-2"></i> {{ $isBn ? 'সাইট পরিদর্শন বা বুকিং আবেদন' : 'Site Visit or Booking Application' }}
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -323,47 +326,47 @@
                 @csrf
                 <input type="hidden" name="property_id" id="modalPropertyId">
                 <div class="modal-body p-4">
-                    <div class="alert alert-light border mb-3 p-3 rounded-3">
-                        <div class="small text-muted">নির্বাচিত প্রপার্টি:</div>
-                        <div class="fw-bold text-dark" id="modalPropertyName">প্রপার্টি লোড হচ্ছে...</div>
-                        <div class="small text-success fw-bold mt-1" id="modalPropertyPrice">মূল্য: ৳ ০</div>
+                    <div class="alert alert-light border mb-3 p-3 rounded-3 modal-property-preview">
+                        <div class="small text-muted">{{ $isBn ? 'নির্বাচিত প্রপার্টি:' : 'Selected Property:' }}</div>
+                        <div class="fw-bold text-dark" id="modalPropertyName">{{ $isBn ? 'প্রপার্টি লোড হচ্ছে...' : 'Loading property...' }}</div>
+                        <div class="small text-success fw-bold mt-1" id="modalPropertyPrice">{{ $isBn ? 'মূল্য: ৳ ০' : 'Price: ৳ 0' }}</div>
                     </div>
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label small fw-bold"><i class="fa fa-user text-success me-1"></i> আপনার নাম <span class="text-danger">*</span></label>
-                            <input type="text" name="customer_name" required class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="আপনার পূর্ণ নাম লিখুন">
+                            <label class="form-label small fw-bold"><i class="fa fa-user text-success me-1"></i> {{ $isBn ? 'আপনার নাম' : 'Your Name' }} <span class="text-danger">*</span></label>
+                            <input type="text" name="customer_name" required class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="{{ $isBn ? 'আপনার পূর্ণ নাম লিখুন' : 'Enter your full name' }}">
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-bold"><i class="fa fa-phone text-success me-1"></i> মোবাইল নম্বর <span class="text-danger">*</span></label>
+                            <label class="form-label small fw-bold"><i class="fa fa-phone text-success me-1"></i> {{ $isBn ? 'মোবাইল নম্বর' : 'Mobile Number' }} <span class="text-danger">*</span></label>
                             <input type="text" name="customer_phone" required class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="০১xxxxxxxxx">
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-bold"><i class="fa fa-envelope-o text-success me-1"></i> ইমেইল (যদি থাকে)</label>
+                            <label class="form-label small fw-bold"><i class="fa fa-envelope-o text-success me-1"></i> {{ $isBn ? 'ইমেইল (যদি থাকে)' : 'Email (Optional)' }}</label>
                             <input type="email" name="customer_email" class="form-control rounded-3" value="{{ Auth::check() ? Auth::user()->email : '' }}" placeholder="email@example.com">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold"><i class="fa fa-tags text-success me-1"></i> আবেদনের ধরন <span class="text-danger">*</span></label>
+                            <label class="form-label small fw-bold"><i class="fa fa-tags text-success me-1"></i> {{ $isBn ? 'আবেদনের ধরন' : 'Inquiry Type' }} <span class="text-danger">*</span></label>
                             <select name="inquiry_type" class="form-select rounded-3" required>
-                                <option value="site_visit" selected>📍 সাইট পরিদর্শন (Site Visit)</option>
-                                <option value="booking_request">📝 সরাসরি বুকিং আবেদন (Booking)</option>
-                                <option value="price_inquiry">💬 বিস্তারিত ও মূল্য আলোচনা (Inquiry)</option>
+                                <option value="site_visit" selected>📍 {{ $isBn ? 'সাইট পরিদর্শন (Site Visit)' : 'Site Visit' }}</option>
+                                <option value="booking_request">📝 {{ $isBn ? 'সরাসরি বুকিং আবেদন (Booking)' : 'Direct Booking' }}</option>
+                                <option value="price_inquiry">💬 {{ $isBn ? 'বিস্তারিত ও মূল্য আলোচনা (Inquiry)' : 'Pricing & EMI Inquiry' }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold"><i class="fa fa-calendar text-success me-1"></i> পছন্দের তারিখ</label>
+                            <label class="form-label small fw-bold"><i class="fa fa-calendar text-success me-1"></i> {{ $isBn ? 'পছন্দের তারিখ' : 'Preferred Date' }}</label>
                             <input type="date" name="preferred_date" class="form-control rounded-3" min="{{ date('Y-m-d') }}">
                         </div>
                         <div class="col-12">
-                            <label class="form-label small fw-bold"><i class="fa fa-commenting-o text-success me-1"></i> আপনার কোনো প্রশ্ন বা বিশেষ নোট</label>
-                            <textarea name="message" rows="2" class="form-control rounded-3" placeholder="যেমন: শুক্রবারে সাইট ভিজিট করতে চাই অথবা কিস্তি সুবিধা জানতে চাই..."></textarea>
+                            <label class="form-label small fw-bold"><i class="fa fa-commenting-o text-success me-1"></i> {{ $isBn ? 'আপনার কোনো প্রশ্ন বা বিশেষ নোট' : 'Your Questions or Notes' }}</label>
+                            <textarea name="message" rows="2" class="form-control rounded-3" placeholder="{{ $isBn ? 'যেমন: শুক্রবারে সাইট ভিজিট করতে চাই অথবা কিস্তি সুবিধা জানতে চাই...' : 'e.g. want to visit site on Friday or ask about installments...' }}"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-light py-3 px-4">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                    <button type="submit" id="modalSubmitBtn" class="btn btn-success fw-bold px-4">
-                        <i class="fa fa-send me-1"></i> আবেদন সাবমিট করুন
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">{{ $isBn ? 'বাতিল' : 'Cancel' }}</button>
+                    <button type="submit" id="modalSubmitBtn" class="btn btn-success fw-bold px-4 rounded-pill">
+                        <i class="fa fa-send me-1"></i> {{ $isBn ? 'আবেদন সাবমিট করুন' : 'Submit Application' }}
                     </button>
                 </div>
             </form>
@@ -382,10 +385,10 @@ function showPropertyToast(message, trackingCode) {
 
     if (!toastWrap || !msgEl) return;
 
-    msgEl.innerText = message || 'আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে। আমাদের প্রতিনিধি দ্রুত যোগাযোগ করবেন।';
+    msgEl.innerText = message || '{{ $isBn ? "আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে। আমাদের প্রতিনিধি দ্রুত যোগাযোগ করবেন।" : "Your application has been received successfully. Our representative will contact you shortly." }}';
     if (codeEl) {
         if (trackingCode) {
-            codeEl.innerText = 'ট্র্যাকিং কোড: ' + trackingCode;
+            codeEl.innerText = '{{ $isBn ? "ট্র্যাকিং কোড: " : "Tracking Code: " }}' + trackingCode;
             codeEl.style.display = 'inline-block';
         } else {
             codeEl.style.display = 'none';
@@ -423,7 +426,7 @@ function hidePropertyToast() {
 function openBookingModal(id, name, price) {
     document.getElementById('modalPropertyId').value = id;
     document.getElementById('modalPropertyName').innerText = name;
-    document.getElementById('modalPropertyPrice').innerText = 'মূল্য: ৳ ' + price;
+    document.getElementById('modalPropertyPrice').innerText = '{{ $isBn ? "মূল্য: ৳ " : "Price: ৳ " }}' + price;
     var modal = new bootstrap.Modal(document.getElementById('customerInquiryModal'));
     modal.show();
 }
@@ -434,7 +437,7 @@ function handleAjaxBookingSubmit(e, form) {
     var originalBtnHtml = btn ? btn.innerHTML : '';
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i> আবেদন পাঠানো হচ্ছে...';
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-1"></i> {{ $isBn ? "আবেদন পাঠানো হচ্ছে..." : "Sending application..." }}';
     }
 
     var formData = new FormData(form);
@@ -465,7 +468,7 @@ function handleAjaxBookingSubmit(e, form) {
         form.reset();
 
         // Trigger Toaster Notification
-        var msg = data.message || 'আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে!';
+        var msg = data.message || '{{ $isBn ? "আপনার আবেদনটি সফলভাবে গৃহীত হয়েছে!" : "Your application has been received successfully!" }}';
         var code = data.inquiry_code || (data.inquiry ? data.inquiry.inquiry_code : '');
         showPropertyToast(msg, code);
     })
@@ -628,6 +631,18 @@ document.addEventListener('DOMContentLoaded', function() {
     border-color: #15803d !important;
     box-shadow: 0 3px 10px rgba(22, 163, 74, 0.35);
 }
+.property-title-link {
+    color: #0f172a;
+}
+.property-card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12) !important;
+}
+.hover-primary:hover {
+    color: #16a34a !important;
+}
+
+/* Toast Styles */
 .property-toast-wrap {
     position: fixed;
     top: 95px;
@@ -735,12 +750,119 @@ document.addEventListener('DOMContentLoaded', function() {
         opacity: 0;
     }
 }
-.property-card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.12) !important;
+
+/* ==========================================================================
+   DARK MODE FOR PROPERTIES CATALOG PAGE
+   ========================================================================== */
+body.dark-theme .property-search-section,
+html[data-theme="dark"] .property-search-section {
+    background: #0f172a !important;
+    border-color: #1e293b !important;
 }
-.hover-primary:hover {
-    color: #16a34a !important;
+body.dark-theme .property-search-input-wrap,
+html[data-theme="dark"] .property-search-input-wrap {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+body.dark-theme .property-search-input,
+html[data-theme="dark"] .property-search-input {
+    color: #f8fafc !important;
+}
+body.dark-theme .property-search-input::placeholder,
+html[data-theme="dark"] .property-search-input::placeholder {
+    color: #64748b !important;
+}
+body.dark-theme .property-filter-select-wrap,
+html[data-theme="dark"] .property-filter-select-wrap {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+body.dark-theme .property-filter-select,
+html[data-theme="dark"] .property-filter-select {
+    color: #f8fafc !important;
+}
+body.dark-theme .property-filter-select option,
+html[data-theme="dark"] .property-filter-select option {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .property-cat-pill,
+html[data-theme="dark"] .property-cat-pill {
+    background: #1e293b !important;
+    color: #cbd5e1 !important;
+    border-color: #334155 !important;
+}
+body.dark-theme .property-cat-pill:hover,
+html[data-theme="dark"] .property-cat-pill:hover {
+    background: #334155 !important;
+    color: #ffffff !important;
+}
+body.dark-theme .property-cat-pill.active,
+html[data-theme="dark"] .property-cat-pill.active {
+    background: linear-gradient(135deg, #16a34a, #15803d) !important;
+    color: #ffffff !important;
+    border-color: #15803d !important;
+}
+body.dark-theme .property-main-listing-wrap,
+html[data-theme="dark"] .property-main-listing-wrap {
+    background: #0b1120 !important;
+}
+body.dark-theme .property-card,
+html[data-theme="dark"] .property-card {
+    background: #0f172a !important;
+    border: 1px solid #1e293b !important;
+}
+body.dark-theme .property-title-link,
+html[data-theme="dark"] .property-title-link {
+    color: #f8fafc !important;
+}
+body.dark-theme .property-card-body,
+html[data-theme="dark"] .property-card-body {
+    background: #0f172a !important;
+    color: #cbd5e1 !important;
+}
+body.dark-theme .property-stat-box,
+html[data-theme="dark"] .property-stat-box {
+    background: #0f172a !important;
+    border-color: #f59e0b !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .property-feature-preview,
+html[data-theme="dark"] .property-feature-preview {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+body.dark-theme .property-empty-box,
+html[data-theme="dark"] .property-empty-box {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #1e293b !important;
+}
+body.dark-theme .modal-content,
+html[data-theme="dark"] .modal-content {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #1e293b !important;
+}
+body.dark-theme .modal-property-preview,
+html[data-theme="dark"] .modal-property-preview {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .modal-body .form-control,
+body.dark-theme .modal-body .form-select,
+html[data-theme="dark"] .modal-body .form-control,
+html[data-theme="dark"] .modal-body .form-select {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .modal-footer,
+html[data-theme="dark"] .modal-footer {
+    background: #0b1120 !important;
+    border-color: #1e293b !important;
 }
 </style>
 @endsection

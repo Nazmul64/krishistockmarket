@@ -1,6 +1,9 @@
 @extends('layouts.frontend.app')
 
 @section('content')
+@php
+    $isBn = $isBn ?? (request()->cookie('ekrishi_lang', 'en') === 'bn');
+@endphp
 <!-- Floating Animated Toast Notification for Booking / Inquiries -->
 <div id="propertyToastNotification" class="property-toast-wrap" style="display: none;">
     <div class="property-toast-box">
@@ -8,8 +11,8 @@
             <i class="fa fa-check-circle toast-check-icon"></i>
         </div>
         <div class="toast-content-wrap">
-            <div class="toast-title">🎉 আবেদন সফলভাবে গৃহীত হয়েছে!</div>
-            <div class="toast-message" id="toastMessageText">আমাদের কাস্টমার রিপ্রেজেন্টেটিভ খুব শীঘ্রই যোগাযোগ করবেন।</div>
+            <div class="toast-title">🎉 {{ $isBn ? 'আবেদন সফলভাবে গৃহীত হয়েছে!' : 'Application Successfully Received!' }}</div>
+            <div class="toast-message" id="toastMessageText">{{ $isBn ? 'আমাদের কাস্টমার রিপ্রেজেন্টেটিভ খুব শীঘ্রই যোগাযোগ করবেন।' : 'Our representative will get in touch with you shortly.' }}</div>
             <div class="toast-tracking-badge" id="toastTrackingCode"></div>
         </div>
         <button type="button" class="toast-close-btn" onclick="hidePropertyToast()">
@@ -21,24 +24,24 @@
     </div>
 </div>
 
-<div class="py-4 bg-light border-bottom">
+<div class="property-breadcrumb-bar py-3 bg-light border-bottom">
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('/') }}" class="text-decoration-none">হোম</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('properties.index') }}" class="text-decoration-none">জমি ও প্রপার্টি</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('/') }}" class="text-decoration-none">{{ $isBn ? 'হোম' : 'Home' }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('properties.index') }}" class="text-decoration-none">{{ $isBn ? 'জমি ও প্রপার্টি' : 'Land & Properties' }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ $property->property_name }}</li>
             </ol>
         </nav>
     </div>
 </div>
 
-<div class="py-5" style="background-color: #f8fafc;">
+<div class="property-detail-main-wrap py-5" style="background-color: #f8fafc;">
     <div class="container">
         <div class="row g-4">
             <!-- Left Column: Media & Specifications -->
             <div class="col-lg-8">
-                <div class="bg-white rounded-4 p-4 shadow-sm mb-4">
+                <div class="property-show-card bg-white rounded-4 p-4 shadow-sm mb-4">
                     <!-- Featured Image -->
                     <div class="rounded-4 overflow-hidden position-relative mb-4" style="max-height: 460px;">
                         <img src="{{ $property->featured_image ?: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop&q=60' }}" 
@@ -49,70 +52,70 @@
                             {{ $property->property_type_name }}
                         </span>
                         <span class="position-absolute top-0 end-0 m-3 badge bg-success px-3 py-2 fs-6">
-                            {{ ucfirst($property->status) }}
+                            {{ $isBn ? ($property->status === 'available' ? 'বিক্রয়যোগ্য' : ucfirst($property->status)) : ucfirst($property->status) }}
                         </span>
                     </div>
 
                     <!-- Title & Code -->
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
                         <span class="badge bg-light text-muted border font-monospace">{{ $property->property_code }}</span>
-                        <span class="text-muted small"><i class="fa fa-calendar me-1"></i> তালিকাভুক্ত: {{ $property->created_at->format('d M, Y') }}</span>
+                        <span class="text-muted small"><i class="fa fa-calendar me-1"></i> {{ $isBn ? 'তালিকাভুক্ত: ' : 'Listed: ' }}{{ $property->created_at->format('d M, Y') }}</span>
                     </div>
-                    <h2 class="fw-bold text-dark mb-3">{{ $property->property_name }}</h2>
+                    <h2 class="fw-bold property-show-title mb-3">{{ $property->property_name }}</h2>
                     <p class="text-muted fs-6 mb-4">
                         <i class="fa fa-map-marker text-danger me-2"></i>
-                        {{ $property->mouza ? 'মৌজা: ' . $property->mouza . ', ' : '' }}
+                        {{ $property->mouza ? ($isBn ? 'মৌজা: ' : 'Mouza: ') . $property->mouza . ', ' : '' }}
                         {{ $property->upazila ? $property->upazila . ', ' : '' }}
                         {{ $property->district }}, {{ $property->division }}
                     </p>
 
                     <!-- Key Land / Property Records Grid -->
-                    <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
-                        <i class="fa fa-file-text-o text-success me-2"></i> জমি ও দলিলের আইনি রেকর্ডসমূহ
+                    <h5 class="fw-bold property-section-heading mb-3 border-bottom pb-2">
+                        <i class="fa fa-file-text-o text-success me-2"></i> {{ $isBn ? 'জমি ও দলিলের আইনি রেকর্ডসমূহ' : 'Legal & Land Records' }}
                     </h5>
                     <div class="row g-3 mb-4">
                         <div class="col-md-3 col-6">
                             <div class="property-spec-box">
                                 <i class="fa fa-expand text-success spec-icon"></i>
-                                <span class="spec-label">মোট আয়তন</span>
+                                <span class="spec-label">{{ $isBn ? 'মোট আয়তন' : 'Total Area' }}</span>
                                 <span class="spec-value">{{ number_format($property->total_area, 2) }} {{ $property->measurement_unit }}</span>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="property-spec-box">
                                 <i class="fa fa-map-o text-primary spec-icon"></i>
-                                <span class="spec-label">দাগ নম্বর</span>
-                                <span class="spec-value">{{ $property->dag_number ?: 'যাচাইকৃত' }}</span>
+                                <span class="spec-label">{{ $isBn ? 'দাগ নম্বর' : 'Dag No' }}</span>
+                                <span class="spec-value">{{ $property->dag_number ?: ($isBn ? 'যাচাইকৃত' : 'Verified') }}</span>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="property-spec-box">
                                 <i class="fa fa-file-text-o text-warning spec-icon"></i>
-                                <span class="spec-label">খতিয়ান নম্বর</span>
-                                <span class="spec-value">{{ $property->khatian_number ?: 'নামজারি রেডি' }}</span>
+                                <span class="spec-label">{{ $isBn ? 'খতিয়ান নম্বর' : 'Khatian No' }}</span>
+                                <span class="spec-value">{{ $property->khatian_number ?: ($isBn ? 'নামজারি রেডি' : 'Mutation Ready') }}</span>
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="property-spec-box">
                                 <i class="fa fa-map-marker text-danger spec-icon"></i>
-                                <span class="spec-label">জেএল / মৌজা</span>
-                                <span class="spec-value">{{ $property->jl_number ?: ($property->mouza ?: 'অনুমোদিত') }}</span>
+                                <span class="spec-label">{{ $isBn ? 'জেএল / মৌজা' : 'JL / Mouza' }}</span>
+                                <span class="spec-value">{{ $property->jl_number ?: ($property->mouza ?: ($isBn ? 'অনুমোদিত' : 'Approved')) }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Description -->
-                    <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
-                        <i class="fa fa-align-left text-success me-2"></i> বিস্তারিত বিবরণ
+                    <h5 class="fw-bold property-section-heading mb-3 border-bottom pb-2">
+                        <i class="fa fa-align-left text-success me-2"></i> {{ $isBn ? 'বিস্তারিত বিবরণ' : 'Detailed Description' }}
                     </h5>
-                    <p class="text-slate-700 lead mb-4" style="line-height: 1.8; font-size: 1.05rem; color: #334155;">
-                        {{ $property->description ?: 'প্রপার্টিটি ১০০% ভেটিং ও লিগ্যাল ক্লিয়ারেন্স সম্পন্ন। বিদ্যুৎ, রাস্তা ও ইউটিলিটি সংযোগ বিদ্যমান। সাইট পরিদর্শনের জন্য বুকিং আবেদন করুন।' }}
+                    <p class="property-description-text lead mb-4" style="line-height: 1.8; font-size: 1.05rem;">
+                        {{ $property->description ?: ($isBn ? 'প্রপার্টিটি ১০০% ভেটিং ও লিগ্যাল ক্লিয়ারেন্স সম্পন্ন। বিদ্যুৎ, রাস্তা ও ইউটিলিটি সংযোগ বিদ্যমান। সাইট পরিদর্শনের জন্য বুকিং আবেদন করুন।' : 'This property has 100% legal verification and vetting completed. Electricity, wide road access, and utility connections are ready.') }}
                     </p>
 
                     <!-- Amenities & Features -->
                     @if($property->features)
-                        <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
-                            <i class="fa fa-check-square-o text-success me-2"></i> সুযোগ-সুবিধা ও বৈশিষ্ট্য
+                        <h5 class="fw-bold property-section-heading mb-3 border-bottom pb-2">
+                            <i class="fa fa-check-square-o text-success me-2"></i> {{ $isBn ? 'সুযোগ-সুবিধা ও বৈশিষ্ট্য' : 'Amenities & Features' }}
                         </h5>
                         <div class="d-flex flex-wrap gap-2 mb-4">
                             @foreach(explode(',', $property->features) as $feature)
@@ -131,26 +134,26 @@
                 <div class="booking-application-card sticky-top" style="top: 90px;">
                     <!-- Pricing Header Banner -->
                     <div class="booking-card-header">
-                        <div class="small fw-bold text-uppercase mb-1" style="color: #a7f3d0; font-size: 12px; letter-spacing: 0.5px;">নির্ধারিত বিক্রয় মূল্য</div>
+                        <div class="small fw-bold text-uppercase mb-1" style="color: #a7f3d0; font-size: 12px; letter-spacing: 0.5px;">{{ $isBn ? 'নির্ধারিত বিক্রয় মূল্য' : 'Official Selling Price' }}</div>
                         <h2 class="booking-price-text mb-2">
                             ৳ {{ number_format($property->selling_price) }}
                         </h2>
                         @if($property->booking_amount > 0)
                             <span class="booking-badge-pill">
-                                <i class="fa fa-bookmark me-1 text-warning"></i> বুকিং মানি: ৳ {{ number_format($property->booking_amount) }}
+                                <i class="fa fa-bookmark me-1 text-warning"></i> {{ $isBn ? 'বুকিং মানি: ৳ ' : 'Booking Deposit: ৳ ' }}{{ number_format($property->booking_amount) }}
                             </span>
                         @endif
                     </div>
 
                     <!-- Direct Inquiry / Booking Form Body -->
-                    <div class="p-4 bg-white">
+                    <div class="p-4 booking-card-body bg-white">
                         <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
                             <div class="booking-icon-circle">
                                 <i class="fa fa-paper-plane text-success"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold text-dark mb-0">সরাসরি বুকিং বা সাইট ভিজিট</h6>
-                                <small class="text-muted">দ্রুত কনফার্মেশনের জন্য ফর্ম পূরণ করুন</small>
+                                <h6 class="fw-bold text-dark mb-0">{{ $isBn ? 'সরাসরি বুকিং বা সাইট ভিজিট' : 'Direct Booking or Site Visit' }}</h6>
+                                <small class="text-muted">{{ $isBn ? 'দ্রুত কনফার্মেশনের জন্য ফর্ম পূরণ করুন' : 'Fill form for instant confirmation' }}</small>
                             </div>
                         </div>
 
@@ -161,15 +164,15 @@
                             <!-- Name -->
                             <div class="form-group-modern mb-3">
                                 <label class="form-label-modern">
-                                    <i class="fa fa-user text-success me-1"></i> আপনার নাম <span class="text-danger">*</span>
+                                    <i class="fa fa-user text-success me-1"></i> {{ $isBn ? 'আপনার নাম' : 'Your Name' }} <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="customer_name" required class="form-control-modern" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="আপনার নাম লিখুন">
+                                <input type="text" name="customer_name" required class="form-control-modern" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="{{ $isBn ? 'আপনার নাম লিখুন' : 'Enter your name' }}">
                             </div>
 
                             <!-- Mobile -->
                             <div class="form-group-modern mb-3">
                                 <label class="form-label-modern">
-                                    <i class="fa fa-phone text-success me-1"></i> মোবাইল নম্বর <span class="text-danger">*</span>
+                                    <i class="fa fa-phone text-success me-1"></i> {{ $isBn ? 'মোবাইল নম্বর' : 'Mobile Number' }} <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" name="customer_phone" required class="form-control-modern" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="০১xxxxxxxxx">
                             </div>
@@ -177,13 +180,13 @@
                             <!-- Inquiry Type (Circled by user) -->
                             <div class="form-group-modern mb-3">
                                 <label class="form-label-modern">
-                                    <i class="fa fa-tags text-success me-1"></i> আবেদনের ধরন <span class="text-danger">*</span>
+                                    <i class="fa fa-tags text-success me-1"></i> {{ $isBn ? 'আবেদনের ধরন' : 'Inquiry Type' }} <span class="text-danger">*</span>
                                 </label>
                                 <div class="custom-select-wrap">
                                     <select name="inquiry_type" class="form-select-modern" required>
-                                        <option value="site_visit" selected>📍 সাইট পরিদর্শন (Site Visit)</option>
-                                        <option value="booking_request">📝 সরাসরি বুকিং আবেদন (Booking)</option>
-                                        <option value="price_inquiry">💬 মূল্য ও কিস্তি আলোচনা (Inquiry)</option>
+                                        <option value="site_visit" selected>📍 {{ $isBn ? 'সাইট পরিদর্শন (Site Visit)' : 'Site Visit' }}</option>
+                                        <option value="booking_request">📝 {{ $isBn ? 'সরাসরি বুকিং আবেদন (Booking)' : 'Direct Booking' }}</option>
+                                        <option value="price_inquiry">💬 {{ $isBn ? 'মূল্য ও কিস্তি আলোচনা (Inquiry)' : 'Pricing & EMI Inquiry' }}</option>
                                     </select>
                                     <i class="fa fa-chevron-down custom-select-arrow"></i>
                                 </div>
@@ -192,7 +195,7 @@
                             <!-- Preferred Date -->
                             <div class="form-group-modern mb-3">
                                 <label class="form-label-modern">
-                                    <i class="fa fa-calendar text-success me-1"></i> পরিদর্শনের পছন্দের তারিখ
+                                    <i class="fa fa-calendar text-success me-1"></i> {{ $isBn ? 'পরিদর্শনের পছন্দের তারিখ' : 'Preferred Visit Date' }}
                                 </label>
                                 <input type="date" name="preferred_date" class="form-control-modern" min="{{ date('Y-m-d') }}">
                             </div>
@@ -200,24 +203,36 @@
                             <!-- Note/Message -->
                             <div class="form-group-modern mb-3">
                                 <label class="form-label-modern">
-                                    <i class="fa fa-commenting-o text-success me-1"></i> নোট / বার্তা
+                                    <i class="fa fa-commenting-o text-success me-1"></i> {{ $isBn ? 'নোট / বার্তা' : 'Notes / Message' }}
                                 </label>
-                                <textarea name="message" rows="2" class="form-control-modern" placeholder="আপনার কোনো নির্দিষ্ট জিজ্ঞাসা থাকলে লিখুন..."></textarea>
+                                <textarea name="message" rows="2" class="form-control-modern" placeholder="{{ $isBn ? 'আপনার কোনো নির্দিষ্ট জিজ্ঞাসা থাকলে লিখুন...' : 'Write your questions or notes...' }}"></textarea>
                             </div>
 
                             <!-- Submit Button -->
                             <button type="submit" class="btn-submit-booking w-100 py-3 fw-bold">
-                                <i class="fa fa-send me-1"></i> আবেদন সাবমিট করুন
+                                <i class="fa fa-send me-1"></i> {{ $isBn ? 'আবেদন সাবমিট করুন' : 'Submit Application' }}
                             </button>
                         </form>
 
                         <div class="booking-security-note mt-3 text-center">
-                            <i class="fa fa-shield text-success me-1"></i> আপনার তথ্য সম্পূর্ণ সুরক্ষিত ও গোপনীয় রাখা হবে।
+                            <i class="fa fa-shield text-success me-1"></i> {{ $isBn ? 'আপনার তথ্য সম্পূর্ণ সুরক্ষিত ও গোপনীয় রাখা হবে।' : 'Your data is 100% confidential and protected.' }}
                         </div>
 
                         <!-- Direct Contact Options -->
                         <div class="d-flex gap-2 mt-3 pt-3 border-top">
-                            <a href="tel:01700000000" class="btn-contact-action flex-fill text-dark">
+                            <a href="tel:01700000000" class="btn-contact-action flex-fill">
+                                <i class="fa fa-phone text-success me-1"></i> {{ $isBn ? 'সরাসরি কল' : 'Call Now' }}
+                            </a>
+                            <a href="https://wa.me/8801700000000" target="_blank" class="btn-contact-action flex-fill text-success">
+                                <i class="fa fa-whatsapp me-1"></i> {{ $isBn ? 'হোয়াটসঅ্যাপ' : 'WhatsApp' }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                                 <i class="fa fa-phone text-success me-1"></i> সরাসরি কল
                             </a>
                             <a href="https://wa.me/8801700000000" target="_blank" class="btn-contact-action flex-fill text-success">
@@ -637,6 +652,98 @@ document.addEventListener('DOMContentLoaded', function() {
         transform: translateX(110%);
         opacity: 0;
     }
+}
+
+/* ==========================================================================
+   DARK MODE FOR PROPERTY SHOW PAGE
+   ========================================================================== */
+body.dark-theme .property-breadcrumb-bar,
+html[data-theme="dark"] .property-breadcrumb-bar {
+    background: #0f172a !important;
+    border-color: #1e293b !important;
+}
+body.dark-theme .property-breadcrumb-bar .breadcrumb-item,
+body.dark-theme .property-breadcrumb-bar a,
+html[data-theme="dark"] .property-breadcrumb-bar .breadcrumb-item,
+html[data-theme="dark"] .property-breadcrumb-bar a {
+    color: #cbd5e1 !important;
+}
+body.dark-theme .property-detail-main-wrap,
+html[data-theme="dark"] .property-detail-main-wrap {
+    background: #0b1120 !important;
+}
+body.dark-theme .property-show-card,
+html[data-theme="dark"] .property-show-card {
+    background: #0f172a !important;
+    border: 1px solid #1e293b !important;
+}
+body.dark-theme .property-show-title,
+html[data-theme="dark"] .property-show-title {
+    color: #f8fafc !important;
+}
+body.dark-theme .property-section-heading,
+html[data-theme="dark"] .property-section-heading {
+    color: #f8fafc !important;
+    border-color: #1e293b !important;
+}
+body.dark-theme .property-spec-box,
+html[data-theme="dark"] .property-spec-box {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+body.dark-theme .spec-label,
+html[data-theme="dark"] .spec-label {
+    color: #94a3b8 !important;
+}
+body.dark-theme .spec-value,
+html[data-theme="dark"] .spec-value {
+    color: #f8fafc !important;
+}
+body.dark-theme .property-description-text,
+html[data-theme="dark"] .property-description-text {
+    color: #cbd5e1 !important;
+}
+body.dark-theme .booking-application-card,
+html[data-theme="dark"] .booking-application-card {
+    background: #0f172a !important;
+    border-color: #1e293b !important;
+}
+body.dark-theme .booking-card-body,
+html[data-theme="dark"] .booking-card-body {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .booking-card-body h6,
+html[data-theme="dark"] .booking-card-body h6 {
+    color: #f8fafc !important;
+}
+body.dark-theme .form-control-modern,
+body.dark-theme .form-select-modern,
+html[data-theme="dark"] .form-control-modern,
+html[data-theme="dark"] .form-select-modern {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .form-select-modern option,
+html[data-theme="dark"] .form-select-modern option {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+body.dark-theme .form-label-modern,
+html[data-theme="dark"] .form-label-modern {
+    color: #cbd5e1 !important;
+}
+body.dark-theme .btn-contact-action,
+html[data-theme="dark"] .btn-contact-action {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+body.dark-theme .btn-contact-action:hover,
+html[data-theme="dark"] .btn-contact-action:hover {
+    background: #334155 !important;
+    color: #ffffff !important;
 }
 </style>
 @endsection

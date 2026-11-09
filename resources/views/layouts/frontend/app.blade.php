@@ -341,6 +341,72 @@
             50% { left: 40%; }
             100% { left: 100%; }
         }
+
+        /* ==========================================================================
+           GLOBAL DARK MODE THEME SYSTEM
+           ========================================================================== */
+        html[data-theme="dark"], body.dark-theme {
+            background-color: #0b1120 !important;
+            color: #f1f5f9 !important;
+        }
+        body.dark-theme .header-sub-nav-bar,
+        html[data-theme="dark"] .header-sub-nav-bar {
+            background: #0f172a !important;
+            border-color: #1e293b !important;
+        }
+        body.dark-theme .sub-nav-link-item,
+        html[data-theme="dark"] .sub-nav-link-item {
+            color: #cbd5e1 !important;
+        }
+        body.dark-theme .sub-nav-link-item:hover,
+        body.dark-theme .sub-nav-link-item.active,
+        html[data-theme="dark"] .sub-nav-link-item:hover,
+        html[data-theme="dark"] .sub-nav-link-item.active {
+            color: #f59e0b !important;
+        }
+        body.dark-theme .header-theme-toggle-btn,
+        html[data-theme="dark"] .header-theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.25) !important;
+            color: #fbbf24 !important;
+            border-color: rgba(251, 191, 36, 0.6) !important;
+        }
+        body.dark-theme .mobile-nav-drawer,
+        html[data-theme="dark"] .mobile-nav-drawer {
+            background: #0f172a !important;
+            color: #f1f5f9 !important;
+        }
+        body.dark-theme .mobile-nav-link,
+        html[data-theme="dark"] .mobile-nav-link {
+            color: #cbd5e1 !important;
+            border-color: #1e293b !important;
+        }
+        body.dark-theme .site-main,
+        html[data-theme="dark"] .site-main {
+            background: #0b1120 !important;
+        }
+        body.dark-theme .bg-white,
+        html[data-theme="dark"] .bg-white {
+            background-color: #0f172a !important;
+            color: #f1f5f9 !important;
+        }
+        body.dark-theme .bg-light,
+        html[data-theme="dark"] .bg-light {
+            background-color: #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+        body.dark-theme .text-dark,
+        html[data-theme="dark"] .text-dark {
+            color: #f8fafc !important;
+        }
+        body.dark-theme .border,
+        html[data-theme="dark"] .border {
+            border-color: #1e293b !important;
+        }
+        body.dark-theme .footer-main-container,
+        html[data-theme="dark"] .footer-main-container {
+            background: #050b14 !important;
+            border-top: 1px solid #1e293b !important;
+        }
     </style>
 </head>
 

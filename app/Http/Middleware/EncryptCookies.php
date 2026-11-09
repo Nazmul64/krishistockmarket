@@ -12,6 +12,7 @@ class EncryptCookies extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'ekrishi_theme',
+        'ekrishi_lang',
     ];
 }
