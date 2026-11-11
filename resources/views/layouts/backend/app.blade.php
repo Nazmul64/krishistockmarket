@@ -801,6 +801,7 @@
                                     <li><a href="{{ route('admin.hrm.payroll.index') }}"><i class="ti-money text-success"></i> <span>পে-রোল & বেতন</span></a></li>
                                     <li><a href="{{ route('admin.hrm.loans.index') }}"><i class="ti-hand-point-right text-warning"></i> <span>লোন & এডভান্স</span></a></li>
                                     <li><a href="{{ route('admin.hrm.recruitment.index') }}"><i class="ti-briefcase text-info"></i> <span>নিয়োগ ও রিক্রুটমেন্ট</span></a></li>
+                                    <li class="{{ Str::contains(optional(Request::route())->getName(), 'admin.career') ? 'active' : '' }}"><a href="{{ route('admin.career.index') }}"><i class="ti-id-badge text-success"></i> <span>ক্যারিয়ার আবেদনসমূহ</span></a></li>
                                     <li><a href="{{ route('admin.hrm.performance.index') }}"><i class="ti-star text-warning"></i> <span>পারফরম্যান্স রিভিউ</span></a></li>
                                     <li><a href="{{ route('admin.hrm.assets.index') }}"><i class="ti-desktop text-secondary"></i> <span>কোম্পানি অ্যাসেট</span></a></li>
                                     <li><a href="{{ route('admin.hrm.announcements.index') }}"><i class="ti-announcement text-danger"></i> <span>ঘোষণা & নোটিশ</span></a></li>

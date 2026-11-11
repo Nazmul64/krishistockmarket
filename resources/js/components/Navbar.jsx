@@ -79,13 +79,16 @@ export default function Navbar({
         { 
             label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 
             url: routes.properties || '/properties', 
-            active: currentPath.includes('/properties'),
-            badge: 'New',
-            highlight: true
+            active: currentPath.includes('/properties')
         },
         { label: t.packages_nav || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
         { label: t.cards_nav || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
         { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
+        { 
+            label: t.career || (lang === 'bn' ? 'ক্যারিয়ার' : 'Career'), 
+            url: routes.career || '/career', 
+            active: currentPath.includes('/career')
+        },
         { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
         { label: t.terms || 'Terms & Conditions', url: routes.terms || '/terms', active: currentPath.includes('/terms') },
         { label: t.privacy || 'Privacy Policy', url: routes.privacy || '/privacy-policy', active: currentPath.includes('/privacy') },

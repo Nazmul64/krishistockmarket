@@ -71,6 +71,8 @@ Route::get('/about', function () {return view('frontend.about-us');})->name('abo
 Route::get('/gallery', function () {return view('frontend.gallery');})->name('gallery');
 Route::get('/contact', function () {return view('frontend.contact');})->name('contact');
 Route::post('/contact/send', [ContactController::class, 'store'])->name('contact.send');
+Route::get('/career', [\App\Http\Controllers\CareerController::class, 'index'])->name('career');
+Route::post('/career/apply', [\App\Http\Controllers\CareerController::class, 'apply'])->name('career.apply');
 Route::get('/terms', function () {return view('frontend.terms');})->name('terms');
 Route::get('/privacy-policy', function () { return view('frontend.privacy');})->name('privacy');
 
@@ -478,6 +480,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
         // Reports
         Route::get('/reports', [HrmReportController::class, 'index'])->name('admin.hrm.reports.index');
     });
+
+    // Admin Career Applications Management
+    Route::get('/career-applications', [\App\Http\Controllers\Admin\AdminCareerApplicationController::class, 'index'])->name('admin.career.index');
+    Route::get('/career-applications/{id}', [\App\Http\Controllers\Admin\AdminCareerApplicationController::class, 'show'])->name('admin.career.show');
+    Route::post('/career-applications/status/{id}', [\App\Http\Controllers\Admin\AdminCareerApplicationController::class, 'updateStatus'])->name('admin.career.status');
+    Route::delete('/career-applications/destroy/{id}', [\App\Http\Controllers\Admin\AdminCareerApplicationController::class, 'destroy'])->name('admin.career.destroy');
 
 });
 

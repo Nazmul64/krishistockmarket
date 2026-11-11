@@ -187,6 +187,7 @@ class FrontendController extends Controller
             'contact_send' => route('contact.send'),
             'terms' => route('terms'),
             'privacy' => route('privacy'),
+            'career' => route('career'),
             'live_search' => route('api.live_search'),
             'csrf_token' => csrf_token(),
         ];
@@ -306,6 +307,7 @@ class FrontendController extends Controller
             ['title_en' => 'Membership Cards', 'title_bn' => 'মেম্বারশিপ কার্ড', 'keywords' => 'card sme gold golden membership মেম্বারশিপ কার্ড এসএমই গোল্ড', 'url' => route('/') . '#card-benefits'],
             ['title_en' => 'Produce Gallery', 'title_bn' => 'প্রোডাক্ট গ্যালারি', 'keywords' => 'gallery photo images ছবি গ্যালারি প্রোডাক্ট', 'url' => route('gallery')],
             ['title_en' => 'Contact Us', 'title_bn' => 'যোগাযোগ', 'keywords' => 'contact support helpline ফোন ইমেইল যোগাযোগ হেল্পলাইন', 'url' => route('contact')],
+            ['title_en' => 'Career', 'title_bn' => 'ক্যারিয়ার', 'keywords' => 'career job path resume cv চাকরি ক্যারিয়ার সার্কুলার নিয়োগ জব আবেদন', 'url' => route('career')],
             ['title_en' => 'Terms & Conditions', 'title_bn' => 'টার্মস এন্ড কন্ডিশন', 'keywords' => 'terms conditions rules নিয়মাবলী শর্তাবলী টার্মস', 'url' => route('terms')],
             ['title_en' => 'Privacy Policy', 'title_bn' => 'প্রাইভেসি পলিসি', 'keywords' => 'privacy policy security গোপনীয়তা প্রাইভেসি পলিসি', 'url' => route('privacy')],
             ['title_en' => 'Login', 'title_bn' => 'লগইন', 'keywords' => 'login signin প্রবেশ লগইন একাউন্ট', 'url' => route('login')],
