@@ -88,6 +88,20 @@ Route::get('/track-order', [\App\Http\Controllers\EcommerceShopController::class
 Route::post('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrderPost'])->name('shop.track_order.post');
 Route::get('/order-track', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder']);
 
+// Corporate Profile, Governance, Projects & Public Services
+Route::get('/board-of-directors', [\App\Http\Controllers\CorporateProfileController::class, 'boardOfDirectors'])->name('corporate.board');
+Route::get('/employee-directory', [\App\Http\Controllers\CorporateProfileController::class, 'employeeDirectory'])->name('corporate.employees');
+Route::get('/corporate-profile', [\App\Http\Controllers\CorporateProfileController::class, 'corporateProfile'])->name('corporate.profile');
+Route::get('/leadership-messages', [\App\Http\Controllers\CorporateProfileController::class, 'leadershipMessages'])->name('corporate.leadership_messages');
+Route::get('/activities-and-projects', [\App\Http\Controllers\CorporateProfileController::class, 'activitiesAndProjects'])->name('corporate.activities');
+Route::get('/investment-sectors', [\App\Http\Controllers\CorporateProfileController::class, 'investmentSectors'])->name('corporate.sectors');
+Route::get('/investment/sectors', [\App\Http\Controllers\CorporateProfileController::class, 'investmentSectors'])->name('investment.sectors');
+Route::get('/project-details/{id}', [\App\Http\Controllers\CorporateProfileController::class, 'projectDetails'])->name('corporate.project.details');
+Route::get('/investment/project/{id}', [\App\Http\Controllers\CorporateProfileController::class, 'projectDetails'])->name('investment.project.show');
+Route::post('/project-details/{id}/invest', [\App\Http\Controllers\CorporateProfileController::class, 'investInProject'])->name('corporate.project.invest');
+Route::post('/investment/project/{id}/invest', [\App\Http\Controllers\CorporateProfileController::class, 'investInProject'])->name('investment.project.invest');
+Route::get('/application-guidelines', [\App\Http\Controllers\CorporateProfileController::class, 'applicationGuidelines'])->name('corporate.guidelines');
+Route::get('/notices', [\App\Http\Controllers\CorporateProfileController::class, 'noticeBoard'])->name('corporate.notices');
 Route::get('/notices/{id}', [\App\Http\Controllers\CorporateProfileController::class, 'noticeDetail'])->name('corporate.notice.show');
 Route::get('/online-services', [\App\Http\Controllers\CorporateProfileController::class, 'onlineServices'])->name('corporate.online_services');
 Route::get('/investment-policy', [\App\Http\Controllers\CorporateProfileController::class, 'investmentPolicy'])->name('corporate.investment_policy');
