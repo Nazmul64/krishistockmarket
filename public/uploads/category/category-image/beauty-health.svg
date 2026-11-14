@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Lotion Dispenser -->
+  <rect x="20" y="40" width="30" height="45" rx="6" fill="#38bdf8" stroke="#1e293b" stroke-width="2.5"/>
+  <rect x="25" y="52" width="20" height="22" rx="3" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+  <path d="M35 59 L35 67 M31 63 L39 63" stroke="#f43f5e" stroke-width="2"/>
+  <!-- Pump head -->
+  <rect x="31" y="34" width="8" height="6" fill="#1e293b"/>
+  <path d="M35 34 L35 25 L45 25 L45 28" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <rect x="28" y="22" width="16" height="5" rx="2" fill="#f59e0b" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Cream Jar -->
+  <rect x="52" y="58" width="32" height="27" rx="4" fill="#fbcfe8" stroke="#1e293b" stroke-width="2.5"/>
+  <rect x="50" y="52" width="36" height="8" rx="3" fill="#f43f5e" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Lipstick -->
+  <g transform="translate(68, 30)">
+    <rect x="0" y="16" width="10" height="16" rx="1" fill="#1e293b"/>
+    <path d="M1 16 L1 6 L9 10 L9 16 Z" fill="#ef4444" stroke="#1e293b" stroke-width="1.5"/>
+  </g>
+</svg>

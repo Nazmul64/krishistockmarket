@@ -75,6 +75,13 @@ export default function Navbar({
     const navLinks = [
         { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
         { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
+        { 
+            label: lang === 'bn' ? 'আমাদের পণ্য' : 'Our Products', 
+            url: routes.our_products || '/our-products', 
+            active: currentPath.includes('/our-products') || currentPath.includes('/shop'),
+            badge: 'Shop',
+            highlight: true
+        },
         { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
         { 
             label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 

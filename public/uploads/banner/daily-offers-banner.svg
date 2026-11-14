@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="1200" height="240">
+  <defs>
+    <linearGradient id="do_bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fff1f2"/>
+      <stop offset="50%" stop-color="#ffe4e6"/>
+      <stop offset="100%" stop-color="#ccfbf1"/>
+    </linearGradient>
+    <filter id="shadowDo" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="240" rx="14" fill="url(#do_bg)"/>
+
+  <!-- Left: Deal Flame & Timer Graphic -->
+  <g transform="translate(50, 30)">
+    <circle cx="70" cy="70" r="55" fill="#f43f5e" filter="url(#shadowDo)"/>
+    <text x="70" y="80" font-size="44" text-anchor="middle">⚡</text>
+    <g transform="translate(150, 10)">
+      <rect x="0" y="0" width="140" height="28" rx="14" fill="#e11d48"/>
+      <text x="70" y="19" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">LIMITED TIME DEALS</text>
+      <text x="0" y="65" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="36" font-weight="900" fill="#0f172a">ডেইলি ফ্ল্যাশ ডিল ও স্পেশাল অফার</text>
+      <text x="0" y="98" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="16" font-weight="600" fill="#475569">প্রতিদিনের সেরা ছাড়ে কেনাকাটা করুন — অফার শেষ হওয়ার আগেই দ্রুত অর্ডার করুন!</text>
+    </g>
+  </g>
+
+  <!-- Right: Offer Discount Callout -->
+  <g transform="translate(870, 40)" filter="url(#shadowDo)">
+    <rect width="280" height="140" rx="14" fill="#ffffff" stroke="#f43f5e" stroke-width="2"/>
+    <text x="140" y="45" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="900" fill="#e11d48" text-anchor="middle">UP TO 50% OFF</text>
+    <text x="140" y="75" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="14" font-weight="700" fill="#334155" text-anchor="middle">নির্বাচিত নিত্যপ্রয়োজনীয় পণ্যে</text>
+    <rect x="30" y="90" width="220" height="34" rx="17" fill="#007e8a"/>
+    <text x="140" y="112" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="13" font-weight="800" fill="#ffffff" text-anchor="middle">⏰ স্টক থাকা পর্যন্ত চলবে</text>
+  </g>
+</svg>

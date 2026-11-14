@@ -318,15 +318,22 @@
                     <div class="col-lg-5 col-md-6 d-flex justify-content-md-end justify-content-center">
                         <div class="ekrishi-digital-card">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-success bg-opacity-25 text-success px-2 py-1 rounded small fw-bold" style="border: 1px solid rgba(16,185,129,0.3);">
-                                    <i class="fa fa-leaf me-1"></i> e-Krishi Member
+                                <span class="badge bg-warning text-dark px-2 py-1 rounded small fw-bold text-uppercase">
+                                    <i class="fa fa-id-card me-1"></i> {{ Auth::user()->membership_card_type ?: 'SME' }} Member
                                 </span>
-                                <i class="fa fa-wifi text-warning opacity-75" style="transform: rotate(90deg); font-size: 14px;"></i>
+                                <a href="{{ route('user.corporate.card') }}" class="badge bg-light text-dark text-decoration-none px-2 py-1 rounded-pill small fw-bold shadow-sm">
+                                    <i class="fa fa-eye me-1 text-primary"></i> 3D কার্ড দেখুন
+                                </a>
                             </div>
 
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <div class="ekrishi-card-chip"></div>
-                                <span class="text-white-50" style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Smart Agro Card</span>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="ekrishi-card-chip"></div>
+                                    <span class="text-white-50" style="font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Smart Agro Card</span>
+                                </div>
+                                @if(Auth::user()->customer_id)
+                                    <span class="badge bg-white bg-opacity-10 text-warning font-monospace" style="font-size: 11px;">ID: {{ Auth::user()->customer_id }}</span>
+                                @endif
                             </div>
 
                             <div class="ekrishi-card-number">
@@ -453,6 +460,431 @@
                         <div class="action-title">আমার অর্ডারসমূহ</div>
                         <div class="action-subtitle">মাসিক বাজার ডেলিভারি</div>
                     </a>
+                </div>
+            </div>
+
+            <!-- Customer Corporate, Membership & Investment Portal Section -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white" style="border: 1px solid #e2e8f0;">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                            <span class="badge bg-primary bg-opacity-10 text-primary p-2 rounded-3"><i class="fa fa-briefcase"></i></span>
+                            <span>মেম্বারশিপ, শেয়ার ও প্রাতিষ্ঠানিক সেবা পোর্টাল (Customer Services Hub)</span>
+                        </h5>
+                        <small class="text-muted">ডিজিটাল মেম্বারশিপ কার্ড, প্রকল্প মূলধন বিনিয়োগ, শেয়ারহোল্ডার সেবা, প্রাতিষ্ঠানিক তথ্য ও হেল্পডেস্ক</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+                        <a href="{{ route('apply.card') }}" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold">
+                            <i class="fa fa-plus-circle me-1"></i> কার্ড আবেদন
+                        </a>
+                        <a href="{{ route('user.corporate.card') }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold">
+                            <i class="fa fa-credit-card me-1"></i> ৩D কার্ড ভিউ
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs / Category Pills for Clear Organization -->
+                <ul class="nav nav-pills mb-3 gap-2" id="customerPortalTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-pill px-3 py-1 font-size-12 fw-bold" id="tab-all-btn" data-bs-toggle="pill" data-bs-target="#tab-all" type="button" role="tab">
+                            <i class="fa fa-th-large me-1"></i> সকল সেবা (All Services)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-3 py-1 font-size-12 fw-bold" id="tab-membership-btn" data-bs-toggle="pill" data-bs-target="#tab-membership" type="button" role="tab">
+                            <i class="fa fa-id-card me-1"></i> মেম্বারশিপ ও কার্ড
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-3 py-1 font-size-12 fw-bold" id="tab-invest-btn" data-bs-toggle="pill" data-bs-target="#tab-invest" type="button" role="tab">
+                            <i class="fa fa-line-chart me-1"></i> বিনিয়োগ ও শেয়ার
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-3 py-1 font-size-12 fw-bold" id="tab-corp-btn" data-bs-toggle="pill" data-bs-target="#tab-corp" type="button" role="tab">
+                            <i class="fa fa-building me-1"></i> প্রাতিষ্ঠানিক কাঠামো
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-3 py-1 font-size-12 fw-bold" id="tab-support-btn" data-bs-toggle="pill" data-bs-target="#tab-support" type="button" role="tab">
+                            <i class="fa fa-headphones me-1"></i> অনলাইন ও মতামত
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="customerPortalTabsContent">
+                    <!-- Tab 1: All Services (Grid of all quick buttons) -->
+                    <div class="tab-pane fade show active" id="tab-all" role="tabpanel">
+                        <div class="row g-3">
+                            <!-- 1. 3D Digital Card -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('user.corporate.card') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eff6ff; color: #2563eb;">
+                                        <i class="fa fa-id-card"></i>
+                                    </div>
+                                    <div class="action-title">ডিজিটাল মেম্বারশিপ কার্ড</div>
+                                    <div class="action-subtitle">৩D ভার্চুয়াল কার্ড ও QR কোড</div>
+                                </a>
+                            </div>
+
+                            <!-- 2. Apply for Card -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('apply.card') }}" class="action-tile h-100 position-relative">
+                                    <span class="badge bg-success position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 10px;">Apply</span>
+                                    <div class="action-icon-wrap" style="background: #ecfdf5; color: #059669;">
+                                        <i class="fa fa-plus-circle"></i>
+                                    </div>
+                                    <div class="action-title">মেম্বারশিপ কার্ড আবেদন</div>
+                                    <div class="action-subtitle">নতুন কার্ডের আবেদন ফর্ম</div>
+                                </a>
+                            </div>
+
+                            <!-- 3. Verify Card -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('verify.card') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f0fdf4; color: #16a34a;">
+                                        <i class="fa fa-qrcode"></i>
+                                    </div>
+                                    <div class="action-title">ডিজিটাল কার্ড যাচাই</div>
+                                    <div class="action-subtitle">কার্ড নম্বর ভ্যালিডেশন</div>
+                                </a>
+                            </div>
+
+                            <!-- 4. 10 Investment Sectors -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('investment.sectors') }}" target="_blank" class="action-tile h-100 position-relative">
+                                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 10px;">১০টি খাত</span>
+                                    <div class="action-icon-wrap" style="background: #fff7ed; color: #ea580c;">
+                                        <i class="fa fa-cubes"></i>
+                                    </div>
+                                    <div class="action-title">১০টি বিনিয়োগ খাত</div>
+                                    <div class="action-subtitle">ড্রাগন, ডেইরি ও কৃষি প্রকল্প</div>
+                                </a>
+                            </div>
+
+                            <!-- 5. My Investments & Dividends -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('user.investments.my') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f5f3ff; color: #7c3aed;">
+                                        <i class="fa fa-line-chart"></i>
+                                    </div>
+                                    <div class="action-title">আমার বিনিয়োগ ও লভ্যাংশ</div>
+                                    <div class="action-subtitle">মূলধন ট্র্যাকিং ও ফান্ড উত্তোলন</div>
+                                </a>
+                            </div>
+
+                            <!-- 6. Shareholder Profile -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('user.corporate.shareholder') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #faf5ff; color: #9333ea;">
+                                        <i class="fa fa-certificate"></i>
+                                    </div>
+                                    <div class="action-title">শেয়ারহোল্ডার প্রোফাইল</div>
+                                    <div class="action-subtitle">১০০ শেয়ার হিসেব ও সার্টিফিকেট</div>
+                                </a>
+                            </div>
+
+                            <!-- 7. Partnership Profile -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('user.corporate.partnership') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #ecfeff; color: #0891b2;">
+                                        <i class="fa fa-handshake-o"></i>
+                                    </div>
+                                    <div class="action-title">পার্টনারশিপ প্রোফাইল</div>
+                                    <div class="action-subtitle">যৌথ ব্যবসায়িক অংশীদারিত্ব</div>
+                                </a>
+                            </div>
+
+                            <!-- 8. Board of Directors -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.board') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eff6ff; color: #1d4ed8;">
+                                        <i class="fa fa-users"></i>
+                                    </div>
+                                    <div class="action-title">পরিচালনা পর্ষদ</div>
+                                    <div class="action-subtitle">বোর্ড অফ ডিরেক্টরস তালিকা</div>
+                                </a>
+                            </div>
+
+                            <!-- 9. Employee Directory -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.employees') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f0fdf4; color: #15803d;">
+                                        <i class="fa fa-id-badge"></i>
+                                    </div>
+                                    <div class="action-title">কর্মকর্তা-কর্মচারী ডিরেক্টরি</div>
+                                    <div class="action-subtitle">অফিসিয়াল টিম ও যোগাযোগ</div>
+                                </a>
+                            </div>
+
+                            <!-- 10. Corporate Profile & Vision -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.profile') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fdf4ff; color: #c026d3;">
+                                        <i class="fa fa-building"></i>
+                                    </div>
+                                    <div class="action-title">প্রতিষ্ঠানের পরিচিতি ও ভিশন</div>
+                                    <div class="action-subtitle">লক্ষ্য, মিশন ও মূলনীতি</div>
+                                </a>
+                            </div>
+
+                            <!-- 11. Leadership Messages -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.leadership_messages') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fffbeb; color: #d97706;">
+                                        <i class="fa fa-quote-left"></i>
+                                    </div>
+                                    <div class="action-title">নেতৃবৃন্দের বাণী</div>
+                                    <div class="action-subtitle">চেয়ারম্যান ও এমডি'র বক্তব্য</div>
+                                </a>
+                            </div>
+
+                            <!-- 12. Activities & Projects -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.activities') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fef2f2; color: #b91c1c;">
+                                        <i class="fa fa-tasks"></i>
+                                    </div>
+                                    <div class="action-title">কার্যক্রম ও প্রকল্প বাস্তবায়ন</div>
+                                    <div class="action-subtitle">মাঠ পর্যায়ের অগ্রগতি</div>
+                                </a>
+                            </div>
+
+                            <!-- 13. Online Services -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.online_services') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eef2ff; color: #4338ca;">
+                                        <i class="fa fa-laptop"></i>
+                                    </div>
+                                    <div class="action-title">সকল অনলাইন সেবাসমূহ</div>
+                                    <div class="action-subtitle">এক ক্লিকে ডিজিটাল সার্ভিসেস</div>
+                                </a>
+                            </div>
+
+                            <!-- 14. Notice Board -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.notices') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fef2f2; color: #dc2626;">
+                                        <i class="fa fa-bullhorn"></i>
+                                    </div>
+                                    <div class="action-title">প্রাতিষ্ঠানিক নোটিশ বোর্ড</div>
+                                    <div class="action-subtitle">ঘোষণা ও সার্কুলার</div>
+                                </a>
+                            </div>
+
+                            <!-- 15. Grievance Redressal -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.grievance') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fdf2f8; color: #db2777;">
+                                        <i class="fa fa-comments"></i>
+                                    </div>
+                                    <div class="action-title">অভিযোগ ও মতামত প্রতিকার</div>
+                                    <div class="action-subtitle">অভিযোগ দাখিল ও ফিডব্যাক</div>
+                                </a>
+                            </div>
+
+                            <!-- 16. Grievance Tracking -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('grievance.track') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fefce8; color: #ca8a04;">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <div class="action-title">অভিযোগ সমাধান ট্র্যাকিং</div>
+                                    <div class="action-subtitle">টোকেন দিয়ে স্ট্যাটাস যাচাই</div>
+                                </a>
+                            </div>
+
+                            <!-- 17. Application Guidelines -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.guidelines') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f0fdf4; color: #15803d;">
+                                        <i class="fa fa-book"></i>
+                                    </div>
+                                    <div class="action-title">আবেদন ও ফি নির্দেশিকা</div>
+                                    <div class="action-subtitle">মেম্বারশিপ ও প্রসেস গাইড</div>
+                                </a>
+                            </div>
+
+                            <!-- 18. Investment Policy -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('corporate.policy') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f8fafc; color: #475569;">
+                                        <i class="fa fa-shield"></i>
+                                    </div>
+                                    <div class="action-title">বিনিয়োগ নীতিমালা ও শর্ত</div>
+                                    <div class="action-subtitle">শর্তাবলী ও মুনাফা বণ্টন আইন</div>
+                                </a>
+                            </div>
+
+                            <!-- 19. Community Forum -->
+                            <div class="col-6 col-md-4 col-xl-3">
+                                <a href="{{ route('user.corporate.community') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eff6ff; color: #3b82f6;">
+                                        <i class="fa fa-users"></i>
+                                    </div>
+                                    <div class="action-title">মেম্বার কমিউনিটি ফোরাম</div>
+                                    <div class="action-subtitle">সদস্যদের উন্মুক্ত আলোচনা</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Membership & Cards -->
+                    <div class="tab-pane fade" id="tab-membership" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('user.corporate.card') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eff6ff; color: #2563eb;"><i class="fa fa-id-card"></i></div>
+                                    <div class="action-title">ডিজিটাল মেম্বারশিপ কার্ড</div>
+                                    <div class="action-subtitle">৩D ভার্চুয়াল কার্ড ও QR কোড</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('apply.card') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #ecfdf5; color: #059669;"><i class="fa fa-plus-circle"></i></div>
+                                    <div class="action-title">মেম্বারশিপ কার্ড আবেদন</div>
+                                    <div class="action-subtitle">নতুন কার্ডের আবেদন ফর্ম</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('verify.card') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f0fdf4; color: #16a34a;"><i class="fa fa-qrcode"></i></div>
+                                    <div class="action-title">ডিজিটাল কার্ড যাচাই</div>
+                                    <div class="action-subtitle">কার্ড নম্বর ভ্যালিডেশন</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.guidelines') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fffbeb; color: #d97706;"><i class="fa fa-book"></i></div>
+                                    <div class="action-title">আবেদন ও ফি নির্দেশিকা</div>
+                                    <div class="action-subtitle">মেম্বারশিপ ও প্রসেস গাইড</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Investment & Shares -->
+                    <div class="tab-pane fade" id="tab-invest" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('investment.sectors') }}" target="_blank" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fff7ed; color: #ea580c;"><i class="fa fa-cubes"></i></div>
+                                    <div class="action-title">১০টি বিনিয়োগ খাত</div>
+                                    <div class="action-subtitle">ড্রাগন, ডেইরি ও কৃষি প্রকল্প</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('user.investments.my') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #ecfdf5; color: #059669;"><i class="fa fa-line-chart"></i></div>
+                                    <div class="action-title">আমার বিনিয়োগ ও লভ্যাংশ</div>
+                                    <div class="action-subtitle">মূলধন ট্র্যাকিং ও ফান্ড উত্তোলন</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('user.corporate.shareholder') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #faf5ff; color: #9333ea;"><i class="fa fa-certificate"></i></div>
+                                    <div class="action-title">শেয়ারহোল্ডার প্রোফাইল</div>
+                                    <div class="action-subtitle">১০০ শেয়ার হিসেব ও সনদ</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('user.corporate.partnership') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #ecfeff; color: #0891b2;"><i class="fa fa-handshake-o"></i></div>
+                                    <div class="action-title">পার্টনারশিপ প্রোফাইল</div>
+                                    <div class="action-subtitle">যৌথ ব্যবসায়িক অংশীদারিত্ব</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.policy') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f8fafc; color: #475569;"><i class="fa fa-shield"></i></div>
+                                    <div class="action-title">বিনিয়োগ নীতিমালা ও শর্ত</div>
+                                    <div class="action-subtitle">মুনাফা বণ্টন ও রিফান্ড নীতি</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Corporate Governance -->
+                    <div class="tab-pane fade" id="tab-corp" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.board') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eff6ff; color: #1d4ed8;"><i class="fa fa-users"></i></div>
+                                    <div class="action-title">পরিচালনা পর্ষদ</div>
+                                    <div class="action-subtitle">বোর্ড অফ ডিরেক্টরস তালিকা</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.employees') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #f0fdf4; color: #15803d;"><i class="fa fa-id-badge"></i></div>
+                                    <div class="action-title">কর্মকর্তা-কর্মচারী ডিরেক্টরি</div>
+                                    <div class="action-subtitle">অফিসিয়াল টিম ও যোগাযোগ</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.profile') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fdf4ff; color: #c026d3;"><i class="fa fa-building"></i></div>
+                                    <div class="action-title">প্রতিষ্ঠানের পরিচিতি ও ভিশন</div>
+                                    <div class="action-subtitle">লক্ষ্য, মিশন ও মূলনীতি</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.leadership_messages') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fffbeb; color: #d97706;"><i class="fa fa-quote-left"></i></div>
+                                    <div class="action-title">নেতৃবৃন্দের বাণী</div>
+                                    <div class="action-subtitle">চেয়ারম্যান ও এমডি'র বক্তব্য</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.activities') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fef2f2; color: #b91c1c;"><i class="fa fa-tasks"></i></div>
+                                    <div class="action-title">কার্যক্রম ও প্রকল্প বাস্তবায়ন</div>
+                                    <div class="action-subtitle">মাঠ পর্যায়ের অগ্রগতি</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 5: Services & Support -->
+                    <div class="tab-pane fade" id="tab-support" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.online_services') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eef2ff; color: #4338ca;"><i class="fa fa-laptop"></i></div>
+                                    <div class="action-title">সকল অনলাইন সেবাসমূহ</div>
+                                    <div class="action-subtitle">এক ক্লিকে ডিজিটাল সার্ভিসেস</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.notices') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fef2f2; color: #dc2626;"><i class="fa fa-bullhorn"></i></div>
+                                    <div class="action-title">প্রাতিষ্ঠানিক নোটিশ বোর্ড</div>
+                                    <div class="action-subtitle">ঘোষণা ও সার্কুলার</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('corporate.grievance') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fdf2f8; color: #db2777;"><i class="fa fa-comments"></i></div>
+                                    <div class="action-title">অভিযোগ ও মতামত প্রতিকার</div>
+                                    <div class="action-subtitle">অভিযোগ দাখিল ও ফিডব্যাক</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('grievance.track') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #fefce8; color: #ca8a04;"><i class="fa fa-search"></i></div>
+                                    <div class="action-title">অভিযোগ সমাধান ট্র্যাকিং</div>
+                                    <div class="action-subtitle">টোকেন দিয়ে স্ট্যাটাস যাচাই</div>
+                                </a>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a href="{{ route('user.corporate.community') }}" class="action-tile h-100">
+                                    <div class="action-icon-wrap" style="background: #eff6ff; color: #3b82f6;"><i class="fa fa-users"></i></div>
+                                    <div class="action-title">মেম্বার কমিউনিটি ফোরাম</div>
+                                    <div class="action-subtitle">সদস্যদের উন্মুক্ত আলোচনা</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

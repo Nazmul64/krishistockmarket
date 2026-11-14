@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('career_applications', function (Blueprint $table) {
-            $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone');
-            $table->string('email')->nullable();
-            $table->text('address');
-            $table->string('resume'); // Path to PDF file
-            $table->text('cover_letter')->nullable();
-            $table->string('position_applied')->default('General Career Application');
-            $table->string('status')->default('pending'); // pending, reviewed, shortlisted, rejected
-            $table->text('admin_notes')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('career_applications')) {
+            Schema::create('career_applications', function (Blueprint $table) {
+                $table->id();
+                $table->string('first_name');
+                $table->string('last_name');
+                $table->string('phone');
+                $table->string('email')->nullable();
+                $table->text('address');
+                $table->string('resume'); // Path to PDF file
+                $table->text('cover_letter')->nullable();
+                $table->string('position_applied')->default('General Career Application');
+                $table->string('status')->default('pending'); // pending, reviewed, shortlisted, rejected
+                $table->text('admin_notes')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

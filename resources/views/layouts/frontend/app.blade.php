@@ -202,144 +202,304 @@
                 display: block !important;
             }
         }
-        /* Premium ekrishisheba Animated Preloader */
+        /* ==========================================================================
+           Seamless Cinematic ekrishisheba Preloader (Card-Free / Organic Floating)
+           ========================================================================== */
+        #loader.ekrishi-preloader-wrap,
+        #site-preloader.ekrishi-preloader-wrap,
         .ekrishi-preloader-wrap {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: radial-gradient(circle at center, #ffffff 0%, #fffbf2 60%, #fef3c7 100%) !important;
-            z-index: 9999999 !important;
+            background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f8fafc 65%, #f1f5f9 100%) !important;
+            z-index: 99999999 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            overflow: hidden !important;
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s ease !important;
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s ease !important;
             pointer-events: all;
         }
+
+        #loader.ekrishi-preloader-wrap.loaded,
+        #site-preloader.ekrishi-preloader-wrap.loaded,
         .ekrishi-preloader-wrap.loaded {
             opacity: 0 !important;
             visibility: hidden !important;
             pointer-events: none !important;
         }
-        .ekrishi-preloader-inner {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            padding: 24px !important;
-            max-width: 380px !important;
-        }
-        .preloader-logo-ring-outer {
-            position: relative !important;
-            min-width: 150px !important;
-            max-width: 240px !important;
-            height: 110px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin-bottom: 22px !important;
-        }
-        .preloader-logo-ring-pulse {
-            position: absolute !important;
-            inset: -8px !important;
-            border-radius: 28px !important;
-            background: radial-gradient(circle, rgba(234, 88, 12, 0.25) 0%, rgba(245, 158, 11, 0.08) 60%, transparent 100%) !important;
-            animation: ekrishiPulse 2s ease-in-out infinite !important;
-        }
-        .preloader-logo-ring-spinner {
-            position: absolute !important;
-            inset: -4px !important;
-            border-radius: 26px !important;
-            border: 3px solid rgba(245, 158, 11, 0.18) !important;
-            border-top-color: #ea580c !important;
-            border-right-color: #f59e0b !important;
-            animation: ekrishiSpin 1.4s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite !important;
-        }
-        .preloader-logo-circle {
-            min-width: 140px !important;
-            max-width: 220px !important;
-            height: 84px !important;
-            border-radius: 22px !important;
-            background: #ffffff !important;
-            box-shadow: 0 12px 30px rgba(234, 88, 12, 0.22), 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            z-index: 2 !important;
-            padding: 10px 20px !important;
-            animation: ekrishiFloat 2.8s ease-in-out infinite !important;
-        }
-        .preloader-logo-img {
-            max-width: 180px !important;
-            max-height: 64px !important;
-            width: auto !important;
-            height: auto !important;
-            object-fit: contain !important;
-            background: transparent !important;
-        }
-        .preloader-brand-title {
-            font-family: 'Poppins', 'Hind Siliguri', sans-serif !important;
-            font-size: 26px !important;
-            font-weight: 800 !important;
-            letter-spacing: 0.02em !important;
-            margin: 0 0 4px 0 !important;
-            background: linear-gradient(135deg, #ea580c 0%, #d97706 60%, #b45309 100%) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-        }
-        .preloader-tagline {
-            font-family: 'Hind Siliguri', sans-serif !important;
-            font-size: 14px !important;
-            font-weight: 500 !important;
-            color: #64748b !important;
-            margin: 0 0 16px 0 !important;
-        }
-        .preloader-progress-bar {
-            width: 180px !important;
-            height: 5px !important;
-            background: rgba(234, 88, 12, 0.14) !important;
-            border-radius: 10px !important;
-            overflow: hidden !important;
-            position: relative !important;
-            margin-bottom: 10px !important;
-        }
-        .preloader-progress-fill {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            bottom: 0 !important;
-            width: 45% !important;
-            background: linear-gradient(90deg, #ea580c, #f59e0b, #ea580c) !important;
-            background-size: 200% 100% !important;
-            border-radius: 10px !important;
-            animation: ekrishiBar 1.4s ease-in-out infinite !important;
-        }
-        .preloader-loading-text {
-            font-family: 'Hind Siliguri', sans-serif !important;
-            font-size: 12.5px !important;
-            color: #94a3b8 !important;
+
+        #loader.ekrishi-preloader-wrap.loaded .ekrishi-preloader-stage,
+        #site-preloader.ekrishi-preloader-wrap.loaded .ekrishi-preloader-stage,
+        .ekrishi-preloader-wrap.loaded .ekrishi-preloader-stage {
+            transform: scale(0.96) translateY(-10px) !important;
+            opacity: 0 !important;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease !important;
         }
 
-        @keyframes ekrishiSpin {
+        .ekrishi-preloader-stage {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            animation: ekrishiStageEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes ekrishiStageEntrance {
+            0% {
+                opacity: 0;
+                transform: scale(0.92) translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .preloader-brand-core {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 130px;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+
+        .preloader-ambient-glow {
+            position: absolute;
+            width: 270px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.28) 0%, rgba(16, 185, 129, 0.12) 45%, transparent 75%);
+            filter: blur(28px);
+            animation: ekrishiCoreBreath 3.5s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes ekrishiCoreBreath {
+            0% { transform: scale(0.88); opacity: 0.6; }
+            100% { transform: scale(1.18); opacity: 1; }
+        }
+
+        .preloader-orbital-ring {
+            position: absolute;
+            width: 250px;
+            height: 105px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(245, 158, 11, 0.35);
+            animation: ekrishiOrbitRotate 12s linear infinite;
+            pointer-events: none;
+        }
+
+        .preloader-orbital-ring.ring-reverse {
+            width: 270px;
+            height: 115px;
+            border: 1px solid rgba(16, 185, 129, 0.28);
+            border-top-color: #10b981;
+            border-bottom-color: #f59e0b;
+            border-left-color: transparent;
+            border-right-color: transparent;
+            animation: ekrishiOrbitRotateReverse 8s linear infinite;
+        }
+
+        @keyframes ekrishiOrbitRotate {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        @keyframes ekrishiPulse {
-            0%, 100% { transform: scale(0.95); opacity: 0.5; }
-            50% { transform: scale(1.15); opacity: 1; }
+
+        @keyframes ekrishiOrbitRotateReverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
         }
-        @keyframes ekrishiFloat {
+
+        .preloader-logo-frame {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .preloader-brand-img {
+            height: 56px;
+            max-height: 60px;
+            width: auto;
+            max-width: 230px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.06));
+            animation: ekrishiLogoFloatPhysics 3.2s ease-in-out infinite;
+        }
+
+        @keyframes ekrishiLogoFloatPhysics {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-4px); }
         }
-        @keyframes ekrishiBar {
-            0% { left: -45%; }
-            50% { left: 40%; }
-            100% { left: 100%; }
+
+        .preloader-light-glint {
+            position: absolute;
+            top: 0;
+            left: -130%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.65) 50%,
+                transparent 100%
+            );
+            transform: skewX(-25deg);
+            animation: ekrishiGlintPass 3s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ekrishiGlintPass {
+            0% { left: -130%; }
+            40%, 100% { left: 160%; }
+        }
+
+        .preloader-meta-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .preloader-meta-subtitle {
+            font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #475569;
+            letter-spacing: 0.04em;
+            margin: 0 0 16px 0;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .preloader-line-track {
+            width: 180px;
+            height: 3px;
+            background: rgba(148, 163, 184, 0.22);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .preloader-line-flow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 40%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ea580c 100%);
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.7);
+            animation: ekrishiLineFlowMotion 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        }
+
+        @keyframes ekrishiLineFlowMotion {
+            0% {
+                left: -40%;
+                width: 25%;
+            }
+            50% {
+                width: 50%;
+            }
+            100% {
+                left: 100%;
+                width: 25%;
+            }
+        }
+
+        .preloader-status-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .preloader-live-beacon {
+            width: 6.5px;
+            height: 6.5px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.85);
+            animation: ekrishiBeaconBlink 1.4s ease-in-out infinite;
+        }
+
+        @keyframes ekrishiBeaconBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .preloader-status-caption {
+            font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #64748b;
+            letter-spacing: 0.03em;
+        }
+
+        /* Seamless Preloader Dark Theme System */
+        body.dark-theme #loader.ekrishi-preloader-wrap,
+        body.dark-theme #site-preloader.ekrishi-preloader-wrap,
+        body.dark-theme .ekrishi-preloader-wrap,
+        body.dark-skin #loader.ekrishi-preloader-wrap,
+        html[data-theme="dark"] #loader.ekrishi-preloader-wrap,
+        html[data-theme="dark"] #site-preloader.ekrishi-preloader-wrap,
+        html[data-theme="dark"] .ekrishi-preloader-wrap {
+            background: radial-gradient(circle at 50% 45%, #0f172a 0%, #0a0f1d 60%, #060911 100%) !important;
+        }
+
+        body.dark-theme .preloader-ambient-glow,
+        body.dark-skin .preloader-ambient-glow,
+        html[data-theme="dark"] .preloader-ambient-glow {
+            background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.1) 45%, transparent 75%) !important;
+            filter: blur(34px);
+        }
+
+        body.dark-theme .preloader-meta-subtitle,
+        body.dark-skin .preloader-meta-subtitle,
+        html[data-theme="dark"] .preloader-meta-subtitle {
+            color: #cbd5e1 !important;
+            text-shadow: none !important;
+        }
+
+        body.dark-theme .preloader-line-track,
+        body.dark-skin .preloader-line-track,
+        html[data-theme="dark"] .preloader-line-track {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        body.dark-theme .preloader-status-caption,
+        body.dark-skin .preloader-status-caption,
+        html[data-theme="dark"] .preloader-status-caption {
+            color: #94a3b8 !important;
+        }
+
+        body.dark-theme .preloader-light-glint,
+        body.dark-skin .preloader-light-glint,
+        html[data-theme="dark"] .preloader-light-glint {
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                transparent 100%
+            ) !important;
         }
 
         /* ==========================================================================
@@ -411,26 +571,37 @@
 </head>
 
 <body class="{{ $siteTheme === 'dark' ? 'dark-theme' : '' }}" data-offset="200" data-spy="scroll" data-target=".ownavigation">
-    <!-- Premium ekrishisheba Animated Preloader with Main Logo -->
+    <!-- Seamless Cinematic ekrishisheba Animated Preloader -->
     <div id="site-preloader" class="ekrishi-preloader-wrap">
-        <div class="ekrishi-preloader-inner">
-            <!-- Orbit Rotating Rings around Main Logo -->
-            <div class="preloader-logo-ring-outer">
-                <div class="preloader-logo-ring-pulse"></div>
-                <div class="preloader-logo-ring-spinner"></div>
-                <div class="preloader-logo-circle">
-                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="ekrishisheba" class="preloader-logo-img">
+        <div class="ekrishi-preloader-stage">
+            <!-- Center Brand Core & Dual Orbital Glow -->
+            <div class="preloader-brand-core">
+                <div class="preloader-ambient-glow"></div>
+                <div class="preloader-orbital-ring"></div>
+                <div class="preloader-orbital-ring ring-reverse"></div>
+                <div class="preloader-logo-frame">
+                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" 
+                         alt="{{ setting('site_title', 'ekrishisheba') }}" 
+                         class="preloader-brand-img"
+                         onerror="this.onerror=null;this.src='{{ asset('upload/images/backend/logo/1794574025FD2hX.png') }}';">
+                    <div class="preloader-light-glint"></div>
                 </div>
             </div>
 
-            <!-- Brand Name & Animated Shimmer Bar -->
-            <h3 class="preloader-brand-title">ekrishisheba</h3>
-            <p class="preloader-tagline">স্মার্ট কৃষি ও নিরাপদ ডিজিটাল সেবা</p>
+            <!-- Sleek Minimalist Meta & Progress Row -->
+            <div class="preloader-meta-wrap">
+                <p class="preloader-meta-subtitle">{{ $isBn ? 'স্মার্ট ডিজিটাল কৃষি সেবা প্ল্যাটফর্ম' : 'Smart Digital Agriculture Platform' }}</p>
 
-            <div class="preloader-progress-bar">
-                <div class="preloader-progress-fill"></div>
+                <!-- Razor-sharp 3px Progress Line -->
+                <div class="preloader-line-track">
+                    <div class="preloader-line-flow"></div>
+                </div>
+
+                <div class="preloader-status-meta">
+                    <span class="preloader-live-beacon"></span>
+                    <span class="preloader-status-caption">{{ $isBn ? 'লোড হচ্ছে...' : 'Loading...' }}</span>
+                </div>
             </div>
-            <small class="preloader-loading-text">লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...</small>
         </div>
     </div>
 
@@ -568,6 +739,11 @@
                 <nav class="d-flex align-items-center sub-nav-links-row">
                     <a href="{{ route('/') }}" class="sub-nav-link-item {{ Route::is('/') ? 'active' : '' }}">{{ $isBn ? 'হোম' : 'Home' }}</a>
                     <a href="{{ route('about') }}" class="sub-nav-link-item {{ Route::is('about') ? 'active' : '' }}">{{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a>
+                    <a href="{{ route('products.index') }}" class="sub-nav-link-item {{ Route::is('products.*') || Route::is('shop.*') ? 'active' : '' }}" style="background: rgba(30, 64, 175, 0.08); border-radius: 20px; padding: 4px 12px; border: 1px solid rgba(30, 64, 175, 0.25); color: #0284c7; font-weight: 700;">
+                        <i class="fa fa-shopping-bag text-primary me-1"></i>
+                        <span>{{ $isBn ? 'আমাদের পণ্য' : 'Our Products' }}</span>
+                        <span class="badge bg-success ms-1 small" style="font-size: 10px; vertical-align: middle;">Shop</span>
+                    </a>
                     <a href="{{ route('stock.index') }}" class="sub-nav-link-item {{ Route::is('stock.*') ? 'active' : '' }}">{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</a>
                     <a href="{{ route('properties.index') }}" class="sub-nav-link-item {{ Route::is('properties.*') ? 'active' : '' }}" style="background: rgba(22, 163, 74, 0.1); border-radius: 20px; padding: 4px 12px; border: 1px solid rgba(22, 163, 74, 0.3);">
                         <i class="fa fa-map-marker text-success me-1"></i>
@@ -577,6 +753,7 @@
                     <a href="{{ route('/') }}#packages" class="sub-nav-link-item">{{ $isBn ? 'প্যাকেজসমূহ' : 'Our Packages' }}</a>
                     <a href="{{ route('/') }}#card-benefits" class="sub-nav-link-item">{{ $isBn ? 'মেম্বারশিপ কার্ড' : 'Membership Cards' }}</a>
                     <a href="{{ route('gallery') }}" class="sub-nav-link-item {{ Route::is('gallery') ? 'active' : '' }}">{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a>
+                    <a href="{{ route('career') }}" class="sub-nav-link-item {{ Route::is('career') ? 'active' : '' }}">{{ $isBn ? 'ক্যারিয়ার' : 'Career' }}</a>
                     <a href="{{ route('contact') }}" class="sub-nav-link-item {{ Route::is('contact') ? 'active' : '' }}">{{ $isBn ? 'যোগাযোগ' : 'Contact' }}</a>
                     <a href="{{ route('terms') }}" class="sub-nav-link-item {{ Route::is('terms') ? 'active' : '' }}">{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</a>
                     <a href="{{ route('privacy') }}" class="sub-nav-link-item {{ Route::is('privacy') ? 'active' : '' }}">{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</a>
@@ -690,6 +867,12 @@
                     </a>
                 </li>
                 <li class="mobile-nav-item">
+                    <a href="{{ route('products.index') }}" class="mobile-nav-link {{ Route::is('products.*') || Route::is('shop.*') ? 'active' : '' }}">
+                        <span><i class="fa fa-shopping-bag text-primary me-2"></i>{{ $isBn ? 'আমাদের পণ্য' : 'Our Products' }} <span class="badge bg-success ms-1">Shop</span></span>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
                     <a href="{{ route('stock.index') }}" class="mobile-nav-link {{ Route::is('stock.*') ? 'active' : '' }}">
                         <span>{{ $isBn ? 'স্টক মার্কেট' : 'Stock Market' }}</span><i class="fa fa-angle-right"></i>
                     </a>
@@ -701,8 +884,23 @@
                     </a>
                 </li>
                 <li class="mobile-nav-item">
+                    <a href="{{ route('/') }}#packages" class="mobile-nav-link">
+                        <span>{{ $isBn ? 'প্যাকেজসমূহ' : 'Our Packages' }}</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('/') }}#card-benefits" class="mobile-nav-link">
+                        <span>{{ $isBn ? 'মেম্বারশিপ কার্ড' : 'Membership Cards' }}</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
                     <a href="{{ route('gallery') }}" class="mobile-nav-link {{ Route::is('gallery') ? 'active' : '' }}">
                         <span>{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</span><i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="mobile-nav-item">
+                    <a href="{{ route('career') }}" class="mobile-nav-link {{ Route::is('career') ? 'active' : '' }}">
+                        <span>{{ $isBn ? 'ক্যারিয়ার' : 'Career' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
                 <li class="mobile-nav-item">
@@ -769,7 +967,9 @@
                                 <li><a href="{{ route('/') }}"><i class="fa fa-angle-right me-2 text-warning"></i> হোমপেজ</a></li>
                                 <li><a href="{{ route('about') }}"><i class="fa fa-angle-right me-2 text-warning"></i> আমাদের সম্পর্কে</a></li>
                                 <li><a href="{{ route('stock.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> স্টক মার্কেট</a></li>
+                                <li><a href="{{ route('properties.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> জমি ও প্রপার্টি</a></li>
                                 <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রোডাক্ট গ্যালারি</a></li>
+                                <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> ক্যারিয়ার</a></li>
                                 <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রাইভেসি পলিসি</a></li>
                                 <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> টার্মস এন্ড কন্ডিশন</a></li>
                             </ul>

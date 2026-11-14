@@ -2,331 +2,471 @@
 
 @section('content')
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+/* Start Global Component */
+:root {
+  --main-Color: #1e2a3a;
+  --sec-Color: #2d3e50;
+  --third-Color: #ffa500;
+  --fourth-Color: #ff8c00;
+  --fiveth-Color: #4a5f7f;
+  --sixth-Color: rgba(255, 255, 255, 0.1);
+  --rgba-Color: rgba(30, 42, 58, 0.95);
+  --box-shadow-1: 0 0 20px rgba(255, 165, 0, 0.85);
+  --box-shadow-2: rgba(0, 0, 0, 0.5);
+  --white-Color: #fff;
+  --black-Color: #000;
+}
 
-    body {
-        font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif !important;
-        background: linear-gradient(135deg, #0b1120 0%, #1c1917 50%, #431407 100%) !important;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-    }
+html, body {
+  font-family: Arial, Helvetica, sans-serif !important;
+  background: linear-gradient(
+    135deg,
+    var(--main-Color) 0%,
+    var(--sec-Color) 100%
+  ) !important;
+  background-color: var(--main-Color) !important;
+  background-image: none !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+  direction: ltr !important;
+}
 
-    .login-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-        box-sizing: border-box;
-    }
+.animated-login-wrapper {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    var(--main-Color) 0%,
+    var(--sec-Color) 100%
+  ) !important;
+  direction: ltr !important;
+}
 
-    .auth-card {
-        width: 100%;
-        max-width: 460px;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                    0 0 35px rgba(245, 158, 11, 0.28);
-        overflow: hidden;
-        margin: 0 auto;
-        animation: fadeIn 0.5s ease-out;
-    }
+/* Stage that holds both the 360-degree circle and the login card */
+.portal-login-stage {
+  position: relative;
+  width: 660px;
+  height: 660px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+/* 360-degree Rotating Halo Equalizer Ring */
+.portal-login-stage .circle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 660px;
+  height: 660px;
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
 
-    .brand-header {
-        background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #f59e0b 100%);
-        padding: 36px 24px 30px;
-        text-align: center;
-        color: #ffffff;
-        position: relative;
-    }
+.portal-login-stage .circle-container .bar {
+  position: absolute;
+  width: 8px;
+  height: 35px;
+  background-color: var(--fiveth-Color);
+  border-radius: 4px;
+  top: 0;
+  left: 50%;
+  margin-left: -4px;
+  transform-origin: center 330px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .brand-header h2 {
-        font-size: 28px;
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        margin: 0 0 6px 0;
-        color: #ffffff;
-    }
+.portal-login-stage .circle-container .bar.active {
+  background: linear-gradient(
+    180deg,
+    var(--third-Color),
+    var(--fourth-Color)
+  ) !important;
+  box-shadow: var(--box-shadow-1) !important;
+}
 
-    .brand-header p {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.95);
-        margin: 0;
-    }
+/* Center Login Card */
+.portal-login-stage .login-box {
+  position: relative;
+  z-index: 10;
+  background: var(--rgba-Color);
+  padding: 38px 36px 32px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px var(--box-shadow-2);
+  width: 380px;
+  max-width: 90vw;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  text-align: left;
+}
 
-    .security-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.22);
-        backdrop-filter: blur(10px);
-        padding: 5px 14px;
-        border-radius: 50px;
-        font-size: 12px;
-        font-weight: 700;
-        color: #ffffff;
-        margin-top: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.35);
-    }
+/* Brand Logo */
+.portal-login-stage .logo-wrap {
+  text-align: center;
+  margin-bottom: 14px;
+}
 
-    .form-container {
-        padding: 32px 28px;
-    }
+.portal-login-stage .logo-wrap img {
+  height: 42px;
+  max-height: 46px;
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+  background: transparent !important;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
+}
 
-    .custom-label {
-        font-size: 13px;
-        font-weight: 700;
-        color: #334155;
-        margin-bottom: 6px;
-        display: block;
-    }
+/* Title */
+.portal-login-stage .login-box .title {
+  text-align: center;
+  color: var(--third-Color);
+  margin-bottom: 8px;
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
 
-    .custom-input-group {
-        position: relative;
-        margin-bottom: 20px;
-    }
+/* Alerts */
+.portal-login-stage .login-alert {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+  text-transform: none;
+}
 
-    .custom-input-group .input-icon {
-        position: absolute;
-        left: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #94a3b8;
-        font-size: 18px;
-        z-index: 10;
-        transition: color 0.2s ease;
-    }
+.portal-login-stage .login-alert.error {
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
 
-    .custom-input {
-        width: 100%;
-        height: 52px;
-        padding-left: 48px;
-        padding-right: 16px;
-        background: #f8fafc;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        font-size: 15px;
-        font-weight: 500;
-        color: #0f172a;
-        box-sizing: border-box;
-        transition: all 0.2s ease;
-    }
+.portal-login-stage .login-alert.success {
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
 
-    .custom-input:focus {
-        outline: none;
-        background: #ffffff;
-        border-color: #f59e0b;
-        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
-    }
+/* Form Style */
+.portal-login-stage .input-group {
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+}
 
-    .custom-input-group:focus-within .input-icon {
-        color: #d97706;
-    }
+.portal-login-stage .input-group input {
+  width: 100%;
+  padding: 12px 48px 12px 18px;
+  background: var(--sixth-Color);
+  border: 1px solid var(--sixth-Color);
+  border-radius: 25px;
+  color: var(--white-Color);
+  caret-color: var(--fourth-Color);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
 
-    .options-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-    }
+.portal-login-stage .input-group input:focus {
+  border-color: var(--third-Color);
+  box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
+  background: rgba(255, 255, 255, 0.14);
+}
 
-    .remember-me {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        user-select: none;
-        margin-bottom: 0;
-    }
+.portal-login-stage .input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: none;
+}
 
-    .remember-me input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: #d97706;
-        cursor: pointer;
-        border-radius: 4px;
-    }
+.portal-login-stage .input-group .input-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  pointer-events: none;
+}
 
-    .remember-me span {
-        font-size: 13px;
-        font-weight: 600;
-        color: #475569;
-    }
+/* Clickable Eye Button for Password */
+.portal-login-stage .input-group .input-icon-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+  z-index: 5;
+  outline: none;
+}
 
-    .forgot-link {
-        font-size: 13px;
-        font-weight: 700;
-        color: #d97706;
-        text-decoration: none;
-        transition: color 0.2s;
-    }
+.portal-login-stage .input-group .input-icon-btn:hover {
+  color: var(--third-Color);
+  transform: translateY(-50%) scale(1.15);
+}
 
-    .forgot-link:hover {
-        color: #b45309;
-        text-decoration: underline;
-    }
+.portal-login-stage .options-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -8px;
+  margin-bottom: 24px;
+  font-size: 12px;
+}
 
-    .btn-login {
-        width: 100%;
-        height: 52px;
-        background: linear-gradient(135deg, #ea580c 0%, #d97706 50%, #f59e0b 100%);
-        border: none;
-        border-radius: 12px;
-        color: #ffffff;
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-        box-shadow: 0 10px 22px -5px rgba(234, 88, 12, 0.45);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+.portal-login-stage .remember-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+  font-size: 12px;
+}
 
-    .btn-login:hover {
-        background: linear-gradient(135deg, #c2410c 0%, #b45309 50%, #d97706 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 14px 26px -5px rgba(234, 88, 12, 0.6);
-    }
+.portal-login-stage .remember-label input {
+  accent-color: var(--third-Color);
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+}
 
-    .auth-footer {
-        text-align: center;
-        margin-top: 24px;
-        padding-top: 18px;
-        border-top: 1px solid #f1f5f9;
-        font-size: 14px;
-        color: #64748b;
-    }
+.portal-login-stage .forget-password a {
+  color: var(--white-Color);
+  opacity: 0.6;
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.3s ease, opacity 0.2s ease;
+}
 
-    .auth-footer a {
-        color: #d97706;
-        font-weight: 700;
-        text-decoration: none;
-    }
+.portal-login-stage .forget-password a:hover {
+  color: var(--third-Color);
+  opacity: 1;
+}
 
-    .auth-footer a:hover {
-        color: #ea580c;
-        text-decoration: underline;
-    }
+.portal-login-stage .login-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(
+    90deg,
+    var(--third-Color),
+    var(--fourth-Color)
+  );
+  border: none;
+  border-radius: 25px;
+  color: var(--white-Color);
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.35);
+}
 
-    .error-feedback {
-        color: #ef4444;
-        font-size: 12px;
-        font-weight: 600;
-        margin-top: 4px;
-        display: block;
-    }
+.portal-login-stage .login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px var(--box-shadow-2);
+}
 
-    .alert-success-custom {
-        background: #ecfdf5;
-        border: 1px solid #a7f3d0;
-        color: #065f46;
-        padding: 12px 16px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
+.portal-login-stage .login-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0px;
+  height: 0px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.portal-login-stage .login-btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Animations */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Scaling for smaller screens */
+@media (max-width: 680px) {
+  .portal-login-stage {
+    transform: scale(calc(100vw / 700));
+    transform-origin: center center;
+  }
+}
 </style>
 
-<div class="login-wrapper">
-    <div class="auth-card">
-        <!-- Header Banner -->
-        <div class="brand-header">
-            <h2>iKrishiPoribar</h2>
-            <p>Welcome Back! Sign in to access your account</p>
-            <div class="security-badge">
-                <i class="ti-shield me-1"></i> Secure Member Portal
-            </div>
-        </div>
+<div class="animated-login-wrapper">
+  <div class="portal-login-stage">
+    <!-- Complete 360-degree Rotating Halo Equalizer Ring -->
+    <div class="circle-container" id="circle-Container"></div>
 
-        <!-- Login Form -->
-        <div class="form-container">
-            @if(session('success'))
-                <div class="alert-success-custom">
-                    <i class="ti-check-box me-1"></i> {{ session('success') }}
-                </div>
+    <!-- Center Login Card -->
+    <div class="login-box">
+      <!-- Logo -->
+      <div class="logo-wrap">
+        <a href="{{ url('/') }}" title="e-Krishi Sheba">
+          <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="ekrishisheba" onerror="this.onerror=null;this.src='{{ asset('upload/images/backend/logo/1794150124EkqIV.png') }}';">
+        </a>
+      </div>
+
+      <!-- Title -->
+      <h3 class="title">LOGIN</h3>
+
+      <!-- Alerts -->
+      @if(session('error'))
+        <div class="login-alert error">
+          <i class="fa fa-exclamation-circle"></i>
+          <span>{{ session('error') }}</span>
+        </div>
+      @endif
+      @if(session('success'))
+        <div class="login-alert success">
+          <i class="fa fa-check-circle"></i>
+          <span>{{ session('success') }}</span>
+        </div>
+      @endif
+      @if($errors->any())
+        <div class="login-alert error">
+          <i class="fa fa-exclamation-circle"></i>
+          <span>{{ $errors->first() }}</span>
+        </div>
+      @endif
+
+      <!-- Form -->
+      <form id="login-Form" method="POST" action="{{ route('login') }}">
+        @csrf
+        <div class="input-group">
+          <input type="text" name="username" value="{{ old('username') }}" placeholder="Email / Username" required autofocus />
+          <span class="input-icon">
+            <i class="fa fa-envelope"></i>
+          </span>
+        </div>
+        <div class="input-group">
+          <input type="password" name="password" id="loginPassword" placeholder="Password" required />
+          <button type="button" class="input-icon-btn toggle-password-visibility" id="togglePasswordBtn" title="পাসওয়ার্ড দেখুন বা লুকান" aria-label="Toggle password visibility">
+            <i class="fa fa-eye" id="togglePasswordIcon"></i>
+          </button>
+        </div>
+        <div class="options-container">
+          <label class="remember-label">
+            <input type="checkbox" name="remember" id="remember_me">
+            <span>Remember me</span>
+          </label>
+          <div class="forget-password">
+            @if(Route::has('password.request'))
+              <a href="{{ route('password.request') }}">forget your password ?</a>
+            @else
+              <a href="#">forget your password ?</a>
             @endif
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <!-- Mobile / Username -->
-                <div>
-                    <label class="custom-label">Mobile Number / Username</label>
-                    <div class="custom-input-group">
-                        <i class="ti-user input-icon"></i>
-                        <input name="username" value="{{ old('username') }}" type="text"
-                            class="custom-input" placeholder="Enter Mobile Number or Username" required autofocus>
-                    </div>
-                    @error('username')
-                        <span class="error-feedback"><i class="ti-alert me-1"></i>{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Password -->
-                <div>
-                    <label class="custom-label">Password</label>
-                    <div class="custom-input-group">
-                        <i class="ti-lock input-icon"></i>
-                        <input name="password" type="password" class="custom-input"
-                            placeholder="Enter your password" required>
-                    </div>
-                    @error('password')
-                        <span class="error-feedback"><i class="ti-alert me-1"></i>{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <!-- Options Row -->
-                <div class="options-row">
-                    <label class="remember-me">
-                        <input name="remember" type="checkbox" id="basic_checkbox_1">
-                        <span>Remember Me</span>
-                    </label>
-
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="forgot-link">
-                            Forgot Password?
-                        </a>
-                    @endif
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn-login">
-                    SIGN IN TO YOUR ACCOUNT
-                </button>
-            </form>
-
-            <!-- Footer -->
-            <div class="auth-footer text-center">
-                <div class="mb-2">
-                    Don't have a Customer account?
-                    <a href="{{ route('register') }}" class="ms-1">Sign Up Here</a>
-                </div>
-                <div class="mt-3 pt-2 border-top">
-                    <a href="{{ route('supplier.register') }}" class="btn btn-sm w-100 py-2 fw-bold" style="border-radius: 10px; border: 1.5px solid #d97706; color: #d97706; background: #fffbeb; transition: all 0.2s ease;">
-                        <i class="ti-truck me-1"></i> Supplier Registration / সাপ্লায়ার সাইন আপ
-                    </a>
-                </div>
-            </div>
+          </div>
         </div>
+        <button type="submit" class="login-btn">login</button>
+      </form>
     </div>
+  </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // 1. Generate All 50 Bars in a Full 360-degree Circle around the Card
+  const circleContainer = document.getElementById("circle-Container");
+  if (circleContainer) {
+    const numBars = 50;
+    let activeBars = 0;
+
+    for (let i = 0; i < numBars; i++) {
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      bar.style.transform = `rotate(${(360 / numBars) * i}deg)`;
+      circleContainer.appendChild(bar);
+    }
+
+    function animateBars() {
+      const bars = document.querySelectorAll(".circle-container .bar");
+      if (!bars.length) return;
+      setInterval(() => {
+        bars[activeBars % numBars].classList.add("active");
+        if (activeBars > 8) {
+          bars[(activeBars - 8) % numBars].classList.remove("active");
+        }
+        activeBars++;
+      }, 100);
+    }
+    animateBars();
+  }
+
+  // 2. Toggle Password Visibility (Eye Button)
+  const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+  const passwordInput = document.getElementById("loginPassword");
+  const togglePasswordIcon = document.getElementById("togglePasswordIcon");
+
+  if (togglePasswordBtn && passwordInput && togglePasswordIcon) {
+    togglePasswordBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePasswordIcon.classList.remove("fa-eye");
+        togglePasswordIcon.classList.add("fa-eye-slash");
+        togglePasswordBtn.title = "পাসওয়ার্ড লুকান";
+      } else {
+        passwordInput.type = "password";
+        togglePasswordIcon.classList.remove("fa-eye-slash");
+        togglePasswordIcon.classList.add("fa-eye");
+        togglePasswordBtn.title = "পাসওয়ার্ড দেখুন";
+      }
+      passwordInput.focus();
+    });
+  }
+});
+</script>
 
 @endsection

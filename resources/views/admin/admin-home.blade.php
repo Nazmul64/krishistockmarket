@@ -64,7 +64,7 @@
                         <div>
                             <div class="pastel-label">এডমিন ম্যানেজার</div>
                             <div class="pastel-value">{{ count($admin) }} <small class="fs-14 fw-normal">জন</small></div>
-                            <div class="pastel-trend text-warning"><i class="fa fa-shield me-1"></i> সুপার এডমিন</div>
+                            <div class="pastel-trend text-warning"><i class="fa fa-shield me-1"></i> এডমিন একাউন্ট</div>
                         </div>
                         <div class="pastel-icon-box">
                             <i class="fa fa-user-secret"></i>

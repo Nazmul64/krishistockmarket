@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Pencil -->
+  <g transform="translate(32, 16) rotate(-10)">
+    <polygon points="4,0 0,10 8,10" fill="#fde047" stroke="#1e293b" stroke-width="2"/>
+    <rect x="0" y="10" width="8" height="42" fill="#f59e0b" stroke="#1e293b" stroke-width="2"/>
+    <polygon points="4,0 2,4 6,4" fill="#1e293b"/>
+  </g>
+  <!-- Ruler -->
+  <g transform="translate(48, 14)">
+    <rect x="0" y="0" width="10" height="52" rx="2" fill="#38bdf8" stroke="#1e293b" stroke-width="2"/>
+    <line x1="0" y1="8" x2="4" y2="8" stroke="#1e293b" stroke-width="1.5"/>
+    <line x1="0" y1="16" x2="6" y2="16" stroke="#1e293b" stroke-width="1.5"/>
+    <line x1="0" y1="24" x2="4" y2="24" stroke="#1e293b" stroke-width="1.5"/>
+    <line x1="0" y1="32" x2="6" y2="32" stroke="#1e293b" stroke-width="1.5"/>
+  </g>
+  <!-- Pen -->
+  <g transform="translate(62, 18) rotate(12)">
+    <rect x="0" y="0" width="7" height="46" rx="2" fill="#22c55e" stroke="#1e293b" stroke-width="2"/>
+    <path d="M0 0 L7 0 L3.5 -6 Z" fill="#1e293b"/>
+  </g>
+  <!-- Holder Cup -->
+  <path d="M26 50 L74 50 L68 86 L32 86 Z" fill="#ffffff" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="36" y="58" width="28" height="20" rx="3" fill="#bae6fd" stroke="#1e293b" stroke-width="1.5"/>
+</svg>

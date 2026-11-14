@@ -12,9 +12,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <title>Crypto Tokenizer UI Interface & Cryptocurrency Admin Template</title>
+    <title>{{ setting('title') ?: 'ekrishisheba' }} - লগইন</title>
 
 
 
@@ -68,7 +66,6 @@
 
     <!-- Style-->
     <link rel="stylesheet" href="{{ asset('assets/main/css/color_theme.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/main/css/style_rtl.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugin') }}/icons/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="{{ asset('assets/plugin') }}/icons/font-awesome/css/all.min">
     <link rel="stylesheet" href="{{ asset('assets/plugin') }}/icons/Ionicons/css/ionicons.css">
@@ -98,7 +95,7 @@
 
 </head>
 
-<body class="hold-transition theme-primary bg-img" style="background-image: url({{ asset('assets/images/auth-bg/bg-9.jpg') }})">
+<body class="hold-transition theme-primary" style="background: linear-gradient(135deg, #1e2a3a 0%, #2d3e50 100%) !important; background-color: #1e2a3a !important; margin: 0; min-height: 100vh;">
 
 
     @yield('content')

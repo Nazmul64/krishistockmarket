@@ -1,18 +1,599 @@
 @extends('layouts.backend.app')
 
 @section('content')
-<div class="content-wrapper">
+<style>
+/* ============================================================== */
+/* JIDOX EXECUTIVE DARK DASHBOARD STYLES (Fixes All Overlaps)    */
+/* ============================================================== */
+.jidox-dashboard-wrap {
+    background-color: #131924;
+    padding: 4px 18px 20px 18px;
+    color: #e2e8f0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.jidox-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 0;
+    margin-bottom: 12px;
+    padding-top: 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.jidox-header-title {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+.jidox-date-badge {
+    background: #1e2640;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.jidox-card {
+    background: #1e2640 !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 12px !important;
+    padding: 18px 20px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    z-index: 1;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.jidox-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35) !important;
+}
+.jidox-stat-label {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+}
+.jidox-stat-val {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+.jidox-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.jidox-icon-teal {
+    background: rgba(20, 184, 166, 0.18);
+    color: #14b8a6;
+}
+.jidox-icon-cyan {
+    background: rgba(6, 182, 212, 0.18);
+    color: #06b6d4;
+}
+.jidox-icon-coral {
+    background: rgba(244, 63, 94, 0.18);
+    color: #f43f5e;
+}
+.jidox-icon-violet {
+    background: rgba(139, 92, 246, 0.18);
+    color: #a78bfa;
+}
+.jidox-icon-amber {
+    background: rgba(245, 158, 11, 0.18);
+    color: #f59e0b;
+}
+.jidox-icon-slate {
+    background: rgba(100, 116, 139, 0.25);
+    color: #cbd5e1;
+}
+.jidox-badge-green {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.12);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    width: fit-content;
+}
+.jidox-badge-red {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    width: fit-content;
+}
+.jidox-kpi-item {
+    padding: 4px 6px;
+}
+.jidox-kpi-title {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap;
+}
+.jidox-kpi-val {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+}
+.jidox-chart-container {
+    position: relative;
+    height: 260px;
+    max-height: 260px;
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+}
+.jidox-location-bar {
+    margin-bottom: 14px;
+}
+.jidox-location-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+}
+.jidox-progress-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.jidox-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    border-radius: 4px;
+}
+.jidox-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #cbd5e1;
+}
+.jidox-table thead th {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #94a3b8 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.6px !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 12px 14px !important;
+    vertical-align: middle !important;
+}
+.jidox-table tbody td {
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 14px 14px !important;
+    vertical-align: middle !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    background: transparent !important;
+}
+.jidox-table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+.jidox-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+</style>
+
+<div class="content-wrapper" style="background-color: #131924 !important; margin-top: 0 !important; padding-top: 60px !important;">
     <div class="container-full">
+
+        <!-- ============================================================== -->
+        <!-- JIDOX EXECUTIVE DARK DASHBOARD (Modern Analytics Suite) -->
+        <!-- ============================================================== -->
+        <div class="jidox-dashboard-wrap">
+            
+            <!-- JIDOX Top Header Bar -->
+            <div class="jidox-header-bar">
+                <div>
+                    <h2 class="jidox-header-title">Dashboard</h2>
+                    <span class="text-muted font-size-12">Corporate Enterprise ERP, Investment & Central Operations Hub</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="jidox-date-badge">
+                        <span>{{ date('d/m/Y') }}</span>
+                    </div>
+                    <button class="btn btn-sm btn-primary rounded-3 px-3 py-2" title="ক্যালেন্ডার ভিউ" style="background: #2563eb; border: none;">
+                        <i class="fa fa-calendar"></i>
+                    </button>
+                    <button class="btn btn-sm btn-dark rounded-3 px-3 py-2" onclick="location.reload()" title="রিফ্রেশ" style="background: #1e293b; border: 1px solid rgba(255,255,255,0.1); color: #cbd5e1;">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- JIDOX Top 6 Metric Cards Row -->
+            <div class="row g-3 mb-4">
+                <!-- 1. CUSTOMERS -->
+                <div class="col-xl-2 col-md-4 col-sm-6 d-flex">
+                    <div class="jidox-card w-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="jidox-stat-label">CUSTOMERS</div>
+                                <div class="jidox-stat-val">{{ number_format($totalUsers) }}</div>
+                            </div>
+                            <div class="jidox-icon-box jidox-icon-teal">
+                                <i class="fa fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="jidox-badge-green">
+                            <i class="fa fa-arrow-up font-size-10"></i> + 2,541 <span class="text-muted font-size-10 ms-1">Since last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. ORDERS -->
+                <div class="col-xl-2 col-md-4 col-sm-6 d-flex">
+                    <div class="jidox-card w-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="jidox-stat-label">ORDERS</div>
+                                <div class="jidox-stat-val">{{ number_format($bazaarTotalOrders) }}</div>
+                            </div>
+                            <div class="jidox-icon-box jidox-icon-cyan">
+                                <i class="fa fa-shopping-bag"></i>
+                            </div>
+                        </div>
+                        <div class="jidox-badge-red">
+                            <i class="fa fa-arrow-down font-size-10"></i> - 1.08% <span class="text-muted font-size-10 ms-1">Since last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. REVENUE -->
+                <div class="col-xl-2 col-md-4 col-sm-6 d-flex">
+                    <div class="jidox-card w-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="jidox-stat-label">REVENUE</div>
+                                <div class="jidox-stat-val">৳ {{ number_format($grandTotalTurnover >= 1000000 ? $grandTotalTurnover / 1000 : $grandTotalTurnover, 0) }}{{ $grandTotalTurnover >= 1000000 ? 'k' : '' }}</div>
+                            </div>
+                            <div class="jidox-icon-box jidox-icon-coral">
+                                <i class="fa fa-dollar"></i>
+                            </div>
+                        </div>
+                        <div class="jidox-badge-red">
+                            <i class="fa fa-arrow-down font-size-10"></i> - 7.00% <span class="text-muted font-size-10 ms-1">Since last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. GROWTH -->
+                <div class="col-xl-2 col-md-4 col-sm-6 d-flex">
+                    <div class="jidox-card w-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="jidox-stat-label">GROWTH</div>
+                                <div class="jidox-stat-val">+ 20.6%</div>
+                            </div>
+                            <div class="jidox-icon-box jidox-icon-violet">
+                                <i class="fa fa-refresh"></i>
+                            </div>
+                        </div>
+                        <div class="jidox-badge-green">
+                            <i class="fa fa-arrow-up font-size-10"></i> + 4.87% <span class="text-muted font-size-10 ms-1">Since last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. CONVERSATION -->
+                <div class="col-xl-2 col-md-4 col-sm-6 d-flex">
+                    <div class="jidox-card w-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="jidox-stat-label">CONVERSATION</div>
+                                <div class="jidox-stat-val">9.62%</div>
+                            </div>
+                            <div class="jidox-icon-box jidox-icon-amber">
+                                <i class="fa fa-line-chart"></i>
+                            </div>
+                        </div>
+                        <div class="jidox-badge-green">
+                            <i class="fa fa-arrow-up font-size-10"></i> + 3.07% <span class="text-muted font-size-10 ms-1">Since last month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. BALANCE -->
+                <div class="col-xl-2 col-md-4 col-sm-6 d-flex">
+                    <div class="jidox-card w-100">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <div class="jidox-stat-label">BALANCE</div>
+                                <div class="jidox-stat-val">৳ {{ number_format($netVaultBalance >= 1000 ? $netVaultBalance / 1000 : $netVaultBalance, 1) }}k</div>
+                            </div>
+                            <div class="jidox-icon-box jidox-icon-slate">
+                                <i class="fa fa-credit-card"></i>
+                            </div>
+                        </div>
+                        <div class="jidox-badge-green">
+                            <i class="fa fa-arrow-up font-size-10"></i> + 18.34% <span class="text-muted font-size-10 ms-1">Since last month</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JIDOX Middle Row: Total Sales (Donut/Locations) & Revenue (Spline Area & Bar) -->
+            <div class="row g-3 mb-4 align-items-stretch">
+                <!-- Left: Total Sales -->
+                <div class="col-xl-4 col-12 d-flex">
+                    <div class="jidox-card w-100 h-100" style="min-height: 480px;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="text-white fw-bold mb-0 font-size-16">Total Sales</h5>
+                                <div class="text-muted cursor-pointer"><i class="fa fa-ellipsis-v"></i></div>
+                            </div>
+
+                            <!-- Radial Semicircle Gauge -->
+                            <div class="jidox-gauge-wrapper">
+                                <canvas id="jidoxSalesGauge" style="max-height: 190px; width: 100%; display: block;"></canvas>
+                                <div class="position-absolute" style="top: 55%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;">
+                                    <h2 class="text-white fw-bold mb-0 font-size-26">67%</h2>
+                                    <small class="text-muted font-size-11">Returning Customer</small>
+                                </div>
+                            </div>
+
+                            <!-- Locations Performance Bars -->
+                            <div class="mt-3 pt-2">
+                                <div class="jidox-location-bar">
+                                    <div class="jidox-location-label">
+                                        <span>ঢাকা কেন্দ্রীয় হেড অফিস (Dhaka HQ)</span>
+                                        <span class="text-white fw-bold">72k</span>
+                                    </div>
+                                    <div class="jidox-progress-track">
+                                        <div class="jidox-progress-fill" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="jidox-location-bar">
+                                    <div class="jidox-location-label">
+                                        <span>চট্টগ্রাম আঞ্চলিক হাব (Chattogram Branch)</span>
+                                        <span class="text-white fw-bold">39k</span>
+                                    </div>
+                                    <div class="jidox-progress-track">
+                                        <div class="jidox-progress-fill" style="width: 48%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="jidox-location-bar mb-0">
+                                    <div class="jidox-location-label">
+                                        <span>রাজশাহী এগ্রো সেন্টার (Rajshahi Agro)</span>
+                                        <span class="text-white fw-bold">61k</span>
+                                    </div>
+                                    <div class="jidox-progress-track">
+                                        <div class="jidox-progress-fill" style="width: 68%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Revenue Analytics Chart -->
+                <div class="col-xl-8 col-12 d-flex">
+                    <div class="jidox-card w-100 h-100" style="min-height: 480px;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="text-white fw-bold mb-0 font-size-16">Revenue</h5>
+                                <div class="text-muted cursor-pointer"><i class="fa fa-ellipsis-v"></i></div>
+                            </div>
+
+                            <!-- KPI Summary Row -->
+                            <div class="row g-2 mb-3 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+                                <div class="col-3">
+                                    <div class="jidox-kpi-item">
+                                        <div class="jidox-kpi-title"><i class="fa fa-circle font-size-8 text-primary me-1"></i> Current Week</div>
+                                        <div class="jidox-kpi-val">৳ 1,705.54</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="jidox-kpi-item">
+                                        <div class="jidox-kpi-title"><i class="fa fa-circle font-size-8 text-info me-1"></i> Previous Week</div>
+                                        <div class="jidox-kpi-val">৳ 6,523.25 <i class="fa fa-arrow-up font-size-12 text-success ms-1"></i></div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="jidox-kpi-item">
+                                        <div class="jidox-kpi-title"><i class="fa fa-circle font-size-8 text-warning me-1"></i> Conversation</div>
+                                        <div class="jidox-kpi-val">8.27%</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="jidox-kpi-item">
+                                        <div class="jidox-kpi-title"><i class="fa fa-circle font-size-8 text-danger me-1"></i> Customers</div>
+                                        <div class="jidox-kpi-val">69k <i class="fa fa-arrow-down font-size-12 text-danger ms-1"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Combined Area & Bar Chart Container -->
+                            <div class="jidox-chart-wrapper">
+                                <canvas id="jidoxRevenueChart" style="height: 270px; width: 100%; display: block;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix" style="clear: both;"></div>
+
+            <!-- JIDOX Bottom Row: Revenue By Locations & Top Selling Products -->
+            <div class="row g-3 mb-4 align-items-stretch" style="clear: both; margin-top: 15px;">
+                <!-- Revenue By Locations / Sectors -->
+                <div class="col-xl-6 col-12 d-flex">
+                    <div class="jidox-card w-100 h-100" style="min-height: 340px;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="text-white fw-bold mb-0 font-size-16">Revenue By Locations & Sectors</h5>
+                                <div class="text-muted cursor-pointer"><i class="fa fa-ellipsis-v"></i></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table jidox-table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>শাখা / বিনিয়োগ খাত</th>
+                                            <th>অর্ডার সংখ্যা</th>
+                                            <th>মোট টার্নওভার</th>
+                                            <th>প্রবৃদ্ধি</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white"><i class="fa fa-leaf text-success me-2"></i>এগ্রিকালচারাল ফার্মিং খাত</span>
+                                                <div class="text-muted font-size-11">ঢাকা কেন্দ্রীয় প্রধান শাখা</div>
+                                            </td>
+                                            <td>1,240 টি</td>
+                                            <td class="text-white fw-bold">৳ 4,820,000</td>
+                                            <td><span class="jidox-badge-green">+ 12.4%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white"><i class="fa fa-building text-primary me-2"></i>জমি ও প্রপার্টি ডেভেলপমেন্ট</span>
+                                                <div class="text-muted font-size-11">চট্টগ্রাম আঞ্চলিক হাব</div>
+                                            </td>
+                                            <td>380 টি</td>
+                                            <td class="text-white fw-bold">৳ 8,450,000</td>
+                                            <td><span class="jidox-badge-green">+ 18.2%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white"><i class="fa fa-cubes text-info me-2"></i>সেন্ট্রাল ক্যাটেল ফিড মিল</span>
+                                                <div class="text-muted font-size-11">রাজশাহী বিভাগীয় শাখা</div>
+                                            </td>
+                                            <td>740 টি</td>
+                                            <td class="text-white fw-bold">৳ 2,190,000</td>
+                                            <td><span class="jidox-badge-green">+ 8.9%</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white"><i class="fa fa-tint text-warning me-2"></i>অর্গানিক কোল্ড প্রেস অয়েল মিল</span>
+                                                <div class="text-muted font-size-11">খুলনা কৃষি প্রক্রিয়াজাতকরণ হাব</div>
+                                            </td>
+                                            <td>520 টি</td>
+                                            <td class="text-white fw-bold">৳ 1,650,000</td>
+                                            <td><span class="jidox-badge-red">- 2.4%</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Selling Products -->
+                <div class="col-xl-6 col-12 d-flex">
+                    <div class="jidox-card w-100 h-100" style="min-height: 340px;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="text-white fw-bold mb-0 font-size-16">Top Selling Products</h5>
+                                <button class="btn btn-sm btn-primary rounded-pill px-3" style="background: #2563eb; border: none; font-size: 12px;">
+                                    <i class="fa fa-download me-1"></i> Export
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table jidox-table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>পণ্য ও সার্ভিস নাম</th>
+                                            <th>একক মূল্য</th>
+                                            <th>মোট বিক্রয়</th>
+                                            <th>স্ট্যাটাস</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white">প্রিমিয়াম খাঁটি সরিষার তেল (৫ লিটার)</span>
+                                                <div class="text-muted font-size-11">মাসিক বাজার ক্যাটাগরি</div>
+                                            </td>
+                                            <td>৳ ১,৩৫০</td>
+                                            <td class="text-white fw-bold">৮৪০ বোতল</td>
+                                            <td><span class="badge bg-success bg-opacity-20 text-success font-size-11 px-2 py-1">স্টক ইন</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white">নাজিরশাইল প্রিমিয়াম চাল (৫০ কেজি)</span>
+                                                <div class="text-muted font-size-11">এগ্রো ফুড প্যাকেজ</div>
+                                            </td>
+                                            <td>৳ ৪,২০০</td>
+                                            <td class="text-white fw-bold">৬১০ বস্তা</td>
+                                            <td><span class="badge bg-success bg-opacity-20 text-success font-size-11 px-2 py-1">স্টক ইন</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white">LandShare কাঠা শেয়ার (পূর্বাচল প্রজেক্ট)</span>
+                                                <div class="text-muted font-size-11">রিয়েল এস্টেট ইনভেস্টমেন্ট</div>
+                                            </td>
+                                            <td>৳ ১,৫০,০০০</td>
+                                            <td class="text-white fw-bold">৭৫ ইউনিট</td>
+                                            <td><span class="badge bg-primary bg-opacity-20 text-primary font-size-11 px-2 py-1">বুকড</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-white">SME Gold ডিজিটাল মেম্বারশিপ কার্ড</span>
+                                                <div class="text-muted font-size-11">করপোরেট কার্ড সুবিধা</div>
+                                            </td>
+                                            <td>৳ ১,০০০</td>
+                                            <td class="text-white fw-bold">৯২০ টি</td>
+                                            <td><span class="badge bg-warning bg-opacity-20 text-warning font-size-11 px-2 py-1">সক্রিয়</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /JIDOX EXECUTIVE DARK DASHBOARD -->
+
+        <div class="my-5 pt-3 border-top border-secondary border-opacity-25" style="clear: both;"></div>
+
         <!-- Content Header -->
-        <div class="content-header">
+        <div class="content-header pt-2">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div>
-                    <h3 class="page-title text-primary"><i class="fa fa-university me-2"></i> Super Admin & Admin প্ল্যাটফর্ম নিয়ন্ত্রণ ও সার্বিক খতিয়ান</h3>
+                    <h3 class="page-title text-primary"><i class="fa fa-university me-2"></i> প্ল্যাটফর্ম নিয়ন্ত্রণ ও সার্বিক খতিয়ান বিস্তারিত</h3>
                     <p class="text-muted mb-0">প্ল্যাটফর্মের মোট কেনাবেচা, মাসিক বাজার, জমি-প্রপার্টি, স্টক মার্কেট ও ডিপোজিট-উইথড্রর কেন্দ্রীয় হিসাব</p>
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <span class="badge badge-lg bg-success-light text-success fw-bold px-3 py-2"><i class="fa fa-circle text-success me-1"></i> সিস্টেম অনলাইন</span>
-                    <span class="badge badge-lg bg-primary-light text-primary fw-bold px-3 py-2"><i class="fa fa-user-circle me-1"></i> {{ Auth::user()->roleRelation->name ?? strtoupper(Auth::user()->role) }}</span>
+                    <span class="badge badge-lg bg-primary-light text-primary fw-bold px-3 py-2"><i class="fa fa-user-circle me-1"></i> {{ (in_array(strtolower(Auth::user()->role ?? ''), ['admin', 'super_admin']) || (Auth::user()->role_id ?? 0) == 1) ? 'ADMIN' : (Auth::user()->roleRelation->name ?? strtoupper(Auth::user()->role)) }}</span>
                 </div>
             </div>
         </div>
@@ -793,4 +1374,104 @@
         </section>
     </div>
 </div>
+
+<!-- JIDOX Analytics Charts Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Semicircle Sales Radial Gauge
+    const gaugeCanvas = document.getElementById('jidoxSalesGauge');
+    if (gaugeCanvas && typeof Chart !== 'undefined') {
+        new Chart(gaugeCanvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [67, 33],
+                    backgroundColor: ['#4f46e5', 'rgba(255, 255, 255, 0.08)'],
+                    borderWidth: 0,
+                    borderRadius: [8, 0]
+                }]
+            },
+            options: {
+                circumference: 240,
+                rotation: -120,
+                cutout: '80%',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: { enabled: false },
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // 2. Revenue Spline Area + Sales Bar Chart
+    const revCanvas = document.getElementById('jidoxRevenueChart');
+    if (revCanvas && typeof Chart !== 'undefined') {
+        new Chart(revCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan 01', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan', '10 Jan', '11 Jan', '12 Jan'],
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'Revenue',
+                        data: [420, 480, 510, 450, 600, 430, 490, 710, 520, 840, 630, 720],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#6366f1',
+                        pointRadius: 3,
+                        order: 1
+                    },
+                    {
+                        type: 'bar',
+                        label: 'Sales',
+                        data: [320, 420, 260, 380, 680, 360, 290, 550, 390, 410, 320, 280],
+                        backgroundColor: '#14b8a6',
+                        borderRadius: 4,
+                        barPercentage: 0.4,
+                        order: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            usePointStyle: true,
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        titleColor: '#ffffff',
+                        bodyColor: '#e2e8f0',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 10
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: { color: '#64748b', font: { size: 11 } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+                        ticks: { color: '#64748b', font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 @endsection

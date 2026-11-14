@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
+        'customer_id',
         'role',
         'user_type',
         'is_active',
@@ -39,6 +40,18 @@ class User extends Authenticatable
         'referral_id',
         'avatar',
         'phone',
+        'nid_number',
+        'nid_document',
+        'present_address',
+        'permanent_address',
+        'nominee_name',
+        'nominee_phone',
+        'nominee_nid',
+        'nominee_relation',
+        'agent_shop_name',
+        'agent_type',
+        'agent_area',
+        'dealer_id',
         'last_login_at',
         'last_login_ip',
     ];
@@ -139,6 +152,46 @@ class User extends Authenticatable
         return $this->hasMany(AuditLog::class, 'actor_id');
     }
 
+    public function shareholderProfile()
+    {
+        return $this->hasOne(ShareholderProfile::class, 'user_id');
+    }
+
+    public function investments()
+    {
+        return $this->hasMany(UserInvestment::class, 'user_id');
+    }
+
+    public function investmentWithdrawals()
+    {
+        return $this->hasMany(InvestmentWithdrawal::class, 'user_id');
+    }
+
+    public function partnerships()
+    {
+        return $this->hasMany(Partnership::class, 'user_id');
+    }
+
+    public function agentInventories()
+    {
+        return $this->hasMany(AgentInventoryBalance::class, 'agent_id');
+    }
+
+    public function providentFunds()
+    {
+        return $this->hasMany(\App\Models\HRM\HrmProvidentFund::class, 'user_id');
+    }
+
+    public function grievances()
+    {
+        return $this->hasMany(Grievance::class, 'user_id');
+    }
+
+    public function shopOrders()
+    {
+        return $this->hasMany(\App\Models\Shop\ShopOrder::class, 'user_id');
+    }
+
     /**
      * Check if user is active.
      */
@@ -208,9 +261,9 @@ class User extends Authenticatable
 
         $roleSlug = strtolower(trim($this->role ?? 'user'));
         return match($roleSlug) {
-            'super_admin', 'admin'           => '/admin',
+            'super_admin', 'admin', 'chairman', 'managing_director', 'ceo', 'finance_admin', 'investment_manager', 'hr_manager', 'marketing_manager' => '/admin',
             'manager'                        => '/manager',
-            'employee'                       => '/employee',
+            'employee', 'agent'              => '/employee',
             'staff'                          => '/staff',
             'support_lead', 'support_agent'  => '/support',
             'security_analyst'               => '/security',
@@ -225,13 +278,13 @@ class User extends Authenticatable
      */
     public function getDashboardRoute(): string
     {
-        if ($this->hasRole('super_admin') || $this->hasRole('admin')) {
+        if ($this->hasAnyRole(['super_admin', 'admin', 'chairman', 'managing_director', 'ceo', 'finance_admin', 'investment_manager', 'hr_manager', 'marketing_manager'])) {
             return 'admin.dashboard';
         }
         if ($this->hasRole('manager')) {
             return 'manager.dashboard';
         }
-        if ($this->hasRole('employee')) {
+        if ($this->hasAnyRole(['employee', 'agent'])) {
             return 'employee.dashboard';
         }
         if ($this->hasRole('staff')) {

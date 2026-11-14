@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Blue Paw -->
+  <g transform="translate(50, 44)">
+    <!-- Main pad with heart inside -->
+    <path d="M-14 8 C-18 20 18 20 14 8 C10 -2 -10 -2 -14 8 Z" fill="#38bdf8" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Heart inside paw -->
+    <path d="M0 12 C-3 6 -8 9 -5 13 L0 18 L5 13 C8 9 3 6 0 12 Z" fill="#ef4444"/>
+    <!-- Toe beans -->
+    <ellipse cx="-16" cy="-4" rx="4.5" ry="6.5" fill="#38bdf8" stroke="#1e293b" stroke-width="2"/>
+    <ellipse cx="-6" cy="-12" rx="4.5" ry="7" fill="#38bdf8" stroke="#1e293b" stroke-width="2"/>
+    <ellipse cx="6" cy="-12" rx="4.5" ry="7" fill="#38bdf8" stroke="#1e293b" stroke-width="2"/>
+    <ellipse cx="16" cy="-4" rx="4.5" ry="6.5" fill="#38bdf8" stroke="#1e293b" stroke-width="2"/>
+  </g>
+
+  <!-- Left caring hand -->
+  <path d="M22 78 Q28 54 36 60 Q44 68 40 78 Z" fill="#fed7aa" stroke="#1e293b" stroke-width="2.5"/>
+  <path d="M22 78 L18 88 L34 88" stroke="#1e293b" stroke-width="2.5" fill="none"/>
+  <!-- Right caring hand -->
+  <path d="M78 78 Q72 54 64 60 Q56 68 60 78 Z" fill="#fed7aa" stroke="#1e293b" stroke-width="2.5"/>
+  <path d="M78 78 L82 88 L66 88" stroke="#1e293b" stroke-width="2.5" fill="none"/>
+</svg>

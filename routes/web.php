@@ -76,6 +76,32 @@ Route::post('/career/apply', [\App\Http\Controllers\CareerController::class, 'ap
 Route::get('/terms', function () {return view('frontend.terms');})->name('terms');
 Route::get('/privacy-policy', function () { return view('frontend.privacy');})->name('privacy');
 
+// E-commerce Superstore / Our Products System
+Route::get('/our-products', [\App\Http\Controllers\EcommerceShopController::class, 'index'])->name('products.index');
+Route::get('/our-products/{slug}', [\App\Http\Controllers\EcommerceShopController::class, 'show'])->name('products.show');
+Route::get('/shop/checkout', [\App\Http\Controllers\EcommerceShopController::class, 'checkout'])->name('shop.checkout');
+Route::post('/shop/checkout', [\App\Http\Controllers\EcommerceShopController::class, 'placeOrder'])->name('shop.checkout.submit');
+Route::post('/shop/apply-coupon', [\App\Http\Controllers\EcommerceShopController::class, 'applyCoupon'])->name('shop.apply_coupon');
+Route::get('/shop/order-success/{orderNumber}', [\App\Http\Controllers\EcommerceShopController::class, 'orderSuccess'])->name('shop.order_success');
+Route::get('/api/shop/search', [\App\Http\Controllers\EcommerceShopController::class, 'apiSearch'])->name('shop.api.search');
+Route::get('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder'])->name('shop.track_order');
+Route::post('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrderPost'])->name('shop.track_order.post');
+Route::get('/order-track', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder']);
+
+Route::get('/notices/{id}', [\App\Http\Controllers\CorporateProfileController::class, 'noticeDetail'])->name('corporate.notice.show');
+Route::get('/online-services', [\App\Http\Controllers\CorporateProfileController::class, 'onlineServices'])->name('corporate.online_services');
+Route::get('/investment-policy', [\App\Http\Controllers\CorporateProfileController::class, 'investmentPolicy'])->name('corporate.investment_policy');
+Route::get('/policy', [\App\Http\Controllers\CorporateProfileController::class, 'investmentPolicy'])->name('corporate.policy');
+Route::get('/apply-card', [\App\Http\Controllers\CorporateProfileController::class, 'applyCard'])->name('apply.card');
+Route::post('/apply-card/submit', [\App\Http\Controllers\CorporateProfileController::class, 'storeCardApplication'])->name('apply.card.submit');
+Route::get('/verify-card/{card_number?}', [\App\Http\Controllers\CorporateProfileController::class, 'verifyCard'])->name('verify.card');
+Route::get('/grievance', [\App\Http\Controllers\CorporateProfileController::class, 'grievanceForm'])->name('grievance.form');
+Route::get('/corporate-grievance', [\App\Http\Controllers\CorporateProfileController::class, 'grievanceForm'])->name('corporate.grievance');
+Route::post('/grievance/submit', [\App\Http\Controllers\CorporateProfileController::class, 'submitGrievance'])->name('grievance.submit');
+Route::get('/grievance/track', [\App\Http\Controllers\CorporateProfileController::class, 'trackGrievance'])->name('grievance.track');
+
+
+
 // Dedicated Role Login & Auth Routes (Section 2 - Isolated Login Mappings)
 Route::get('/admin/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'admin')->name('admin.login');
 Route::post('/admin/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'admin')->name('admin.login.post');
@@ -566,18 +592,347 @@ Route::group(['prefix' => 'user', 'middleware' => 'UserChacker'], function () {
         Route::post('/cancel-inquiry/{id}', [\App\Http\Controllers\Users\UserPropertyController::class, 'cancelInquiry'])->name('cancel_inquiry');
     });
 
+    // User Corporate Membership, Cards, Investments & Community Routes
+    Route::prefix('corporate')->name('user.corporate.')->group(function() {
+        Route::get('/my-card', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myCard'])->name('card');
+        Route::get('/investments', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myInvestments'])->name('investments');
+        Route::post('/investments/withdraw', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'requestWithdrawal'])->name('investments.withdraw');
+        Route::get('/shareholder-profile', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myShareholderProfile'])->name('shareholder');
+        Route::get('/partnership-profile', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myPartnershipProfile'])->name('partnership');
+        Route::get('/community', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'communityForum'])->name('community');
+        Route::post('/community/post', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'storeCommunityPost'])->name('community.post');        Route::post('/community/comment/{postId}', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'storeCommunityComment'])->name('community.comment');
+        Route::get('/agent-inventory', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'agentInventory'])->name('agent_inventory');
+        Route::get('/provident-fund', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myProvidentFund'])->name('provident_fund');
+    });
+
+    // Direct User Shortcuts
+    Route::get('/my-card', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myCard'])->name('user.my_card');
+    Route::get('/my-investments', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'myInvestments'])->name('user.investments.my');
+    Route::get('/community-forum', [\App\Http\Controllers\Users\UserCorporatePortalController::class, 'communityForum'])->name('user.community.forum');
+
+
+
 });
 
+Route::group(['prefix' => 'admin/corporate', 'middleware' => 'AdminCheck'], function () {
+    Route::get('/board-members', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'boardMembersIndex'])->name('admin.corporate.board_members');
+    Route::post('/board-members/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeBoardMember'])->name('admin.corporate.board_members.store');
+    Route::post('/board-members/update/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateBoardMember'])->name('admin.corporate.board_members.update');
+    Route::get('/board-members/destroy/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'destroyBoardMember'])->name('admin.corporate.board_members.destroy');
 
+    Route::get('/profile-cms', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'corporateProfileCms'])->name('admin.corporate.profile_cms');
+    Route::post('/profile-cms/update/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateProfileSection'])->name('admin.corporate.profile_cms.update');
 
+    Route::get('/activities', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'activitiesIndex'])->name('admin.corporate.activities');
+    Route::post('/activities/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeActivity'])->name('admin.corporate.activities.store');
+    Route::post('/activities/update/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateActivity'])->name('admin.corporate.activities.update');
+    Route::get('/activities/destroy/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'destroyActivity'])->name('admin.corporate.activities.destroy');
 
+    Route::get('/sectors', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'sectorsIndex'])->name('admin.corporate.sectors');
+    Route::post('/sectors/update/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateSector'])->name('admin.corporate.sectors.update');
+    Route::get('/investment-projects', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'projectsIndex'])->name('admin.corporate.projects');
+    Route::post('/investment-projects/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeProject'])->name('admin.corporate.projects.store');
+    Route::post('/investment-projects/update/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateProject'])->name('admin.corporate.projects.update');
+    Route::get('/investment-projects/destroy/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'destroyProject'])->name('admin.corporate.projects.destroy');
+    Route::get('/investments', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'investmentsIndex'])->name('admin.corporate.investments');
+    Route::post('/investments/status/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateInvestmentStatus'])->name('admin.corporate.investments.status');
+    Route::post('/investments/dividend/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'declareDividend'])->name('admin.corporate.investments.dividend');
+    Route::post('/investments/dividend-paid/{dividendId}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'markDividendPaid'])->name('admin.corporate.investments.dividend_paid');
+    Route::get('/withdrawals', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'withdrawalsIndex'])->name('admin.corporate.withdrawals');
+    Route::post('/withdrawals/status/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateWithdrawalStatus'])->name('admin.corporate.withdrawals.status');
+    Route::get('/shareholders', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'shareholdersIndex'])->name('admin.corporate.shareholders');
+    Route::post('/shareholders/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeShareholder'])->name('admin.corporate.shareholders.store');
+    Route::post('/shareholders/dividend/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'declareShareDividend'])->name('admin.corporate.shareholders.dividend');
+    Route::get('/partnerships', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'partnershipsIndex'])->name('admin.corporate.partnerships');
+    Route::post('/partnerships/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storePartnership'])->name('admin.corporate.partnerships.store');
+    Route::get('/finance-dashboard', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'financeDashboard'])->name('admin.corporate.finance');
+    Route::post('/finance-dashboard/entry', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeFinanceEntry'])->name('admin.corporate.finance.entry');
+    Route::get('/agent-inventory', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'agentInventoryIndex'])->name('admin.corporate.agent_inventory');
+    Route::post('/agent-inventory/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeAgentInventory'])->name('admin.corporate.agent_inventory.store');
+    Route::get('/provident-fund', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'providentFundIndex'])->name('admin.corporate.provident_fund');
+    Route::post('/provident-fund/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeProvidentFund'])->name('admin.corporate.provident_fund.store');
+    Route::get('/notices', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'noticesIndex'])->name('admin.corporate.notices');    Route::post('/notices/store', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'storeNotice'])->name('admin.corporate.notices.store');
+    Route::post('/notices/update/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'updateNotice'])->name('admin.corporate.notices.update');
+    Route::get('/notices/destroy/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'destroyNotice'])->name('admin.corporate.notices.destroy');
+    Route::get('/grievances', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'grievancesIndex'])->name('admin.corporate.grievances');
+    Route::post('/grievances/respond/{id}', [\App\Http\Controllers\Admin\AdminCorporateManagementController::class, 'respondGrievance'])->name('admin.corporate.grievances.respond');
+});
+// =========================================================================
+// Corporate ERP System Routes (Store, Inventory, Asset, Maintenance & Finance)
+// =========================================================================
+Route::group(['prefix' => 'admin/erp', 'middleware' => ['auth', 'role:super_admin,admin,managing_director,finance_admin']], function () {
+    // 1. Dashboard & Company Profile
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\ERP\ErpDashboardController::class, 'index'])->name('admin.erp.dashboard');
+    Route::get('/company-profile', [\App\Http\Controllers\Admin\ERP\ErpDashboardController::class, 'companyProfile'])->name('admin.erp.company_profile');
+    Route::post('/company-profile/update', [\App\Http\Controllers\Admin\ERP\ErpDashboardController::class, 'updateCompanyProfile'])->name('admin.erp.company_profile.update');
+    Route::post('/documents/store', [\App\Http\Controllers\Admin\ERP\ErpDashboardController::class, 'storeDocument'])->name('admin.erp.documents.store');
 
+    // 2. Store & Inventory Management
+    Route::get('/store/items', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'itemsIndex'])->name('admin.erp.store.items');
+    Route::post('/store/items/store', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'storeItem'])->name('admin.erp.store.items.store');
+    Route::post('/store/items/update/{id}', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'updateItem'])->name('admin.erp.store.items.update');
+    Route::get('/store/requisitions', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'requisitionsIndex'])->name('admin.erp.store.requisitions');
+    Route::post('/store/requisitions/store', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'storeRequisition'])->name('admin.erp.store.requisitions.store');
+    Route::post('/store/requisitions/status/{id}', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'updateRequisitionStatus'])->name('admin.erp.store.requisitions.status');
+    Route::get('/store/stock-in-out', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'stockInOutIndex'])->name('admin.erp.store.stock_in_out');
+    Route::post('/store/stock-in-out/store', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'storeStockTransaction'])->name('admin.erp.store.stock_in_out.store');
+    Route::get('/store/transfers-adjustments', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'transfersAdjustmentsIndex'])->name('admin.erp.store.transfers_adjustments');
+    Route::get('/store/transfers', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'transfersAdjustmentsIndex'])->name('admin.erp.store.transfers');
+    Route::post('/store/transfers/store', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'storeTransfer'])->name('admin.erp.store.transfers.store');
+    Route::post('/store/adjustments/store', [\App\Http\Controllers\Admin\ERP\ErpStoreController::class, 'storeAdjustment'])->name('admin.erp.store.adjustments.store');
 
+    // 3. Procurement & Purchase Orders
+    Route::get('/procurement', [\App\Http\Controllers\Admin\ERP\ErpProcurementController::class, 'index'])->name('admin.erp.procurement');
+    Route::get('/procurement/index', [\App\Http\Controllers\Admin\ERP\ErpProcurementController::class, 'index'])->name('admin.erp.procurement.index');
+    Route::post('/procurement/supplier/store', [\App\Http\Controllers\Admin\ERP\ErpProcurementController::class, 'storeSupplier'])->name('admin.erp.procurement.supplier.store');
+    Route::post('/procurement/po/store', [\App\Http\Controllers\Admin\ERP\ErpProcurementController::class, 'storePurchaseOrder'])->name('admin.erp.procurement.po.store');
+    Route::post('/procurement/grn/store', [\App\Http\Controllers\Admin\ERP\ErpProcurementController::class, 'storeGrn'])->name('admin.erp.procurement.grn.store');
 
+    // 4. Fixed Asset Management
+    Route::get('/assets', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'assetsIndex'])->name('admin.erp.assets');
+    Route::get('/assets/index', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'assetsIndex'])->name('admin.erp.assets.index');
+    Route::post('/assets/store', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'storeAsset'])->name('admin.erp.assets.store');
+    Route::post('/assets/update/{id}', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'updateAsset'])->name('admin.erp.assets.update');
+    Route::get('/assets/assignments', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'assignmentsIndex'])->name('admin.erp.assets.assignments');
+    Route::post('/assets/assignments/store', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'storeAssignment'])->name('admin.erp.assets.assignments.store');
+    Route::post('/assets/assignments/return/{id}', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'returnAssignment'])->name('admin.erp.assets.assignments.return');
+    Route::get('/assets/depreciation', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'depreciationIndex'])->name('admin.erp.assets.depreciation');
+    Route::post('/assets/depreciation/calculate', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'calculateDepreciation'])->name('admin.erp.assets.depreciation.calculate');
+    Route::post('/assets/disposal/store', [\App\Http\Controllers\Admin\ERP\ErpAssetController::class, 'storeDisposal'])->name('admin.erp.assets.disposal.store');
 
+    // 5. Vehicle & Fleet Management
+    Route::get('/vehicles', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'index'])->name('admin.erp.vehicles');
+    Route::get('/vehicles/index', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'index'])->name('admin.erp.vehicles.index');
+    Route::post('/vehicles/store', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'storeVehicle'])->name('admin.erp.vehicles.store');
+    Route::post('/vehicles/documents/store', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'storeDocument'])->name('admin.erp.vehicles.documents.store');
+    Route::get('/vehicles/trips', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'tripsIndex'])->name('admin.erp.vehicles.trips');
+    Route::post('/vehicles/trips/store', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'storeTrip'])->name('admin.erp.vehicles.trips.store');
+    Route::post('/vehicles/fuel/store', [\App\Http\Controllers\Admin\ERP\ErpVehicleController::class, 'storeFuel'])->name('admin.erp.vehicles.fuel.store');
+    // 6. Maintenance & Repairs
+    Route::get('/maintenance', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'index'])->name('admin.erp.maintenance');
+    Route::get('/maintenance/index', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'index'])->name('admin.erp.maintenance.index');
+    Route::post('/maintenance/request/store', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'storeRequest'])->name('admin.erp.maintenance.request.store');
+    Route::post('/maintenance/requests/store', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'storeRequest'])->name('admin.erp.maintenance.requests.store');
+    Route::post('/maintenance/request/status/{id}', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'updateRequestStatus'])->name('admin.erp.maintenance.request.status');
+    Route::post('/maintenance/requests/status/{id}', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'updateRequestStatus'])->name('admin.erp.maintenance.requests.status');
+    Route::post('/maintenance/schedule/store', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'storeSchedule'])->name('admin.erp.maintenance.schedule.store');
+    Route::post('/maintenance/schedules/store', [\App\Http\Controllers\Admin\ERP\ErpMaintenanceController::class, 'storeSchedule'])->name('admin.erp.maintenance.schedules.store');
 
+    // 7. Bills & Invoices
+    Route::get('/bills', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'index'])->name('admin.erp.bills');
+    Route::get('/bills/index', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'index'])->name('admin.erp.bills.index');
+    Route::get('/billing/bills', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'index'])->name('admin.erp.billing.bills');
+    Route::post('/bills/store', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'storeBill'])->name('admin.erp.bills.store');
+    Route::post('/billing/bills/store', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'storeBill'])->name('admin.erp.billing.bills.store');
+    Route::post('/bills/approve/{id}', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'approveBill'])->name('admin.erp.bills.approve');
+    Route::post('/billing/bills/approve/{id}', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'approveBill'])->name('admin.erp.billing.bills.approve');
+    Route::post('/bills/pay/{id}', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'payBill'])->name('admin.erp.bills.pay');
+    Route::post('/billing/bills/pay/{id}', [\App\Http\Controllers\Admin\ERP\ErpBillingController::class, 'payBill'])->name('admin.erp.billing.bills.pay');
 
+    // 8. Vouchers (Double Entry)
+    Route::get('/vouchers', [\App\Http\Controllers\Admin\ERP\ErpVoucherController::class, 'index'])->name('admin.erp.vouchers');
+    Route::get('/vouchers/index', [\App\Http\Controllers\Admin\ERP\ErpVoucherController::class, 'index'])->name('admin.erp.vouchers.index');
+    Route::post('/vouchers/store', [\App\Http\Controllers\Admin\ERP\ErpVoucherController::class, 'storeVoucher'])->name('admin.erp.vouchers.store');
+    Route::get('/vouchers/print/{id}', [\App\Http\Controllers\Admin\ERP\ErpVoucherController::class, 'printVoucher'])->name('admin.erp.vouchers.print');
 
+    // 9. Money Receipts & Cash Memos
+    Route::get('/money-receipts', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'moneyReceiptsIndex'])->name('admin.erp.money_receipts');
+    Route::get('/money-receipts/index', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'moneyReceiptsIndex'])->name('admin.erp.money_receipts.index');
+    Route::get('/billing/money-receipts', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'moneyReceiptsIndex'])->name('admin.erp.billing.money_receipts');
+    Route::post('/money-receipts/store', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'storeMoneyReceipt'])->name('admin.erp.money_receipts.store');
+    Route::post('/billing/money-receipts/store', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'storeMoneyReceipt'])->name('admin.erp.billing.money_receipts.store');
+    Route::get('/money-receipts/print/{id}', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'printMoneyReceipt'])->name('admin.erp.money_receipts.print');
+    Route::get('/billing/money-receipts/print/{id}', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'printMoneyReceipt'])->name('admin.erp.billing.money_receipts.print');
 
+    Route::get('/cash-memos', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'cashMemosIndex'])->name('admin.erp.cash_memos');
+    Route::get('/cash-memos/index', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'cashMemosIndex'])->name('admin.erp.cash_memos.index');
+    Route::get('/billing/cash-memos', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'cashMemosIndex'])->name('admin.erp.billing.cash_memos');
+    Route::post('/cash-memos/store', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'storeCashMemo'])->name('admin.erp.cash_memos.store');
+    Route::post('/billing/cash-memos/store', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'storeCashMemo'])->name('admin.erp.billing.cash_memos.store');
+    Route::get('/cash-memos/print/{id}', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'printCashMemo'])->name('admin.erp.cash_memos.print');
+    Route::get('/billing/cash-memos/print/{id}', [\App\Http\Controllers\Admin\ERP\ErpReceiptMemoController::class, 'printCashMemo'])->name('admin.erp.billing.cash_memos.print');
 
+    // 10. Accounts & Finance
+    Route::get('/accounts/chart-of-accounts', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'chartOfAccounts'])->name('admin.erp.accounts.chart_of_accounts');
+    Route::post('/accounts/chart-of-accounts/store', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'storeAccount'])->name('admin.erp.accounts.chart_of_accounts.store');
+    Route::get('/accounts/general-ledger', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'generalLedger'])->name('admin.erp.accounts.general_ledger');
+    Route::get('/accounts/cash-bank', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'cashBankIndex'])->name('admin.erp.accounts.cash_bank');
+    Route::post('/accounts/cash-bank/store', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'storeCashBankAccount'])->name('admin.erp.accounts.cash_bank.store');
+    Route::get('/accounts/trial-balance', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'trialBalance'])->name('admin.erp.accounts.trial_balance');
+    Route::get('/accounts/profit-and-loss', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'profitAndLoss'])->name('admin.erp.accounts.profit_and_loss');
+    Route::get('/accounts/balance-sheet', [\App\Http\Controllers\Admin\ERP\ErpAccountsController::class, 'balanceSheet'])->name('admin.erp.accounts.balance_sheet');
 
+    // 11. Expenses & Budgets
+    Route::get('/expenses', [\App\Http\Controllers\Admin\ERP\ErpExpenseBudgetController::class, 'expensesIndex'])->name('admin.erp.expenses');
+    Route::get('/expenses/index', [\App\Http\Controllers\Admin\ERP\ErpExpenseBudgetController::class, 'expensesIndex'])->name('admin.erp.expenses.index');
+    Route::post('/expenses/store', [\App\Http\Controllers\Admin\ERP\ErpExpenseBudgetController::class, 'storeExpense'])->name('admin.erp.expenses.store');
+    Route::get('/budgets', [\App\Http\Controllers\Admin\ERP\ErpExpenseBudgetController::class, 'budgetsIndex'])->name('admin.erp.budgets');
+    Route::get('/budgets/index', [\App\Http\Controllers\Admin\ERP\ErpExpenseBudgetController::class, 'budgetsIndex'])->name('admin.erp.budgets.index');
+    Route::post('/budgets/store', [\App\Http\Controllers\Admin\ERP\ErpExpenseBudgetController::class, 'storeBudget'])->name('admin.erp.budgets.store');
+
+    // 12. Reports & Analytics
+    Route::get('/reports', [\App\Http\Controllers\Admin\ERP\ErpReportsController::class, 'index'])->name('admin.erp.reports');
+    Route::get('/reports/index', [\App\Http\Controllers\Admin\ERP\ErpReportsController::class, 'index'])->name('admin.erp.reports.index');
+});
+// =========================================================================
+// Complete Independent E-commerce Management Module Routes
+// =========================================================================
+Route::group(['prefix' => 'admin/ecommerce', 'middleware' => ['auth', 'role:super_admin,admin']], function () {
+    // 1. Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'dashboard'])->name('admin.ecommerce.dashboard');
+
+    // 2. Sliders
+    Route::get('/sliders', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliders'])->name('admin.ecommerce.sliders');
+    Route::post('/sliders/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderStore'])->name('admin.ecommerce.sliders.store');
+    Route::post('/sliders/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderUpdate'])->name('admin.ecommerce.sliders.update');
+    Route::get('/sliders/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderDestroy'])->name('admin.ecommerce.sliders.destroy');
+
+    // 3. Banners
+    Route::get('/banners', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'banners'])->name('admin.ecommerce.banners');
+    Route::post('/banners/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerStore'])->name('admin.ecommerce.banners.store');
+    Route::post('/banners/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerUpdate'])->name('admin.ecommerce.banners.update');
+    Route::get('/banners/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerDestroy'])->name('admin.ecommerce.banners.destroy');
+
+    // 4. Categories & Subcategories
+    Route::get('/categories', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categories'])->name('admin.ecommerce.categories');
+    Route::post('/categories/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryStore'])->name('admin.ecommerce.categories.store');
+    Route::post('/categories/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryUpdate'])->name('admin.ecommerce.categories.update');
+    Route::get('/categories/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryDestroy'])->name('admin.ecommerce.categories.destroy');
+
+    Route::get('/subcategories', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategories'])->name('admin.ecommerce.subcategories');
+    Route::post('/subcategories/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryStore'])->name('admin.ecommerce.subcategories.store');
+    Route::post('/subcategories/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryUpdate'])->name('admin.ecommerce.subcategories.update');
+    Route::get('/subcategories/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryDestroy'])->name('admin.ecommerce.subcategories.destroy');
+
+    // 5. Brands
+    Route::get('/brands', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brands'])->name('admin.ecommerce.brands');
+    Route::post('/brands/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandStore'])->name('admin.ecommerce.brands.store');
+    Route::post('/brands/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandUpdate'])->name('admin.ecommerce.brands.update');
+    Route::get('/brands/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandDestroy'])->name('admin.ecommerce.brands.destroy');
+
+    // 6. Attributes & Values
+    Route::get('/attributes', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributes'])->name('admin.ecommerce.attributes');
+    Route::post('/attributes/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeStore'])->name('admin.ecommerce.attributes.store');
+    Route::post('/attributes/values/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeValueStore'])->name('admin.ecommerce.attributes.values.store');
+    Route::get('/attributes/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeDestroy'])->name('admin.ecommerce.attributes.destroy');
+    Route::get('/attributes/values/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeValueDestroy'])->name('admin.ecommerce.attributes.values.destroy');
+
+    // 7. Products
+    Route::get('/products', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'products'])->name('admin.ecommerce.products');
+    Route::get('/products/create', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productCreate'])->name('admin.ecommerce.products.create');
+    Route::post('/products/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productStore'])->name('admin.ecommerce.products.store');
+    Route::get('/products/edit/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productEdit'])->name('admin.ecommerce.products.edit');
+    Route::post('/products/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productUpdate'])->name('admin.ecommerce.products.update');
+    Route::get('/products/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productDestroy'])->name('admin.ecommerce.products.destroy');
+    Route::post('/products/quick-stock/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productQuickStock'])->name('admin.ecommerce.products.quick_stock');
+
+    // 8. Inventory
+    Route::get('/inventory', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'inventory'])->name('admin.ecommerce.inventory');
+
+    // 9. Combo Offers
+    Route::get('/combo-offers', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'comboOffers'])->name('admin.ecommerce.combo_offers');
+    Route::post('/combo-offers/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'comboOfferStore'])->name('admin.ecommerce.combo_offers.store');
+    Route::get('/combo-offers/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'comboOfferDestroy'])->name('admin.ecommerce.combo_offers.destroy');
+
+    // 10. Coupons
+    Route::get('/coupons', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'coupons'])->name('admin.ecommerce.coupons');
+    Route::post('/coupons/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'couponStore'])->name('admin.ecommerce.coupons.store');
+    Route::get('/coupons/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'couponDestroy'])->name('admin.ecommerce.coupons.destroy');
+
+    // 11. Orders
+    Route::get('/orders', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orders'])->name('admin.ecommerce.orders');
+    Route::get('/orders/show/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderShow'])->name('admin.ecommerce.orders.show');
+    Route::match(['post', 'put'], '/orders/status/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderStatusUpdate'])->name('admin.ecommerce.orders.status');
+    Route::match(['post', 'put'], '/orders/payment-status/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderPaymentStatusUpdate'])->name('admin.ecommerce.orders.payment_status');
+    Route::get('/orders/invoice/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderInvoice'])->name('admin.ecommerce.orders.invoice');
+    Route::post('/orders/{id}/send-courier', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderSendCourier'])->name('admin.ecommerce.orders.send_courier');
+    Route::post('/orders/bulk-action', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'ordersBulkAction'])->name('admin.ecommerce.orders.bulk_action');
+    Route::match(['get', 'delete'], '/orders/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderDestroy'])->name('admin.ecommerce.orders.destroy');
+    Route::post('/orders/create-manual', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'orderCreateManual'])->name('admin.ecommerce.orders.create_manual');
+    Route::get('/orders/check-customer/{phone}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'checkCustomer'])->name('admin.ecommerce.orders.check_customer');
+
+    // Courier Settings
+    Route::get('/courier/steadfast', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'courierSteadfast'])->name('admin.ecommerce.courier.steadfast');
+    Route::post('/courier/steadfast', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'courierSteadfastUpdate'])->name('admin.ecommerce.courier.steadfast.update');
+    Route::get('/courier/pathao', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'courierPathao'])->name('admin.ecommerce.courier.pathao');
+    Route::post('/courier/pathao', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'courierPathaoUpdate'])->name('admin.ecommerce.courier.pathao.update');
+
+    // 12. Customers
+    Route::get('/customers', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'customers'])->name('admin.ecommerce.customers');
+
+    // 13. Shipping Areas
+    Route::get('/shipping', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shipping'])->name('admin.ecommerce.shipping');
+    Route::post('/shipping/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingStore'])->name('admin.ecommerce.shipping.store');
+    Route::post('/shipping/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingUpdate'])->name('admin.ecommerce.shipping.update');
+    Route::get('/shipping/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingDestroy'])->name('admin.ecommerce.shipping.destroy');
+
+    // 14. Payment Methods
+    Route::get('/payments', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'payments'])->name('admin.ecommerce.payments');
+    Route::post('/payments/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'paymentUpdate'])->name('admin.ecommerce.payments.update');
+
+    // 15. Reports
+    Route::get('/reports', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'reports'])->name('admin.ecommerce.reports');
+
+    // 16. Settings
+    Route::get('/settings', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'settings'])->name('admin.ecommerce.settings');
+    Route::post('/settings/update', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'settingsUpdate'])->name('admin.ecommerce.settings.update');
+});
+
+// =========================================================================
+// Super Shop & Multi-Branch Management Enterprise Module Routes
+// =========================================================================
+Route::group(['prefix' => 'admin/supershop', 'middleware' => ['auth', 'role:super_admin,admin']], function () {
+    // 1. Central & Branch Executive Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\SuperShop\SuperShopDashboardController::class, 'index'])->name('admin.supershop.dashboard');
+
+    // 2. Branch Management
+    Route::get('/branches', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'index'])->name('admin.supershop.branches');
+    Route::post('/branches/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'store'])->name('admin.supershop.branches.store');
+    Route::match(['post', 'put'], '/branches/update/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'update'])->name('admin.supershop.branches.update');
+    Route::match(['get', 'delete'], '/branches/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'destroy'])->name('admin.supershop.branches.destroy');
+
+    // 3. Branch Inventory & Stock Movement
+    Route::get('/inventory', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'index'])->name('admin.supershop.inventory');
+    Route::post('/inventory/adjust/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'adjustStock'])->name('admin.supershop.inventory.adjust');
+    Route::post('/inventory/assign-product', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'assignProduct'])->name('admin.supershop.inventory.assign');
+    Route::get('/inventory/movements', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'movements'])->name('admin.supershop.inventory.movements');
+
+    // 4. POS Terminal & Fast Billing
+    Route::get('/pos', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'terminal'])->name('admin.supershop.pos');
+    Route::get('/pos/barcode', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'barcodeSearch'])->name('admin.supershop.pos.barcode');
+    Route::get('/pos/search', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'searchProducts'])->name('admin.supershop.pos.search');
+    Route::get('/pos/customer-lookup', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'customerLookup'])->name('admin.supershop.pos.customer_lookup');
+    Route::post('/pos/checkout', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'checkout'])->name('admin.supershop.pos.checkout');
+    Route::get('/pos/receipt/{id}', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'receipt'])->name('admin.supershop.pos.receipt');
+
+    // 5. Cashier Shift & Cash Drawer
+    Route::get('/shifts', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'index'])->name('admin.supershop.shifts');
+    Route::post('/shifts/open', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'openShift'])->name('admin.supershop.shifts.open');
+    Route::post('/shifts/close/{id}', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'closeShift'])->name('admin.supershop.shifts.close');
+    Route::post('/shifts/drawer-transaction', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'drawerTransaction'])->name('admin.supershop.shifts.drawer_transaction');
+
+    // 6. Central Procurement & Suppliers (PO & GRN)
+    Route::get('/procurement', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'index'])->name('admin.supershop.procurement');
+    Route::post('/procurement/suppliers/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'supplierStore'])->name('admin.supershop.procurement.suppliers.store');
+    Route::post('/procurement/po/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'poStore'])->name('admin.supershop.procurement.po.store');
+    Route::post('/procurement/grn/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'grnStore'])->name('admin.supershop.procurement.grn.store');
+
+    // 7. Branch-to-Branch Stock Transfers
+    Route::get('/transfers', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'index'])->name('admin.supershop.transfers');
+    Route::post('/transfers/store', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'store'])->name('admin.supershop.transfers.store');
+    Route::post('/transfers/dispatch/{id}', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'dispatchTransfer'])->name('admin.supershop.transfers.dispatch');
+    Route::post('/transfers/receive/{id}', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'receiveTransfer'])->name('admin.supershop.transfers.receive');
+
+    // 8. POS Sales & Returns
+    Route::get('/sales', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'index'])->name('admin.supershop.sales');
+    Route::get('/sales/show/{id}', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'show'])->name('admin.supershop.sales.show');
+    Route::post('/sales/return', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'returnStore'])->name('admin.supershop.sales.return');
+
+    // 9. Branch Expenses
+    Route::get('/expenses', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'index'])->name('admin.supershop.expenses');
+    Route::post('/expenses/store', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'store'])->name('admin.supershop.expenses.store');
+    Route::match(['get', 'delete'], '/expenses/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'destroy'])->name('admin.supershop.expenses.destroy');
+
+    // 10. Reports & Business Intelligence
+    Route::get('/reports', [\App\Http\Controllers\Admin\SuperShop\ReportsController::class, 'index'])->name('admin.supershop.reports');
+});

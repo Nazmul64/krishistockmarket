@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="1200" height="240">
+  <defs>
+    <linearGradient id="win_bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="50%" stop-color="#f0f9ff"/>
+      <stop offset="100%" stop-color="#ccfbf1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="240" rx="14" fill="url(#win_bg)"/>
+  <g transform="translate(60, 45)">
+    <rect x="0" y="0" width="160" height="28" rx="14" fill="#0284c7"/>
+    <text x="80" y="19" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">WINTER SPECIAL</text>
+    <text x="0" y="65" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="36" font-weight="900" fill="#0369a1">শীতকালীন নিত্যপ্রয়োজনীয় পণ্যের বাজার</text>
+    <text x="0" y="98" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="17" font-weight="600" fill="#0c4a6e">খাঁটি সরিষার তেল, খেজুর গুড়, বডি লোশন ও শীতকালীন হেলথ কেয়ার</text>
+  </g>
+  <g transform="translate(900, 50)">
+    <text x="80" y="80" font-size="70" text-anchor="middle">❄️</text>
+  </g>
+</svg>

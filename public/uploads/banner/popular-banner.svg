@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="1200" height="240">
+  <defs>
+    <linearGradient id="pop_bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="60%" stop-color="#fce7f3"/>
+      <stop offset="100%" stop-color="#f0fdfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="240" rx="14" fill="url(#pop_bg)"/>
+  <g transform="translate(60, 45)">
+    <rect x="0" y="0" width="160" height="28" rx="14" fill="#db2777"/>
+    <text x="80" y="19" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle">BEST SELLERS</text>
+    <text x="0" y="65" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="36" font-weight="900" fill="#831843">জনপ্রিয় ও সর্বাধিক বিক্রীত পণ্যসমূহ</text>
+    <text x="0" y="98" font-family="'Segoe UI', 'Hind Siliguri', sans-serif" font-size="17" font-weight="600" fill="#9d174d">গ্রাহকদের পছন্দের সেরা খাদ্য ও নিত্যপ্রয়োজনীয় আইটেম</text>
+  </g>
+  <g transform="translate(900, 50)">
+    <text x="80" y="80" font-size="70" text-anchor="middle">⭐</text>
+  </g>
+</svg>
