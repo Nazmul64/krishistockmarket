@@ -122,8 +122,8 @@
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-primary text-white px-2 py-1 shadow-sm">
-                                                        <i class="ti-package me-1"></i>{{ $cat->products_count }} টি পণ্য
+                                                    <span class="badge" style="background-color: #0284c7; color: #ffffff; font-weight: 700; font-size: 12px; padding: 5px 9px;">
+                                                        <i class="fa fa-cubes me-1"></i>{{ $cat->products_count ?? 0 }} টি পণ্য
                                                     </span>
                                                 </td>
                                                 <td>
@@ -135,12 +135,12 @@
                                                 </td>
                                                 <td class="text-end">
                                                     <!-- Edit Button -->
-                                                    <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $cat->id }}" title="এডিট করুন">
-                                                        <i class="ti-pencil-alt"></i>
+                                                    <button type="button" class="btn btn-sm btn-info text-white me-1" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $cat->id }}" title="এডিট করুন">
+                                                        <i class="fa fa-edit me-1"></i>এডিট
                                                     </button>
                                                     <!-- Delete Button -->
-                                                    <a href="{{ route('admin.ecommerce.categories.destroy', $cat->id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('আপনি কি নিশ্চিত এই ক্যাটাগরি মুছে ফেলতে চান?')" title="ডিলিট করুন">
-                                                        <i class="ti-trash"></i>
+                                                    <a href="{{ route('admin.ecommerce.categories.destroy', $cat->id) }}" class="btn btn-sm btn-danger" onclick="return confirm('আপনি কি নিশ্চিত এই ক্যাটাগরি মুছে ফেলতে চান?')" title="ডিলিট করুন">
+                                                        <i class="fa fa-trash"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -154,7 +154,7 @@
                                                             @method('PUT')
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title fw-bold" id="editCatLabel{{ $cat->id }}">
-                                                                    <i class="ti-pencil-alt text-primary me-1"></i> ক্যাটাগরি সম্পাদনা: {{ $cat->name }}
+                                                                    <i class="fa fa-edit text-primary me-1"></i> ক্যাটাগরি সম্পাদনা: {{ $cat->name }}
                                                                 </h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
@@ -198,7 +198,7 @@
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
                                                                 <button type="submit" class="btn btn-primary">
-                                                                    <i class="ti-check me-1"></i> আপডেট সংরক্ষণ করুন
+                                                                    <i class="fa fa-check me-1"></i> আপডেট সংরক্ষণ করুন
                                                                 </button>
                                                             </div>
                                                         </form>

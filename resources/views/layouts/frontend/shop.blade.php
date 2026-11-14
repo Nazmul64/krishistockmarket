@@ -519,49 +519,186 @@
             transform: scale(0.98);
         }
 
-        /* Floating Cart Widget */
+        /* ================= 3-COLOR REVOLVING BORDER FLOATING CART WIDGET ================= */
         .floating-cart-badge {
-            position: fixed;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #007e8a;
-            color: #ffffff;
-            border: 2px solid #ef4444;
-            border-right: none;
-            border-radius: 8px 0 0 8px;
-            padding: 10px 14px;
+            position: fixed !important;
+            right: 0 !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            z-index: 999999 !important;
+            cursor: pointer;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5px 0 2.5px 2.5px;
+            border-radius: 12px 0 0 12px;
+            background: transparent;
+            overflow: hidden;
+            box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.22);
+            transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+        }
+        .floating-cart-badge:hover {
+            transform: translateY(-50%) scale(1.05) !important;
+            box-shadow: -6px 8px 26px rgba(0, 0, 0, 0.28);
+        }
+        .floating-cart-badge:active {
+            transform: translateY(-50%) scale(0.97) !important;
+        }
+
+        /* 3-Color Revolving Conic Gradient Border (Teal, Amber/Yellow, Red) */
+        .floating-cart-badge::before {
+            content: '';
+            position: absolute;
+            top: -70%;
+            left: -70%;
+            width: 240%;
+            height: 240%;
+            background: conic-gradient(
+                from 0deg,
+                #00a896 0%,
+                #00a896 28%,
+                #f59e0b 38%,
+                #f59e0b 62%,
+                #ef4444 72%,
+                #ef4444 94%,
+                #00a896 100%
+            );
+            animation: rotateCartBorder 2.6s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes rotateCartBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Inner card on top of the revolving border */
+        .floating-cart-inner {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 9.5px 0 0 9.5px;
+            overflow: hidden;
+            min-width: 68px;
+            width: 68px;
+        }
+
+        /* White Top Half */
+        .floating-cart-top {
+            width: 100%;
+            background: #ffffff;
+            padding: 7px 4px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-            z-index: 1040;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .floating-cart-count {
+            font-size: 10.5px;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: 0.3px;
+            line-height: 1.1;
+            margin-top: 3px;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
         }
-        .floating-cart-badge:hover {
-            background: #006069;
-            padding-right: 18px;
+
+        /* Teal Bottom Half */
+        .floating-cart-bottom {
+            width: 100%;
+            background: #007e8a;
+            padding: 4px 4px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
-        .floating-cart-icon {
-            font-size: 20px;
-            margin-bottom: 3px;
-            color: #fef08a;
-        }
-        .floating-cart-count {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            line-height: 1.2;
-        }
+
         .floating-cart-price {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
-            margin-top: 2px;
-            color: #fff;
+            color: #ffffff;
+            line-height: 1.1;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Animated Shopping Bag Icon (Item Drops In + Bag Squashes) */
+        .cart-anim-bag-wrapper {
+            position: relative;
+            width: 32px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+        .cart-anim-bag-svg {
+            overflow: visible;
+            display: block;
+        }
+
+        @keyframes dropIntoBag {
+            0% {
+                opacity: 0;
+                transform: translateY(-13px) scale(0.6);
+            }
+            18% {
+                opacity: 1;
+                transform: translateY(-9px) scale(0.95);
+            }
+            48% {
+                opacity: 1;
+                transform: translateY(4px) scale(0.95);
+            }
+            60% {
+                opacity: 0;
+                transform: translateY(14px) scale(0.4);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(14px) scale(0.4);
+            }
+        }
+
+        @keyframes bagSquash {
+            0%, 46% {
+                transform: scale(1, 1);
+            }
+            54% {
+                transform: scale(1.18, 0.82);
+            }
+            66% {
+                transform: scale(0.92, 1.08);
+            }
+            78% {
+                transform: scale(1.05, 0.96);
+            }
+            88% {
+                transform: scale(0.98, 1.02);
+            }
+            100% {
+                transform: scale(1, 1);
+            }
+        }
+
+        .cart-drop-item {
+            transform-origin: 20px 7px;
+            animation: dropIntoBag 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .cart-bag-group {
+            transform-origin: 20px 40px;
+            animation: bagSquash 1.8s ease-in-out infinite;
         }
 
         /* Cart Drawer (Slide-out) */
@@ -1057,17 +1194,27 @@
                 max-width: 92%;
             }
             .floating-cart-badge {
-                padding: 6px 10px;
-                border-radius: 6px 0 0 6px;
+                padding: 2px 0 2px 2px !important;
+                border-radius: 8px 0 0 8px !important;
             }
-            .floating-cart-icon {
-                font-size: 15px;
+            .floating-cart-inner {
+                min-width: 54px !important;
+                width: 54px !important;
+                border-radius: 6px 0 0 6px !important;
+            }
+            .cart-anim-bag-wrapper {
+                width: 26px !important;
+                height: 28px !important;
+            }
+            .cart-anim-bag-svg {
+                width: 26px !important;
+                height: 28px !important;
             }
             .floating-cart-count {
-                font-size: 9px;
+                font-size: 8px !important;
             }
             .floating-cart-price {
-                font-size: 11px;
+                font-size: 10px !important;
             }
             .shop-support-bubble {
                 bottom: 15px;
@@ -1221,11 +1368,37 @@
         </div>
     </div>
 
-    <!-- Floating Bag Widget on the Right (0 ITEM ৳0) -->
-    <div class="floating-cart-badge" id="floatingCartBtn" onclick="ShopCart.openDrawer()">
-        <i class="fa-solid fa-basket-shopping floating-cart-icon"></i>
-        <div class="floating-cart-count" id="floatingCartCount">0 ITEM</div>
-        <div class="floating-cart-price" id="floatingCartTotal">৳ 0</div>
+    <!-- Floating Bag Widget on the Far-Right Edge (3-Color Revolving Border + Animated Bag) -->
+    <div class="floating-cart-badge" id="floatingCartBtn" onclick="ShopCart.openDrawer()" title="আমার শপিং ব্যাগ">
+        <div class="floating-cart-inner">
+            <div class="floating-cart-top">
+                <div class="cart-anim-bag-wrapper">
+                    <svg class="cart-anim-bag-svg" viewBox="0 0 40 42" width="30" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Falling Item (Item drops into bag opening) -->
+                        <g class="cart-drop-item">
+                            <rect x="14" y="2" width="12" height="10" rx="2" fill="#f59e0b" stroke="#b45309" stroke-width="1.2"/>
+                            <path d="M20 2v10M14 7h12" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+                        </g>
+                        <!-- Shopping Bag Group (Squashes & stretches with physics bounce) -->
+                        <g class="cart-bag-group">
+                            <!-- Bag Handle -->
+                            <path d="M14 17 C14 9, 26 9, 26 17" stroke="#007e8a" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                            <!-- Bag Body -->
+                            <path d="M7 17 L9.5 37 C9.7 38.6 11.1 39.8 12.7 39.8 L27.3 39.8 C28.9 39.8 30.3 38.6 30.5 37 L33 17 Z" fill="#008a96" stroke="#00646d" stroke-width="1.5" stroke-linejoin="round"/>
+                            <!-- Bag Opening Rim -->
+                            <path d="M7 17 C13 19.5 27 19.5 33 17" stroke="#004d54" stroke-width="1.2" fill="none"/>
+                            <!-- Bag Emblem Accent -->
+                            <circle cx="20" cy="28.5" r="3.5" fill="#fef08a"/>
+                            <path d="M18.5 28.5 Q20 30 21.5 28.5" stroke="#b45309" stroke-width="0.9" stroke-linecap="round" fill="none"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="floating-cart-count" id="floatingCartCount">0 ITEM</div>
+            </div>
+            <div class="floating-cart-bottom">
+                <div class="floating-cart-price" id="floatingCartTotal">৳ 0</div>
+            </div>
+        </div>
     </div>
 
     <!-- Slide-out Cart Drawer -->
@@ -1587,7 +1760,7 @@
 
                 // Update Floating Widget
                 const floatCount = document.getElementById('floatingCartCount');
-                if (floatCount) floatCount.textContent = totalCount + ' ITEM' + (totalCount !== 1 ? 'S' : '');
+                if (floatCount) floatCount.textContent = totalCount + (totalCount > 1 ? ' ITEMS' : ' ITEM');
                 const floatTotal = document.getElementById('floatingCartTotal');
                 if (floatTotal) floatTotal.textContent = '৳ ' + Math.round(subtotal);
 

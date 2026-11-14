@@ -960,11 +960,9 @@
                     <div class="col">
                         <div class="shop-product-card shadow-sm">
                             <div>
-                                {{-- Show red discount badge ONLY on Daily Offers page OR if product is specifically a daily offer --}}
-                                @if($badgeFilter === 'daily-offers' || ($product->is_daily_offer && $product->offer_end_date))
-                                    @if($product->old_price && $product->old_price > $product->price)
-                                        <span class="prod-discount-badge">৳{{ round($product->old_price - $product->price) }}<br><small style="font-size: 8.5px; font-weight: 900;">OFF</small></span>
-                                    @endif
+                                {{-- Show discount badge ONLY when product has a discount --}}
+                                @if($product->old_price && $product->old_price > $product->price)
+                                    <span class="prod-discount-badge">৳{{ round($product->old_price - $product->price) }}<br><small style="font-size: 8.5px; font-weight: 900;">OFF</small></span>
                                 @endif
 
                                 <a href="{{ route('products.show', $product->slug) }}" class="prod-img-wrap">
@@ -974,12 +972,9 @@
                                     <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
-                                {{-- Show timer strip ONLY on Daily Offers page --}}
-                                @if($badgeFilter === 'daily-offers' || ($product->is_daily_offer && $product->offer_end_date))
-                                    @php
-                                        $timerTarget = $product->offer_end_date ?: now()->addDays(16)->addHours(10)->addMinutes(12)->addSeconds(10);
-                                    @endphp
-                                    <div class="prod-timer-strip" data-end-time="{{ \Carbon\Carbon::parse($timerTarget)->toIso8601String() }}">
+                                {{-- Show timer strip ONLY on products that have an explicit future offer end date --}}
+                                @if(!empty($product->offer_end_date) && \Carbon\Carbon::parse($product->offer_end_date)->isFuture())
+                                    <div class="prod-timer-strip" data-end-time="{{ \Carbon\Carbon::parse($product->offer_end_date)->toIso8601String() }}">
                                         <div class="timer-segment"><span class="t-val t-day">00</span><span class="t-lbl">DAY</span></div>
                                         <span class="t-sep">:</span>
                                         <div class="timer-segment"><span class="t-val t-hour">00</span><span class="t-lbl">HR</span></div>
