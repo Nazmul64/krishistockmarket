@@ -8,42 +8,184 @@
         background: #ffffff;
         border: 1px solid var(--shop-border);
         border-radius: 12px;
-        padding: 30px;
+        padding: 24px;
         margin-bottom: 40px;
     }
+
+    /* Product Image Outer & Zoom Container */
+    .prod-img-outer {
+        position: relative;
+    }
     .prod-main-img-wrap {
+        position: relative;
         background: #ffffff;
-        border: 1px solid #f1f5f9;
+        border: 1px solid #e2e8f0;
         border-radius: 12px;
-        padding: 30px;
+        padding: 16px;
         text-align: center;
-        height: 420px;
+        height: 440px;
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
+        cursor: crosshair;
     }
     .prod-main-img-wrap img {
         max-height: 100%;
         max-width: 100%;
         object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-    .prod-main-img-wrap:hover img {
-        transform: scale(1.05);
+        user-select: none;
+        pointer-events: none;
     }
 
+    /* Interactive Zoom Lens */
+    .zoom-lens {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border: 2px solid #008080;
+        background: rgba(0, 128, 128, 0.15);
+        border-radius: 6px;
+        pointer-events: none;
+        display: none;
+        z-index: 10;
+        box-shadow: 0 0 10px rgba(0, 128, 128, 0.2);
+    }
+
+    /* Flyout Zoom Preview Window */
+    .zoom-flyout-window {
+        position: absolute;
+        top: 0;
+        left: 103%;
+        width: 480px;
+        height: 440px;
+        background: #ffffff;
+        border: 2px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.18);
+        z-index: 1050;
+        display: none;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    /* Multiple Pictures / Gallery Thumbnails Slider */
+    .thumb-slider-container {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        margin-top: 12px;
+    }
+    .thumb-slider-track {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        padding: 4px 2px;
+        scrollbar-width: thin;
+        flex-grow: 1;
+    }
+    .thumb-slider-track::-webkit-scrollbar {
+        height: 4px;
+    }
+    .thumb-slider-track::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    .thumb-card {
+        flex: 0 0 68px;
+        height: 76px;
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 3px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .thumb-card img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    .thumb-card.active, .thumb-card:hover {
+        border-color: #ea580c;
+        box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
+        transform: scale(1.02);
+    }
+    .thumb-nav-btn {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.15s;
+        color: #475569;
+        flex-shrink: 0;
+    }
+    .thumb-nav-btn:hover {
+        background: #008080;
+        color: #ffffff;
+        border-color: #008080;
+    }
+
+    /* Product Title & Code */
     .prod-detail-title {
-        font-size: 26px;
+        font-size: 24px;
         font-weight: 800;
         color: #0f172a;
-        margin-bottom: 12px;
-        line-height: 1.3;
+        margin-bottom: 8px;
+        line-height: 1.35;
     }
+    .prod-code-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-size: 12px;
+        color: #475569;
+        margin-bottom: 12px;
+    }
+    .btn-copy-code {
+        background: transparent;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 1px 8px;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #334155;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.15s;
+    }
+    .btn-copy-code:hover {
+        background: #008080;
+        color: #ffffff;
+        border-color: #008080;
+    }
+
+    /* Price styling */
     .prod-detail-price {
         font-size: 28px;
         font-weight: 800;
-        color: var(--shop-teal);
-        margin-bottom: 12px;
+        color: #0f172a;
+        margin-bottom: 16px;
         display: flex;
         align-items: baseline;
         gap: 12px;
@@ -55,107 +197,30 @@
         font-weight: 400;
     }
 
-    /* Product Card Red Discount Badge (Top-Left) */
-    .prod-discount-badge {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        background: #dc2626;
-        color: #ffffff;
-        font-size: 11px;
-        font-weight: 800;
-        line-height: 1.1;
-        padding: 4px 7px;
-        border-radius: 4px;
-        z-index: 3;
-        box-shadow: 0 2px 5px rgba(220, 38, 38, 0.35);
-        text-align: center;
-    }
-
-    /* Countdown Timer Strip */
-    .prod-timer-strip {
-        background: #005f69;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        padding: 3px 6px;
-        border-radius: 4px;
-        margin: 6px 0 8px;
-        font-family: inherit;
-    }
-    .timer-segment {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-width: 22px;
-        line-height: 1;
-    }
-    .timer-segment .t-val {
-        font-size: 11px;
-        font-weight: 800;
-        color: #ffffff;
-    }
-    .timer-segment .t-lbl {
-        font-size: 8px;
-        font-weight: 700;
-        opacity: 0.85;
-        letter-spacing: 0.3px;
-    }
-    .t-sep {
-        font-size: 11px;
-        font-weight: 800;
-        color: #99f6e4;
-        margin-top: -3px;
-    }
-
-    .prod-badge-strip {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-    }
-    .badge-spec-box {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        padding: 6px 14px;
-        border-radius: 6px;
-        font-size: 12.5px;
-    }
-    .badge-spec-label {
-        color: #64748b;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        margin-right: 6px;
-    }
-    .badge-spec-value {
-        font-weight: 700;
-        color: #0f172a;
-    }
-
+    /* Quantity and Action Buttons */
     .prod-action-row {
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 30px;
+        gap: 12px;
+        margin-bottom: 16px;
         flex-wrap: wrap;
     }
     .prod-qty-selector {
         display: flex;
         align-items: center;
-        border: 2px solid var(--shop-teal);
+        border: 1px solid #cbd5e1;
         border-radius: 8px;
         overflow: hidden;
+        background: #ffffff;
     }
     .qty-btn-sel {
-        background: #ffffff;
+        background: #f8fafc;
         border: none;
-        width: 40px;
-        height: 42px;
+        width: 36px;
+        height: 38px;
         font-size: 16px;
+        font-weight: 700;
+        color: #334155;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -163,50 +228,148 @@
         transition: background 0.15s;
     }
     .qty-btn-sel:hover {
-        background: #f1f5f9;
+        background: #e2e8f0;
     }
     .qty-input-sel {
-        width: 50px;
-        height: 42px;
+        width: 44px;
+        height: 38px;
         border: none;
         text-align: center;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
         outline: none;
     }
 
-    .btn-detail-add-bag {
-        background: var(--shop-teal);
+    /* Action Buttons Matching Screenshot */
+    .btn-buy-now {
+        background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
         color: #ffffff;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 32px;
+        font-weight: 800;
         font-size: 15px;
-        font-weight: 700;
+        padding: 10px 24px;
+        border-radius: 8px;
+        border: none;
         display: inline-flex;
         align-items: center;
         gap: 8px;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 4px 12px rgba(0, 126, 138, 0.2);
+        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
     }
-    .btn-detail-add-bag:hover {
-        background: var(--shop-teal-dark);
+    .btn-buy-now:hover {
+        background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
         color: #ffffff;
         transform: translateY(-2px);
+    }
+
+    .btn-add-cart-outline {
+        background: #ffffff;
+        color: #0f172a;
+        font-weight: 800;
+        font-size: 15px;
+        padding: 10px 24px;
+        border-radius: 8px;
+        border: 2px solid #0f172a;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-add-cart-outline:hover {
+        background: #0f172a;
+        color: #ffffff;
+        transform: translateY(-2px);
+    }
+
+    .btn-whatsapp-order {
+        background: #ecfdf5;
+        color: #059669;
+        font-weight: 700;
+        font-size: 13.5px;
+        padding: 8px 18px;
+        border-radius: 8px;
+        border: 1px solid #a7f3d0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-whatsapp-order:hover {
+        background: #059669;
+        color: #ffffff;
+        border-color: #059669;
+    }
+
+    .btn-call-order {
+        background: #eff6ff;
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 13.5px;
+        padding: 8px 18px;
+        border-radius: 8px;
+        border: 1px solid #bfdbfe;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-call-order:hover {
+        background: #2563eb;
+        color: #ffffff;
+        border-color: #2563eb;
+    }
+
+    /* Product Video Card (Right Column) */
+    .product-video-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        position: sticky;
+        top: 90px;
+    }
+    .video-card-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+    .video-embed-wrapper {
+        position: relative;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #0f172a;
+        aspect-ratio: 9/16; /* Vertical video / Shorts style */
+        max-height: 480px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+    .video-embed-wrapper iframe, .video-embed-wrapper video {
+        width: 100%;
+        height: 100%;
+        border: none;
+        object-fit: cover;
     }
 
     /* Product Description Box with Read More Collapse */
     .desc-wrapper {
         border-top: 1px solid #f1f5f9;
-        padding-top: 24px;
+        padding-top: 20px;
         margin-top: 20px;
     }
     .desc-head-title {
         font-size: 16px;
         font-weight: 800;
         color: #0f172a;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
     .desc-content-box {
         font-size: 14px;
@@ -238,30 +401,17 @@
         background: var(--shop-teal-light);
         border-color: var(--shop-teal);
     }
-    @media (max-width: 768px) {
-        .prod-detail-card {
-            padding: 16px;
+
+    @media (max-width: 991px) {
+        .zoom-flyout-window {
+            display: none !important;
+        }
+        .zoom-lens {
+            display: none !important;
         }
         .prod-main-img-wrap {
-            height: 250px;
-            padding: 16px;
-        }
-        .prod-detail-title {
-            font-size: 20px;
-        }
-        .prod-detail-price {
-            font-size: 22px;
-            margin-bottom: 14px;
-        }
-        .prod-action-row {
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .btn-detail-add-bag {
-            padding: 8px 20px;
-            font-size: 14px;
-            flex-grow: 1;
-            justify-content: center;
+            height: 320px;
+            cursor: default;
         }
     }
 </style>
@@ -283,35 +433,76 @@
     </ol>
 </nav>
 
+@php
+    // Collect all unique images for multiple image slider
+    $allImages = $product->all_images;
+    if (empty($allImages) && !empty($product->image)) {
+        $allImages = [$product->image];
+    }
+    $hasVideo = !empty($product->video_url);
+@endphp
+
 <!-- Main Product View Card -->
 <div class="prod-detail-card shadow-sm">
     <div class="row g-4">
-        <!-- Product Image (Left) -->
-        <div class="col-lg-5">
-            <div class="prod-main-img-wrap">
-                <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" id="mainProductImg">
+        
+        <!-- =================== 1. Product Image & Multiple Pictures Slider (Left) =================== -->
+        <div class="{{ $hasVideo ? 'col-lg-4 col-md-5' : 'col-lg-5 col-md-6' }}">
+            <div class="prod-img-outer" id="prodImgContainer">
+                <div class="prod-main-img-wrap" id="mainImgWrap">
+                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" id="mainProductImg">
+                    <!-- Zoom Lens -->
+                    <div id="zoomLens" class="zoom-lens"></div>
+                </div>
+
+                <!-- Flyout Zoom Box (Opens on right when hovered) -->
+                <div id="zoomFlyoutWindow" class="zoom-flyout-window"></div>
             </div>
-            @if($product->images && $product->images->isNotEmpty())
-                <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
-                    <div class="border rounded p-1 cursor-pointer bg-white" style="cursor: pointer; width: 64px; height: 64px;" onclick="document.getElementById('mainProductImg').src='{{ asset($product->image) }}'">
-                        <img src="{{ asset($product->image) }}" style="width: 100%; height: 100%; object-fit: contain;">
+
+            <!-- Multiple Pictures Thumbnails Slider (Below Main Image) -->
+            @if(count($allImages) > 1)
+                <div class="thumb-slider-container">
+                    <button type="button" class="thumb-nav-btn prev-btn" onclick="scrollThumbs(-1)" aria-label="Previous">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <div class="thumb-slider-track" id="thumbSliderTrack">
+                        @foreach($allImages as $idx => $tImg)
+                            <div class="thumb-card {{ $idx === 0 ? 'active' : '' }}" 
+                                 onclick="changeMainImage('{{ asset($tImg) }}', this)"
+                                 onmouseenter="changeMainImage('{{ asset($tImg) }}', this)">
+                                <img src="{{ asset($tImg) }}" alt="{{ $product->name }} view {{ $idx + 1 }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';">
+                            </div>
+                        @endforeach
                     </div>
-                    @foreach($product->images as $gImg)
-                        <div class="border rounded p-1 cursor-pointer bg-white" style="cursor: pointer; width: 64px; height: 64px;" onclick="document.getElementById('mainProductImg').src='{{ asset($gImg->image) }}'">
-                            <img src="{{ asset($gImg->image) }}" style="width: 100%; height: 100%; object-fit: contain;">
-                        </div>
-                    @endforeach
+                    <button type="button" class="thumb-nav-btn next-btn" onclick="scrollThumbs(1)" aria-label="Next">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
                 </div>
             @endif
         </div>
 
-        <!-- Product Details (Right) -->
-        <div class="col-lg-7">
-            <div class="ps-lg-3">
-                <span class="prod-delivery-badge mb-2"><i class="fa fa-clock me-1"></i>{{ $product->delivery_time }}</span>
-                
+        <!-- =================== 2. Product Details & Action Buttons (Center) =================== -->
+        <div class="{{ $hasVideo ? 'col-lg-5 col-md-7' : 'col-lg-7 col-md-6' }}">
+            <div class="ps-lg-2">
                 <h1 class="prod-detail-title">{{ $product->name }}</h1>
 
+                <!-- Product Code with Copy Button (Screenshot match) -->
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="prod-code-badge">
+                        <i class="fa fa-barcode text-muted"></i>
+                        <span>Code: <strong class="text-dark">{{ $product->sku ?: 'SKU-' . $product->id }}</strong></span>
+                        <button type="button" class="btn-copy-code" onclick="copyProductCode('{{ $product->sku ?: 'SKU-' . $product->id }}', this)">
+                            <i class="fa fa-copy"></i>
+                            <span class="copy-lbl">Copy</span>
+                        </button>
+                    </div>
+
+                    @if($product->delivery_time)
+                        <span class="badge bg-light text-muted border px-2 py-1 small"><i class="fa fa-clock text-info me-1"></i>{{ $product->delivery_time }}</span>
+                    @endif
+                </div>
+
+                <!-- Price & Discount -->
                 <div class="prod-detail-price">
                     <span id="currentDisplayPrice">{{ $product->formatted_price }}</span>
                     @if($product->formatted_old_price)
@@ -320,10 +511,11 @@
                     @endif
                 </div>
 
-                @if($product->offer_end_date)
+                <!-- Countdown Timer (if promo offer) -->
+                @if($product->offer_end_date && \Carbon\Carbon::parse($product->offer_end_date)->isFuture())
                     <div class="mb-3">
                         <div class="text-danger small fw-bold mb-1"><i class="fa fa-fire me-1"></i> অফারটি শেষ হতে বাকি আছে:</div>
-                        <div class="prod-timer-strip" data-end-time="{{ \Carbon\Carbon::parse($product->offer_end_date)->toIso8601String() }}" style="max-width: 280px; padding: 6px 12px; margin: 0;">
+                        <div class="prod-timer-strip" data-end-time="{{ \Carbon\Carbon::parse($product->offer_end_date)->toIso8601String() }}" style="max-width: 260px; padding: 5px 10px; margin: 0;">
                             <div class="timer-segment"><span class="t-val t-day" style="font-size: 13px;">00</span><span class="t-lbl">DAY</span></div>
                             <span class="t-sep" style="font-size: 13px;">:</span>
                             <div class="timer-segment"><span class="t-val t-hour" style="font-size: 13px;">00</span><span class="t-lbl">HR</span></div>
@@ -335,8 +527,8 @@
                     </div>
                 @endif
 
+                <!-- Variant Options (if any) -->
                 @if($product->has_variants && $product->variants && $product->variants->isNotEmpty())
-                    <!-- Variant Options Selector -->
                     <div class="mb-3 p-3 bg-light rounded-3 border">
                         <label class="form-label fw-bold small text-muted text-uppercase mb-2">উপলব্ধ ভ্যারিয়েন্ট / সাইজ নির্বাচন করুন:</label>
                         <div class="d-flex flex-wrap gap-2" id="variantSelectorGroup">
@@ -366,56 +558,85 @@
                     </div>
                 @endif
 
-                <!-- Add to Bag and Quantity Controller -->
-                <div class="prod-action-row">
+                <!-- Quantity Selector -->
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <span class="small fw-bold text-muted text-uppercase">Quantity:</span>
                     <div class="prod-qty-selector">
                         <button type="button" class="qty-btn-sel" onclick="changeQty(-1)">−</button>
                         <input type="text" id="detailQtyInput" class="qty-input-sel" value="1" readonly>
                         <button type="button" class="qty-btn-sel" onclick="changeQty(1)">+</button>
                     </div>
+                </div>
 
-                    <button type="button" class="btn-detail-add-bag" onclick="addCurrentProductToBag()">
-                        <i class="fa fa-plus"></i>
-                        <span>Add to Bag</span>
+                <!-- Primary Action Buttons (অর্ডার করুন & কার্টে রাখুন) -->
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <button type="button" class="btn btn-buy-now" onclick="buyNowCurrentProduct()">
+                        <i class="fa fa-bolt"></i>
+                        <span>অর্ডার করুন</span>
+                    </button>
+                    <button type="button" class="btn btn-add-cart-outline" onclick="addCurrentProductToBag()">
+                        <i class="fa fa-shopping-bag"></i>
+                        <span>কার্টে রাখুন</span>
                     </button>
                 </div>
 
-                <!-- Badges: AVAILABILITY & SKU -->
-                <div class="prod-badge-strip">
-                    <div class="badge-spec-box">
-                        <span class="badge-spec-label">AVAILABILITY</span>
-                        <span class="badge-spec-value text-success"><i class="fa fa-circle-check me-1"></i>In Stock</span>
-                    </div>
-
-                    <div class="badge-spec-box">
-                        <span class="badge-spec-label">SKU</span>
-                        <span class="badge-spec-value">{{ $product->sku ?: '894118400' . $product->id }}</span>
-                    </div>
-
-                    @if($product->brand)
-                        <div class="badge-spec-box">
-                            <span class="badge-spec-label">BRAND</span>
-                            <span class="badge-spec-value">{{ $product->brand }}</span>
-                        </div>
-                    @endif
+                <!-- Contact & Call for Order Buttons -->
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <a href="https://wa.me/8801805020340?text={{ urlencode('আমি এই পণ্যটি কিনতে আগ্রহী: ' . $product->name . ' (Code: ' . ($product->sku ?: 'SKU-' . $product->id) . ')') }}" target="_blank" class="btn btn-whatsapp-order">
+                        <i class="fab fa-whatsapp fs-5"></i>
+                        <span>01805-020340</span>
+                    </a>
+                    <a href="tel:01805020340" class="btn btn-call-order">
+                        <i class="fa fa-phone-alt"></i>
+                        <span>Call For Order</span>
+                    </a>
                 </div>
 
-                <!-- Product Description with Read More ⌄ Collapsible Toggle -->
+                <!-- Product Description with Show More Collapse -->
                 <div class="desc-wrapper">
-                    <h5 class="desc-head-title">Product Description</h5>
+                    <h5 class="desc-head-title">Description</h5>
                     <div class="desc-content-box collapsed" id="descContentBox">
+                        <p class="fw-bold mb-1">{{ $product->name }}</p>
                         {!! nl2br(e($product->description)) !!}
                         @if(empty($product->description))
-                            <p>Experience authentic quality and maximum freshness with {{ $product->name }}. Carefully packaged and sourced to ensure natural taste, essential nutrition, and hygienic purity for your daily household needs.</p>
+                            <p>Add a fresh touch to your daily lifestyle with {{ $product->name }}. Carefully sourced and verified for authentic quality, durability, and complete customer satisfaction.</p>
                         @endif
                     </div>
                     <button type="button" class="btn-read-more-toggle" id="btnReadMoreToggle" onclick="toggleDescription()">
-                        <span id="readMoreLabel">Read More</span>
+                        <span id="readMoreLabel">Show more</span>
                         <i class="fa fa-chevron-down" id="readMoreChevron"></i>
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- =================== 3. Dedicated Product Video Card (Right Column) =================== -->
+        @if($hasVideo)
+            <div class="col-lg-3 col-md-12">
+                <div class="product-video-card shadow-sm">
+                    <h6 class="video-card-title">
+                        <i class="fa fa-play-circle text-danger me-2 fs-5"></i> Product Video
+                    </h6>
+                    <div class="video-embed-wrapper">
+                        @if(strpos($product->video_url, 'youtube.com') !== false || strpos($product->video_url, 'youtu.be') !== false)
+                            @php
+                                $embedUrl = $product->video_url;
+                                if (preg_match('/(?:shorts\/|v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $product->video_url, $vMatch)) {
+                                    $embedUrl = 'https://www.youtube.com/embed/' . $vMatch[1] . '?autoplay=0&rel=0';
+                                }
+                            @endphp
+                            <iframe src="{{ $embedUrl }}" title="{{ $product->name }} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        @else
+                            <video controls poster="{{ asset('uploads/products/three_piece_video_poster.jpg') }}" playsinline class="w-100 h-100">
+                                <source src="{{ $product->video_url }}" type="video/mp4">
+                                আপনার ব্রাউজার ভিডিও প্লেব্যাক সমর্থন করে না।
+                            </video>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
 </div>
 
@@ -441,18 +662,6 @@
                             <img src="{{ asset($rel->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $rel->name }}" loading="lazy">
                         </a>
 
-                        @if($rel->offer_end_date)
-                            <div class="prod-timer-strip" data-end-time="{{ \Carbon\Carbon::parse($rel->offer_end_date)->toIso8601String() }}">
-                                <div class="timer-segment"><span class="t-val t-day">00</span><span class="t-lbl">DAY</span></div>
-                                <span class="t-sep">:</span>
-                                <div class="timer-segment"><span class="t-val t-hour">00</span><span class="t-lbl">HR</span></div>
-                                <span class="t-sep">:</span>
-                                <div class="timer-segment"><span class="t-val t-min">00</span><span class="t-lbl">MIN</span></div>
-                                <span class="t-sep">:</span>
-                                <div class="timer-segment"><span class="t-val t-sec">00</span><span class="t-lbl">SEC</span></div>
-                            </div>
-                        @endif
-
                         <a href="{{ route('products.show', $rel->slug) }}" class="prod-name" title="{{ $rel->name }}">
                             {{ $rel->name }}
                         </a>
@@ -464,7 +673,7 @@
                                 <span class="prod-old-price">{{ $rel->formatted_old_price }}</span>
                             @endif
                         </div>
-                        <button type="button" class="btn-add-bag" data-id="{{ $rel->id }}" data-name="{{ $rel->name }}" data-price="{{ $rel->price }}" data-image="{{ $rel->image }}" data-sku="{{ $rel->sku }}" data-delivery="{{ $rel->delivery_time }}" onclick="addCardToBag(this)">
+                        <button type="button" class="btn-add-bag" data-id="{{ $rel->id }}" data-name="{{ $rel->name }}" data-price="{{ $rel->price }}" data-image="{{ asset($rel->image ?: 'uploads/products/default.png') }}" data-sku="{{ $rel->sku }}" data-delivery="{{ $rel->delivery_time }}" onclick="addCardToBag(this)">
                             <i class="fa fa-plus"></i>
                             <span>Add to Bag</span>
                         </button>
@@ -484,6 +693,49 @@
     let selectedVariantSku = @json($product->sku);
     let selectedVariantLabel = '';
 
+    // Multiple Image Switching
+    function changeMainImage(imgUrl, thumbEl) {
+        const mainImg = document.getElementById('mainProductImg');
+        const flyout = document.getElementById('zoomFlyoutWindow');
+        if (mainImg) {
+            mainImg.src = imgUrl;
+        }
+        if (flyout) {
+            flyout.style.backgroundImage = `url("${imgUrl}")`;
+        }
+        document.querySelectorAll('.thumb-card').forEach(c => c.classList.remove('active'));
+        if (thumbEl) {
+            thumbEl.classList.add('active');
+        }
+    }
+
+    // Thumbnails horizontal scroll
+    function scrollThumbs(direction) {
+        const track = document.getElementById('thumbSliderTrack');
+        if (track) {
+            track.scrollBy({ left: direction * 150, behavior: 'smooth' });
+        }
+    }
+
+    // Copy Product Code
+    function copyProductCode(code, btn) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(() => {
+                const lbl = btn.querySelector('.copy-lbl') || btn;
+                const orig = lbl.textContent;
+                lbl.textContent = 'Copied!';
+                btn.style.borderColor = '#008080';
+                btn.style.color = '#008080';
+                setTimeout(() => {
+                    lbl.textContent = orig;
+                    btn.style.borderColor = '';
+                    btn.style.color = '';
+                }, 2000);
+            });
+        }
+    }
+
+    // Variant Selection
     function selectVariant(btn) {
         document.querySelectorAll('.variant-option-btn').forEach(b => {
             b.classList.remove('btn-teal', 'text-white');
@@ -516,18 +768,20 @@
         }
     }
 
+    // Quantity Selector
     function changeQty(delta) {
         currentQty = Math.max(1, currentQty + delta);
         document.getElementById('detailQtyInput').value = currentQty;
     }
 
+    // Add to Cart
     function addCurrentProductToBag() {
         const itemName = selectedVariantLabel ? (@json($product->name) + ' (' + selectedVariantLabel + ')') : @json($product->name);
         ShopCart.addItem({
             id: {{ $product->id }},
             name: itemName,
             price: selectedVariantPrice,
-            image: @json($product->image),
+            image: document.getElementById('mainProductImg') ? document.getElementById('mainProductImg').src : @json(asset($product->image ?: 'uploads/products/default.png')),
             sku: selectedVariantSku,
             delivery_time: @json($product->delivery_time),
             quantity: currentQty,
@@ -535,6 +789,13 @@
         });
     }
 
+    // Buy Now (Instant checkout)
+    function buyNowCurrentProduct() {
+        addCurrentProductToBag();
+        window.location.href = "{{ route('shop.checkout') }}";
+    }
+
+    // Description Read More Toggle
     function toggleDescription() {
         const descBox = document.getElementById('descContentBox');
         const label = document.getElementById('readMoreLabel');
@@ -542,49 +803,65 @@
 
         if (descBox.classList.contains('collapsed')) {
             descBox.classList.remove('collapsed');
-            label.textContent = 'Read Less';
+            label.textContent = 'Show less';
             chevron.classList.remove('fa-chevron-down');
             chevron.classList.add('fa-chevron-up');
         } else {
             descBox.classList.add('collapsed');
-            label.textContent = 'Read More';
+            label.textContent = 'Show more';
             chevron.classList.remove('fa-chevron-up');
             chevron.classList.add('fa-chevron-down');
         }
     }
 
-    // Dynamic Live Countdown Timer for Deals & Offers
-    function updateCountdowns() {
-        const now = new Date().getTime();
-        document.querySelectorAll('.prod-timer-strip').forEach(el => {
-            const endTimeStr = el.getAttribute('data-end-time');
-            if (!endTimeStr) return;
-            const endTime = new Date(endTimeStr).getTime();
-            const distance = endTime - now;
+    // Interactive Hover Lens & Side Flyout Zoom Window
+    document.addEventListener('DOMContentLoaded', function() {
+        const imgWrap = document.getElementById('mainImgWrap');
+        const mainImg = document.getElementById('mainProductImg');
+        const lens = document.getElementById('zoomLens');
+        const flyout = document.getElementById('zoomFlyoutWindow');
 
-            if (distance < 0) {
-                el.style.display = 'none';
-                return;
-            }
+        if (!imgWrap || !mainImg || !lens || !flyout) return;
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        function updateZoomBg() {
+            flyout.style.backgroundImage = `url("${mainImg.src}")`;
+        }
+        updateZoomBg();
 
-            const dayEl = el.querySelector('.t-day');
-            const hrEl = el.querySelector('.t-hour');
-            const minEl = el.querySelector('.t-min');
-            const secEl = el.querySelector('.t-sec');
-
-            if (dayEl) dayEl.textContent = String(days).padStart(2, '0');
-            if (hrEl) hrEl.textContent = String(hours).padStart(2, '0');
-            if (minEl) minEl.textContent = String(minutes).padStart(2, '0');
-            if (secEl) secEl.textContent = String(seconds).padStart(2, '0');
+        imgWrap.addEventListener('mouseenter', function() {
+            if (window.innerWidth < 992) return;
+            updateZoomBg();
+            lens.style.display = 'block';
+            flyout.style.display = 'block';
         });
-    }
 
-    updateCountdowns();
-    setInterval(updateCountdowns, 1000);
+        imgWrap.addEventListener('mouseleave', function() {
+            lens.style.display = 'none';
+            flyout.style.display = 'none';
+        });
+
+        imgWrap.addEventListener('mousemove', function(e) {
+            if (window.innerWidth < 992) return;
+            const rect = imgWrap.getBoundingClientRect();
+
+            const lensW = lens.offsetWidth || 140;
+            const lensH = lens.offsetHeight || 140;
+
+            let x = e.clientX - rect.left - (lensW / 2);
+            let y = e.clientY - rect.top - (lensH / 2);
+
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x > rect.width - lensW) x = rect.width - lensW;
+            if (y > rect.height - lensH) y = rect.height - lensH;
+
+            lens.style.left = x + 'px';
+            lens.style.top = y + 'px';
+
+            const zoomRatio = 2.6;
+            flyout.style.backgroundSize = `${rect.width * zoomRatio}px ${rect.height * zoomRatio}px`;
+            flyout.style.backgroundPosition = `-${x * zoomRatio}px -${y * zoomRatio}px`;
+        });
+    });
 </script>
 @endsection

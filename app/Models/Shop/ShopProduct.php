@@ -57,6 +57,32 @@ class ShopProduct extends Model
         return $this->hasMany(ShopReview::class, 'product_id')->where('is_approved', true);
     }
 
+    public function getAllImagesAttribute()
+    {
+        $list = [];
+        if (!empty($this->image)) {
+            $list[] = $this->image;
+        }
+        if ($this->relationLoaded('images') ? $this->images->isNotEmpty() : $this->images()->exists()) {
+            foreach ($this->images as $img) {
+                if (!empty($img->image) && !in_array($img->image, $list)) {
+                    $list[] = $img->image;
+                }
+            }
+        }
+        if (!empty($this->gallery)) {
+            $extra = is_array($this->gallery) ? $this->gallery : json_decode($this->gallery, true);
+            if (is_array($extra)) {
+                foreach ($extra as $g) {
+                    if (!empty($g) && !in_array($g, $list)) {
+                        $list[] = $g;
+                    }
+                }
+            }
+        }
+        return $list;
+    }
+
     public function getFormattedPriceAttribute()
     {
         return number_format($this->price, 0) . '৳';
