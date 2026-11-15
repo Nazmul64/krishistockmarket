@@ -618,7 +618,7 @@
                                     @if($product->stock_quantity <= 0)
                                         <span class="badge-out-of-stock">Out of Stock !</span>
                                     @endif
-                                    <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
                                 <div class="prod-delivery-sub">{{ $product->delivery_time }}</div>
@@ -637,7 +637,7 @@
                                 @if($product->stock_quantity <= 0)
                                     <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                 @else
-                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                         <i class="fa fa-plus"></i>
                                         <span>Add to Bag</span>
                                     </button>
@@ -674,7 +674,7 @@
                                     @if($product->stock_quantity <= 0)
                                         <span class="badge-out-of-stock">Out of Stock !</span>
                                     @endif
-                                    <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
                                 <div class="prod-delivery-sub">{{ $product->delivery_time }}</div>
@@ -693,7 +693,7 @@
                                 @if($product->stock_quantity <= 0)
                                     <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                 @else
-                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                         <i class="fa fa-plus"></i>
                                         <span>Add to Bag</span>
                                     </button>
@@ -733,7 +733,7 @@
                                     @if($product->stock_quantity <= 0)
                                         <span class="badge-out-of-stock">Out of Stock !</span>
                                     @endif
-                                    <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
                                 <div class="prod-delivery-sub">{{ $product->delivery_time }}</div>
@@ -752,7 +752,7 @@
                                 @if($product->stock_quantity <= 0)
                                     <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                 @else
-                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                         <i class="fa fa-plus"></i>
                                         <span>Add to Bag</span>
                                     </button>
@@ -775,7 +775,7 @@
                                     @if($product->stock_quantity <= 0)
                                         <span class="badge-out-of-stock">Out of Stock !</span>
                                     @endif
-                                    <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
                                 <div class="prod-delivery-sub">{{ $product->delivery_time }}</div>
@@ -794,7 +794,7 @@
                                 @if($product->stock_quantity <= 0)
                                     <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                 @else
-                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                         <i class="fa fa-plus"></i>
                                         <span>Add to Bag</span>
                                     </button>
@@ -817,7 +817,7 @@
                                     @if($product->stock_quantity <= 0)
                                         <span class="badge-out-of-stock">Out of Stock !</span>
                                     @endif
-                                    <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
                                 <div class="prod-delivery-sub">{{ $product->delivery_time }}</div>
@@ -836,7 +836,7 @@
                                 @if($product->stock_quantity <= 0)
                                     <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                 @else
-                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                         <i class="fa fa-plus"></i>
                                         <span>Add to Bag</span>
                                     </button>
@@ -876,7 +876,7 @@
                                             @if($product->stock_quantity <= 0)
                                                 <span class="badge-out-of-stock">Out of Stock !</span>
                                             @endif
-                                            <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                            <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                         </a>
 
                                         <div class="prod-delivery-sub">{{ $product->delivery_time }}</div>
@@ -895,7 +895,7 @@
                                         @if($product->stock_quantity <= 0)
                                             <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                         @else
-                                            <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                            <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                                 <i class="fa fa-plus"></i>
                                                 <span>Add to Bag</span>
                                             </button>
@@ -984,7 +984,7 @@
                                     @if($product->stock_quantity <= 0)
                                         <span class="badge-out-of-stock">Out of Stock !</span>
                                     @endif
-                                    <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $product->name }}" loading="lazy">
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
                                 </a>
 
                                 {{-- Show timer strip ONLY on products that have an explicit future offer end date --}}
@@ -1016,7 +1016,7 @@
                                 @if($product->stock_quantity <= 0)
                                     <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
                                 @else
-                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ $product->image }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time }}" onclick="addCardToBag(this)">
                                         <i class="fa fa-plus"></i>
                                         <span>Add to Bag</span>
                                     </button>

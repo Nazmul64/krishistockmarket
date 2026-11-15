@@ -556,7 +556,7 @@
             const lineTotal = Math.round(item.price * item.quantity);
             html += `
                 <div class="summary-item-row">
-                    <img src="${item.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200'}" alt="${item.name}" class="summary-item-img">
+                    <img src="${item.image || '/uploads/products/default.png'}" onerror="this.onerror=null;this.src='/uploads/products/default.png';" alt="${item.name}" class="summary-item-img">
                     <div class="flex-grow-1 min-w-0">
                         <div class="fw-bold text-truncate" title="${item.name}">${item.name}</div>
                         <div class="text-muted small">৳ ${Math.round(item.price)} × ${item.quantity}</div>

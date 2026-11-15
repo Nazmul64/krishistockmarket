@@ -1832,7 +1832,7 @@
                     const lineTotal = Math.round(item.price * item.quantity);
                     html += `
                         <div class="cart-item-row">
-                            <img src="${item.image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200'}" alt="${item.name}" class="cart-item-img">
+                            <img src="${item.image || '/uploads/products/default.png'}" onerror="this.onerror=null;this.src='/uploads/products/default.png';" alt="${item.name}" class="cart-item-img">
                             <div class="cart-item-info">
                                 <div class="cart-item-name" title="${item.name}">${item.name}</div>
                                 <div class="cart-item-price">৳ ${Math.round(item.price)} × ${item.quantity} = <strong>৳ ${lineTotal}</strong></div>

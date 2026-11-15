@@ -289,7 +289,7 @@
         <!-- Product Image (Left) -->
         <div class="col-lg-5">
             <div class="prod-main-img-wrap">
-                <img src="{{ $product->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800' }}" alt="{{ $product->name }}" id="mainProductImg">
+                <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" id="mainProductImg">
             </div>
             @if($product->images && $product->images->isNotEmpty())
                 <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
@@ -438,7 +438,7 @@
                         @endif
                         <span class="prod-delivery-badge"><i class="fa fa-clock me-1"></i>{{ $rel->delivery_time }}</span>
                         <a href="{{ route('products.show', $rel->slug) }}" class="prod-img-wrap">
-                            <img src="{{ $rel->image ?: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400' }}" alt="{{ $rel->name }}" loading="lazy">
+                            <img src="{{ asset($rel->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $rel->name }}" loading="lazy">
                         </a>
 
                         @if($rel->offer_end_date)
