@@ -124,9 +124,11 @@ class EcommerceShopController extends Controller
         $exclusiveDeals = ShopProduct::where('is_active', true)
             ->where(function ($q) {
                 $q->where('is_exclusive', true)
+                  ->orWhere('is_combo_offer', true)
                   ->orWhere('is_daily_offer', true)
                   ->orWhereNotNull('old_price');
             })
+            ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
             ->orderBy('id', 'asc')
             ->take(12)
             ->get();
@@ -137,6 +139,7 @@ class EcommerceShopController extends Controller
                 $q->where('is_featured', true)
                   ->orWhere('is_popular', true);
             })
+            ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
             ->orderBy('id', 'asc')
             ->take(12)
             ->get();
@@ -144,35 +147,32 @@ class EcommerceShopController extends Controller
         // Explore Our Products collections
         $newArrivalProducts = ShopProduct::where('is_active', true)
             ->where('is_new_arrival', true)
-            ->orderBy('id', 'desc')
-            ->take(12)
-            ->get();
-        if ($newArrivalProducts->count() < 6) {
-            $newArrivalProducts = ShopProduct::where('is_active', true)->orderBy('id', 'desc')->take(12)->get();
-        }
-
-        $trendingProducts = ShopProduct::where('is_active', true)
-            ->where('is_trending', true)
+            ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
             ->orderBy('id', 'asc')
             ->take(12)
             ->get();
-        if ($trendingProducts->count() < 6) {
-            $trendingProducts = ShopProduct::where('is_active', true)->orderBy('price', 'desc')->take(12)->get();
-        }
+
+        $trendingProducts = ShopProduct::where('is_active', true)
+            ->where('is_trending', true)
+            ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
+            ->orderBy('price', 'desc')
+            ->take(12)
+            ->get();
 
         $popularProducts = ShopProduct::where('is_active', true)
             ->where('is_popular', true)
-            ->orderBy('id', 'desc')
+            ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
+            ->orderBy('id', 'asc')
             ->take(12)
             ->get();
-        if ($popularProducts->count() < 6) {
-            $popularProducts = ShopProduct::where('is_active', true)->orderBy('price', 'asc')->take(12)->get();
-        }
 
         // Category-wise product rows (Food, Baby Food & Care, Beauty & Health, etc.)
         $categorySections = ShopCategory::where('is_active', true)
             ->with(['products' => function ($q) {
-                $q->where('is_active', true)->take(12);
+                $q->where('is_active', true)
+                  ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
+                  ->orderBy('id', 'asc')
+                  ->take(12);
             }])
             ->orderBy('order_num', 'asc')
             ->get();
