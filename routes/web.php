@@ -88,6 +88,7 @@ Route::get('/api/shop/search', [\App\Http\Controllers\EcommerceShopController::c
 Route::get('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder'])->name('shop.track_order');
 Route::post('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrderPost'])->name('shop.track_order.post');
 Route::get('/order-track', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder']);
+Route::get('/shop/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder']);
 
 // Corporate Profile, Governance, Projects & Public Services
 Route::get('/board-of-directors', [\App\Http\Controllers\CorporateProfileController::class, 'boardOfDirectors'])->name('corporate.board');

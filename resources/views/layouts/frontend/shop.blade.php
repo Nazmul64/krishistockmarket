@@ -482,18 +482,24 @@
         .prod-img-wrap {
             position: relative;
             height: 145px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             margin-bottom: 8px;
             overflow: hidden;
-            background: #f8fafc;
+            background: #ffffff;
             border-radius: 8px;
+            padding: 6px;
         }
         .prod-img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+            display: block !important;
+            margin: auto !important;
             transition: transform 0.3s ease;
         }
         .shop-product-card:hover .prod-img-wrap img {
@@ -1295,14 +1301,18 @@
     <!-- Top Announcement Bar -->
     <div class="shop-top-notice">
         <div class="container-fluid px-3 px-lg-5 d-flex justify-content-between align-items-center">
-            <div>
+            <div class="text-truncate me-2">
                 <i class="fa fa-bullhorn me-1 text-warning"></i>
                 {{ $settings['top_notice_bar'] ?? 'এখন ঢাকাজুড়ে ফ্রি হোম ডেলিভারি! সীমিত সময়ের অফার চলছে।' }}
             </div>
-            <div class="d-none d-md-block">
-                হটলাইন: <strong class="text-white">{{ $settings['shop_hotline'] ?? '09617900200' }}</strong> | 
-                <a href="{{ route('shop.track_order') }}" class="text-warning text-decoration-none me-2 fw-semibold"><i class="fa fa-truck-fast me-1"></i>অর্ডার ট্র্যাক করুন</a> | 
-                <a href="{{ route('/') }}" class="text-info text-decoration-none"><i class="fa fa-home me-1"></i> মূল ওয়েবসাইটে ফিরুন</a>
+            <div class="flex-shrink-0 text-nowrap">
+                <span class="d-none d-md-inline">
+                    হটলাইন: <strong class="text-white">{{ $settings['shop_hotline'] ?? '09617900200' }}</strong> | 
+                </span>
+                <a href="{{ route('shop.track_order') }}" class="text-warning text-decoration-none me-2 fw-semibold"><i class="fa fa-truck-fast me-1"></i>অর্ডার ট্র্যাক করুন</a>
+                <span class="d-none d-md-inline">
+                    | <a href="{{ route('/') }}" class="text-info text-decoration-none"><i class="fa fa-home me-1"></i> মূল ওয়েবসাইটে ফিরুন</a>
+                </span>
             </div>
         </div>
     </div>

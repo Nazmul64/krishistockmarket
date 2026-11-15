@@ -769,26 +769,49 @@ class EcommerceShopController extends Controller
 
         $settings = ShopSetting::all()->pluck('value', 'key');
         $order = null;
+        $orderList = collect();
         $orderId = trim($request->get('order_id', ''));
         $phone = trim($request->get('phone', ''));
+        $searched = ($orderId !== '' || $phone !== '');
 
-        if ($orderId || $phone) {
-            $query = ShopOrder::with('items.product');
-            if ($orderId) {
-                $cleanId = ltrim($orderId, '#');
+        if ($searched) {
+            $query = ShopOrder::with('items.product')->where('order_status', '!=', 'incomplete');
+
+            if ($orderId && $phone) {
+                $cleanId = ltrim(trim($orderId), '#');
+                $digitsPhone = preg_replace('/[^0-9]/', '', $phone);
+                $query->where(function($q) use ($cleanId) {
+                    $q->where('order_number', $cleanId)
+                      ->orWhere('order_number', 'like', "%{$cleanId}%")
+                      ->orWhere('id', $cleanId);
+                })->where(function($q) use ($phone, $digitsPhone) {
+                    $q->where('phone', 'like', "%{$phone}%");
+                    if (!empty($digitsPhone)) {
+                        $q->orWhere('phone', 'like', "%{$digitsPhone}%");
+                    }
+                });
+            } elseif ($orderId) {
+                $cleanId = ltrim(trim($orderId), '#');
                 $query->where(function($q) use ($cleanId) {
                     $q->where('order_number', $cleanId)
                       ->orWhere('order_number', 'like', "%{$cleanId}%")
                       ->orWhere('id', $cleanId);
                 });
+            } elseif ($phone) {
+                $digitsPhone = preg_replace('/[^0-9]/', '', $phone);
+                $query->where(function($q) use ($phone, $digitsPhone) {
+                    $q->where('phone', 'like', "%{$phone}%");
+                    if (!empty($digitsPhone)) {
+                        $q->orWhere('phone', 'like', "%{$digitsPhone}%");
+                    }
+                });
             }
-            if ($phone) {
-                $query->where('phone', 'like', "%{$phone}%");
-            }
-            $order = $query->latest()->first();
+
+            $orderList = $query->latest()->get();
+            $order = $orderList->first();
         }
 
-        return view('frontend.shop.track_order', compact('categories', 'settings', 'order', 'orderId', 'phone'));
+        return view('frontend.shop.track_order', compact('categories', 'settings', 'order', 'orderList', 'orderId', 'phone', 'searched'));
     }
 
     /**
@@ -796,14 +819,16 @@ class EcommerceShopController extends Controller
      */
     public function trackOrderPost(Request $request)
     {
-        $request->validate([
-            'order_id' => 'required|string',
-            'phone' => 'required|string',
-        ]);
+        $orderId = trim($request->input('order_id', ''));
+        $phone = trim($request->input('phone', ''));
 
-        return redirect()->route('shop.track_order', [
-            'order_id' => trim($request->order_id),
-            'phone' => trim($request->phone),
-        ]);
+        if (!$orderId && !$phone) {
+            return redirect()->back()->with('error', 'অনুগ্রহ করে আপনার অর্ডার আইডি অথবা ফোন নম্বর দিন।');
+        }
+
+        return redirect()->route('shop.track_order', array_filter([
+            'order_id' => $orderId,
+            'phone' => $phone,
+        ]));
     }
 }

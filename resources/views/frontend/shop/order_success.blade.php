@@ -13,7 +13,30 @@
                     <i class="fa fa-check"></i>
                 </div>
                 <h2 class="fw-bold text-dark">ধন্যবাদ! আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।</h2>
-                <p class="text-muted">আপনার অর্ডার নম্বর: <strong class="text-teal fs-5">{{ $order->order_number }}</strong></p>
+
+                <!-- Prominent Order ID Card with Copy & Track Action -->
+                <div class="card border border-2 border-warning mx-auto mt-3 mb-3 p-3 text-center" style="max-width: 540px; border-radius: 16px; background: linear-gradient(180deg, #fffaf5 0%, #ffffff 100%);">
+                    <span class="text-muted small fw-semibold text-uppercase">আপনার অর্ডার ট্র্যাকিং আইডি</span>
+                    <div class="d-flex align-items-center justify-content-center gap-2 mt-1 mb-2">
+                        <span class="fs-3 fw-bold font-monospace" style="color: #ea580c; letter-spacing: 0.5px;">#{{ $order->order_number }}</span>
+                        <button type="button" class="btn btn-sm btn-outline-warning text-dark py-1 px-2 fw-semibold" 
+                                onclick="navigator.clipboard.writeText('{{ $order->order_number }}'); this.innerHTML='<i class=\'fa fa-check text-success\'></i> কপি হয়েছে'; setTimeout(() => this.innerHTML='<i class=\'fa fa-copy\'></i> কপি', 1500);" 
+                                title="অর্ডার কোড কপি করুন">
+                            <i class="fa fa-copy"></i> কপি
+                        </button>
+                    </div>
+                    <div class="small text-muted mb-3">
+                        <i class="fa fa-info-circle text-primary me-1"></i>আপনার এই <strong>অর্ডার আইডি (#{{ $order->order_number }})</strong> অথবা আপনার <strong>ফোন নম্বর ({{ $order->phone }})</strong> দিয়ে যেকোনো সময় সাইটের 'অর্ডার ট্র্যাক করুন' অপশন থেকে লাইভ স্ট্যাটাস দেখতে পারবেন।
+                    </div>
+                    <div>
+                        <a href="{{ route('shop.track_order', ['order_id' => $order->order_number, 'phone' => $order->phone]) }}" 
+                           class="btn text-white fw-bold px-4 py-2 shadow-sm d-inline-flex align-items-center justify-content-center gap-2"
+                           style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 10px;">
+                            <i class="fa fa-truck-fast"></i> লাইভ অর্ডার ট্র্যাক করুন (Track Order)
+                        </a>
+                    </div>
+                </div>
+
                 <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill font-size-13">
                     <i class="fa fa-truck-fast me-1"></i> ডেলিভারি প্রস্তুতি চলছে (১-২ ঘণ্টার মধ্যে সরবরাহ করা হবে)
                 </div>
@@ -101,10 +124,15 @@
 
             <!-- Action Buttons -->
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="{{ route('products.index') }}" class="btn btn-teal text-white px-4 py-2" style="background: var(--shop-teal);">
+                <a href="{{ route('shop.track_order', ['order_id' => $order->order_number, 'phone' => $order->phone]) }}" 
+                   class="btn text-white px-4 py-2 fw-bold" 
+                   style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 8px;">
+                    <i class="fa fa-truck-fast me-2"></i>অর্ডার ট্র্যাক করুন
+                </a>
+                <a href="{{ route('products.index') }}" class="btn btn-teal text-white px-4 py-2" style="background: var(--shop-teal); border-radius: 8px;">
                     <i class="fa fa-shopping-bag me-2"></i>কেনাকাটা চালিয়ে যান
                 </a>
-                <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="window.print()">
+                <button type="button" class="btn btn-outline-secondary px-4 py-2" onclick="window.print()" style="border-radius: 8px;">
                     <i class="fa fa-print me-2"></i>রশিদ প্রিন্ট করুন
                 </button>
             </div>

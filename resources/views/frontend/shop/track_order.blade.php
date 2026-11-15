@@ -44,32 +44,38 @@
                         </div>
 
                         <!-- Search / Input Form -->
-                        <form action="{{ route('shop.track_order') }}" method="GET">
+                        <form action="{{ route('shop.track_order') }}" method="GET" id="trackOrderForm" onsubmit="return validateTrackForm(event);">
                             <!-- Order ID Input -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold small text-dark mb-1">Order ID</label>
+                                <label class="form-label fw-bold small text-dark mb-1 d-flex justify-content-between">
+                                    <span>Order ID</span>
+                                    <small class="text-muted fw-normal">(আইডি অথবা ফোন নম্বর দিন)</small>
+                                </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 12px 0 0 12px; border: 1.5px solid #e5e7eb; border-right: none;">
-                                        <span class="fw-bold text-warning font-monospace">#</span>
+                                        <span class="fw-bold font-monospace" style="color: #f97316; font-size: 16px;">#</span>
                                     </span>
-                                    <input type="text" name="order_id" class="form-control border-start-0 py-2" 
+                                    <input type="text" name="order_id" id="trackOrderId" class="form-control border-start-0 py-2" 
                                            style="border-radius: 0 12px 12px 0; border: 1.5px solid #e5e7eb; border-left: none;" 
-                                           placeholder="Enter order id (e.g. ORD44621 or ASMI-...)" 
-                                           value="{{ $orderId }}" required>
+                                           placeholder="Enter order id (e.g. ASMI-... or 44621)" 
+                                           value="{{ $orderId }}">
                                 </div>
                             </div>
 
                             <!-- Phone Number Input -->
                             <div class="mb-3">
-                                <label class="form-label fw-bold small text-dark mb-1">Phone number</label>
+                                <label class="form-label fw-bold small text-dark mb-1 d-flex justify-content-between">
+                                    <span>Phone number</span>
+                                    <small class="text-muted fw-normal">(বাধ্যতামূলক নয় যদি অর্ডার আইডি থাকে)</small>
+                                </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 12px 0 0 12px; border: 1.5px solid #e5e7eb; border-right: none;">
-                                        <i class="fa fa-phone text-warning"></i>
+                                        <i class="fa fa-phone" style="color: #f97316;"></i>
                                     </span>
-                                    <input type="text" name="phone" class="form-control border-start-0 py-2" 
+                                    <input type="text" name="phone" id="trackPhone" class="form-control border-start-0 py-2" 
                                            style="border-radius: 0 12px 12px 0; border: 1.5px solid #e5e7eb; border-left: none;" 
-                                           placeholder="Enter your phone number (e.g. 017...)" 
-                                           value="{{ $phone }}" required>
+                                           placeholder="Enter your phone number (e.g. 01712...)" 
+                                           value="{{ $phone }}">
                                 </div>
                             </div>
 
@@ -107,6 +113,37 @@
                     </div>
                 </div>
 
+                @if(!empty($orderList) && $orderList->count() > 1)
+                    <!-- Multiple Orders Found Notice -->
+                    <div class="card border-0 shadow-sm mt-4" style="border-radius: 16px; background: #ffffff;">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h6 class="fw-bold text-dark mb-0 small">
+                                    <i class="fa fa-list text-warning me-1"></i>আপনার নম্বরে মোট {{ $orderList->count() }} টি অর্ডার পাওয়া গেছে:
+                                </h6>
+                                <span class="badge bg-light text-muted small border">সাম্প্রতিক অর্ডার</span>
+                            </div>
+                            <div class="list-group list-group-flush">
+                                @foreach($orderList as $o)
+                                    <a href="{{ route('shop.track_order', ['order_id' => $o->order_number, 'phone' => $phone]) }}" 
+                                       class="list-group-item list-group-item-action py-2 px-2 d-flex justify-content-between align-items-center rounded-2 mb-1 {{ ($order && $order->id == $o->id) ? 'bg-warning bg-opacity-10 border border-warning' : 'border-0' }}">
+                                        <div>
+                                            <span class="fw-bold text-dark font-monospace" style="font-size: 13px;">#{{ $o->order_number }}</span>
+                                            <small class="text-muted d-block" style="font-size: 11px;">{{ $o->created_at->format('d M, Y - h:i A') }}</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge {{ in_array($o->order_status, ['delivered', 'completed']) ? 'bg-success' : 'bg-primary' }} mb-1" style="font-size: 10px;">
+                                                {{ ucfirst($o->order_status) }}
+                                            </span>
+                                            <div class="fw-bold text-dark font-monospace" style="font-size: 12px;">৳ {{ number_format($o->total_amount, 0) }}</div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- ORDER TRACKING RESULT DETAILS -->
                 @if($order)
                     <div class="card border-0 shadow-lg mt-4" style="border-radius: 24px; overflow: hidden; background: #ffffff;">
@@ -114,7 +151,12 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                                 <div>
                                     <span class="badge bg-warning text-dark fw-bold mb-1">অর্ডার পাওয়া গেছে</span>
-                                    <h4 class="fw-bold mb-0 font-monospace">#{{ $order->order_number }}</h4>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <h4 class="fw-bold mb-0 font-monospace text-warning">#{{ $order->order_number }}</h4>
+                                        <button type="button" class="btn btn-sm btn-outline-light py-0 px-2 font-size-11" onclick="navigator.clipboard.writeText('{{ $order->order_number }}'); this.innerText='কপি হয়েছে!'; setTimeout(() => this.innerText='কপি', 1500);" title="কপি করুন">
+                                            <i class="fa fa-copy"></i> কপি
+                                        </button>
+                                    </div>
                                     <small class="text-white-50"><i class="fa fa-calendar me-1"></i>{{ $order->created_at->format('d M, Y - h:i A') }}</small>
                                 </div>
                                 <div class="text-end">
@@ -246,7 +288,7 @@
                                     <div class="d-flex align-items-center justify-content-between py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                                         <div class="d-flex align-items-center gap-2">
                                             <img src="{{ $item->product && $item->product->image ? asset($item->product->image) : asset('assets/images/placeholder.png') }}" 
-                                                 alt="{{ $item->product_name }}" class="rounded border" style="width: 42px; height: 42px; object-fit: cover;">
+                                                 alt="{{ $item->product_name }}" class="rounded border" style="width: 48px; height: 48px; object-fit: contain !important; background: #ffffff; padding: 2px;">
                                             <div>
                                                 <div class="fw-semibold text-dark small">{{ $item->product_name }}</div>
                                                 <small class="text-muted font-monospace">৳{{ number_format($item->price, 0) }} × {{ $item->quantity }}</small>
@@ -303,4 +345,19 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function validateTrackForm(e) {
+    var oid = (document.getElementById('trackOrderId').value || '').trim();
+    var ph = (document.getElementById('trackPhone').value || '').trim();
+    if (!oid && !ph) {
+        if (e) e.preventDefault();
+        alert('অনুগ্রহ করে আপনার অর্ডার আইডি অথবা ফোন নম্বর দিন।');
+        return false;
+    }
+    return true;
+}
+</script>
+@endpush
 
