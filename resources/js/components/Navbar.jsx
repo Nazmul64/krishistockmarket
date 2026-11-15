@@ -97,8 +97,11 @@ export default function Navbar({
             active: currentPath.includes('/career')
         },
         { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
-        { label: t.terms || 'Terms & Conditions', url: routes.terms || '/terms', active: currentPath.includes('/terms') },
-        { label: t.privacy || 'Privacy Policy', url: routes.privacy || '/privacy-policy', active: currentPath.includes('/privacy') },
+        { 
+            label: lang === 'bn' ? 'আমাদের ভিডিও' : 'Our Videos', 
+            url: routes.our_videos || '/our-videos', 
+            active: currentPath.includes('/our-videos') 
+        },
     ];
 
     // Static pages lookup definition
@@ -110,6 +113,7 @@ export default function Navbar({
         { title: t.card_title || 'Membership Cards', subtitle: 'SME & Gold Cards', url: (routes.home || '/') + '#card-benefits', keywords: 'cards sme gold card membership মেম্বারশিপ কার্ড গোল্ড' },
         { title: t.gallery || 'Produce Gallery', subtitle: 'Farm & Commodity Photos', url: routes.gallery || '/gallery', keywords: 'gallery photo images ছবি গ্যালারি প্রোডাক্ট' },
         { title: t.contact || 'Contact Us', subtitle: 'Support & Helpline', url: routes.contact || '/contact', keywords: 'contact support helpline যোগাযোগ হেল্পলাইন ফোন' },
+        { title: lang === 'bn' ? 'আমাদের ভিডিওসমূহ' : 'Our Videos', subtitle: 'Video Gallery', url: routes.our_videos || '/our-videos', keywords: 'video videos youtube আমাদের ভিডিও গ্যালারি প্লেয়ার' },
         { title: t.terms || 'Terms & Conditions', subtitle: 'Platform Policies', url: routes.terms || '/terms', keywords: 'terms conditions নিয়মাবলী শর্তাবলী টার্মস' },
         { title: t.privacy || 'Privacy Policy', subtitle: 'User Data Security', url: routes.privacy || '/privacy-policy', keywords: 'privacy policy সিকিউরিটি প্রাইভেসি পলিসি' },
         { title: t.login || 'Login', subtitle: 'Access Account', url: routes.login || '/login', keywords: 'login signin প্রবেশ লগইন একাউন্ট' },

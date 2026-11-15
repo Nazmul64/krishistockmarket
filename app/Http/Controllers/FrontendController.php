@@ -189,6 +189,7 @@ class FrontendController extends Controller
             'terms' => route('terms'),
             'privacy' => route('privacy'),
             'career' => route('career'),
+            'our_videos' => route('our_videos'),
             'live_search' => route('api.live_search'),
             'csrf_token' => csrf_token(),
         ];

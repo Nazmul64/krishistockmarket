@@ -45,6 +45,7 @@ export default function Footer({
                                     <li><a href={routes.about || '/about'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.about || 'About Us'}</a></li>
                                     <li><a href={routes.stock_index || '/stocks'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.stocks || 'Stock Market'}</a></li>
                                     <li><a href={routes.gallery || '/gallery'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.gallery || 'Produce Gallery'}</a></li>
+                                    <li><a href={routes.our_videos || '/our-videos'}><i className="fa fa-angle-right me-2 text-warning"></i> {lang === 'bn' ? 'আমাদের ভিডিওসমূহ' : 'Our Videos'}</a></li>
                                     <li><a href={routes.privacy || '/privacy-policy'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.privacy || 'Privacy Policy'}</a></li>
                                     <li><a href={routes.terms || '/terms'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.terms || 'Terms & Conditions'}</a></li>
                                 </ul>
