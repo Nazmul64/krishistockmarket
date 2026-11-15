@@ -277,28 +277,45 @@
         .sidebar-badge-link {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 9px 16px;
-            color: #334155;
+            gap: 12px;
+            padding: 8px 16px;
+            color: #1e293b;
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.15s ease-in-out;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
         .sidebar-badge-link:hover,
         .sidebar-badge-link.active {
             background: #f1f5f9;
             color: var(--shop-teal);
-            font-weight: 600;
+            font-weight: 700;
             padding-left: 20px;
         }
         .sidebar-badge-link .icon-box {
-            width: 24px;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
+            font-size: 20px;
+        }
+        .sidebar-badge-link .icon-box img,
+        .sidebar-badge-link .badge-icon-img {
+            width: 28px;
+            height: 28px;
+            max-width: 28px;
+            max-height: 28px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+        }
+        .sidebar-badge-link:hover .icon-box img,
+        .sidebar-badge-link:hover .badge-icon-img {
+            transform: scale(1.18);
         }
 
         /* Category Header */

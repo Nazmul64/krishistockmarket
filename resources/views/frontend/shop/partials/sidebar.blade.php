@@ -23,32 +23,38 @@
         <!-- Quick Badges (Winter Essentials, Monthly Bazar, Combo Offers, Daily Offers, Popular, Shop by Brands) -->
         <div class="sidebar-badges-list">
             <a href="{{ route('products.index', ['badge' => 'winter-essentials']) }}" class="sidebar-badge-link {{ $currentBadge == 'winter-essentials' ? 'active' : '' }}">
-                <span class="icon-box text-info"><i class="fa-solid fa-cart-flatbed-suitcase"></i></span>
+                <span class="icon-box text-info" style="font-size: 22px;"><i class="fa-solid fa-cart-flatbed-suitcase"></i></span>
                 <span>Winter Essentials</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'monthly-bazar']) }}" class="sidebar-badge-link {{ $currentBadge == 'monthly-bazar' ? 'active' : '' }}">
-                <span class="icon-box text-success"><i class="fa-solid fa-store"></i></span>
+                <span class="icon-box">
+                    <img src="{{ asset('uploads/icons/icon-monthly-bazar.png') }}" alt="Monthly Bazar" class="badge-icon-img">
+                </span>
                 <span>Monthly Bazar</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'combo-offers']) }}" class="sidebar-badge-link {{ $currentBadge == 'combo-offers' ? 'active' : '' }}">
-                <span class="icon-box text-warning"><i class="fa-solid fa-gift"></i></span>
+                <span class="icon-box text-warning" style="font-size: 22px;"><i class="fa-solid fa-gift"></i></span>
                 <span>Combo Offers</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'daily-offers']) }}" class="sidebar-badge-link {{ $currentBadge == 'daily-offers' ? 'active' : '' }}">
-                <span class="icon-box text-danger"><i class="fa-solid fa-tag"></i></span>
+                <span class="icon-box">
+                    <img src="{{ asset('uploads/icons/icon-daily-offers.svg') }}" alt="Daily Offers" class="badge-icon-img">
+                </span>
                 <span>Daily Offers</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'popular']) }}" class="sidebar-badge-link {{ $currentBadge == 'popular' ? 'active' : '' }}">
-                <span class="icon-box text-danger"><i class="fa-solid fa-heart"></i></span>
+                <span class="icon-box">
+                    <img src="{{ asset('uploads/icons/icon-popular.png') }}" alt="Popular" class="badge-icon-img">
+                </span>
                 <span>Popular</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'brands']) }}" class="sidebar-badge-link {{ $currentBadge == 'brands' ? 'active' : '' }}">
-                <span class="icon-box text-primary"><i class="fa-solid fa-bag-shopping"></i></span>
+                <span class="icon-box text-primary" style="font-size: 22px;"><i class="fa-solid fa-bag-shopping"></i></span>
                 <span>Shop by Brands</span>
             </a>
         </div>
