@@ -363,8 +363,41 @@
     @media (max-width: 1100px) {
         .product-carousel-item { flex: 0 0 calc((100% - (3 * 10px)) / 4); }
     }
+    @media (max-width: 991px) {
+        .product-carousel-item { flex: 0 0 calc((100% - (2 * 10px)) / 3); min-width: 150px; }
+    }
     @media (max-width: 768px) {
-        .product-carousel-item { flex: 0 0 calc((100% - (1 * 8px)) / 2.3); min-width: 135px; }
+        .product-carousel-track {
+            gap: 10px !important;
+            padding: 4px 0 12px !important;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .product-carousel-item {
+            flex: 0 0 calc((100% - 10px) / 2) !important;
+            max-width: calc((100% - 10px) / 2) !important;
+            width: calc((100% - 10px) / 2) !important;
+            min-width: 0 !important;
+            scroll-snap-align: start;
+            box-sizing: border-box;
+        }
+        .shop-product-card {
+            padding: 10px 8px;
+        }
+        .prod-img-wrap {
+            height: 120px;
+        }
+        .prod-name {
+            font-size: 12px;
+            min-height: 32px;
+        }
+        .prod-price-wrap {
+            font-size: 14px;
+        }
+        .btn-add-bag, .btn-out-stock {
+            padding: 6px 6px;
+            font-size: 11.5px;
+        }
     }
 
     /* ================= 4. HEADINGS & BUTTONS ================= */
@@ -1123,12 +1156,23 @@
         });
 
         tracks.forEach(cfg => {
+            const track = document.getElementById(cfg.trackId);
+            const dotsWrap = document.getElementById(cfg.dotsId);
+            if (!track) return;
+
+            // Sync dots on touch swipe / manual scroll
+            track.addEventListener('scroll', () => {
+                if (!dotsWrap) return;
+                const pageIndex = Math.round(track.scrollLeft / (track.clientWidth || 1));
+                const dots = dotsWrap.querySelectorAll('.sec-dot');
+                dots.forEach((d, i) => {
+                    if (i === pageIndex) d.classList.add('active');
+                    else d.classList.remove('active');
+                });
+            }, { passive: true });
+
             let page = 0;
             setInterval(() => {
-                const track = document.getElementById(cfg.trackId);
-                const dotsWrap = document.getElementById(cfg.dotsId);
-                if (!track) return;
-
                 page = (page === 0) ? 1 : 0;
                 track.scrollTo({
                     left: page * track.clientWidth,

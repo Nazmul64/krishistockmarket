@@ -559,7 +559,7 @@
         /* ================= 3-COLOR REVOLVING BORDER FLOATING CART WIDGET ================= */
         .floating-cart-badge {
             position: fixed !important;
-            right: 0 !important;
+            right: 24px !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
             z-index: 999999 !important;
@@ -569,16 +569,16 @@
             -webkit-user-select: none;
             display: flex;
             flex-direction: column;
-            padding: 2.5px 0 2.5px 2.5px;
-            border-radius: 12px 0 0 12px;
+            padding: 2.5px !important;
+            border-radius: 12px !important;
             background: transparent;
             overflow: hidden;
-            box-shadow: -4px 6px 20px rgba(0, 0, 0, 0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
             transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
         }
         .floating-cart-badge:hover {
             transform: translateY(-50%) scale(1.05) !important;
-            box-shadow: -6px 8px 26px rgba(0, 0, 0, 0.28);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
         }
         .floating-cart-badge:active {
             transform: translateY(-50%) scale(0.97) !important;
@@ -619,7 +619,7 @@
             flex-direction: column;
             align-items: center;
             background: #ffffff;
-            border-radius: 9.5px 0 0 9.5px;
+            border-radius: 9.5px !important;
             overflow: hidden;
             min-width: 68px;
             width: 68px;
@@ -1225,19 +1225,35 @@
             .cart-drawer {
                 max-width: 85%;
             }
+            .floating-cart-badge {
+                right: 16px !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .floating-cart-badge {
+                right: 12px !important;
+                padding: 2px !important;
+                border-radius: 10px !important;
+            }
+            .floating-cart-inner {
+                min-width: 58px !important;
+                width: 58px !important;
+                border-radius: 8px !important;
+            }
         }
         @media (max-width: 576px) {
             .cart-drawer {
                 max-width: 92%;
             }
             .floating-cart-badge {
-                padding: 2px 0 2px 2px !important;
-                border-radius: 8px 0 0 8px !important;
+                right: 10px !important;
+                padding: 2px !important;
+                border-radius: 10px !important;
             }
             .floating-cart-inner {
                 min-width: 54px !important;
                 width: 54px !important;
-                border-radius: 6px 0 0 6px !important;
+                border-radius: 8px !important;
             }
             .cart-anim-bag-wrapper {
                 width: 26px !important;
