@@ -179,6 +179,7 @@
 <form action="{{ route('shop.checkout.submit') }}" method="POST" id="shopCheckoutForm">
     @csrf
     <input type="hidden" name="items" id="formItemsJson">
+    <input type="hidden" name="incomplete_order_id" id="formIncompleteId" value="{{ session('shop_incomplete_order_id') }}">
 
     <div class="row g-4">
         <!-- Left: Customer Information & Delivery Details -->
@@ -193,19 +194,19 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label-custom">ফার্স্ট নেম (First Name) <span class="text-danger">*</span></label>
-                        <input type="text" name="first_name" class="form-control form-control-custom" value="{{ old('first_name', Auth::check() ? explode(' ', Auth::user()->name)[0] : '') }}" required placeholder="আপনার নামের প্রথম অংশ">
+                        <input type="text" name="first_name" id="custFirstName" class="form-control form-control-custom" value="{{ old('first_name', Auth::check() ? explode(' ', Auth::user()->name)[0] : '') }}" required placeholder="আপনার নামের প্রথম অংশ">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">লাস্ট নেম (Last Name)</label>
-                        <input type="text" name="last_name" class="form-control form-control-custom" value="{{ old('last_name', Auth::check() && count(explode(' ', Auth::user()->name)) > 1 ? explode(' ', Auth::user()->name)[1] : '') }}" placeholder="আপনার নামের শেষ অংশ">
+                        <input type="text" name="last_name" id="custLastName" class="form-control form-control-custom" value="{{ old('last_name', Auth::check() && count(explode(' ', Auth::user()->name)) > 1 ? explode(' ', Auth::user()->name)[1] : '') }}" placeholder="আপনার নামের শেষ অংশ">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">মোবাইল ফোন নম্বর <span class="text-danger">*</span></label>
-                        <input type="tel" name="phone" class="form-control form-control-custom" value="{{ old('phone', Auth::check() ? Auth::user()->phone : '') }}" required placeholder="017XXXXXXXX">
+                        <input type="tel" name="phone" id="custPhone" class="form-control form-control-custom" value="{{ old('phone', Auth::check() ? Auth::user()->phone : '') }}" required placeholder="017XXXXXXXX">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">ইমেইল (ঐচ্ছিক)</label>
-                        <input type="email" name="email" class="form-control form-control-custom" value="{{ old('email', Auth::check() ? Auth::user()->email : '') }}" placeholder="example@gmail.com">
+                        <input type="email" name="email" id="custEmail" class="form-control form-control-custom" value="{{ old('email', Auth::check() ? Auth::user()->email : '') }}" placeholder="example@gmail.com">
                     </div>
                 </div>
             </div>
@@ -220,15 +221,15 @@
                 <div class="row g-3">
                     <div class="col-12">
                         <label class="form-label-custom">পূর্ণাঙ্গ ঠিকানা (বাসা/ফ্ল্যাট নং, রোড, এলাকা) <span class="text-danger">*</span></label>
-                        <textarea name="address" rows="2" class="form-control form-control-custom" required placeholder="উদাহরণ: বাসা #১২, রোড #০৫, ব্লক-সি, বনানী, ঢাকা">{{ old('address') }}</textarea>
+                        <textarea name="address" id="custAddress" rows="2" class="form-control form-control-custom" required placeholder="উদাহরণ: বাসা #১২, রোড #০৫, ব্লক-সি, বনানী, ঢাকা">{{ old('address') }}</textarea>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">শহর / জেলা (City)</label>
-                        <input type="text" name="city" id="inputCity" class="form-control form-control-custom" value="{{ old('city', 'Dhaka') }}">
+                        <input type="text" name="city" id="custCity" class="form-control form-control-custom" value="{{ old('city', 'Dhaka') }}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label-custom">অর্ডারের বিশেষ নোট (ঐচ্ছিক)</label>
-                        <input type="text" name="notes" class="form-control form-control-custom" value="{{ old('notes') }}" placeholder="যেমন: বিকাল ৫ টার পর ডেলিভারি দিন">
+                        <input type="text" name="notes" id="custNotes" class="form-control form-control-custom" value="{{ old('notes') }}" placeholder="যেমন: বিকাল ৫ টার পর ডেলিভারি দিন">
                     </div>
                 </div>
             </div>
@@ -580,6 +581,74 @@
         setTimeout(() => {
             ShopCart.clearCart();
         }, 500);
+    });
+
+    // Automatic Background Incomplete Order Capture (Draft / Abandoned Cart)
+    let incompleteTimer = null;
+    let currentIncompleteId = document.getElementById('formIncompleteId') ? document.getElementById('formIncompleteId').value : null;
+
+    function captureIncompleteOrder() {
+        clearTimeout(incompleteTimer);
+        incompleteTimer = setTimeout(() => {
+            const phone = document.getElementById('custPhone')?.value?.trim();
+            const firstName = document.getElementById('custFirstName')?.value?.trim();
+            const lastName = document.getElementById('custLastName')?.value?.trim();
+            const address = document.getElementById('custAddress')?.value?.trim();
+            const city = document.getElementById('custCity')?.value?.trim();
+            const notes = document.getElementById('custNotes')?.value?.trim();
+            const items = ShopCart.getItems();
+
+            if (!phone || phone.length < 6 || !items || items.length === 0) {
+                return;
+            }
+
+            const payMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'cod';
+            const shipZoneId = document.querySelector('input[name="shipping_zone_id"]:checked')?.value || null;
+            const shipMethod = document.querySelector('input[name="shipping_method"]:checked')?.value || 'inside_dhaka';
+
+            const payload = {
+                phone: phone,
+                first_name: firstName,
+                last_name: lastName,
+                address: address,
+                city: city,
+                notes: notes,
+                items: JSON.stringify(items),
+                shipping_charge: currentShippingCost,
+                shipping_zone_id: shipZoneId,
+                shipping_method: shipMethod,
+                payment_method: payMethod,
+                incomplete_order_id: currentIncompleteId
+            };
+
+            fetch('{{ route("shop.checkout.incomplete") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success && res.incomplete_order_id) {
+                    currentIncompleteId = res.incomplete_order_id;
+                    const hiddenInc = document.getElementById('formIncompleteId');
+                    if (hiddenInc) {
+                        hiddenInc.value = currentIncompleteId;
+                    }
+                }
+            })
+            .catch(() => {});
+        }, 1200);
+    }
+
+    ['custPhone', 'custFirstName', 'custLastName', 'custAddress', 'custCity', 'custNotes'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', captureIncompleteOrder);
+            el.addEventListener('blur', captureIncompleteOrder);
+        }
     });
 
     document.addEventListener('DOMContentLoaded', () => {

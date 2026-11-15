@@ -81,6 +81,7 @@ Route::get('/our-products', [\App\Http\Controllers\EcommerceShopController::clas
 Route::get('/our-products/{slug}', [\App\Http\Controllers\EcommerceShopController::class, 'show'])->name('products.show');
 Route::get('/shop/checkout', [\App\Http\Controllers\EcommerceShopController::class, 'checkout'])->name('shop.checkout');
 Route::post('/shop/checkout', [\App\Http\Controllers\EcommerceShopController::class, 'placeOrder'])->name('shop.checkout.submit');
+Route::post('/shop/checkout/incomplete', [\App\Http\Controllers\EcommerceShopController::class, 'recordIncompleteOrder'])->name('shop.checkout.incomplete');
 Route::post('/shop/apply-coupon', [\App\Http\Controllers\EcommerceShopController::class, 'applyCoupon'])->name('shop.apply_coupon');
 Route::get('/shop/order-success/{orderNumber}', [\App\Http\Controllers\EcommerceShopController::class, 'orderSuccess'])->name('shop.order_success');
 Route::get('/api/shop/search', [\App\Http\Controllers\EcommerceShopController::class, 'apiSearch'])->name('shop.api.search');

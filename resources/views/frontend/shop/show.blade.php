@@ -18,10 +18,10 @@
     }
     .prod-main-img-wrap {
         position: relative;
-        background: #ffffff;
+        background: #f8fafc;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
-        padding: 16px;
+        padding: 0 !important;
         text-align: center;
         height: 440px;
         display: flex;
@@ -31,9 +31,9 @@
         cursor: crosshair;
     }
     .prod-main-img-wrap img {
-        max-height: 100%;
-        max-width: 100%;
-        object-fit: contain;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         user-select: none;
         pointer-events: none;
     }
@@ -486,15 +486,11 @@
             <div class="ps-lg-2">
                 <h1 class="prod-detail-title">{{ $product->name }}</h1>
 
-                <!-- Product Code with Copy Button (Screenshot match) -->
+                <!-- Product Code (Pill display) -->
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <div class="prod-code-badge">
                         <i class="fa fa-barcode text-muted"></i>
                         <span>Code: <strong class="text-dark">{{ $product->sku ?: 'SKU-' . $product->id }}</strong></span>
-                        <button type="button" class="btn-copy-code" onclick="copyProductCode('{{ $product->sku ?: 'SKU-' . $product->id }}', this)">
-                            <i class="fa fa-copy"></i>
-                            <span class="copy-lbl">Copy</span>
-                        </button>
                     </div>
 
                     @if($product->delivery_time)
@@ -657,7 +653,6 @@
                         @if($rel->old_price && $rel->old_price > $rel->price)
                             <span class="prod-discount-badge">৳{{ round($rel->old_price - $rel->price) }}<br><small style="font-size: 8.5px; font-weight: 900;">OFF</small></span>
                         @endif
-                        <span class="prod-delivery-badge"><i class="fa fa-clock me-1"></i>{{ $rel->delivery_time }}</span>
                         <a href="{{ route('products.show', $rel->slug) }}" class="prod-img-wrap">
                             <img src="{{ asset($rel->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $rel->name }}" loading="lazy">
                         </a>

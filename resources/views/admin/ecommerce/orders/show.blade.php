@@ -189,7 +189,22 @@
                         <div class="box-body">
                             <div class="mb-3">
                                 <div class="text-muted small">পেমেন্ট মেথড:</div>
-                                <div class="fw-bold text-uppercase fs-6">{{ $order->payment_method ?: 'Cash On Delivery' }}</div>
+                                <div class="fw-bold fs-6">
+                                    @if($order->payment_method === 'cod')
+                                        <span class="badge bg-secondary fs-6"><i class="fa fa-hand-holding-dollar me-1"></i> Cash on Delivery (ক্যাশ অন ডেলিভারি)</span>
+                                    @elseif($order->payment_method === 'bkash')
+                                        <span class="badge bg-danger fs-6"><i class="fa fa-mobile-screen me-1"></i> অনলাইন পেমেন্ট (bKash বিকাশ)</span>
+                                    @elseif($order->payment_method === 'nagad')
+                                        <span class="badge bg-warning text-dark fs-6"><i class="fa fa-mobile-screen me-1"></i> অনলাইন পেমেন্ট (Nagad নগদ)</span>
+                                    @elseif($order->payment_method === 'rocket')
+                                        <span class="badge fs-6" style="background: #8b5cf6; color: white;"><i class="fa fa-mobile-screen me-1"></i> অনলাইন পেমেন্ট (Rocket রকেট)</span>
+                                    @else
+                                        <span class="badge bg-primary fs-6">{{ strtoupper($order->payment_method ?: 'COD') }}</span>
+                                    @endif
+                                    @if($order->payment_transaction_id)
+                                        <div class="small text-muted mt-1">TrxID: <code>{{ $order->payment_transaction_id }}</code></div>
+                                    @endif
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <div class="text-muted small">বর্তমান পেমেন্ট অবস্থা:</div>

@@ -106,6 +106,9 @@
                 <a href="{{ route('admin.ecommerce.orders', ['status' => 'pending']) }}" class="btn btn-sm {{ request('status') === 'pending' ? 'btn-warning text-dark fw-bold' : 'btn-light border' }}">
                     Pending <span class="badge bg-warning text-dark ms-1">{{ $counts['pending_entry'] }}</span>
                 </a>
+                <a href="{{ route('admin.ecommerce.orders', ['status' => 'incomplete']) }}" class="btn btn-sm {{ request('status') === 'incomplete' ? 'btn-danger text-white fw-bold' : 'btn-light border' }}">
+                    <i class="fa fa-exclamation-circle me-1"></i> Incomplete (অসম্পূর্ণ) <span class="badge bg-danger text-white ms-1">{{ $counts['incomplete'] ?? 0 }}</span>
+                </a>
                 <a href="{{ route('admin.ecommerce.orders', ['status' => 'processing']) }}" class="btn btn-sm {{ request('status') === 'processing' ? 'btn-info text-white' : 'btn-light border' }}">
                     Processing <span class="badge bg-info text-white ms-1">{{ $counts['processing'] }}</span>
                 </a>

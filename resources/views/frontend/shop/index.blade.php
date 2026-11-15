@@ -251,16 +251,19 @@
     .prod-img-wrap {
         display: block;
         width: 100%;
-        height: 135px;
-        margin-bottom: 6px;
+        height: 140px;
+        margin-bottom: 8px;
         position: relative;
         text-decoration: none;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f8fafc;
     }
     .prod-img-wrap img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
-        transition: transform 0.2s ease;
+        object-fit: cover;
+        transition: transform 0.25s ease;
     }
     .shop-product-card:hover .prod-img-wrap img {
         transform: scale(1.05);

@@ -481,19 +481,19 @@
 
         .prod-img-wrap {
             position: relative;
-            height: 160px;
+            height: 145px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             overflow: hidden;
-            background: #fff;
+            background: #f8fafc;
             border-radius: 8px;
         }
         .prod-img-wrap img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
         .shop-product-card:hover .prod-img-wrap img {

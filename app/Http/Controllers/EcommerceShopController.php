@@ -271,7 +271,17 @@ class EcommerceShopController extends Controller
         }])->where('is_active', true)->orderBy('order_num', 'asc')->get();
 
         $shippingZones = ShopShippingZone::where('is_active', true)->orderBy('order_num', 'asc')->get();
-        $paymentMethods = ShopPaymentMethod::where('is_active', true)->orderBy('order_num', 'asc')->get();
+        // Payment methods: COD is always available; Online gateways (bKash, Nagad, Rocket) ONLY show if API key is configured in admin panel
+        $paymentMethods = ShopPaymentMethod::where('is_active', true)
+            ->where(function ($query) {
+                $query->where('code', 'cod')
+                      ->orWhere(function ($q) {
+                          $q->whereNotNull('api_key')
+                            ->where('api_key', '!=', '');
+                      });
+            })
+            ->orderBy('order_num', 'asc')
+            ->get();
         $settings = ShopSetting::all()->pluck('value', 'key');
 
         $user = Auth::user();
@@ -336,6 +346,140 @@ class EcommerceShopController extends Controller
             'discount_formatted' => '৳ ' . number_format($discount, 0),
             'message' => 'কুপন সফলভাবে প্রয়োগ হয়েছে! আপনি ৳' . number_format($discount, 0) . ' ছাড় পেয়েছেন।'
         ]);
+    }
+
+    /**
+     * Record incomplete order (Draft/Abandoned checkout tracking)
+     */
+    public function recordIncompleteOrder(Request $request)
+    {
+        $phone = trim($request->input('phone', ''));
+        $firstName = trim($request->input('first_name', ''));
+        $lastName = trim($request->input('last_name', ''));
+        $address = trim($request->input('address', ''));
+        $city = trim($request->input('city', 'Dhaka'));
+        $rawItems = $request->input('items', []);
+
+        if (empty($phone) || strlen($phone) < 6) {
+            return response()->json(['success' => false, 'message' => 'ফোন নম্বর প্রয়োজন'], 422);
+        }
+
+        if (is_string($rawItems)) {
+            $itemsData = json_decode($rawItems, true) ?? [];
+        } else {
+            $itemsData = (array)$rawItems;
+        }
+
+        if (empty($itemsData)) {
+            return response()->json(['success' => false, 'message' => 'ব্যাগ খালি'], 422);
+        }
+
+        $subtotal = 0;
+        foreach ($itemsData as $item) {
+            $qty = max(1, (int)($item['quantity'] ?? 1));
+            $price = (float)($item['price'] ?? 0);
+            $subtotal += ($price * $qty);
+        }
+
+        $shippingCharge = (float)$request->input('shipping_charge', 0);
+        $totalAmount = $subtotal + $shippingCharge;
+
+        $existingOrderId = $request->input('incomplete_order_id') ?: $request->session()->get('shop_incomplete_order_id');
+        $order = null;
+
+        if ($existingOrderId) {
+            $order = ShopOrder::where('id', $existingOrderId)->where('order_status', 'incomplete')->first();
+        }
+
+        if (!$order) {
+            $order = ShopOrder::where('phone', $phone)
+                ->where('order_status', 'incomplete')
+                ->where('created_at', '>=', now()->subHours(3))
+                ->latest()
+                ->first();
+        }
+
+        $historyEntry = [
+            'status' => 'incomplete',
+            'comment' => 'গ্রাহক চেকআউটে তথ্য পূরণ করেছেন কিন্তু অর্ডার কনফার্ম করেননি (অসম্পূর্ণ অর্ডার)।',
+            'time' => now()->toDateTimeString()
+        ];
+
+        DB::beginTransaction();
+        try {
+            if ($order) {
+                $order->update([
+                    'first_name' => $firstName ?: $order->first_name,
+                    'last_name' => $lastName ?: $order->last_name,
+                    'phone' => $phone,
+                    'address' => $address ?: $order->address,
+                    'city' => $city ?: $order->city,
+                    'subtotal' => $subtotal,
+                    'shipping_charge' => $shippingCharge,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $request->input('payment_method', 'cod'),
+                ]);
+
+                ShopOrderItem::where('order_id', $order->id)->delete();
+                foreach ($itemsData as $item) {
+                    ShopOrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item['id'] ?? null,
+                        'product_name' => $item['name'] ?? 'Product',
+                        'sku' => $item['sku'] ?? null,
+                        'price' => (float)($item['price'] ?? 0),
+                        'quantity' => max(1, (int)($item['quantity'] ?? 1)),
+                        'total' => (float)($item['price'] ?? 0) * max(1, (int)($item['quantity'] ?? 1)),
+                    ]);
+                }
+            } else {
+                $orderNumber = 'INCOMP-' . date('ymd') . '-' . strtoupper(Str::random(4));
+                $order = ShopOrder::create([
+                    'order_number' => $orderNumber,
+                    'user_id' => Auth::id() ?? null,
+                    'first_name' => $firstName ?: 'Guest',
+                    'last_name' => $lastName,
+                    'phone' => $phone,
+                    'ip_address' => $request->ip(),
+                    'platform' => 'Website',
+                    'address' => $address ?: 'অসম্পূর্ণ ঠিকানা',
+                    'city' => $city,
+                    'shipping_method' => $request->input('shipping_method', 'inside_dhaka'),
+                    'shipping_charge' => $shippingCharge,
+                    'subtotal' => $subtotal,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $request->input('payment_method', 'cod'),
+                    'payment_status' => 'pending',
+                    'order_status' => 'incomplete',
+                    'status_history' => [$historyEntry],
+                    'notes' => 'অসম্পূর্ণ অর্ডার (কাস্টমার বের হয়ে গেছেন)',
+                ]);
+
+                foreach ($itemsData as $item) {
+                    ShopOrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $item['id'] ?? null,
+                        'product_name' => $item['name'] ?? 'Product',
+                        'sku' => $item['sku'] ?? null,
+                        'price' => (float)($item['price'] ?? 0),
+                        'quantity' => max(1, (int)($item['quantity'] ?? 1)),
+                        'total' => (float)($item['price'] ?? 0) * max(1, (int)($item['quantity'] ?? 1)),
+                    ]);
+                }
+            }
+
+            DB::commit();
+            $request->session()->put('shop_incomplete_order_id', $order->id);
+
+            return response()->json([
+                'success' => true,
+                'incomplete_order_id' => $order->id,
+                'order_number' => $order->order_number
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -453,45 +597,91 @@ class EcommerceShopController extends Controller
             $totalAmount = max(0, ($subtotal - $discountAmount)) + $shippingCharge;
             $orderNumber = 'ASMI-' . date('ymd') . '-' . strtoupper(Str::random(4));
 
+            $payMethod = $request->payment_method ?: 'cod';
+            $payLabel = ($payMethod === 'cod') ? 'ক্যাশ অন ডেলিভারি (Cash on Delivery)' : ('অনলাইন পেমেন্ট: ' . strtoupper($payMethod));
+
             $initialHistory = [
                 [
                     'status' => 'pending',
-                    'comment' => 'গ্রাহক দ্বারা নতুন অর্ডার সফলভাবে তৈরি করা হয়েছে।',
+                    'comment' => "গ্রাহক দ্বারা নতুন অর্ডার সফলভাবে তৈরি করা হয়েছে। [পদ্ধতি: {$payLabel}]",
                     'time' => now()->toDateTimeString()
                 ]
             ];
 
-            $order = ShopOrder::create([
-                'order_number' => $orderNumber,
-                'user_id' => Auth::id() ?? null,
-                'shipping_zone_id' => $shippingZoneId,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-                'ip_address' => $request->ip(),
-                'platform' => $request->filled('platform') ? $request->platform : ($request->session()->get('ecommerce_platform', 'Website')),
-                'address' => $request->address,
-                'city' => $request->city ?? 'Dhaka',
-                'shipping_method' => $shippingMethod,
-                'shipping_charge' => $shippingCharge,
-                'discount_amount' => $discountAmount,
-                'coupon_code' => $couponCode,
-                'subtotal' => $subtotal,
-                'total_amount' => $totalAmount,
-                'payment_method' => $request->payment_method ?: 'cod',
-                'payment_status' => 'pending',
-                'payment_transaction_id' => $request->payment_transaction_id,
-                'order_status' => 'pending',
-                'status_history' => $initialHistory,
-                'notes' => $request->notes,
-            ]);
-
-            foreach ($orderItemsToCreate as $oi) {
-                $oi['order_id'] = $order->id;
-                ShopOrderItem::create($oi);
+            // Check if converting an incomplete order
+            $existingIncId = $request->input('incomplete_order_id') ?: $request->session()->get('shop_incomplete_order_id');
+            $existingIncomplete = null;
+            if ($existingIncId) {
+                $existingIncomplete = ShopOrder::where('id', $existingIncId)->where('order_status', 'incomplete')->first();
             }
 
+            if ($existingIncomplete) {
+                $order = $existingIncomplete;
+                $order->update([
+                    'order_number' => $orderNumber,
+                    'user_id' => Auth::id() ?? $order->user_id,
+                    'shipping_zone_id' => $shippingZoneId,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    'ip_address' => $request->ip(),
+                    'platform' => $request->filled('platform') ? $request->platform : ($request->session()->get('ecommerce_platform', 'Website')),
+                    'address' => $request->address,
+                    'city' => $request->city ?? 'Dhaka',
+                    'shipping_method' => $shippingMethod,
+                    'shipping_charge' => $shippingCharge,
+                    'discount_amount' => $discountAmount,
+                    'coupon_code' => $couponCode,
+                    'subtotal' => $subtotal,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $payMethod,
+                    'payment_status' => ($payMethod === 'cod') ? 'pending' : 'paid',
+                    'payment_transaction_id' => $request->payment_transaction_id,
+                    'order_status' => 'pending',
+                    'status_history' => $initialHistory,
+                    'notes' => $request->notes,
+                ]);
+
+                ShopOrderItem::where('order_id', $order->id)->delete();
+                foreach ($orderItemsToCreate as $oi) {
+                    $oi['order_id'] = $order->id;
+                    ShopOrderItem::create($oi);
+                }
+            } else {
+                $order = ShopOrder::create([
+                    'order_number' => $orderNumber,
+                    'user_id' => Auth::id() ?? null,
+                    'shipping_zone_id' => $shippingZoneId,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
+                    'ip_address' => $request->ip(),
+                    'platform' => $request->filled('platform') ? $request->platform : ($request->session()->get('ecommerce_platform', 'Website')),
+                    'address' => $request->address,
+                    'city' => $request->city ?? 'Dhaka',
+                    'shipping_method' => $shippingMethod,
+                    'shipping_charge' => $shippingCharge,
+                    'discount_amount' => $discountAmount,
+                    'coupon_code' => $couponCode,
+                    'subtotal' => $subtotal,
+                    'total_amount' => $totalAmount,
+                    'payment_method' => $payMethod,
+                    'payment_status' => ($payMethod === 'cod') ? 'pending' : 'paid',
+                    'payment_transaction_id' => $request->payment_transaction_id,
+                    'order_status' => 'pending',
+                    'status_history' => $initialHistory,
+                    'notes' => $request->notes,
+                ]);
+
+                foreach ($orderItemsToCreate as $oi) {
+                    $oi['order_id'] = $order->id;
+                    ShopOrderItem::create($oi);
+                }
+            }
+
+            $request->session()->forget('shop_incomplete_order_id');
             DB::commit();
 
             if ($request->ajax() || $request->wantsJson()) {

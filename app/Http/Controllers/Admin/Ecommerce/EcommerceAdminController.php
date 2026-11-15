@@ -804,6 +804,7 @@ class EcommerceAdminController extends Controller
         $counts = [
             'all' => ShopOrder::count(),
             'pending_entry' => ShopOrder::where('order_status', 'pending')->count(),
+            'incomplete' => ShopOrder::where('order_status', 'incomplete')->count(),
             'processing' => ShopOrder::where('order_status', 'processing')->count(),
             'in_transport' => ShopOrder::whereIn('order_status', ['in_transport', 'shipping'])->count(),
             'delivered' => ShopOrder::where('order_status', 'delivered')->count(),
