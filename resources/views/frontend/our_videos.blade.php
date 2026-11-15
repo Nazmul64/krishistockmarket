@@ -42,29 +42,15 @@
                                 @endif
                             </div>
 
-                            <!-- Card Body Section -->
-                            <div class="card-body p-4 d-flex flex-column justify-content-between flex-grow-1">
-                                <div>
-                                    <h5 class="card-title fw-bold text-dark mb-2" style="font-size: 17px; line-height: 1.4;">
-                                        {{ $video->title }}
-                                    </h5>
-                                    @if($video->description)
-                                        <p class="card-text text-muted small mb-3" style="line-height: 1.6;">
-                                            {{ $video->description }}
-                                        </p>
-                                    @endif
+                            <!-- Action Button (If Provided) -->
+                            @if($video->button_link)
+                                <div class="card-body p-3 text-center">
+                                    <a href="{{ $video->button_link }}" class="btn btn-golden-action w-100 py-2 fw-semibold text-center d-flex align-items-center justify-content-center gap-2">
+                                        <span>{{ $video->button_text ?: 'বিস্তারিত দেখুন' }}</span>
+                                        <i class="fa fa-arrow-right font-size-12"></i>
+                                    </a>
                                 </div>
-
-                                <!-- Action Button (If Provided) -->
-                                @if($video->button_link)
-                                    <div class="mt-3 pt-3 border-top">
-                                        <a href="{{ $video->button_link }}" class="btn btn-golden-action w-100 py-2 fw-semibold text-center d-flex align-items-center justify-content-center gap-2" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; border: none; border-radius: 8px;">
-                                            <span>{{ $video->button_text ?: 'বিস্তারিত দেখুন' }}</span>
-                                            <i class="fa fa-arrow-right font-size-12"></i>
-                                        </a>
-                                    </div>
-                                @endif
-                            </div>
+                            @endif
                         </div>
                     </div>
                 @empty

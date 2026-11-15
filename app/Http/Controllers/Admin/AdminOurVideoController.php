@@ -31,7 +31,7 @@ class AdminOurVideoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'video_url' => 'required|string|max:1000',
             'description' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
@@ -40,6 +40,7 @@ class AdminOurVideoController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
+        $validated['title'] = $validated['title'] ?: ('ভিডিও #' . ((OurVideo::max('id') ?? 0) + 1));
         $validated['order_num'] = $request->input('order_num', 0);
         $validated['is_active'] = $request->has('is_active') ? true : false;
 
@@ -65,7 +66,7 @@ class AdminOurVideoController extends Controller
         $video = OurVideo::findOrFail($id);
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
             'video_url' => 'required|string|max:1000',
             'description' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
@@ -74,6 +75,7 @@ class AdminOurVideoController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
+        $validated['title'] = $validated['title'] ?: ($video->title ?: ('ভিডিও #' . $video->id));
         $validated['order_num'] = $request->input('order_num', 0);
         $validated['is_active'] = $request->has('is_active') ? true : false;
 

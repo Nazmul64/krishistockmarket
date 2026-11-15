@@ -51,8 +51,8 @@
 
                                 <!-- Video Title -->
                                 <div class="form-group mb-3">
-                                    <label class="form-label fw-bold">ভিডিও শিরোনাম (Title) <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="title" value="{{ old('title') }}" placeholder="যেমন: আমাদের নতুন পণ্যের পরিচিতি" required>
+                                    <label class="form-label fw-bold">ভিডিও শিরোনাম (Title) <small class="text-muted">(ঐচ্ছিক - অ্যাডমিনে চেনার জন্য)</small></label>
+                                    <input type="text" class="form-control" name="title" value="{{ old('title') }}" placeholder="যেমন: আমাদের নতুন পণ্যের পরিচিতি (ঐচ্ছিক)">
                                 </div>
 
                                 <!-- YouTube / Video URL -->
