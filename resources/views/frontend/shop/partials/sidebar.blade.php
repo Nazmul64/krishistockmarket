@@ -8,22 +8,18 @@
     <!-- 1. Header Section (Brand + Quick Badges + Categories Header) -->
     <div class="sidebar-header-section flex-shrink-0">
         <!-- Top Shopping Zone BD banner -->
-        <div class="sidebar-brand-box">
-            <a href="{{ route('products.index') }}" class="text-decoration-none">
-                <div class="d-flex align-items-center justify-content-center gap-2">
-                    <i class="fa fa-shopping-bag text-danger fs-5"></i>
-                    <div class="text-start">
-                        <strong class="text-dark d-block fw-bold" style="font-size: 13px; letter-spacing: -0.3px;">SHOPPING ZONE BD</strong>
-                        <div class="brand-tagline">Fashionable Wear in Reasonable Price</div>
-                    </div>
-                </div>
+        <div class="sidebar-brand-box py-2 px-3 text-center">
+            <a href="{{ route('products.index') }}" class="text-decoration-none d-block">
+                <img src="{{ asset('uploads/icons/szbd_long.png') }}" alt="SHOPPING ZONE BD" style="max-height: 42px; width: auto; max-width: 100%; object-fit: contain;">
             </a>
         </div>
 
         <!-- Quick Badges (Winter Essentials, Monthly Bazar, Combo Offers, Daily Offers, Popular, Shop by Brands) -->
         <div class="sidebar-badges-list">
             <a href="{{ route('products.index', ['badge' => 'winter-essentials']) }}" class="sidebar-badge-link {{ $currentBadge == 'winter-essentials' ? 'active' : '' }}">
-                <span class="icon-box text-info" style="font-size: 22px;"><i class="fa-solid fa-cart-flatbed-suitcase"></i></span>
+                <span class="icon-box">
+                    <img src="{{ asset('uploads/icons/winter_essentials.png') }}" alt="Winter Essentials" class="badge-icon-img">
+                </span>
                 <span>Winter Essentials</span>
             </a>
 
@@ -35,26 +31,30 @@
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'combo-offers']) }}" class="sidebar-badge-link {{ $currentBadge == 'combo-offers' ? 'active' : '' }}">
-                <span class="icon-box text-warning" style="font-size: 22px;"><i class="fa-solid fa-gift"></i></span>
+                <span class="icon-box">
+                    <img src="{{ asset('uploads/icons/combo_offer.jpg') }}" alt="Combo Offers" class="badge-icon-img" style="border-radius: 6px;">
+                </span>
                 <span>Combo Offers</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'daily-offers']) }}" class="sidebar-badge-link {{ $currentBadge == 'daily-offers' ? 'active' : '' }}">
                 <span class="icon-box">
-                    <img src="{{ asset('uploads/icons/icon-daily-offers.svg') }}" alt="Daily Offers" class="badge-icon-img">
+                    <img src="{{ asset('uploads/icons/offer.gif') }}" alt="Daily Offers" class="badge-icon-img">
                 </span>
                 <span>Daily Offers</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'popular']) }}" class="sidebar-badge-link {{ $currentBadge == 'popular' ? 'active' : '' }}">
                 <span class="icon-box">
-                    <img src="{{ asset('uploads/icons/icon-popular.png') }}" alt="Popular" class="badge-icon-img">
+                    <img src="{{ asset('uploads/icons/heart.gif') }}" alt="Popular" class="badge-icon-img">
                 </span>
                 <span>Popular</span>
             </a>
 
             <a href="{{ route('products.index', ['badge' => 'brands']) }}" class="sidebar-badge-link {{ $currentBadge == 'brands' ? 'active' : '' }}">
-                <span class="icon-box text-primary" style="font-size: 22px;"><i class="fa-solid fa-bag-shopping"></i></span>
+                <span class="icon-box">
+                    <img src="{{ asset('uploads/icons/shop_by_brand.svg') }}" alt="Shop by Brands" class="badge-icon-img">
+                </span>
                 <span>Shop by Brands</span>
             </a>
         </div>

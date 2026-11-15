@@ -1390,25 +1390,7 @@
         <div class="floating-cart-inner">
             <div class="floating-cart-top">
                 <div class="cart-anim-bag-wrapper">
-                    <svg class="cart-anim-bag-svg" viewBox="0 0 40 42" width="30" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Falling Item (Item drops into bag opening) -->
-                        <g class="cart-drop-item">
-                            <rect x="14" y="2" width="12" height="10" rx="2" fill="#f59e0b" stroke="#b45309" stroke-width="1.2"/>
-                            <path d="M20 2v10M14 7h12" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
-                        </g>
-                        <!-- Shopping Bag Group (Squashes & stretches with physics bounce) -->
-                        <g class="cart-bag-group">
-                            <!-- Bag Handle -->
-                            <path d="M14 17 C14 9, 26 9, 26 17" stroke="#007e8a" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-                            <!-- Bag Body -->
-                            <path d="M7 17 L9.5 37 C9.7 38.6 11.1 39.8 12.7 39.8 L27.3 39.8 C28.9 39.8 30.3 38.6 30.5 37 L33 17 Z" fill="#008a96" stroke="#00646d" stroke-width="1.5" stroke-linejoin="round"/>
-                            <!-- Bag Opening Rim -->
-                            <path d="M7 17 C13 19.5 27 19.5 33 17" stroke="#004d54" stroke-width="1.2" fill="none"/>
-                            <!-- Bag Emblem Accent -->
-                            <circle cx="20" cy="28.5" r="3.5" fill="#fef08a"/>
-                            <path d="M18.5 28.5 Q20 30 21.5 28.5" stroke="#b45309" stroke-width="0.9" stroke-linecap="round" fill="none"/>
-                        </g>
-                    </svg>
+                    <img src="{{ asset('uploads/icons/bag.gif') }}" alt="Shopping Bag" style="width: 32px; height: 32px; object-fit: contain; display: block;">
                 </div>
                 <div class="floating-cart-count" id="floatingCartCount">0 ITEM</div>
             </div>
