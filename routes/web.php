@@ -73,6 +73,7 @@ Route::get('/contact', function () {return view('frontend.contact');})->name('co
 Route::post('/contact/send', [ContactController::class, 'store'])->name('contact.send');
 Route::get('/career', [\App\Http\Controllers\CareerController::class, 'index'])->name('career');
 Route::post('/career/apply', [\App\Http\Controllers\CareerController::class, 'apply'])->name('career.apply');
+Route::get('/our-videos', [\App\Http\Controllers\FrontendController::class, 'ourVideos'])->name('our_videos');
 Route::get('/terms', function () {return view('frontend.terms');})->name('terms');
 Route::get('/privacy-policy', function () { return view('frontend.privacy');})->name('privacy');
 
@@ -427,6 +428,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::post('/card-benefits/update/{id}', [AdminCardBenefitController::class, 'update'])->name('admin.card_benefits.update');
     Route::get('/card-benefits/destroy/{id}', [AdminCardBenefitController::class, 'destroy'])->name('admin.card_benefits.delete');
     Route::post('/card-benefits/toggle-status/{id}', [AdminCardBenefitController::class, 'toggleStatus'])->name('admin.card_benefits.toggle_status');
+
+    // Our Videos Admin Routes
+    Route::get('/our-videos', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'index'])->name('admin.our_videos.index');
+    Route::get('/our-videos/create', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'create'])->name('admin.our_videos.create');
+    Route::post('/our-videos/store', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'store'])->name('admin.our_videos.store');
+    Route::get('/our-videos/edit/{id}', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'edit'])->name('admin.our_videos.edit');
+    Route::post('/our-videos/update/{id}', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'update'])->name('admin.our_videos.update');
+    Route::get('/our-videos/destroy/{id}', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'destroy'])->name('admin.our_videos.destroy');
+    Route::post('/our-videos/toggle-status/{id}', [\App\Http\Controllers\Admin\AdminOurVideoController::class, 'toggleStatus'])->name('admin.our_videos.toggle_status');
 
     // Admin Live Chat Support Hub Routes
     Route::get('/chat-support', [\App\Http\Controllers\ChatController::class, 'adminIndex'])->name('admin.chat.index');

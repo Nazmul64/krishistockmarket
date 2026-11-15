@@ -345,4 +345,17 @@ class FrontendController extends Controller
             'pages' => $pages,
         ]);
     }
+
+    /**
+     * Frontend Our Videos page.
+     */
+    public function ourVideos()
+    {
+        $videos = \App\Models\OurVideo::where('is_active', true)
+            ->orderBy('order_num', 'asc')
+            ->latest()
+            ->paginate(12);
+
+        return view('frontend.our_videos', compact('videos'));
+    }
 }

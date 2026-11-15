@@ -755,8 +755,9 @@
                     <a href="{{ route('gallery') }}" class="sub-nav-link-item {{ Route::is('gallery') ? 'active' : '' }}">{{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a>
                     <a href="{{ route('career') }}" class="sub-nav-link-item {{ Route::is('career') ? 'active' : '' }}">{{ $isBn ? 'ক্যারিয়ার' : 'Career' }}</a>
                     <a href="{{ route('contact') }}" class="sub-nav-link-item {{ Route::is('contact') ? 'active' : '' }}">{{ $isBn ? 'যোগাযোগ' : 'Contact' }}</a>
-                    <a href="{{ route('terms') }}" class="sub-nav-link-item {{ Route::is('terms') ? 'active' : '' }}">{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</a>
-                    <a href="{{ route('privacy') }}" class="sub-nav-link-item {{ Route::is('privacy') ? 'active' : '' }}">{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</a>
+                    <a href="{{ route('our_videos') }}" class="sub-nav-link-item {{ Route::is('our_videos') ? 'active' : '' }}">
+                        <i class="fa fa-play-circle text-danger me-1"></i>{{ $isBn ? 'আমাদের ভিডিও' : 'Our Videos' }}
+                    </a>
                 </nav>
             </div>
         </div>
@@ -909,13 +910,8 @@
                     </a>
                 </li>
                 <li class="mobile-nav-item">
-                    <a href="{{ route('terms') }}" class="mobile-nav-link {{ Route::is('terms') ? 'active' : '' }}">
-                        <span>{{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms & Conditions' }}</span><i class="fa fa-angle-right"></i>
-                    </a>
-                </li>
-                <li class="mobile-nav-item">
-                    <a href="{{ route('privacy') }}" class="mobile-nav-link {{ Route::is('privacy') ? 'active' : '' }}">
-                        <span>{{ $isBn ? 'প্রাইভেসি এন্ড পলিসি' : 'Privacy Policy' }}</span><i class="fa fa-angle-right"></i>
+                    <a href="{{ route('our_videos') }}" class="mobile-nav-link {{ Route::is('our_videos') ? 'active' : '' }}">
+                        <span><i class="fa fa-play-circle text-danger me-2"></i>{{ $isBn ? 'আমাদের ভিডিও' : 'Our Videos' }}</span><i class="fa fa-angle-right"></i>
                     </a>
                 </li>
             </ul>
@@ -970,6 +966,7 @@
                                 <li><a href="{{ route('properties.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> জমি ও প্রপার্টি</a></li>
                                 <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রোডাক্ট গ্যালারি</a></li>
                                 <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> ক্যারিয়ার</a></li>
+                                <li><a href="{{ route('our_videos') }}"><i class="fa fa-angle-right me-2 text-warning"></i> আমাদের ভিডিওসমূহ</a></li>
                                 <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রাইভেসি পলিসি</a></li>
                                 <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> টার্মস এন্ড কন্ডিশন</a></li>
                             </ul>

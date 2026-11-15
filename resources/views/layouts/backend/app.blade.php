@@ -1084,14 +1084,14 @@
 
                             @if(Auth::user()->hasPermission('settings'))
                             <li class="header">Settings Managment</li>
-                            <li class="treeview {{ (optional(Request::route())->getName() == 'setting.index')||(optional(Request::route())->getName() == 'setting.slider')||(optional(Request::route())->getName() == 'admin.our_packages.index')||(optional(Request::route())->getName() == 'setting.offer_banner')||(optional(Request::route())->getName() == 'profile.index')||(optional(Request::route())->getName() == 'admin.payment.index') ? 'menu-open' : '' }}">
+                            <li class="treeview {{ (optional(Request::route())->getName() == 'setting.index')||(optional(Request::route())->getName() == 'setting.slider')||(optional(Request::route())->getName() == 'admin.our_packages.index')||(optional(Request::route())->getName() == 'setting.offer_banner')||(optional(Request::route())->getName() == 'profile.index')||(optional(Request::route())->getName() == 'admin.payment.index')||Str::startsWith(optional(Request::route())->getName(), 'admin.our_videos') ? 'menu-open' : '' }}">
                                 <a href="#">
                                     <span>Settings</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
                                 </a>
-                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'setting.index')||(optional(Request::route())->getName() == 'setting.slider')||(optional(Request::route())->getName() == 'admin.our_packages.index')||(optional(Request::route())->getName() == 'setting.offer_banner')||(optional(Request::route())->getName() == 'profile.index')||(optional(Request::route())->getName() == 'admin.payment.index') ? 'd-block' : '' }}">
+                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'setting.index')||(optional(Request::route())->getName() == 'setting.slider')||(optional(Request::route())->getName() == 'admin.our_packages.index')||(optional(Request::route())->getName() == 'setting.offer_banner')||(optional(Request::route())->getName() == 'profile.index')||(optional(Request::route())->getName() == 'admin.payment.index')||Str::startsWith(optional(Request::route())->getName(), 'admin.our_videos') ? 'd-block' : '' }}">
                                     <li class="">
                                         <a href="{{ route('setting.index') }}">
                                             <i class="ti-more"></i>
@@ -1132,6 +1132,12 @@
                                         <a href="{{ route('admin.card_benefits.index') }}">
                                             <i class="ti-more"></i>
                                             <span>Card Benefits (কার্ড সুবিধাসমূহ)</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (Str::startsWith(optional(Request::route())->getName(), 'admin.our_videos')) ? 'active' : '' }}">
+                                        <a href="{{ route('admin.our_videos.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span class="text-danger fw-bold"><i class="fa fa-play-circle me-1"></i> Our Videos (আমাদের ভিডিওসমূহ)</span>
                                         </a>
                                     </li>
                                     <li class="{{ (optional(Request::route())->getName() == 'setting.offer_banner') ? 'active' : '' }}">
