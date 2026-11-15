@@ -294,24 +294,24 @@
             padding-left: 20px;
         }
         .sidebar-badge-link .icon-box {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
         }
         .sidebar-badge-link .icon-box img,
         .sidebar-badge-link .badge-icon-img {
-            width: 28px;
-            height: 28px;
-            max-width: 28px;
-            max-height: 28px;
+            width: 32px;
+            height: 32px;
+            max-width: 32px;
+            max-height: 32px;
             object-fit: contain;
             display: block;
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
         }
         .sidebar-badge-link:hover .icon-box img,
         .sidebar-badge-link:hover .badge-icon-img {
@@ -358,15 +358,35 @@
         .sidebar-cat-item .cat-label {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
-        .sidebar-cat-item .cat-icon {
-            font-size: 15px;
-            color: #64748b;
-            width: 20px;
-            text-align: center;
+        .cat-thumb {
+            flex: 0 0 34px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+            background: #f3fafb;
+            border-radius: 9px;
+            overflow: hidden;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
-        .sidebar-cat-item:hover .cat-icon {
+        .sidebar-cat-item:hover .cat-thumb,
+        .sidebar-cat-item.active .cat-thumb {
+            background: #e0f2f1;
+            transform: scale(1.08);
+        }
+        .cat-thumb img {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+        .cat-thumb .cat-icon {
+            font-size: 17px;
             color: var(--shop-teal);
         }
         .sidebar-cat-item .arrow-icon {

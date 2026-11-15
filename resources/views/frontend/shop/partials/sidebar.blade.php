@@ -75,12 +75,14 @@
                 <li class="sidebar-cat-item {{ $isCatActive ? 'active' : '' }}">
                     <a href="{{ route('products.index', ['category' => $category->slug]) }}">
                         <span class="cat-label">
-                            @if($category->image)
-                                <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" style="width: 20px; height: 20px; object-fit: contain; margin-right: 8px;">
-                            @else
-                                <i class="fa {{ $category->icon ?: 'fa-shopping-basket' }} cat-icon"></i>
-                            @endif
-                            <span>{{ $category->name }}</span>
+                            <span class="cat-thumb">
+                                @if($category->image)
+                                    <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" loading="lazy">
+                                @else
+                                    <i class="fa {{ $category->icon ?: 'fa-shopping-basket' }} cat-icon"></i>
+                                @endif
+                            </span>
+                            <span class="fw-semibold text-dark" style="font-size: 13.5px;">{{ $category->name }}</span>
                         </span>
                         @if($category->subcategories->count() > 0)
                             <i class="fa fa-angle-right arrow-icon"></i>
