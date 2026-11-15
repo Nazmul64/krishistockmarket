@@ -2,46 +2,46 @@
 
 @section('title', 'অর্ডার ট্র্যাকিং - Track Your Order | ' . ($settings['shop_name'] ?? 'Asmi Supershop'))
 
+@section('shop_content')
 @section('content')
-<div class="shop-track-page py-5" style="background: linear-gradient(180deg, #fef6ee 0%, #ffffff 400px);">
-    <div class="container py-2 py-md-4">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-9 col-lg-6 col-xl-5">
+<div class="shop-track-page py-3">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-11 col-lg-9 col-xl-8">
 
-                <!-- Main Tracking Card (Image 2 Reference) -->
-                <div class="card border-0 shadow-lg mx-auto" style="border-radius: 24px; overflow: hidden; background: #ffffff;">
-                    <div class="card-body p-4 p-md-5">
-                        <!-- Top Orange Package Icon -->
-                        <div class="text-center mb-3">
-                            <div class="d-inline-flex align-items-center justify-content-center shadow-sm" 
-                                 style="width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);">
-                                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                                </svg>
-                            </div>
-                            <h2 class="fw-bold text-dark mt-3 mb-1" style="font-size: 26px; letter-spacing: -0.5px;">Track Your Order</h2>
-                            <p class="text-muted small mb-0">Enter your order details below to see its status</p>
+            <!-- Main Tracking Card (Image 2 Reference) -->
+            <div class="card border-0 shadow-lg mx-auto" style="border-radius: 24px; overflow: hidden; background: #ffffff;">
+                <div class="card-body p-4 p-md-5">
+                    <!-- Top Orange Package Icon -->
+                    <div class="text-center mb-3">
+                        <div class="d-inline-flex align-items-center justify-content-center shadow-sm" 
+                             style="width: 76px; height: 76px; border-radius: 22px; background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);">
+                            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                            </svg>
                         </div>
+                        <h2 class="fw-bold text-dark mt-3 mb-1" style="font-size: 26px; letter-spacing: -0.5px;">Track Your Order</h2>
+                        <p class="text-muted small mb-0">Enter your order details below to see its status</p>
+                    </div>
 
-                        <!-- 3-Step Pill Bar (Image 2) -->
-                        <div class="d-flex align-items-center justify-content-between p-2 mb-4 rounded-pill" style="background-color: #fff7ed; border: 1px solid #fed7aa;">
-                            <div class="d-flex align-items-center gap-1">
-                                <span class="badge rounded-circle bg-warning text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: #f97316 !important;">1</span>
-                                <span class="fw-semibold text-dark" style="font-size: 11px;">Order ID</span>
-                            </div>
-                            <div class="text-muted" style="font-size: 10px;">➔</div>
-                            <div class="d-flex align-items-center gap-1">
-                                <span class="badge rounded-circle bg-warning text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: #f97316 !important;">2</span>
-                                <span class="fw-semibold text-dark" style="font-size: 11px;">Phone number</span>
-                            </div>
-                            <div class="text-muted" style="font-size: 10px;">➔</div>
-                            <div class="d-flex align-items-center gap-1">
-                                <span class="badge rounded-circle {{ $order ? 'bg-success' : 'bg-secondary' }} text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px;">3</span>
-                                <span class="fw-semibold {{ $order ? 'text-success' : 'text-muted' }}" style="font-size: 11px;">See status</span>
-                            </div>
+                    <!-- 3-Step Pill Bar (Image 2) -->
+                    <div class="d-flex align-items-center justify-content-between p-2 mb-4 rounded-pill" style="background-color: #fff7ed; border: 1px solid #fed7aa;">
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="badge rounded-circle bg-warning text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: #f97316 !important;">1</span>
+                            <span class="fw-semibold text-dark" style="font-size: 11px;">Order ID</span>
                         </div>
+                        <div class="text-muted" style="font-size: 10px;">➔</div>
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="badge rounded-circle bg-warning text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: #f97316 !important;">2</span>
+                            <span class="fw-semibold text-dark" style="font-size: 11px;">Phone number</span>
+                        </div>
+                        <div class="text-muted" style="font-size: 10px;">➔</div>
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="badge rounded-circle {{ $order ? 'bg-success' : 'bg-secondary' }} text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px;">3</span>
+                            <span class="fw-semibold {{ $order ? 'text-success' : 'text-muted' }}" style="font-size: 11px;">See status</span>
+                        </div>
+                    </div>
 
                         <!-- Search / Input Form -->
                         <form action="{{ route('shop.track_order') }}" method="GET" id="trackOrderForm" onsubmit="return validateTrackForm(event);">
@@ -230,6 +230,55 @@
                                 </div>
                             @endif
 
+                            <!-- Live Status Highlight Box -->
+                            <div class="p-3 rounded-3 mb-4 d-flex align-items-center gap-3" 
+                                 style="background-color: {{ $status === 'delivered' || $status === 'completed' ? '#f0fdf4' : ($status === 'cancelled' ? '#fef2f2' : '#eff6ff') }}; 
+                                        border: 1.5px solid {{ $status === 'delivered' || $status === 'completed' ? '#86efac' : ($status === 'cancelled' ? '#fca5a5' : '#bfdbfe') }};">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" 
+                                     style="width: 46px; height: 46px; background: {{ $status === 'delivered' || $status === 'completed' ? '#16a34a' : ($status === 'cancelled' ? '#dc2626' : ($status === 'shipping' || $status === 'in_transport' ? '#2563eb' : '#f97316')) }};">
+                                    @if($status === 'delivered' || $status === 'completed')
+                                        <i class="fa fa-check fs-5"></i>
+                                    @elseif($status === 'shipping' || $status === 'in_transport')
+                                        <i class="fa fa-truck fs-5"></i>
+                                    @elseif($status === 'processing')
+                                        <i class="fa fa-cogs fs-5"></i>
+                                    @elseif($status === 'cancelled')
+                                        <i class="fa fa-times fs-5"></i>
+                                    @else
+                                        <i class="fa fa-clock-o fs-5"></i>
+                                    @endif
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="small text-muted fw-semibold mb-1">অর্ডারের বর্তমান অবস্থা (Live Status):</div>
+                                    <div class="fw-bold font-size-16" style="color: {{ $status === 'delivered' || $status === 'completed' ? '#16a34a' : ($status === 'cancelled' ? '#dc2626' : '#1e293b') }};">
+                                        @if($status === 'pending')
+                                            <span class="badge bg-warning text-dark me-1" style="font-size: 13px;">পেন্ডিং (Pending)</span> - অর্ডার সফলভাবে গ্রহণ করা হয়েছে
+                                        @elseif($status === 'processing')
+                                            <span class="badge bg-info text-white me-1" style="font-size: 13px;">প্রসেসিং (Processing)</span> - পণ্য প্রস্তুত ও প্যাকেজিং চলছে
+                                        @elseif($status === 'shipping' || $status === 'in_transport')
+                                            <span class="badge bg-primary text-white me-1" style="font-size: 13px;">ডেলিভারিতে আছে (Shipping)</span> - কুরিয়ারে পাঠানো হয়েছে
+                                        @elseif($status === 'delivered' || $status === 'completed')
+                                            <span class="badge bg-success text-white me-1" style="font-size: 13px;">ডেলিভারি সম্পন্ন (Delivered)</span> - গ্রাহক পণ্য বুঝে পেয়েছেন
+                                        @elseif($status === 'cancelled')
+                                            <span class="badge bg-danger text-white me-1" style="font-size: 13px;">বাতিল (Cancelled)</span> - অর্ডারটি বাতিল করা হয়েছে
+                                        @else
+                                            <span class="badge bg-secondary me-1" style="font-size: 13px;">{{ ucfirst($status) }}</span>
+                                        @endif
+                                    </div>
+                                    <small class="text-secondary d-block mt-1">
+                                        @if($status === 'pending')
+                                            আপনার অর্ডারটি আমাদের ডাটাবেসে সফলভাবে পেন্ডিং অবস্থায় রয়েছে। শীঘ্রই আমাদের সেলস প্রতিনিধি এটি নিশ্চিত করবেন।
+                                        @elseif($status === 'processing')
+                                            আপনার পণ্যের মান পরীক্ষা ও প্যাকিং সম্পন্ন হচ্ছে। দ্রুতই এটি কুরিয়ারে হস্তান্তর করা হবে।
+                                        @elseif($status === 'shipping' || $status === 'in_transport')
+                                            পণ্যটি ডেলিভারি এজেন্টের দায়িত্বে আছে এবং আপনার ঠিকানার উদ্দেশ্যে রওনা হয়েছে।
+                                        @elseif($status === 'delivered' || $status === 'completed')
+                                            সফলভাবে ডেলিভারি সম্পন্ন হয়েছে। আমাদের সাথে কেনাকাটা করার জন্য ধন্যবাদ!
+                                        @endif
+                                    </small>
+                                </div>
+                            </div>
+
                             <!-- Courier Details (If Dispatched) -->
                             @if($order->courier_name)
                                 <div class="p-3 mb-4 rounded-3 border" style="background-color: #f0fdf4; border-color: #bbf7d0 !important;">
@@ -343,7 +392,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')

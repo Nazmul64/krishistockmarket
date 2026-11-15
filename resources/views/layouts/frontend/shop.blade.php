@@ -1415,7 +1415,11 @@
 
             <!-- Main Shop Content Slot -->
             <div class="col-lg-9 col-xl-10">
-                @yield('shop_content')
+                @hasSection('shop_content')
+                    @yield('shop_content')
+                @else
+                    @yield('content')
+                @endif
             </div>
         </div>
     </div>

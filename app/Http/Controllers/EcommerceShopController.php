@@ -777,37 +777,54 @@ class EcommerceShopController extends Controller
         if ($searched) {
             $query = ShopOrder::with('items.product')->where('order_status', '!=', 'incomplete');
 
+            $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+            $last10 = (strlen($cleanPhone) >= 10) ? substr($cleanPhone, -10) : $cleanPhone;
+            $cleanId = ltrim(trim($orderId), '#');
+
             if ($orderId && $phone) {
-                $cleanId = ltrim(trim($orderId), '#');
-                $digitsPhone = preg_replace('/[^0-9]/', '', $phone);
                 $query->where(function($q) use ($cleanId) {
                     $q->where('order_number', $cleanId)
                       ->orWhere('order_number', 'like', "%{$cleanId}%")
                       ->orWhere('id', $cleanId);
-                })->where(function($q) use ($phone, $digitsPhone) {
-                    $q->where('phone', 'like', "%{$phone}%");
-                    if (!empty($digitsPhone)) {
-                        $q->orWhere('phone', 'like', "%{$digitsPhone}%");
-                    }
                 });
+
+                if (!empty($last10)) {
+                    $query->where(function($q) use ($phone, $cleanPhone, $last10) {
+                        $q->where('phone', 'like', "%{$phone}%");
+                        if ($cleanPhone) $q->orWhere('phone', 'like', "%{$cleanPhone}%");
+                        if ($last10) $q->orWhere('phone', 'like', "%{$last10}%");
+                    });
+                }
             } elseif ($orderId) {
-                $cleanId = ltrim(trim($orderId), '#');
                 $query->where(function($q) use ($cleanId) {
                     $q->where('order_number', $cleanId)
                       ->orWhere('order_number', 'like', "%{$cleanId}%")
                       ->orWhere('id', $cleanId);
                 });
             } elseif ($phone) {
-                $digitsPhone = preg_replace('/[^0-9]/', '', $phone);
-                $query->where(function($q) use ($phone, $digitsPhone) {
+                $query->where(function($q) use ($phone, $cleanPhone, $last10) {
                     $q->where('phone', 'like', "%{$phone}%");
-                    if (!empty($digitsPhone)) {
-                        $q->orWhere('phone', 'like', "%{$digitsPhone}%");
-                    }
+                    if ($cleanPhone) $q->orWhere('phone', 'like', "%{$cleanPhone}%");
+                    if ($last10) $q->orWhere('phone', 'like', "%{$last10}%");
                 });
             }
 
             $orderList = $query->latest()->get();
+
+            // Fallback: If searched both but no match, try finding by order_id or phone separately
+            if ($orderList->isEmpty() && $orderId && $phone) {
+                $fallbackQuery = ShopOrder::with('items.product')->where('order_status', '!=', 'incomplete');
+                $fallbackQuery->where(function($q) use ($cleanId, $last10) {
+                    $q->where('order_number', $cleanId)
+                      ->orWhere('order_number', 'like', "%{$cleanId}%")
+                      ->orWhere('id', $cleanId);
+                    if (!empty($last10)) {
+                        $q->orWhere('phone', 'like', "%{$last10}%");
+                    }
+                });
+                $orderList = $fallbackQuery->latest()->get();
+            }
+
             $order = $orderList->first();
         }
 
