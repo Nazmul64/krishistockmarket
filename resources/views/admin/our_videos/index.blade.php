@@ -65,8 +65,8 @@
                                 <!-- Live Preview Container -->
                                 <div class="mb-3 d-none" id="adminVideoPreviewBox">
                                     <label class="form-label fw-bold small text-muted">লাইভ প্রিভিউ:</label>
-                                    <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm border bg-dark">
-                                        <iframe id="adminPreviewIframe" src="" frameborder="0" allowfullscreen></iframe>
+                                    <div class="position-relative w-100 rounded overflow-hidden shadow-sm border bg-dark" style="height: 220px;">
+                                        <iframe id="adminPreviewIframe" class="w-100 h-100 position-absolute top-0 start-0 border-0" src="" frameborder="0" allowfullscreen></iframe>
                                     </div>
                                 </div>
 

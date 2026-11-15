@@ -21,30 +21,29 @@
         <div class="container">
             <div class="row g-4 align-items-stretch">
                 @forelse ($videos as $video)
-                    <div class="col-12 col-md-6 col-lg-4 d-flex">
-                        <div class="card w-100 shadow-sm border-0 rounded-4 overflow-hidden d-flex flex-column" 
-                             style="background: #ffffff; border: 1px solid #e2e8f0; transition: transform 0.25s ease, box-shadow 0.25s ease;">
+                    <div class="col-12 col-md-6 col-lg-6 d-flex mb-4">
+                        <div class="card video-card-container w-100 shadow-sm border-0 d-flex flex-column" 
+                             style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: transform 0.25s ease, box-shadow 0.25s ease;">
                             
-                            <!-- Video Player Section (Ratio 16:9 for YouTube or HTML5 Video Tag) -->
-                            <div class="video-media-wrapper position-relative bg-dark" style="background: #000000;">
+                            <!-- Video Player Section (Full Width 100%, Large Responsive Height) -->
+                            <div class="video-frame-box position-relative w-100 overflow-hidden bg-dark">
                                 @if($video->is_direct_video)
-                                    <video src="{{ $video->video_url }}" class="card-img-top w-100" style="aspect-ratio: 16/9; object-fit: cover;" controls preload="metadata"></video>
+                                    <video src="{{ $video->video_url }}" class="w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover;" controls preload="metadata"></video>
                                 @else
-                                    <div class="ratio ratio-16x9">
-                                        <iframe src="{{ $video->embed_url }}" 
-                                                title="{{ $video->title }}" 
-                                                frameborder="0" 
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                                allowfullscreen
-                                                loading="lazy">
-                                        </iframe>
-                                    </div>
+                                    <iframe class="w-100 h-100 position-absolute top-0 start-0" 
+                                            src="{{ $video->embed_url }}" 
+                                            title="{{ $video->title ?? 'YouTube video player' }}" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen
+                                            loading="lazy">
+                                    </iframe>
                                 @endif
                             </div>
 
                             <!-- Action Button (If Provided) -->
                             @if($video->button_link)
-                                <div class="card-body p-3 text-center">
+                                <div class="card-body p-3 text-center d-flex align-items-center justify-content-center" style="background: #ffffff;">
                                     <a href="{{ $video->button_link }}" class="btn btn-golden-action w-100 py-2 fw-semibold text-center d-flex align-items-center justify-content-center gap-2">
                                         <span>{{ $video->button_text ?: 'বিস্তারিত দেখুন' }}</span>
                                         <i class="fa fa-arrow-right font-size-12"></i>
@@ -56,7 +55,7 @@
                 @empty
                     <!-- Empty State -->
                     <div class="col-12 text-center py-5">
-                        <div class="p-5 bg-white rounded-4 border mx-auto shadow-sm" style="max-width: 520px;">
+                        <div class="p-5 bg-white rounded-4 border mx-auto shadow-sm" style="max-width: 520px; border-radius: 16px;">
                             <div class="mb-3 d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: #fee2e2; color: #ef4444;">
                                 <i class="fa fa-play-circle fa-3x"></i>
                             </div>
@@ -78,9 +77,62 @@
 </div>
 
 <style>
-.video-card:hover {
+.video-card-container {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.video-card-container:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Full Width 100% Video Frame with large, comfortable height */
+.video-frame-box {
+    position: relative !important;
+    width: 100% !important;
+    display: block !important;
+    background: #000000 !important;
+    overflow: hidden !important;
+    height: 250px;
+}
+
+@media (min-width: 576px) {
+    .video-frame-box {
+        height: 320px;
+    }
+}
+
+@media (min-width: 768px) {
+    .video-frame-box {
+        height: 370px;
+    }
+}
+
+@media (min-width: 992px) {
+    .video-frame-box {
+        height: 420px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .video-frame-box {
+        height: 450px;
+    }
+}
+
+.video-frame-box iframe,
+.video-frame-box video {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    border: 0 !important;
+    outline: none !important;
+    display: block !important;
+    object-fit: cover !important;
 }
 </style>
 @endsection

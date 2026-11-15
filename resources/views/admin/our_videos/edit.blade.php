@@ -46,8 +46,8 @@
                                 <!-- Live Preview Container -->
                                 <div class="mb-3" id="adminEditPreviewBox">
                                     <label class="form-label fw-bold small text-muted">ভিডিও প্রিভিউ:</label>
-                                    <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm border bg-dark">
-                                        <iframe id="adminEditPreviewIframe" src="{{ $video->embed_url }}" frameborder="0" allowfullscreen></iframe>
+                                    <div class="position-relative w-100 rounded overflow-hidden shadow-sm border bg-dark" style="height: 240px;">
+                                        <iframe id="adminEditPreviewIframe" class="w-100 h-100 position-absolute top-0 start-0 border-0" src="{{ $video->embed_url }}" frameborder="0" allowfullscreen></iframe>
                                     </div>
                                 </div>
 
