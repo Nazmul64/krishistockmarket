@@ -123,48 +123,131 @@
             border: 1px solid #bbf7d0;
             text-decoration: none;
         }
-        .whatsapp-contact i {
-            font-size: 20px;
-            color: #22c55e;
+        .whatsapp-contact {
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .whatsapp-contact:hover {
+            transform: translateY(-1px);
+        }
+        .header-whatsapp-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(37, 211, 102, 0.3));
+            transition: transform 0.2s ease;
+        }
+        .whatsapp-contact:hover .header-whatsapp-img {
+            transform: scale(1.08);
         }
 
-        /* Shop Search Box */
-        .shop-search-form {
+        /* Asmi Style Capsule Search Box */
+        .search-box {
             position: relative;
             width: 100%;
-            max-width: 520px;
         }
-        .shop-search-input {
+        .search-box .ss-form {
             width: 100%;
-            border: 2px solid var(--shop-teal);
-            border-radius: 6px;
-            padding: 8px 45px 8px 16px;
+            margin: 0;
+        }
+        .search-box .ss-field {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .search-box .searchInput {
+            width: 100%;
+            height: 42px;
+            padding: 0 65px 0 20px;
+            border: 1.5px solid #005862 !important;
+            border-radius: 999px !important;
+            background: #f1f9fa !important;
+            color: #12343a !important;
             font-size: 14px;
-            outline: none;
-            background: #fff;
-            transition: all 0.2s;
+            box-shadow: none !important;
+            outline: none !important;
+            transition: all 0.25s ease;
         }
-        .shop-search-input:focus {
-            box-shadow: 0 0 0 3px rgba(0, 126, 138, 0.2);
+        .search-box .searchInput:focus {
+            background: #ffffff !important;
+            border-color: #005862 !important;
+            box-shadow: 0 0 0 3px rgba(0, 88, 98, 0.16) !important;
         }
-        .shop-search-btn {
+        .search-box .typing-placeholder {
+            position: absolute;
+            left: 20px;
+            right: 65px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6f9399;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+            z-index: 3;
+            user-select: none;
+        }
+        .search-box .typingText {
+            color: #005862;
+            font-weight: 600;
+        }
+        .search-box .typingText::after {
+            content: "";
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            margin-left: 2px;
+            vertical-align: -2px;
+            background: #005862;
+            animation: ssBlink 0.9s steps(1) infinite;
+        }
+        @keyframes ssBlink {
+            50% { opacity: 0; }
+        }
+        .search-box .ss-btn {
             position: absolute;
             right: 0;
             top: 0;
             bottom: 0;
-            width: 42px;
-            background: var(--shop-teal);
-            border: none;
-            border-radius: 0 5px 5px 0;
-            color: #fff;
+            z-index: 4;
+            width: 58px;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 0 !important;
+            padding: 0;
+            border-radius: 0 999px 999px 0 !important;
+            background: #005862 !important;
+            color: #ffffff !important;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s ease, transform 0.1s ease;
         }
-        .shop-search-btn:hover {
-            background: var(--shop-teal-dark);
+        .search-box .ss-btn:hover {
+            background: #004149 !important;
+        }
+        .search-box .ss-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* App Download Banner Image */
+        .app-download-banner-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .app-download-banner-link:hover {
+            transform: scale(1.05);
+        }
+        .app-download-img {
+            height: 42px;
+            width: auto;
+            max-width: 175px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
         }
 
         /* App Download Banner Pill */
@@ -959,35 +1042,180 @@
             color: #ffffff;
         }
 
-        /* Floating Support Bubble */
-        .shop-support-bubble {
+        /* Floating Animated Mascot Support Button */
+        .aclc-fab {
             position: fixed;
             bottom: 25px;
             right: 25px;
+            width: 62px;
+            height: 62px;
+            border-radius: 50% !important;
             background: #ffffff;
-            border: 2px solid var(--shop-teal);
-            border-radius: 30px;
-            padding: 6px 14px 6px 10px;
+            border: 2px solid #1598a7 !important;
+            padding: 3px;
+            box-shadow: 0 6px 24px rgba(21, 152, 167, 0.35) !important;
+            cursor: pointer;
+            z-index: 1030;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-            text-decoration: none;
-            color: #1e293b;
+            justify-content: center;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            outline: none !important;
+        }
+        .aclc-fab:hover {
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(21, 152, 167, 0.45) !important;
+        }
+        .aclc-fab .aclc-disc {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 40%, #ffffff 0%, #FFF6DD 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .aclc-fab .aclc-mascot {
+            width: 88%;
+            height: 88%;
+            display: block;
+            transform-origin: 50% 90%;
+            animation: aclcBob 2.6s ease-in-out infinite;
+        }
+        @keyframes aclcBob {
+            0%, 100% {
+                transform: translateY(0) rotate(0);
+            }
+            25% {
+                transform: translateY(-4px) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(0) rotate(0);
+            }
+            75% {
+                transform: translateY(-4px) rotate(5deg);
+            }
+        }
+        .aclc-label {
+            position: fixed;
+            right: 98px;
+            bottom: 38px;
+            z-index: 1029;
+            background: #ffffff;
+            color: #0f7480;
+            border: 2px solid #1598a7;
+            border-radius: 22px;
+            padding: 7px 15px;
             font-size: 13px;
             font-weight: 700;
-            z-index: 1030;
-            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(21, 152, 167, 0.25);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(14px) scale(0.9);
+            animation: aclcLabel 10s infinite;
         }
-        .shop-support-bubble:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 126, 138, 0.25);
-            color: var(--shop-teal);
+        .aclc-label::after {
+            content: "";
+            position: absolute;
+            right: -7px;
+            top: 50%;
+            width: 11px;
+            height: 11px;
+            background: #ffffff;
+            border-right: 2px solid #1598a7;
+            border-top: 2px solid #1598a7;
+            transform: translateY(-50%) rotate(45deg);
         }
-        .shop-support-bubble img {
-            width: 28px;
-            height: 28px;
+        @keyframes aclcLabel {
+            0%, 8% {
+                opacity: 0;
+                transform: translateX(14px) scale(0.9);
+            }
+            14%, 42% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            50%, 100% {
+                opacity: 0;
+                transform: translateX(14px) scale(0.9);
+            }
+        }
+
+        /* Mobile Fixed Bottom Navigation Bar (Asmi Shop Style) */
+        .bottom_social_section {
+            background: #005862;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1045;
+            box-shadow: 0 -3px 16px rgba(0, 0, 0, 0.2);
+            padding: 6px 0 5px 0;
+        }
+        .bottom_social_section a,
+        .bottom_social_section button {
+            outline: none !important;
+            box-shadow: none !important;
+            color: #ffffff !important;
+            text-decoration: none !important;
+        }
+        .bottom_social_section small {
+            font-size: 11px !important;
+            color: #ffffff !important;
+            line-height: 1.1;
+            margin-top: 1px;
+        }
+        .bottom_social_section .cart-center-wrap {
+            width: 60px;
+            height: 38px;
+            position: relative;
+        }
+        .bottom_social_section .cart-circle-btn {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 58px;
+            height: 58px;
+            border-radius: 50% !important;
+            background: #005862 !important;
+            border: 4px solid #ffffff !important;
+            box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.25), 0 6px 16px rgba(0, 88, 98, 0.45) !important;
+            color: #ffffff !important;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: transform 0.2s ease;
+        }
+        .bottom_social_section .cart-circle-btn:active {
+            transform: translateX(-50%) scale(0.92);
+        }
+        .bottom_social_section .cart-circle-btn .cart-count {
+            position: absolute;
+            top: -3px;
+            right: -2px;
+            min-width: 20px;
+            height: 20px;
             border-radius: 50%;
+            background: #dc3545;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            padding: 0 4px;
+        }
+
+        /* Floating Support Bubble Fallback */
+        .shop-support-bubble {
+            display: none;
         }
 
         /* Interactive Support Chat Widget */
@@ -1225,14 +1453,35 @@
         }
 
         @media (max-width: 991px) {
+            body {
+                padding-bottom: 72px !important;
+            }
+            .aclc-fab {
+                bottom: 75px !important;
+                right: 15px !important;
+                width: 52px !important;
+                height: 52px !important;
+            }
+            .aclc-label {
+                right: 74px !important;
+                bottom: 84px !important;
+                font-size: 11px !important;
+                padding: 5px 11px !important;
+            }
+            .shop-chat-widget {
+                bottom: 75px !important;
+                right: 10px !important;
+                max-width: calc(100vw - 20px) !important;
+            }
+            .floating-cart-badge {
+                bottom: 75px !important;
+                right: 16px !important;
+            }
             .shop-sidebar {
                 margin-bottom: 20px;
             }
             .cart-drawer {
                 max-width: 85%;
-            }
-            .floating-cart-badge {
-                right: 16px !important;
             }
         }
         @media (max-width: 768px) {
@@ -1322,7 +1571,7 @@
         <div class="container-fluid px-3 px-lg-5">
             <div class="row align-items-center gy-2">
                 <!-- Logo & Mobile Toggle -->
-                <div class="col-6 col-lg-3 d-flex align-items-center gap-3">
+                <div class="col-6 col-lg-3 d-flex align-items-center gap-2 gap-sm-3">
                     <button class="btn btn-outline-secondary d-lg-none btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebarOffcanvas">
                         <i class="fa fa-bars"></i>
                     </button>
@@ -1339,34 +1588,56 @@
                             </div>
                         @endif
                     </a>
+
+                    <!-- Mobile WhatsApp Quick Icon (shown next to logo on mobile) -->
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['shop_whatsapp'] ?? '8801805020340') }}" target="_blank" class="d-inline-flex d-lg-none ms-1" title="WhatsApp Chat">
+                        <img src="{{ asset('images/whatsapp-icon.png') }}" alt="WhatsApp" style="width: 32px; height: 32px; object-fit: contain;">
+                    </a>
                 </div>
 
                 <!-- WhatsApp Contacts (Desktop) -->
-                <div class="col-lg-2 d-none d-xl-flex">
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['shop_whatsapp'] ?? '8801805020340') }}" target="_blank" class="whatsapp-contact">
-                        <i class="fa-brands fa-whatsapp"></i>
-                        <div>
-                            <div>{{ $settings['shop_whatsapp'] ?? '01805020340' }}</div>
-                            <div style="font-size: 11px; color: #16a34a;">01805020346</div>
+                <div class="col-lg-2 d-none d-lg-flex align-items-center">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['shop_whatsapp'] ?? '8801805020340') }}" target="_blank" class="whatsapp-contact d-flex align-items-center gap-2">
+                        <img src="{{ asset('images/whatsapp-icon.png') }}" alt="WhatsApp" class="header-whatsapp-img">
+                        <div class="whatsapp-numbers" style="line-height: 1.25;">
+                            <div style="font-size: 13px; font-weight: 700; color: #005862; letter-spacing: 0.2px;">{{ $settings['shop_whatsapp'] ?? '01805020340' }}</div>
+                            <div style="font-size: 12px; font-weight: 600; color: #16a34a; letter-spacing: 0.2px;">01805020346</div>
                         </div>
                     </a>
                 </div>
 
-                <!-- Live Search Bar -->
-                <div class="col-12 col-lg-4 order-3 order-lg-2">
-                    <form action="{{ route('products.index') }}" method="GET" class="shop-search-form mx-auto">
-                        <input type="text" name="search" class="shop-search-input" value="{{ request('search') }}" placeholder="Search for Products (e.g. Rice, Oil, Vegetables)..." autocomplete="off" id="shopSearchInput">
-                        <button type="submit" class="shop-search-btn" title="Search">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </form>
+                <!-- Live Search Bar with Typewriter Animation -->
+                <div class="col-12 col-lg-4 col-xl-4 order-3 order-lg-2">
+                    <div class="search-box position-relative w-100 mx-auto" style="max-width: 520px;">
+                        <form action="{{ route('products.index') }}" method="GET" class="ss-form m-0" id="shopSearchForm">
+                            <div class="ss-field position-relative w-100 d-flex align-items-center">
+                                <input autocomplete="off" 
+                                       type="text" 
+                                       name="search" 
+                                       id="shopSearchInput"
+                                       value="{{ request('search') }}"
+                                       aria-label="Search products"
+                                       class="searchInput form-control" />
+                                
+                                <div class="typing-placeholder" id="searchTypingPlaceholder">
+                                    Search for Products (e.g. <span class="typingText" id="searchTypingText"></span>)
+                                </div>
+
+                                <button type="submit" class="ss-btn" aria-label="Search" title="Search">
+                                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="7"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- App Pill, Login & Cart Button -->
-                <div class="col-6 col-lg-3 order-2 order-lg-3 d-flex align-items-center justify-content-end gap-2 gap-md-3">
-                    <a href="#download-app" class="app-download-pill d-none d-md-flex">
-                        <i class="fa-solid fa-mobile-screen-button text-primary"></i>
-                        <span>Download App!</span>
+                <!-- App Banner, Login & Cart Button -->
+                <div class="col-6 col-lg-3 col-xl-3 order-2 order-lg-3 d-flex align-items-center justify-content-end gap-2 gap-md-3">
+                    <a href="#download-app" class="app-download-banner-link d-none d-md-inline-flex align-items-center" title="Download The App Now!">
+                        <img src="{{ asset('images/download-app-badge.png') }}" alt="Download The App Now!" class="app-download-img">
                     </a>
 
                     @if(Auth::check())
@@ -1485,10 +1756,12 @@
         </div>
     </div>
 
-    <!-- Floating Support Bubble (Interactive Chatbox Trigger) -->
-    <button type="button" class="shop-support-bubble shadow border-0" id="btnToggleChat" onclick="toggleShopChat()" title="Asmi Support">
-        <i class="fa-solid fa-headset text-teal fs-5" style="color: var(--shop-teal);"></i>
-        <span>Asmi Support</span>
+    <!-- Floating Asmi Mascot Chat Trigger & Animated Label -->
+    <div class="aclc-label d-none d-md-block" id="aclcLabel">Asmi Support</div>
+    <button class="aclc-fab" id="btnToggleChat" type="button" onclick="toggleShopChat()" aria-label="Asmi Online Support" title="Asmi Online Support">
+        <span class="aclc-disc">
+            <img class="aclc-mascot" src="{{ asset('images/piku-mascot.svg') }}" alt="Asmi Online Support">
+        </span>
     </button>
 
     <!-- Interactive Customer Support Chatbox -->
@@ -1496,12 +1769,12 @@
         <!-- Chat Header -->
         <div class="shop-chat-header d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
-                <div class="chat-header-avatar">
-                    <i class="fa-solid fa-headset text-white"></i>
+                <div class="chat-header-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: #FFF6DD; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px;">
+                    <img src="{{ asset('images/piku-mascot.svg') }}" alt="Asmi Support" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div>
                     <h6 class="mb-0 text-white fw-bold" style="font-size: 14px;">Asmi Support</h6>
-                    <small class="text-white-50" style="font-size: 11px;"><i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i>অনলাইন | e-Krishi Sheba</small>
+                    <small class="text-white-50" style="font-size: 11px;"><i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i>অনলাইন | Asmi Shop</small>
                 </div>
             </div>
             <button type="button" class="btn-chat-close" onclick="toggleShopChat()" aria-label="Close Chat">
@@ -1702,12 +1975,6 @@
                             </div>
                         </a>
                     </div>
-
-                    <h5 class="shop-footer-title mt-4 mb-2">QUICK ACCESS</h5>
-                    <div>
-                        <a href="{{ route('corporate.board') }}" class="quick-portal-btn"><i class="fa fa-building me-1"></i> Corporate Portal</a>
-                        <a href="{{ route('login') }}" class="quick-portal-btn"><i class="fa fa-motorcycle me-1"></i> Rider Portal</a>
-                    </div>
                 </div>
             </div>
 
@@ -1722,6 +1989,56 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Fixed Bottom Navigation Bar (Asmi Shop Style) -->
+    <div class="bottom_social_section d-block d-lg-none">
+        <div class="container-fluid px-2">
+            <div class="d-flex justify-content-around align-items-center position-relative py-1">
+                <!-- 1. Menu Button -->
+                <div class="menu-btn text-center">
+                    <button class="btn text-center text-white border-0 bg-transparent p-0 d-flex flex-column align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebarOffcanvas" aria-controls="mobileSidebarOffcanvas">
+                        <i class="fa fa-bars fs-5 mb-1 text-white"></i>
+                        <small class="text-white" style="font-size: 11px; font-weight: 500;">Menu</small>
+                    </button>
+                </div>
+
+                <!-- 2. Home Link -->
+                <a href="{{ route('products.index') }}" class="btn text-center text-white border-0 bg-transparent p-0 d-flex flex-column align-items-center text-decoration-none">
+                    <i class="fa fa-house fs-5 mb-1 text-white"></i>
+                    <small class="text-white" style="font-size: 11px; font-weight: 500;">Home</small>
+                </a>
+
+                <!-- 3. Center Protruding Floating Cart Button -->
+                <div class="cart-center-wrap position-relative">
+                    <button type="button" class="cart-circle-btn" onclick="ShopCart.openDrawer()" aria-label="Open Cart">
+                        <i class="fa fa-cart-shopping"></i>
+                        <span class="cart-count badge rounded-pill bg-danger" id="mobileBottomCartBadge">0</span>
+                    </button>
+                </div>
+
+                <!-- 4. Message / Live Chat / WhatsApp -->
+                <div class="text-center position-relative paymentTwo-box">
+                    <button type="button" class="btn text-white border-0 bg-transparent p-0 d-flex flex-column align-items-center payment-2btn" onclick="toggleShopChat()">
+                        <i class="fa-regular fa-comment-dots fs-5 mb-1 text-white"></i>
+                        <small class="text-white" style="font-size: 11px; font-weight: 500;">Message</small>
+                    </button>
+                </div>
+
+                <!-- 5. Login / Account -->
+                @if(Auth::check())
+                    <a href="{{ route('dashboard') }}" class="btn text-center text-white border-0 bg-transparent p-0 d-flex flex-column align-items-center text-decoration-none">
+                        <i class="fa-regular fa-user fs-5 mb-1 text-white"></i>
+                        <small class="text-white" style="font-size: 11px; font-weight: 500;">Account</small>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn text-center text-white border-0 bg-transparent p-0 d-flex flex-column align-items-center text-decoration-none">
+                        <i class="fa-regular fa-user fs-5 mb-1 text-white"></i>
+                        <small class="text-white" style="font-size: 11px; font-weight: 500;">Login</small>
+                    </a>
+                @endif
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1807,6 +2124,8 @@
                 // Update Header Cart Badge
                 const navBadge = document.getElementById('navCartBadge');
                 if (navBadge) navBadge.textContent = totalCount;
+                const mobileBottomBadge = document.getElementById('mobileBottomCartBadge');
+                if (mobileBottomBadge) mobileBottomBadge.textContent = totalCount;
 
                 // Update Floating Widget
                 const floatCount = document.getElementById('floatingCartCount');
@@ -2138,6 +2457,72 @@
             } else {
                 setupFlyouts();
             }
+        })();
+
+        // Asmi Search Typewriter Placeholder Animation
+        (function initSearchTypewriter() {
+            const words = [
+                "Fish", "Meat", "Rice", "Eggs", "Milk", "Fruits", "Vegetables", 
+                "Oil", "Snacks", "Drinks", "Baby Food", "Diapers", "Detergent", "Soap", "Shampoo"
+            ];
+
+            const input = document.getElementById("shopSearchInput");
+            const typingEl = document.getElementById("searchTypingText");
+            const typingBox = document.getElementById("searchTypingPlaceholder");
+
+            if (!input || !typingEl || !typingBox) return;
+
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function typeEffect() {
+                if (input.value && input.value.trim().length > 0) {
+                    typingBox.style.display = "none";
+                    return;
+                } else {
+                    typingBox.style.display = "block";
+                }
+
+                let currentWord = words[wordIndex];
+
+                if (isDeleting) {
+                    charIndex--;
+                } else {
+                    charIndex++;
+                }
+
+                typingEl.textContent = currentWord.substring(0, charIndex);
+
+                let speed = isDeleting ? 45 : 95;
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    speed = 1300;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                    speed = 300;
+                }
+
+                setTimeout(typeEffect, speed);
+            }
+
+            typeEffect();
+
+            input.addEventListener("input", function () {
+                if (this.value && this.value.trim().length > 0) {
+                    typingBox.style.display = "none";
+                } else {
+                    typingBox.style.display = "block";
+                }
+            });
+
+            input.addEventListener("focus", function () {
+                if (this.value && this.value.trim().length > 0) {
+                    typingBox.style.display = "none";
+                }
+            });
         })();
     </script>
     @yield('extra_js')
