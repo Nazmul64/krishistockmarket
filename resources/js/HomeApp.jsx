@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HeroSlider from './components/HeroSlider';
+import MonthlyBazarSection from './components/MonthlyBazarSection';
 import LiveStockMarket from './components/LiveStockMarket';
 import PackageSection from './components/PackageSection';
 import MembershipCards from './components/MembershipCards';
@@ -67,6 +68,14 @@ export default function HomeApp({ data = {} }) {
                 <HeroSlider
                     sliders={sliders}
                     offerBanner={offerBanner}
+                    routes={routes}
+                    lang={lang}
+                    t={t}
+                />
+
+                {/* Monthly Bazar Showcase (Right below slider upon website entry) */}
+                <MonthlyBazarSection
+                    products={data.monthly_bazar_products || []}
                     routes={routes}
                     lang={lang}
                     t={t}

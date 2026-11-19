@@ -1,6 +1,6 @@
 @extends('layouts.frontend.shop')
 
-@section('title', 'Asmi Supershop | e-Krishi Sheba - নিত্যপ্রয়োজনীয় সুপারশপ')
+@section('title', 'e-Krishi Sheba | ই-কৃষি সেবা - নিত্যপ্রয়োজনীয় সুপারশপ')
 
 @section('extra_css')
 <style>
@@ -612,7 +612,82 @@
         </div>
     </div>
 
-    <!-- ================================= 2. CATEGORIES HORIZONTAL CAROUSEL ================================= -->
+    <!-- ================================= 2. MONTHLY BAZAR (স্লাইডারের ঠিক নিচে মাসিক বাজার পণ্যসমূহ) ================================= -->
+    @if(isset($monthlyBazarProducts) && $monthlyBazarProducts->count() > 0)
+    <div class="mb-5 pb-2" id="monthly-bazar-section">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+            <div class="d-flex align-items-center gap-2">
+                <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 44px; height: 44px; background: #e0f2f1; color: var(--shop-teal);">
+                    <i class="fa fa-shopping-basket fs-5"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold text-dark mb-0" style="font-size: 22px;">
+                        Monthly Bazar <span class="text-teal" style="color: var(--shop-teal);">(মাসিক বাজার)</span>
+                    </h3>
+                    <p class="text-muted small mb-0">নিত্যপ্রয়োজনীয় ফ্রেশ মাসিক বাজার পণ্য ও সেরা সাশ্রয়ী প্যাকেজ</p>
+                </div>
+            </div>
+            <div>
+                <a href="{{ route('products.index', ['badge' => 'monthly-bazar']) }}" class="btn-asmi-view-all">
+                    <span>View All (৯২৬+ পণ্য)</span>
+                    <i class="fa fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="position-relative">
+            <div class="product-carousel-track" id="trackMonthlyBazar">
+                @foreach($monthlyBazarProducts as $product)
+                    <div class="product-carousel-item">
+                        <div class="shop-product-card shadow-sm position-relative">
+                            <span class="badge bg-success position-absolute top-0 start-0 m-2 rounded-pill font-size-10" style="z-index: 2; font-size: 10px;">
+                                মাসিক বাজার
+                            </span>
+                            <div>
+                                <a href="{{ route('products.show', $product->slug) }}" class="prod-img-wrap">
+                                    @if($product->stock_quantity <= 0)
+                                        <span class="badge-out-of-stock">Out of Stock !</span>
+                                    @endif
+                                    <img src="{{ asset($product->image ?: 'uploads/products/default.png') }}" onerror="this.onerror=null;this.src='{{ asset('uploads/products/default.png') }}';" alt="{{ $product->name }}" loading="lazy">
+                                </a>
+
+                                <div class="prod-delivery-sub">{{ $product->delivery_time ?: 'Delivery 1-2 hours' }}</div>
+
+                                <a href="{{ route('products.show', $product->slug) }}" class="prod-name" title="{{ $product->name }}">
+                                    {{ $product->name }}
+                                </a>
+                            </div>
+                            <div>
+                                <div class="prod-price-wrap">
+                                    <span>{{ $product->formatted_price }}</span>
+                                    @if($product->unit)
+                                        <small class="text-muted fw-normal" style="font-size: 11px;">/ Per {{ $product->unit }}</small>
+                                    @endif
+                                </div>
+                                @if($product->stock_quantity <= 0)
+                                    <button type="button" class="btn-out-stock" disabled>Out of Stock</button>
+                                @else
+                                    <button type="button" class="btn-add-bag" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price }}" data-image="{{ asset($product->image ?: 'uploads/products/default.png') }}" data-sku="{{ $product->sku }}" data-delivery="{{ $product->delivery_time ?: 'Delivery 1-2 hours' }}" onclick="addCardToBag(this)">
+                                        <i class="fa fa-plus"></i>
+                                        <span>Add to Bag</span>
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="section-dots" id="dotsMonthlyBazar">
+                <span class="sec-dot active" onclick="slideProductTrack('trackMonthlyBazar', 0, this)"></span>
+                <span class="sec-dot" onclick="slideProductTrack('trackMonthlyBazar', 1, this)"></span>
+                <span class="sec-dot" onclick="slideProductTrack('trackMonthlyBazar', 2, this)"></span>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- ================================= 3. CATEGORIES HORIZONTAL CAROUSEL ================================= -->
     <div class="cat-carousel-container position-relative mb-5">
         <h4 class="fw-bold mb-3 text-dark text-center">Categories</h4>
 

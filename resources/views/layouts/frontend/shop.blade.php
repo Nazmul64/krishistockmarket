@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Asmi Supershop | e-Krishi Sheba - নিত্যপ্রয়োজনীয় সুপারশপ')</title>
+    <title>@yield('title', 'e-Krishi Sheba | ই-কৃষি সেবা - নিত্যপ্রয়োজনীয় সুপারশপ')</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('upload/images/backend/logo') }}/{{ setting('favicon') }}" />
@@ -1756,11 +1756,11 @@
         </div>
     </div>
 
-    <!-- Floating Asmi Mascot Chat Trigger & Animated Label -->
-    <div class="aclc-label d-none d-md-block" id="aclcLabel">Asmi Support</div>
-    <button class="aclc-fab" id="btnToggleChat" type="button" onclick="toggleShopChat()" aria-label="Asmi Online Support" title="Asmi Online Support">
+    <!-- Floating Krishi Sheba Mascot Chat Trigger & Animated Label -->
+    <div class="aclc-label d-none d-md-block" id="aclcLabel">কৃষি সেবা</div>
+    <button class="aclc-fab" id="btnToggleChat" type="button" onclick="toggleShopChat()" aria-label="কৃষি সেবা অনলাইন সাপোর্ট" title="কৃষি সেবা অনলাইন সাপোর্ট">
         <span class="aclc-disc">
-            <img class="aclc-mascot" src="{{ asset('images/piku-mascot.svg') }}" alt="Asmi Online Support">
+            <img class="aclc-mascot" src="{{ asset('images/piku-mascot.svg') }}" alt="কৃষি সেবা অনলাইন সাপোর্ট">
         </span>
     </button>
 
@@ -1770,11 +1770,11 @@
         <div class="shop-chat-header d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-2">
                 <div class="chat-header-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: #FFF6DD; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px;">
-                    <img src="{{ asset('images/piku-mascot.svg') }}" alt="Asmi Support" style="width: 100%; height: 100%; object-fit: contain;">
+                    <img src="{{ asset('images/piku-mascot.svg') }}" alt="কৃষি সেবা সাপোর্ট" style="width: 100%; height: 100%; object-fit: contain;">
                 </div>
                 <div>
-                    <h6 class="mb-0 text-white fw-bold" style="font-size: 14px;">Asmi Support</h6>
-                    <small class="text-white-50" style="font-size: 11px;"><i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i>অনলাইন | Asmi Shop</small>
+                    <h6 class="mb-0 text-white fw-bold" style="font-size: 14px;">কৃষি সেবা সাপোর্ট</h6>
+                    <small class="text-white-50" style="font-size: 11px;"><i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i>অনলাইন | কৃষি সেবা</small>
                 </div>
             </div>
             <button type="button" class="btn-chat-close" onclick="toggleShopChat()" aria-label="Close Chat">
@@ -1815,7 +1815,7 @@
             </form>
 
             <div class="text-center mt-3 pt-3 border-top">
-                <a href="https://wa.me/8801805020340?text=Hello%20Asmi%20Shop%20Support" target="_blank" class="text-decoration-none small text-success fw-bold">
+                <a href="https://wa.me/8801805020340?text=Hello%20Krishi%20Sheba%20Support" target="_blank" class="text-decoration-none small text-success fw-bold">
                     <i class="fa-brands fa-whatsapp me-1"></i> অথবা সরাসরি হোয়াটসঅ্যাপে লিখুন
                 </a>
             </div>
@@ -1981,10 +1981,10 @@
             <!-- Bottom Copyright Line -->
             <div class="shop-copyright-bar d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
                 <div>
-                    COPYRIGHT © 2026. All Rights Reserved By Asmishop.
+                    COPYRIGHT © 2026. All Rights Reserved By e-Krishi Sheba.
                 </div>
                 <div>
-                    Developed By <a href="{{ route('/') }}" class="text-white fw-bold">Asmi IT Solutions / e-Krishi Sheba</a>
+                    Developed By <a href="{{ route('/') }}" class="text-white fw-bold">e-Krishi Sheba Team</a>
                 </div>
             </div>
         </div>
@@ -2282,7 +2282,7 @@
                 if (!chatMessages || chatMessages.length === 0) {
                     chatMessages.push({
                         sender: 'agent',
-                        text: `আসসালামু আলাইকুম <strong>${chatUser.name}</strong>! Asmi Supershop এ আপনাকে স্বাগতম। আপনার অর্ডার, ডেলিভারি বা পণ্যের বিষয়ে কীভাবে সাহায্য করতে পারি?`,
+                        text: `আসসালামু আলাইকুম <strong>${chatUser.name}</strong>! ই-কৃষি সেবা সুপারশপে আপনাকে স্বাগতম। আপনার অর্ডার, ডেলিভারি বা পণ্যের বিষয়ে কীভাবে সাহায্য করতে পারি?`,
                         time: getCurrentChatTime()
                     });
                     saveChatMessages();

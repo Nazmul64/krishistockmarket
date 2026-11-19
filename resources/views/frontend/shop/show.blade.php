@@ -1,6 +1,6 @@
 @extends('layouts.frontend.shop')
 
-@section('title', $product->name . ' | Asmi Supershop')
+@section('title', $product->name . ' | e-Krishi Sheba - ই-কৃষি সেবা')
 
 @section('extra_css')
 <style>

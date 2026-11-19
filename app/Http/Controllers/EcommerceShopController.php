@@ -180,6 +180,17 @@ class EcommerceShopController extends Controller
         // Paginated products (for browse / filter mode)
         $products = $query->orderBy('id', 'asc')->paginate(20)->withQueryString();
 
+        // Monthly Bazar products showcase for storefront entrance (right below slider)
+        $monthlyBazarProducts = ShopProduct::where('is_active', true)
+            ->where(function ($q) {
+                $q->where('is_monthly_bazar', true)
+                  ->orWhere('is_featured', true);
+            })
+            ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
+            ->orderBy('id', 'asc')
+            ->take(16)
+            ->get();
+
         // Specific Banner for badge / collection page (e.g. Monthly Bazar, Daily Offers)
         $pageBanner = null;
         if ($badgeFilter) {
@@ -193,6 +204,7 @@ class EcommerceShopController extends Controller
             'banners',
             'brands',
             'settings',
+            'monthlyBazarProducts',
             'exclusiveDeals',
             'featuredProducts',
             'newArrivalProducts',

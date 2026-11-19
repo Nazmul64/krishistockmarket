@@ -111,56 +111,6 @@ export default function HeroSlider({
                         </div>
                     )}
                 </div>
-
-                {/* Quick Trust Highlights Strip - Hidden on Mobile Device as requested */}
-                <div className="quick-highlights-strip mt-4 d-none d-md-block">
-                    <div className="row g-3">
-                        <div className="col-6 col-md-3">
-                            <div className="highlight-box">
-                                <div className="highlight-icon bg-gold">
-                                    <i className="fa fa-leaf"></i>
-                                </div>
-                                <div className="highlight-text">
-                                    <h5>{t.hl_1_title || (lang === 'bn' ? 'প্রাকৃতিক ও খাঁটি পণ্য' : 'Natural & Pure Products')}</h5>
-                                    <p>{t.hl_1_sub || (lang === 'bn' ? 'সরাসরি কৃষকের মাঠ থেকে' : "Directly from farmer's fields")}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-6 col-md-3">
-                            <div className="highlight-box">
-                                <div className="highlight-icon bg-emerald">
-                                    <i className="fa fa-line-chart"></i>
-                                </div>
-                                <div className="highlight-text">
-                                    <h5>{t.hl_2_title || (lang === 'bn' ? 'লাইভ স্টক রেট' : 'Live Stock Rates')}</h5>
-                                    <p>{t.hl_2_sub || (lang === 'bn' ? 'প্রতিদিনের রিয়েল-টাইম দর' : 'Real-time daily rates')}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-6 col-md-3">
-                            <div className="highlight-box">
-                                <div className="highlight-icon bg-amber">
-                                    <i className="fa fa-shield"></i>
-                                </div>
-                                <div className="highlight-text">
-                                    <h5>{t.hl_3_title || (lang === 'bn' ? 'নিরাপদ বিনিয়োগ' : 'Secure Investment')}</h5>
-                                    <p>{t.hl_3_sub || (lang === 'bn' ? '১০০% সুরক্ষিত লেনদেন' : '100% Protected transactions')}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-6 col-md-3">
-                            <div className="highlight-box">
-                                <div className="highlight-icon bg-gold">
-                                    <i className="fa fa-credit-card"></i>
-                                </div>
-                                <div className="highlight-text">
-                                    <h5>{t.hl_4_title || (lang === 'bn' ? 'এসএমই ও গোল্ড কার্ড' : 'SME & Gold Cards')}</h5>
-                                    <p>{t.hl_4_sub || (lang === 'bn' ? 'বিশেষ বোনাস ও সুবিধা' : 'Special bonuses & perks')}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
     );

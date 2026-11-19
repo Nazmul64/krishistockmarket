@@ -231,6 +231,36 @@ class FrontendController extends Controller
             'csrf_token' => csrf_token(),
         ];
 
+        // Monthly Bazar Products for Homepage Showcase (Right below slider)
+        $monthly_bazar_products = [];
+        if (class_exists(\App\Models\Shop\ShopProduct::class)) {
+            $monthly_bazar_products = \App\Models\Shop\ShopProduct::where('is_active', true)
+                ->where(function ($q) {
+                    $q->where('is_monthly_bazar', true)
+                      ->orWhere('is_featured', true);
+                })
+                ->orderByRaw("CASE WHEN image LIKE 'uploads/products/%' THEN 0 ELSE 1 END")
+                ->orderBy('id', 'asc')
+                ->take(12)
+                ->get()
+                ->map(function ($p) {
+                    $img = $p->image ?: 'uploads/products/default.png';
+                    $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://']) ? $img : asset(ltrim($img, '/'));
+                    return [
+                        'id' => $p->id,
+                        'name' => $p->name,
+                        'slug' => $p->slug,
+                        'price' => (float)$p->price,
+                        'formatted_price' => '৳ ' . number_format($p->price, 0),
+                        'unit' => $p->unit,
+                        'delivery_time' => $p->delivery_time ?: 'Delivery 1-2 hours',
+                        'image' => $imgUrl,
+                        'url' => route('products.show', $p->slug),
+                        'stock_quantity' => (int)$p->stock_quantity,
+                    ];
+                })->values()->all();
+        }
+
         return [
             'site' => $site,
             'auth' => $auth,
@@ -242,6 +272,7 @@ class FrontendController extends Controller
             'card_benefits' => $card_benefits,
             'features' => $features,
             'gallery' => $gallery,
+            'monthly_bazar_products' => $monthly_bazar_products,
         ];
     }
 
