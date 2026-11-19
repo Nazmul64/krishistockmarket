@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // 0. Use Bootstrap 5 for all pagination links across the application
+        Paginator::useBootstrapFive();
+
         // 1. Blade directive for granular permission checking
         Blade::if('canPermission', function ($permission) {
             return Auth::check() && Auth::user()->hasPermission($permission);

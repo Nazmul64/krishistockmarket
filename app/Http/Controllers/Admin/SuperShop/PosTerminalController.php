@@ -28,7 +28,19 @@ class PosTerminalController extends Controller
     public function terminal(Request $request)
     {
         $branches = Branch::where('status', 'active')->orderBy('id', 'asc')->get();
-        $selectedBranchId = $request->get('branch_id', $branches->first()?->id);
+        if ($branches->isEmpty()) {
+            $defaultBranch = Branch::create([
+                'name' => 'প্রধান শাখা / সুপার শপ',
+                'code' => 'BR-01',
+                'type' => 'super_shop',
+                'phone' => '01700000000',
+                'address' => 'ঢাকা, বাংলাদেশ',
+                'status' => 'active',
+            ]);
+            $branches = collect([$defaultBranch]);
+        }
+
+        $selectedBranchId = (int)$request->get('branch_id', $branches->first()?->id);
         $selectedBranch = Branch::with('posCounters')->find($selectedBranchId);
 
         $counters = $selectedBranch ? $selectedBranch->posCounters->where('status', 'active') : collect();
@@ -43,11 +55,22 @@ class PosTerminalController extends Controller
         // Categories for visual quick filter in POS
         $categories = ShopCategory::where('is_active', true)->orderBy('name', 'asc')->get();
 
-        // Initial products available in this branch
-        $initialProducts = BranchInventory::with('product')
-            ->where('branch_id', $selectedBranchId)
-            ->where('stock_quantity', '>', 0)
-            ->take(24)
+        // Initial products available in this branch (ordered by latest from all 4,890 active e-commerce products)
+        $initialProducts = ShopProduct::with(['category', 'brand'])
+            ->leftJoin('branch_inventories', function ($join) use ($selectedBranchId) {
+                $join->on('shop_products.id', '=', 'branch_inventories.product_id')
+                     ->where('branch_inventories.branch_id', '=', $selectedBranchId);
+            })
+            ->select(
+                'shop_products.*',
+                'branch_inventories.shelf_location',
+                'branch_inventories.purchase_price as branch_purchase_price',
+                'branch_inventories.selling_price as branch_selling_price',
+                DB::raw('COALESCE(branch_inventories.stock_quantity, shop_products.stock_quantity) as branch_stock')
+            )
+            ->where('shop_products.is_active', true)
+            ->orderBy('shop_products.id', 'desc')
+            ->take(48)
             ->get();
 
         return view('admin.supershop.pos.terminal', compact(
@@ -68,81 +91,115 @@ class PosTerminalController extends Controller
     public function barcodeSearch(Request $request)
     {
         $code = trim($request->get('barcode', ''));
-        $branchId = $request->get('branch_id');
+        $branchId = (int)$request->get('branch_id');
 
         if (!$code || !$branchId) {
             return response()->json(['success' => false, 'message' => 'বারকোড বা শাখা আইডি দেওয়া হয়নি।'], 400);
         }
 
-        // Look for matching product by SKU, barcode or ID
-        $product = ShopProduct::where('sku', $code)
-            ->orWhere('id', $code)
+        // Look for matching product in central catalog with branch stock
+        $product = ShopProduct::with(['category', 'brand'])
+            ->leftJoin('branch_inventories', function ($join) use ($branchId) {
+                $join->on('shop_products.id', '=', 'branch_inventories.product_id')
+                     ->where('branch_inventories.branch_id', '=', $branchId);
+            })
+            ->select(
+                'shop_products.*',
+                'branch_inventories.shelf_location',
+                'branch_inventories.purchase_price as branch_purchase_price',
+                'branch_inventories.selling_price as branch_selling_price',
+                DB::raw('COALESCE(branch_inventories.stock_quantity, shop_products.stock_quantity) as branch_stock')
+            )
+            ->where('shop_products.is_active', true)
+            ->where(function ($q) use ($code) {
+                $q->where('shop_products.sku', $code)
+                  ->orWhere('shop_products.id', $code)
+                  ->orWhere('shop_products.name', $code)
+                  ->orWhere('shop_products.name_bn', $code);
+            })
             ->first();
 
         if (!$product) {
-            return response()->json(['success' => false, 'message' => 'বারকোড অনুযায়ী কোনো পণ্য পাওয়া যায়নি!'], 404);
+            return response()->json(['success' => false, 'message' => 'বারকোড বা কোড অনুযায়ী কোনো পণ্য পাওয়া যায়নি!'], 404);
         }
 
-        $inv = BranchInventory::where('branch_id', $branchId)
-            ->where('product_id', $product->id)
-            ->first();
-
-        $stock = $inv ? $inv->stock_quantity : 0;
-        $price = $inv && $inv->selling_price ? (float)$inv->selling_price : (float)$product->price;
+        $stock = (int)$product->branch_stock;
+        $price = $product->branch_selling_price ? (float)$product->branch_selling_price : (float)$product->price;
+        $cost = $product->branch_purchase_price ? (float)$product->branch_purchase_price : round($price * 0.8, 2);
+        $img = $product->image ?: $product->thumbnail;
 
         return response()->json([
             'success' => true,
             'product' => [
                 'id' => $product->id,
                 'name' => $product->name,
+                'name_bn' => $product->name_bn,
                 'sku' => $product->sku,
                 'barcode' => $product->sku,
                 'price' => $price,
-                'cost_price' => $inv ? (float)$inv->purchase_price : round($price * 0.8, 2),
+                'cost_price' => $cost,
                 'stock' => $stock,
-                'image' => $product->image ? asset($product->image) : asset('assets/images/placeholder.png'),
+                'image' => $img ? asset($img) : asset('assets/images/placeholder.png'),
             ]
         ]);
     }
 
     /**
-     * Live Product Search in POS Terminal.
+     * Live Product Search in POS Terminal across all 4,890 e-commerce products.
      */
     public function searchProducts(Request $request)
     {
         $q = trim($request->get('q', ''));
-        $branchId = $request->get('branch_id');
+        $branchId = (int)$request->get('branch_id');
         $catId = $request->get('category_id');
 
-        $query = BranchInventory::with(['product.category'])
-            ->where('branch_id', $branchId);
+        $query = ShopProduct::with(['category', 'brand'])
+            ->leftJoin('branch_inventories', function ($join) use ($branchId) {
+                $join->on('shop_products.id', '=', 'branch_inventories.product_id')
+                     ->where('branch_inventories.branch_id', '=', $branchId);
+            })
+            ->select(
+                'shop_products.*',
+                'branch_inventories.shelf_location',
+                'branch_inventories.purchase_price as branch_purchase_price',
+                'branch_inventories.selling_price as branch_selling_price',
+                DB::raw('COALESCE(branch_inventories.stock_quantity, shop_products.stock_quantity) as branch_stock')
+            )
+            ->where('shop_products.is_active', true);
 
         if ($catId) {
-            $query->whereHas('product', fn($pq) => $pq->where('category_id', $catId));
+            $query->where('shop_products.category_id', $catId);
         }
 
         if ($q !== '') {
-            $query->whereHas('product', function ($pq) use ($q) {
-                $pq->where('name', 'like', "%{$q}%")
-                   ->orWhere('sku', 'like', "%{$q}%");
+            $query->where(function ($pq) use ($q) {
+                $pq->where('shop_products.name', 'like', "%{$q}%")
+                   ->orWhere('shop_products.name_bn', 'like', "%{$q}%")
+                   ->orWhere('shop_products.sku', 'like', "%{$q}%");
             });
         }
 
-        $items = $query->take(20)->get();
+        $items = $query->orderBy('shop_products.id', 'desc')->take(48)->get();
 
         return response()->json([
             'success' => true,
-            'products' => $items->map(function ($inv) {
+            'products' => $items->map(function ($prod) {
+                $img = $prod->image ?: $prod->thumbnail;
+                $price = $prod->branch_selling_price ? (float)$prod->branch_selling_price : (float)$prod->price;
+                $cost = (float)($prod->branch_purchase_price ?: ($prod->purchase_price ?: round($price * 0.8, 2)));
+
                 return [
-                    'id' => $inv->product->id,
-                    'name' => $inv->product->name,
-                    'sku' => $inv->product->sku,
-                    'barcode' => $inv->product->sku,
-                    'price' => $inv->selling_price ? (float)$inv->selling_price : (float)$inv->product->price,
-                    'cost_price' => (float)($inv->purchase_price ?: ($inv->product->price * 0.8)),
-                    'stock' => $inv->stock_quantity,
-                    'shelf' => $inv->shelf_location,
-                    'image' => $inv->product->image ? asset($inv->product->image) : asset('assets/images/placeholder.png'),
+                    'id' => $prod->id,
+                    'name' => $prod->name,
+                    'name_bn' => $prod->name_bn,
+                    'sku' => $prod->sku,
+                    'barcode' => $prod->sku,
+                    'category' => $prod->category?->name ?? 'General',
+                    'price' => $price,
+                    'cost_price' => $cost,
+                    'stock' => (int)$prod->branch_stock,
+                    'shelf' => $prod->shelf_location,
+                    'image' => $img ? asset($img) : asset('assets/images/placeholder.png'),
                 ];
             })
         ]);
@@ -245,28 +302,31 @@ class PosTerminalController extends Controller
                     'total_price' => $lineTotal,
                 ]);
 
-                // Deduct Branch Inventory
-                $inv = BranchInventory::where('branch_id', $branchId)
-                    ->where('product_id', $prodId)
-                    ->lockForUpdate()
-                    ->first();
+                // Deduct Branch Inventory & Central Product Stock
+                $inv = BranchInventory::firstOrNew([
+                    'branch_id' => $branchId,
+                    'product_id' => $prodId,
+                ]);
+                $masterProd = ShopProduct::find($prodId);
+                $oldInvStock = $inv->exists ? (int)$inv->stock_quantity : ($masterProd ? (int)$masterProd->stock_quantity : 0);
+                $inv->stock_quantity = max(0, $oldInvStock - $qty);
+                $inv->save();
 
-                if ($inv) {
-                    $inv->stock_quantity = max(0, $inv->stock_quantity - $qty);
-                    $inv->save();
-
-                    // Log Stock Movement Audit
-                    StockMovement::create([
-                        'branch_id' => $branchId,
-                        'product_id' => $prodId,
-                        'type' => 'pos_sale',
-                        'quantity' => -$qty,
-                        'balance_after' => $inv->stock_quantity,
-                        'reference_no' => $sale->invoice_no,
-                        'user_id' => $cashierId,
-                        'notes' => "POS কাউন্টারে বিক্রয় (ইনভয়েস: {$sale->invoice_no})",
-                    ]);
+                if ($masterProd) {
+                    $masterProd->decrement('stock_quantity', min($masterProd->stock_quantity, $qty));
                 }
+
+                // Log Stock Movement Audit
+                StockMovement::create([
+                    'branch_id' => $branchId,
+                    'product_id' => $prodId,
+                    'type' => 'pos_sale',
+                    'quantity' => -$qty,
+                    'balance_after' => $inv->stock_quantity,
+                    'reference_no' => $sale->invoice_no,
+                    'user_id' => $cashierId,
+                    'notes' => "POS কাউন্টারে বিক্রয় (ইনভয়েস: {$sale->invoice_no})",
+                ]);
             }
 
             // Create Payment Record (Supports split payments if provided)

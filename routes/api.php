@@ -21,8 +21,64 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Mobile App REST API Endpoints
 Route::get('/home-data', [\App\Http\Controllers\FrontendController::class, 'apiHomepageData'])->name('api.mobile.home_data');
 Route::get('/live-search', [\App\Http\Controllers\FrontendController::class, 'apiLiveSearch'])->name('api.mobile.live_search');
+Route::get('/about', [\App\Http\Controllers\FrontendController::class, 'apiAbout'])->name('api.mobile.about');
 Route::post('/contact/send', [\App\Http\Controllers\ContactController::class, 'store'])->name('api.mobile.contact_send');
 Route::get('/career/info', [\App\Http\Controllers\CareerController::class, 'apiCareerInfo'])->name('api.mobile.career_info');
 Route::post('/career/apply', [\App\Http\Controllers\CareerController::class, 'apiApply'])->name('api.mobile.career_apply');
+Route::get('/our-videos', [\App\Http\Controllers\FrontendController::class, 'apiOurVideos'])->name('api.mobile.our_videos');
+
+// Land, Plots & Properties Real Estate Showcase API
+Route::get('/properties', [\App\Http\Controllers\PropertyFrontendController::class, 'apiIndex'])->name('api.mobile.properties.index');
+Route::get('/properties/{id}', [\App\Http\Controllers\PropertyFrontendController::class, 'apiShow'])->name('api.mobile.properties.show');
+Route::post('/properties/inquiry', [\App\Http\Controllers\PropertyFrontendController::class, 'apiSubmitInquiry'])->name('api.mobile.properties.inquiry');
+
+// E-Commerce Superstore Mobile App REST API Routes
+Route::prefix('')->group(function () {
+    Route::get('/shop/home', [\App\Http\Controllers\Api\EcommerceApiController::class, 'home'])->name('api.shop.home');
+    Route::get('/banners', [\App\Http\Controllers\Api\EcommerceApiController::class, 'banners'])->name('api.shop.banners');
+    Route::get('/categories', [\App\Http\Controllers\Api\EcommerceApiController::class, 'categories'])->name('api.shop.categories');
+    Route::get('/products', [\App\Http\Controllers\Api\EcommerceApiController::class, 'products'])->name('api.shop.products');
+    Route::get('/products/{id}', [\App\Http\Controllers\Api\EcommerceApiController::class, 'productDetail'])->name('api.shop.product_detail');
+    Route::get('/products/{id}/related', [\App\Http\Controllers\Api\EcommerceApiController::class, 'relatedProducts'])->name('api.shop.related_products');
+    Route::get('/shipping-methods', [\App\Http\Controllers\Api\EcommerceApiController::class, 'shippingMethods'])->name('api.shop.shipping_methods');
+    Route::get('/payment-methods', [\App\Http\Controllers\Api\EcommerceApiController::class, 'paymentMethods'])->name('api.shop.payment_methods');
+    Route::post('/coupon/apply', [\App\Http\Controllers\Api\EcommerceApiController::class, 'applyCoupon'])->name('api.shop.apply_coupon');
+    Route::post('/checkout', [\App\Http\Controllers\Api\EcommerceApiController::class, 'checkout'])->name('api.shop.checkout');
+    Route::get('/orders/track', [\App\Http\Controllers\Api\EcommerceApiController::class, 'trackOrder'])->name('api.shop.orders.track');
+    Route::get('/orders/{id}', [\App\Http\Controllers\Api\EcommerceApiController::class, 'trackOrder'])->name('api.shop.orders.detail');
+
+    // Live Chat Synchronized API
+    Route::get('/chat/messages', [\App\Http\Controllers\Api\EcommerceApiController::class, 'getChatMessages'])->name('api.chat.messages');
+    Route::post('/chat/send', [\App\Http\Controllers\Api\EcommerceApiController::class, 'sendChatMessage'])->name('api.chat.send');
+});
+
+// Customer Member Portal & Authentication REST API
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'login'])->name('api.auth.login');
+    Route::post('/logout', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'logout'])->name('api.auth.logout');
+    Route::post('/forgot-password', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'forgotPassword'])->name('api.auth.forgot_password');
+    Route::post('/reset-password', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'resetPassword'])->name('api.auth.reset_password');
+});
+
+// Top-level aliases for direct mobile & web client compatibility
+Route::post('/login', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'login'])->name('api.direct.login');
+Route::post('/logout', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'logout'])->name('api.direct.logout');
+Route::post('/forgot-password', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'forgotPassword'])->name('api.direct.forgot_password');
+Route::post('/reset-password', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'resetPassword'])->name('api.direct.reset_password');
+
+Route::prefix('customer')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'dashboard'])->name('api.customer.dashboard');
+    Route::get('/deposit-methods', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'depositMethods'])->name('api.customer.deposit_methods');
+    Route::post('/deposit-submit', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'submitDeposit'])->name('api.customer.deposit_submit');
+    Route::post('/withdraw-submit', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'submitWithdraw'])->name('api.customer.withdraw_submit');
+    Route::get('/wallet-ledger', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'walletLedger'])->name('api.customer.wallet_ledger');
+    Route::get('/my-stocks', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'myStocks'])->name('api.customer.my_stocks');
+    Route::get('/my-orders', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'myOrders'])->name('api.customer.my_orders');
+    Route::get('/card-info', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'cardInfo'])->name('api.customer.card_info');
+    Route::post('/card-apply', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'submitCardApplication'])->name('api.customer.card_apply');
+    Route::get('/corporate-data', [\App\Http\Controllers\Api\CustomerPortalApiController::class, 'corporateData'])->name('api.customer.corporate_data');
+});
+
+
 
 

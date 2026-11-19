@@ -555,6 +555,32 @@ class EcommerceShopController extends Controller
                         // Safely deduct stock
                         $dbProduct->stock_quantity = max(0, $dbProduct->stock_quantity - $quantity);
                         $dbProduct->save();
+
+                        // Sync deduction with SuperShop branch inventory and audit movement
+                        try {
+                            $primaryBranch = \App\Models\SuperShop\Branch::where('status', 'active')->first();
+                            if ($primaryBranch) {
+                                $bInv = \App\Models\SuperShop\BranchInventory::where('branch_id', $primaryBranch->id)
+                                    ->where('product_id', $productId)
+                                    ->first();
+                                if ($bInv) {
+                                    $bInv->stock_quantity = max(0, $bInv->stock_quantity - $quantity);
+                                    $bInv->save();
+                                }
+                                \App\Models\SuperShop\StockMovement::create([
+                                    'branch_id' => $primaryBranch->id,
+                                    'product_id' => $productId,
+                                    'type' => 'ecommerce_sale',
+                                    'quantity' => -$quantity,
+                                    'balance_after' => $dbProduct->stock_quantity,
+                                    'reference_no' => 'WEB-ORDER',
+                                    'user_id' => Auth::id() ?: null,
+                                    'notes' => 'ই-কমার্স ওয়েবসাইট অর্ডার',
+                                ]);
+                            }
+                        } catch (\Throwable $stockEx) {
+                            // Non-blocking
+                        }
                     }
                 }
 

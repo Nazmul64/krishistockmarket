@@ -4,21 +4,24 @@
 <div class="content-wrapper">
     <div class="container-full">
         <!-- Content Header -->
-        <div class="content-header">
+        <div class="content-header pb-2">
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                 <div>
                     <h3 class="page-title text-dark fw-bold mb-1">
-                        <i class="ti-archive text-success me-2"></i>মাল্টি-ব্রাঞ্চ স্টক ও ইনভেন্টরি ম্যানেজমেন্ট
+                        <i class="ti-package text-success me-2"></i>সুপার শপ ইনভেন্টরি ও স্টক ম্যানেজমেন্ট
                     </h3>
-                    <p class="text-muted mb-0">সেন্ট্রাল ক্যাটালগের সাথে জিরো-ডুপ্লিকেশন ব্রাঞ্চ স্টক ট্র্যাকিং, রিঅর্ডার অ্যালার্ট ও শেল্ফ লোকেশন</p>
+                    <p class="text-muted mb-0">ই-কমার্স ক্যাটালগের সাথে রিয়েল-টাইম স্টক সিঙ্ক, স্বয়ংক্রিয় বিক্রয় হিসাব ও অডিট লগ</p>
                 </div>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('admin.supershop.inventory.movements', ['branch_id' => $selectedBranchId]) }}" class="btn btn-sm btn-outline-secondary">
-                        <i class="ti-time me-1"></i> স্টক মুভমেন্ট হিস্ট্রি
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{{ route('admin.supershop.inventory.sync', ['branch_id' => $selectedBranchId]) }}" class="btn btn-sm btn-primary fw-bold shadow-sm">
+                        <i class="ti-reload me-1"></i> ক্যাটালগ সিঙ্ক (Sync Now)
                     </a>
-                    <button type="button" class="btn btn-sm btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#assignProductModal">
-                        <i class="ti-plus me-1"></i> ক্যাটালগ থেকে পণ্য অ্যাসাইন
-                    </button>
+                    <a href="{{ route('admin.supershop.inventory.movements', ['branch_id' => $selectedBranchId]) }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="ti-time me-1"></i> স্টক মুভমেন্ট অডিট লগ
+                    </a>
+                    <a href="{{ route('admin.supershop.pos', ['branch_id' => $selectedBranchId]) }}" class="btn btn-sm btn-success fw-bold shadow-sm">
+                        <i class="ti-shopping-cart me-1"></i> POS কাউন্টার খুলুন
+                    </a>
                 </div>
             </div>
         </div>
@@ -26,69 +29,94 @@
         <!-- Main Content -->
         <section class="content">
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
                     <i class="fa fa-check-circle me-1"></i> {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
             @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
                     <i class="fa fa-exclamation-circle me-1"></i> {{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
-            <!-- 1. Branch Selector & Summary Cards -->
-            <div class="row align-items-center mb-3">
-                <div class="col-md-4 col-12 mb-2 mb-md-0">
-                    <form method="GET" action="{{ route('admin.supershop.inventory') }}" class="d-flex align-items-center gap-2">
-                        <label class="fw-bold text-nowrap mb-0 text-dark"><i class="ti-home me-1"></i>ব্রাঞ্চ নির্বাচন:</label>
-                        <select name="branch_id" class="form-select form-select-sm fw-bold border-success" onchange="this.form.submit()">
-                            @foreach($branches as $b)
-                                <option value="{{ $b->id }}" {{ $selectedBranchId == $b->id ? 'selected' : '' }}>
-                                    {{ $b->code }} - {{ $b->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
+            <!-- 1. Executive Summary KPI Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-3 bg-white">
+                        <div class="text-muted small fw-semibold mb-1">মোট ক্যাটালগ আইটেম</div>
+                        <div class="fs-4 fw-bold text-dark">{{ number_format($totalItems) }}</div>
+                        <div class="small text-muted mt-1"><i class="fa fa-check text-success me-1"></i>ই-কমার্স অটো-সিঙ্ক</div>
+                    </div>
                 </div>
-
-                <div class="col-md-8 col-12">
-                    <div class="d-flex justify-content-md-end gap-2 flex-wrap">
-                        <span class="badge bg-primary-light text-primary px-3 py-2 fs-6">
-                            মোট আইটেম: <strong>{{ $totalItems }}</strong>
-                        </span>
-                        <span class="badge bg-success-light text-success px-3 py-2 fs-6">
-                            মোট স্টক ইউনিট: <strong>{{ number_format($totalStockUnits) }}</strong>
-                        </span>
-                        <a href="{{ route('admin.supershop.inventory', ['branch_id' => $selectedBranchId, 'low_stock' => 1]) }}" class="badge {{ $totalLowStock > 0 ? 'bg-warning text-dark' : 'bg-light text-muted' }} px-3 py-2 fs-6 text-decoration-none">
-                            লো স্টক অ্যালার্ট: <strong>{{ $totalLowStock }}</strong>
-                        </a>
-                        @if($outOfStock > 0)
-                            <span class="badge bg-danger px-3 py-2 fs-6">
-                                স্টক শেষ: <strong>{{ $outOfStock }}</strong>
-                            </span>
-                        @endif
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-3 bg-white">
+                        <div class="text-muted small fw-semibold mb-1">বর্তমান মজুত ইউনিট</div>
+                        <div class="fs-4 fw-bold text-primary">{{ number_format($totalStockUnits) }}</div>
+                        <div class="small text-muted mt-1">সব ক্যাটাগরি মিলিয়ে</div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-3 bg-white">
+                        <div class="text-muted small fw-semibold mb-1">মোট বিক্রিত ইউনিট</div>
+                        <div class="fs-4 fw-bold text-info">{{ number_format($totalUnitsSold) }}</div>
+                        <div class="small text-muted mt-1">POS + অনলাইন বিক্রয়</div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-3 bg-white">
+                        <div class="text-muted small fw-semibold mb-1">পর্যাপ্ত স্টক পণ্য</div>
+                        <div class="fs-4 fw-bold text-success">{{ number_format($inStockCount) }}</div>
+                        <div class="small text-success mt-1"><i class="fa fa-arrow-up me-1"></i>নরমাল স্টক</div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-3 bg-white">
+                        <div class="text-muted small fw-semibold mb-1">সীমিত স্টক অ্যালার্ট</div>
+                        <div class="fs-4 fw-bold text-warning">{{ number_format($totalLowStock) }}</div>
+                        <div class="small text-warning mt-1"><i class="fa fa-exclamation-triangle me-1"></i>রিঅর্ডার প্রয়োজন</div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-3 bg-white">
+                        <div class="text-muted small fw-semibold mb-1">স্টক আউট (শেষ)</div>
+                        <div class="fs-4 fw-bold text-danger">{{ number_format($outOfStock) }}</div>
+                        <div class="small text-danger mt-1"><i class="fa fa-times-circle me-1"></i>অবিলম্বে রিস্টক</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. Filters & Search Box -->
-            <div class="box shadow-sm mb-3">
-                <div class="box-body py-2">
+            <!-- 2. Branch Selector & Filter Bar -->
+            <div class="card border-0 shadow-sm rounded-4 mb-3">
+                <div class="card-body p-3">
                     <form method="GET" action="{{ route('admin.supershop.inventory') }}" class="row g-2 align-items-center">
-                        <input type="hidden" name="branch_id" value="{{ $selectedBranchId }}">
-                        
-                        <div class="col-md-4 col-12">
+                        <!-- Branch Selection -->
+                        <div class="col-lg-3 col-md-4 col-12">
                             <div class="input-group input-group-sm">
-                                <span class="input-group-text"><i class="ti-search"></i></span>
-                                <input type="text" name="search" class="form-control" placeholder="পণ্যের নাম বা বারকোড / SKU দিয়ে খুঁজুন..." value="{{ $search }}">
+                                <span class="input-group-text bg-light text-dark fw-bold"><i class="ti-home me-1"></i>ব্রাঞ্চ:</span>
+                                <select name="branch_id" class="form-select form-select-sm fw-bold border-success" onchange="this.form.submit()">
+                                    @foreach($branches as $b)
+                                        <option value="{{ $b->id }}" {{ $selectedBranchId == $b->id ? 'selected' : '' }}>
+                                            {{ $b->code }} - {{ $b->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-6">
+                        <!-- Search -->
+                        <div class="col-lg-3 col-md-4 col-12">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white"><i class="ti-search text-muted"></i></span>
+                                <input type="text" name="search" class="form-control form-control-sm" placeholder="পণ্যের নাম, বাংলা নাম বা SKU..." value="{{ $search }}">
+                            </div>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="col-lg-2 col-md-4 col-6">
                             <select name="category_id" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="">সকল ক্যাটাগরি (All Categories)</option>
+                                <option value="">সকল ক্যাটাগরি (All)</option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat->id }}" {{ $selectedCatId == $cat->id ? 'selected' : '' }}>
                                         {{ $cat->name }}
@@ -97,92 +125,137 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3 col-6">
-                            <div class="form-check form-check-inline mt-1">
-                                <input class="form-check-input" type="checkbox" name="low_stock" id="lowStockCheck" value="1" {{ $lowStockOnly ? 'checked' : '' }} onchange="this.form.submit()">
-                                <label class="form-check-label small fw-bold text-danger" for="lowStockCheck">শুধুমাত্র স্বল্প স্টক (<= Reorder)</label>
-                            </div>
+                        <!-- Stock Status Filter -->
+                        <div class="col-lg-2 col-md-6 col-6">
+                            <select name="stock_filter" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="all" {{ $stockFilter === 'all' ? 'selected' : '' }}>সকল স্টক স্ট্যাটাস</option>
+                                <option value="in_stock" {{ $stockFilter === 'in_stock' ? 'selected' : '' }}>পর্যাপ্ত স্টক (>10)</option>
+                                <option value="low_stock" {{ $stockFilter === 'low_stock' ? 'selected' : '' }}>সীমিত স্টক (<=10)</option>
+                                <option value="out_of_stock" {{ $stockFilter === 'out_of_stock' ? 'selected' : '' }}>স্টক শেষ (0)</option>
+                            </select>
                         </div>
 
-                        <div class="col-md-2 col-12 text-end">
-                            <button type="submit" class="btn btn-sm btn-primary w-100">ফিল্টার প্রয়োগ</button>
+                        <!-- Submit & Reset -->
+                        <div class="col-lg-2 col-md-6 col-12 d-flex gap-2">
+                            <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">
+                                <i class="ti-filter me-1"></i> ফিল্টার
+                            </button>
+                            <a href="{{ route('admin.supershop.inventory', ['branch_id' => $selectedBranchId]) }}" class="btn btn-sm btn-light border" title="ফিল্টার রিসেট">
+                                <i class="ti-reload"></i>
+                            </a>
                         </div>
                     </form>
                 </div>
             </div>
 
             <!-- 3. Inventory Table -->
-            <div class="box shadow-sm">
-                <div class="box-body p-0">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0 align-middle">
-                            <thead class="table-light">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-muted small text-uppercase">
                                 <tr>
-                                    <th>পণ্য (Product)</th>
-                                    <th>ক্যাটাগরি</th>
-                                    <th>শেল্ফ অবস্থান (Shelf)</th>
+                                    <th class="ps-3 py-3">পণ্য বিবরণ (Product)</th>
+                                    <th>ক্যাটাগরি ও ব্র্যান্ড</th>
                                     <th class="text-end">ক্রয়মূল্য (Cost)</th>
                                     <th class="text-end">বিক্রয়মূল্য (MRP)</th>
-                                    <th class="text-center">বর্তমান স্টক</th>
+                                    <th class="text-center">মোট বিক্রয়</th>
+                                    <th class="text-center">বর্তমান মজুত</th>
                                     <th class="text-center">রিঅর্ডার লেভেল</th>
                                     <th class="text-center">স্ট্যাটাস</th>
-                                    <th class="text-end">স্টক সমন্বয়</th>
+                                    <th class="text-center">শেল্ফ</th>
+                                    <th class="text-end pe-3">স্টক অ্যাকশন</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($inventories as $inv)
                                     @php
-                                        $prod = $inv->product;
-                                        $isLow = $inv->stock_quantity <= $inv->reorder_level;
-                                        $isOut = $inv->stock_quantity <= 0;
+                                        $stock = (int)($inv->branch_stock ?? $inv->stock_quantity);
+                                        $reorder = (int)($inv->branch_reorder_level ?: 10);
+                                        $isLow = $stock <= $reorder && $stock > 0;
+                                        $isOut = $stock <= 0;
+                                        $soldCount = $inv->total_sold;
+                                        $img = $inv->image ?: $inv->thumbnail;
+                                        $costPrice = $inv->branch_purchase_price ?: ($inv->purchase_price ?: round($inv->price * 0.8, 2));
+                                        $sellingPrice = $inv->branch_selling_price ?: $inv->price;
                                     @endphp
                                     <tr class="{{ $isOut ? 'table-danger' : ($isLow ? 'table-warning' : '') }}">
-                                        <td>
+                                        <!-- Product Info -->
+                                        <td class="ps-3 py-3">
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ $prod && $prod->thumbnail ? asset($prod->thumbnail) : asset('assets/images/placeholder.png') }}" class="rounded me-2 border" style="width: 40px; height: 40px; object-fit: cover;" onerror="this.src='https://placehold.co/40x40?text=Shop'">
+                                                <img src="{{ $img ? asset($img) : asset('assets/images/placeholder.png') }}" class="rounded-3 me-2 border shadow-none" style="width: 44px; height: 44px; object-fit: cover;" onerror="this.src='https://placehold.co/44x44?text=Shop'">
                                                 <div>
-                                                    <strong class="text-dark">{{ $prod ? $prod->name : 'Unknown Product' }}</strong>
-                                                    <div class="small text-muted">
-                                                        SKU: <span class="fw-bold">{{ $prod ? $prod->sku : 'N/A' }}</span>
-                                                        @if($prod && $prod->barcode)
-                                                            | <i class="fa fa-barcode"></i> {{ $prod->barcode }}
-                                                        @endif
+                                                    <div class="fw-bold text-dark fs-6">{{ $inv->name }}</div>
+                                                    @if($inv->name_bn)
+                                                        <div class="small text-muted">{{ $inv->name_bn }}</div>
+                                                    @endif
+                                                    <div class="small text-muted mt-1">
+                                                        <span class="badge bg-light text-dark border">SKU: {{ $inv->sku ?: 'N/A' }}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
+
+                                        <!-- Category & Brand -->
                                         <td>
-                                            <span class="badge bg-light text-dark border">{{ $prod && $prod->category ? $prod->category->name : 'General' }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-light text-muted">{{ $inv->shelf_location ?: 'অ্যাসাইন হয়নি' }}</span>
-                                        </td>
-                                        <td class="text-end text-muted">
-                                            ৳ {{ number_format($inv->purchase_price ?: ($prod ? $prod->price * 0.8 : 0), 2) }}
-                                        </td>
-                                        <td class="text-end fw-bold text-dark">
-                                            ৳ {{ number_format($inv->selling_price ?: ($prod ? $prod->price : 0), 2) }}
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="fs-6 fw-bold {{ $isOut ? 'text-danger' : ($isLow ? 'text-warning-dark' : 'text-success') }}">
-                                                {{ $inv->stock_quantity }} {{ $prod ? $prod->unit : 'টি' }}
+                                            <span class="badge bg-light text-dark border px-2 py-1 mb-1 d-inline-block">
+                                                {{ $inv->category ? $inv->category->name : 'General' }}
                                             </span>
-                                        </td>
-                                        <td class="text-center text-muted small">
-                                            {{ $inv->reorder_level }}
-                                        </td>
-                                        <td class="text-center">
-                                            @if($isOut)
-                                                <span class="badge bg-danger">স্টক শেষ (Stockout)</span>
-                                            @elseif($isLow)
-                                                <span class="badge bg-warning text-dark">স্বল্প স্টক (Low)</span>
-                                            @else
-                                                <span class="badge bg-success">পর্যাপ্ত (In Stock)</span>
+                                            @if($inv->brand)
+                                                <div class="small text-muted"><i class="ti-tag me-1"></i>{{ is_string($inv->brand) ? $inv->brand : ($inv->brand->name ?? '') }}</div>
                                             @endif
                                         </td>
-                                        <td class="text-end">
-                                            <button type="button" class="btn btn-xs btn-outline-primary fw-bold" data-bs-toggle="modal" data-bs-target="#adjustModal{{ $inv->id }}">
-                                                <i class="ti-exchange-vertical me-1"></i> সমন্বয়
+
+                                        <!-- Cost Price -->
+                                        <td class="text-end text-muted">
+                                            ৳ {{ number_format($costPrice, 2) }}
+                                        </td>
+
+                                        <!-- Selling Price -->
+                                        <td class="text-end fw-bold text-dark">
+                                            ৳ {{ number_format($sellingPrice, 2) }}
+                                        </td>
+
+                                        <!-- Sold Count -->
+                                        <td class="text-center">
+                                            <span class="badge bg-info-light text-info fw-bold px-2 py-1 fs-6">
+                                                {{ $soldCount }} {{ $inv->unit ?: 'টি' }}
+                                            </span>
+                                        </td>
+
+                                        <!-- Current Available Stock -->
+                                        <td class="text-center">
+                                            <div class="fs-6 fw-bolder {{ $isOut ? 'text-danger' : ($isLow ? 'text-warning-dark' : 'text-success') }}">
+                                                {{ $stock }} {{ $inv->unit ?: 'টি' }}
+                                            </div>
+                                            <div class="small text-muted">মজুত আছে</div>
+                                        </td>
+
+                                        <!-- Reorder Level -->
+                                        <td class="text-center text-muted small">
+                                            <span class="badge bg-light text-secondary">{{ $reorder }}</span>
+                                        </td>
+
+                                        <!-- Status Badge -->
+                                        <td class="text-center">
+                                            @if($isOut)
+                                                <span class="badge bg-danger rounded-pill px-3 py-1">স্টক শেষ (Stockout)</span>
+                                            @elseif($isLow)
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-1">সীমিত (Low Stock)</span>
+                                            @else
+                                                <span class="badge bg-success rounded-pill px-3 py-1">পর্যাপ্ত (In Stock)</span>
+                                            @endif
+                                        </td>
+
+                                        <!-- Shelf Location -->
+                                        <td class="text-center">
+                                            <span class="badge bg-light text-muted border">{{ $inv->shelf_location ?: 'নির্ধারিত নয়' }}</span>
+                                        </td>
+
+                                        <!-- Stock Adjustment Action -->
+                                        <td class="text-end pe-3">
+                                            <button type="button" class="btn btn-xs btn-outline-primary rounded-pill px-3 fw-bold" data-bs-toggle="modal" data-bs-target="#adjustModal{{ $inv->id }}">
+                                                <i class="ti-exchange-vertical me-1"></i> স্টক সমন্বয় / রিস্টক
                                             </button>
                                         </td>
                                     </tr>
@@ -192,48 +265,71 @@
                                         <div class="modal-dialog">
                                             <form method="POST" action="{{ route('admin.supershop.inventory.adjust', $inv->id) }}">
                                                 @csrf
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title fw-bold">স্টক সমন্বয় – {{ $prod ? $prod->name : '' }}</h5>
+                                                <input type="hidden" name="branch_id" value="{{ $selectedBranchId }}">
+                                                <div class="modal-content rounded-4 border-0 shadow">
+                                                    <div class="modal-header bg-light rounded-top-4">
+                                                        <h5 class="modal-title fw-bold text-dark">
+                                                            <i class="ti-package text-success me-1"></i> স্টক সমন্বয় – {{ $inv->name }}
+                                                        </h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        <div class="alert alert-info py-2 small mb-3">
-                                                            বর্তমান স্টক: <strong>{{ $inv->stock_quantity }}</strong> {{ $prod ? $prod->unit : '' }} | ব্রাঞ্চ: <strong>{{ $inv->branch ? $inv->branch->name : '' }}</strong>
+                                                    <div class="modal-body p-4">
+                                                        <!-- Info Alert -->
+                                                        <div class="d-flex justify-content-between p-3 bg-light rounded-3 mb-3">
+                                                            <div>
+                                                                <div class="text-muted small">বর্তমান মজুত স্টক:</div>
+                                                                <div class="fs-5 fw-bold text-primary">{{ $stock }} {{ $inv->unit ?: 'টি' }}</div>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <div class="text-muted small">মোট বিক্রিত:</div>
+                                                                <div class="fs-5 fw-bold text-dark">{{ $soldCount }} {{ $inv->unit ?: 'টি' }}</div>
+                                                            </div>
                                                         </div>
 
                                                         <div class="mb-3">
-                                                            <label class="form-label fw-bold">সমন্বয়ের ধরন (Adjustment Type) <span class="text-danger">*</span></label>
-                                                            <select name="adjustment_type" class="form-select" required>
-                                                                <option value="add">➕ স্টক যোগ করুন (Add to Stock)</option>
-                                                                <option value="subtract">➖ স্টক হ্রাস করুন (Reduce/Damage/Loss)</option>
-                                                                <option value="set">🔁 নির্দিষ্ট সংখ্যায় সেট করুন (Physical Count Match)</option>
+                                                            <label class="form-label fw-bold">সমন্বয়ের ধরন (Adjustment Action) <span class="text-danger">*</span></label>
+                                                            <select name="adjustment_type" class="form-select form-select-lg" required>
+                                                                <option value="add">➕ স্টক যোগ করুন (রিস্টক / নতুন ক্রয়)</option>
+                                                                <option value="subtract">➖ স্টক কমান (ড্যামেজ / নষ্ট / মেয়াদোত্তীর্ণ)</option>
+                                                                <option value="set">🔄 নির্দিষ্ট সংখ্যা সেট করুন (Physical Count Set)</option>
                                                             </select>
                                                         </div>
 
                                                         <div class="mb-3">
                                                             <label class="form-label fw-bold">পরিমাণ (Quantity) <span class="text-danger">*</span></label>
-                                                            <input type="number" name="quantity" class="form-control" min="0" required placeholder="পরিমাণ লিখুন">
+                                                            <input type="number" name="quantity" class="form-control form-control-lg fw-bold" min="0" required placeholder="পরিমাণ লিখুন (যেমন: 10, 50, 100)">
                                                         </div>
 
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">শেল্ফ অবস্থান (Shelf Location)</label>
-                                                            <input type="text" name="shelf_location" class="form-control" value="{{ $inv->shelf_location }}" placeholder="যেমন: Aisle 3, Rack B2">
+                                                        <div class="row g-2 mb-3">
+                                                            <div class="col-6">
+                                                                <label class="form-label small fw-bold">শেল্ফ অবস্থান (Shelf)</label>
+                                                                <input type="text" name="shelf_location" class="form-control form-control-sm" value="{{ $inv->shelf_location }}" placeholder="যেমন: Aisle 3, Rack B">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <label class="form-label small fw-bold">রিঅর্ডার অ্যালার্ট লেভেল</label>
+                                                                <input type="number" name="reorder_level" class="form-control form-control-sm" value="{{ $reorder }}" min="1">
+                                                            </div>
                                                         </div>
 
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">রিঅর্ডার লেভেল (Reorder Level)</label>
-                                                            <input type="number" name="reorder_level" class="form-control" value="{{ $inv->reorder_level }}" min="1">
+                                                        <div class="row g-2 mb-3">
+                                                            <div class="col-6">
+                                                                <label class="form-label small fw-bold">শাখা ক্রয়মূল্য (৳)</label>
+                                                                <input type="number" step="0.01" name="purchase_price" class="form-control form-control-sm" value="{{ $costPrice }}" placeholder="ক্রয়মূল্য">
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <label class="form-label small fw-bold">শাখা বিক্রয়মূল্য (৳)</label>
+                                                                <input type="number" step="0.01" name="selling_price" class="form-control form-control-sm" value="{{ $sellingPrice }}" placeholder="বিক্রয়মূল্য">
+                                                            </div>
                                                         </div>
 
-                                                        <div class="mb-3">
-                                                            <label class="form-label fw-bold">সমন্বয়ের কারণ (Reason / Audit Note) <span class="text-danger">*</span></label>
-                                                            <input type="text" name="reason" class="form-control" placeholder="যেমন: ড্যামেজ পণ্য বাদ দেওয়া, ফিজিক্যাল অডিট সংশোধন" required>
+                                                        <div class="mb-2">
+                                                            <label class="form-label fw-bold">সমন্বয়ের কারণ / অডিট নোট <span class="text-danger">*</span></label>
+                                                            <input type="text" name="reason" class="form-control" placeholder="যেমন: নতুন চালানের রিস্টক, ফিজিক্যাল অডিট সংশোধন" required>
                                                         </div>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                                                        <button type="submit" class="btn btn-primary fw-bold">স্টক আপডেট নিশ্চিত করুন</button>
+                                                    <div class="modal-footer bg-light rounded-bottom-4">
+                                                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">বাতিল</button>
+                                                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">স্টক আপডেট নিশ্চিত করুন</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -241,7 +337,15 @@
                                     </div>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center py-4 text-muted">এই ব্রাঞ্চে কোনো ইনভেন্টরি তথ্য পাওয়া যায়নি।</td>
+                                        <td colspan="10" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="ti-package font-size-36 d-block mb-2 text-secondary"></i>
+                                                কোনো পণ্য পাওয়া যায়নি।
+                                            </div>
+                                            <a href="{{ route('admin.supershop.inventory.sync', ['branch_id' => $selectedBranchId]) }}" class="btn btn-sm btn-primary mt-2">
+                                                <i class="ti-reload me-1"></i> ক্যাটালগ থেকে সব পণ্য অটো-সিঙ্ক করুন
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -249,65 +353,17 @@
                     </div>
                 </div>
                 @if($inventories->hasPages())
-                    <div class="box-footer">
-                        {{ $inventories->links() }}
+                    <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="text-muted small">
+                            মোট {{ number_format($inventories->total()) }} টির মধ্যে {{ number_format($inventories->firstItem()) }} - {{ number_format($inventories->lastItem()) }} টি দেখানো হচ্ছে
+                        </div>
+                        <div>
+                            {{ $inventories->withQueryString()->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 @endif
             </div>
         </section>
-
-        <!-- Assign Product Modal -->
-        <div class="modal fade" id="assignProductModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <form method="POST" action="{{ route('admin.supershop.inventory.assign') }}">
-                    @csrf
-                    <input type="hidden" name="branch_id" value="{{ $selectedBranchId }}">
-                    <div class="modal-content">
-                        <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title fw-bold text-white"><i class="ti-plus me-1"></i> সেন্ট্রাল ক্যাটালগ থেকে ব্রাঞ্চে পণ্য যুক্ত করুন</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-bold">ক্যাটালগ পণ্য নির্বাচন করুন <span class="text-danger">*</span></label>
-                                <select name="product_id" class="form-select" required>
-                                    <option value="">-- পণ্য নির্বাচন করুন --</option>
-                                    @foreach($unassignedProducts as $up)
-                                        <option value="{{ $up->id }}">{{ $up->name }} (SKU: {{ $up->sku }}) - ৳{{ $up->price }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">প্রাথমিক স্টক পরিমাণ (Initial Stock) <span class="text-danger">*</span></label>
-                                <input type="number" name="stock_quantity" class="form-control" value="50" min="0" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">রিঅর্ডার লেভেল (Reorder Alert)</label>
-                                <input type="number" name="reorder_level" class="form-control" value="10" min="1">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">শেল্ফ অবস্থান (Shelf Location)</label>
-                                <input type="text" name="shelf_location" class="form-control" placeholder="যেমন: Aisle 2, Rack C">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">শাখা বিক্রয়মূল্য (ঐচ্ছিক - ডিফল্ট ক্যাটালগ মূল্য ব্যবহৃত হবে)</label>
-                                <input type="number" step="0.01" name="selling_price" class="form-control" placeholder="কাস্টম মূল্য না থাকলে খালি রাখুন">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">বাতিল</button>
-                            <button type="submit" class="btn btn-success fw-bold">পণ্য যুক্ত করুন</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
     </div>
 </div>
 @endsection
-

@@ -57,6 +57,28 @@ class ShopProduct extends Model
         return $this->hasMany(ShopReview::class, 'product_id')->where('is_approved', true);
     }
 
+    public function branchInventories()
+    {
+        return $this->hasMany(\App\Models\SuperShop\BranchInventory::class, 'product_id');
+    }
+
+    public function posSaleItems()
+    {
+        return $this->hasMany(\App\Models\SuperShop\PosSaleItem::class, 'product_id');
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(ShopOrderItem::class, 'product_id');
+    }
+
+    public function getTotalSoldAttribute()
+    {
+        $posSold = (int)\App\Models\SuperShop\PosSaleItem::where('product_id', $this->id)->sum('quantity');
+        $onlineSold = (int)ShopOrderItem::where('product_id', $this->id)->sum('quantity');
+        return $posSold + $onlineSold;
+    }
+
     public function getAllImagesAttribute()
     {
         $list = [];

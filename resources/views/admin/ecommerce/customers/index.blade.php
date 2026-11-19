@@ -78,8 +78,13 @@
                     </div>
                 </div>
                 @if($customers->hasPages())
-                    <div class="box-footer d-flex justify-content-end">
-                        {{ $customers->links() }}
+                    <div class="box-footer d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                        <div class="text-muted small">
+                            মোট {{ number_format($customers->total()) }} জনের মধ্যে {{ number_format($customers->firstItem()) }} - {{ number_format($customers->lastItem()) }} জন দেখানো হচ্ছে
+                        </div>
+                        <div>
+                            {{ $customers->withQueryString()->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 @endif
             </div>

@@ -167,8 +167,13 @@
                     </div>
                 </div>
                 @if($products->hasPages())
-                    <div class="box-footer d-flex justify-content-end">
-                        {{ $products->links() }}
+                    <div class="box-footer d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
+                        <div class="text-muted small">
+                            মোট {{ number_format($products->total()) }} টির মধ্যে {{ number_format($products->firstItem()) }} - {{ number_format($products->lastItem()) }} টি দেখানো হচ্ছে
+                        </div>
+                        <div>
+                            {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 @endif
             </div>

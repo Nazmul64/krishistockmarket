@@ -178,13 +178,6 @@
                     <i class="fa fa-bars font-size-22 text-white"></i>
                 </a>
 
-                <!-- Desktop Menu Push Button -->
-                <a href="{{ route('home') }}" class="waves-effect waves-light nav-link rounded d-none d-md-inline-block push-btn"
-                    data-toggle="push-menu" role="button" title="Toggle Sidebar">
-                    <img style="width: 46px;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}"
-                        class="img-fluid svg-icon" alt="">
-                </a>
-
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="logo">
                     <div class="logo-lg d-flex align-items-center">
@@ -199,44 +192,71 @@
             </div>
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top">
-                <!-- Sidebar toggle button-->
-                <div class="app-menu">
-                    <ul class="header-megamenu nav">
-                        <li class="btn-group nav-item d-md-none">
-                            <a href="#" class="waves-effect waves-light nav-link push-btn btn-outline no-border"
-                                data-toggle="push-menu" role="button">
-                                <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/collapse.svg"
-                                    class="img-fluid svg-icon" alt="">
+                <!-- Left Section: Sidebar toggle & Search Bar (Screenshot matching) -->
+                <div class="app-menu d-flex align-items-center">
+                    <ul class="header-megamenu nav align-items-center">
+                        <li class="btn-group nav-item">
+                            <a href="#" class="waves-effect waves-light nav-link push-btn btn-outline no-border me-2"
+                                data-toggle="push-menu" role="button" title="Toggle Sidebar">
+                                <i class="fa fa-bars font-size-18 text-secondary"></i>
                             </a>
                         </li>
-                        <li class="btn-group nav-item">
-                            <a href="#" data-provide="fullscreen"
-                                class="waves-effect waves-light nav-link btn-outline no-border full-screen"
-                                title="Full Screen">
-                                <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/fullscreen.svg"
-                                    class="img-fluid svg-icon" alt="">
-                            </a>
+                        <li class="btn-group nav-item d-none d-sm-block">
+                            <div class="header-search-bar">
+                                <i class="fa fa-search"></i>
+                                <input type="text" placeholder="Type here to search">
+                            </div>
                         </li>
 
                         @if (Auth::user()->role == "employee")
-                            <li class="btn-group d-lg-inline-flex d-none">
+                            <li class="btn-group d-lg-inline-flex d-none ms-3">
                                 <div class="" id="myDiv2" style="line-height: 46px;font-weight: 900;color: red;">
                                     {{ route('/') }}/register?ref={{ Auth::user()->username }}
                                 </div>
                                 <button style="margin-left: 10px;padding: 5px 10px !important;height: 34px;margin-top: 7px;" id="myButton2" class="btn btn-sm btn-success">Copy Link</button>
                             </li>
                         @endif
-
                     </ul>
                 </div>
 
+                <!-- Right Section: Flag, Dark Toggle, Apps Grid, Notifications, Messages, User Profile (Screenshot matching) -->
                 <div class="navbar-custom-menu r-side">
-                    <ul class="nav navbar-nav d-flex align-items-center flex-row gap-3">
-                        <li class="d-none d-md-block">
-                            <div class="header-search-bar">
-                                <i class="fa fa-search"></i>
-                                <input type="text" placeholder="Search menu, users, stock...">
-                            </div>
+                    <ul class="nav navbar-nav d-flex align-items-center flex-row gap-2">
+                        <!-- Flag / Language -->
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link btn-header-icon" title="Language">
+                                <span style="font-size: 16px;">🇺🇸</span>
+                            </a>
+                        </li>
+
+                        <!-- Dark / Light Mode Toggle -->
+                        <li class="nav-item">
+                            <a href="javascript:void(0)" class="nav-link btn-header-icon" id="themeModeToggle" title="Toggle Mode">
+                                <i class="fa fa-moon-o"></i>
+                            </a>
+                        </li>
+
+                        <!-- Apps Grid / Modules -->
+                        <li class="nav-item d-none d-sm-block">
+                            <a href="javascript:void(0)" class="nav-link btn-header-icon" title="Grid Menu">
+                                <i class="fa fa-th-large"></i>
+                            </a>
+                        </li>
+
+                        <!-- Notifications Bell -->
+                        <li class="nav-item position-relative">
+                            <a href="javascript:void(0)" class="nav-link btn-header-icon position-relative" title="Notifications">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="header-badge-count">5</span>
+                            </a>
+                        </li>
+
+                        <!-- Messages -->
+                        <li class="nav-item position-relative">
+                            <a href="javascript:void(0)" class="nav-link btn-header-icon position-relative" title="Messages">
+                                <i class="fa fa-commenting-o"></i>
+                                <span class="header-badge-count">0</span>
+                            </a>
                         </li>
 
                         @if(Auth::check() && Auth::user()->role == "user")
@@ -244,25 +264,24 @@
                             @php
                                 $headerCartCount = \App\Models\UserCart::where('user_id', Auth::id())->sum('quantity');
                             @endphp
-                            <a href="{{ route('my.cart') }}" class="btn-outline no-border position-relative text-dark d-flex align-items-center justify-content-center" title="My Cart" style="width: 38px; height: 38px; border-radius: 8px; background: rgba(0,0,0,0.04); font-size: 17px; text-decoration: none;">
+                            <a href="{{ route('my.cart') }}" class="btn-outline no-border position-relative text-dark d-flex align-items-center justify-content-center" title="My Cart" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(0,0,0,0.04); font-size: 16px; text-decoration: none;">
                                 <i class="fa fa-shopping-cart text-success"></i>
                                 <span class="badge bg-danger rounded-pill user-cart-badge {{ $headerCartCount > 0 ? '' : 'd-none' }}" style="position: absolute; top: -3px; right: -4px; font-size: 10px; padding: 2px 5px; min-width: 17px;">{{ $headerCartCount }}</span>
                             </a>
                         </li>
                         @endif
 
-                        <li>
-                            <button type="button" class="btn-theme-gear" id="openThemeSettings" title="Theme Settings Customizer">
-                                <i class="fa fa-cog"></i>
-                            </button>
-                        </li>
-
-                        <!-- User Account-->
+                        <!-- User Profile Pill -->
                         <li class="dropdown user user-menu">
-                            <a href="#" class="waves-effect waves-light dropdown-toggle btn-outline no-border"
-                                data-bs-toggle="dropdown" title="User">
-                                <img src="{{ asset('assets') }}/images/svg-icon/sidebar-menu/user.svg"
-                                    class="rounded svg-icon" alt="" />
+                            <a href="#" class="waves-effect waves-light dropdown-toggle header-user-pill"
+                                data-bs-toggle="dropdown" title="User Profile">
+                                <img src="{{ !empty(Auth::user()->avatar) && file_exists(public_path('upload/images/user/' . Auth::user()->avatar)) ? asset('upload/images/user/' . Auth::user()->avatar) : asset('assets/images/avatar/avatar-1.png') }}"
+                                    class="header-avatar-circle" alt="User" />
+                                <div class="d-none d-md-flex flex-column text-start">
+                                    <span class="header-user-name">{{ Auth::user()->name ?? 'Super Admin' }}</span>
+                                    <span class="header-user-role">{{ optional(Auth::user()->roleRelation)->name ?? (Auth::user()->role == 'super_admin' ? 'Super Admin' : (Auth::user()->role == 'admin' ? 'HR Manager' : ucfirst(Auth::user()->role))) }}</span>
+                                </div>
+                                <i class="fa fa-angle-down text-muted font-size-12 ms-1"></i>
                             </a>
                             <ul class="dropdown-menu animated flipInX">
                                 <li class="user-body">
@@ -291,27 +310,28 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
-
-
                                 </li>
                             </ul>
                         </li>
-
-
                     </ul>
                 </div>
             </nav>
         </header>
 
+        <!-- Floating Settings Gear Tab (Screenshot matching) -->
+        <a href="javascript:void(0);" id="openThemeSettings" class="floating-settings-gear-tab" title="Theme Settings Customizer">
+            <i class="fa fa-cog fa-spin-hover"></i>
+        </a>
+
 
         <aside class="main-sidebar">
             <!-- Mobile Sidebar Drawer Header with Close Button -->
-            <div class="sidebar-mobile-header d-flex align-items-center justify-content-between px-3 py-3 d-md-none" style="border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.35);">
+            <div class="sidebar-mobile-header d-flex align-items-center justify-content-between px-3 py-3 d-md-none" style="border-bottom: 1px solid #f1f5f9; background: #ffffff;">
                 <div class="d-flex align-items-center gap-2">
                     <img style="height: 34px; width: auto; max-width: 110px; object-fit: contain; background: transparent !important; padding: 0 !important; border-radius: 0 !important;" src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="logo">
                     <div>
-                        <div class="text-white fw-bold font-size-14" style="line-height: 1.2;">ekrishisheba Admin</div>
-                        <small class="text-warning font-size-11">{{ Auth::user()->name ?? 'Administrator' }}</small>
+                        <div class="text-dark fw-bold font-size-14" style="line-height: 1.2;">ekrishisheba Admin</div>
+                        <small class="text-muted font-size-11">{{ Auth::user()->name ?? 'Administrator' }}</small>
                     </div>
                 </div>
                 <button type="button" class="btn btn-sm btn-outline-light rounded-circle sidebar-mobile-close-btn" id="sidebarMobileCloseBtn" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);" title="মেনু বন্ধ করুন">
@@ -541,12 +561,9 @@
 
                             @if(Auth::user()->hasPermission('settings') || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
                             <li class="{{ (optional(Request::route())->getName() == 'setting.index') ? 'active menu-open' : '' }}">
-                                <a href="{{ route('setting.index') }}">
+                                <a href="{{ route('setting.index') }}" title="ফন্ট সেটিংস">
                                     <i class="fa fa-font text-warning"></i>
-                                    <span>ফন্ট ফ্যামিলি (Font Settings)</span>
-                                    <span class="pull-right-container">
-                                        <span class="label label-warning pull-right">১০০+ ফন্ট</span>
-                                    </span>
+                                    <span>ফন্ট সেটিংস (Fonts)</span>
                                 </a>
                             </li>
                             @endif

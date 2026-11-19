@@ -549,6 +549,13 @@ class EcommerceAdminController extends Controller
                 }
             }
 
+            // Auto-sync new product to SuperShop branches
+            try {
+                \App\Models\SuperShop\BranchInventory::syncNewProductToBranches($product);
+            } catch (\Throwable $syncEx) {
+                // Non-blocking
+            }
+
             DB::commit();
             return redirect()->route('admin.ecommerce.products')->with('success', 'নতুন পণ্য সফলভাবে তৈরি ও সংরক্ষণ করা হয়েছে!');
         } catch (\Exception $e) {
@@ -616,6 +623,16 @@ class EcommerceAdminController extends Controller
         }
 
         $product->update($data);
+
+        // Sync updated prices and stock to SuperShop branches
+        try {
+            \App\Models\SuperShop\BranchInventory::where('product_id', $product->id)->update([
+                'selling_price' => (float)$product->price,
+                'purchase_price' => $product->purchase_price ?: round((float)$product->price * 0.8, 2),
+            ]);
+        } catch (\Throwable $th) {
+            // Non-blocking
+        }
 
         // Upload additional gallery images
         if ($request->hasFile('gallery_images')) {

@@ -18,12 +18,33 @@ class FrontendController extends Controller
         $sliders = [];
         for ($i = 1; $i <= 4; $i++) {
             $img = setting('slider' . $i . '_img');
-            if (!empty($img) && file_exists(public_path('upload/slider/' . $img))) {
+            if (!empty($img)) {
+                $imgPath = null;
+                if (file_exists(public_path('upload/slider/' . $img))) {
+                    $imgPath = asset('upload/slider/' . $img);
+                } elseif (file_exists(public_path('uploads/slider/' . $img))) {
+                    $imgPath = asset('uploads/slider/' . $img);
+                } elseif (file_exists(public_path(ltrim($img, '/')))) {
+                    $imgPath = asset(ltrim($img, '/'));
+                } else {
+                    $imgPath = asset('upload/slider/' . $img);
+                }
                 $sliders[] = [
                     'id' => $i,
-                    'image' => asset('upload/slider/' . $img),
+                    'image' => $imgPath,
                     'title' => setting('slider' . $i . '_text') ?: 'কৃষি পরিবারে স্বাগতম',
                     'description' => setting('slider' . $i . '_description') ?: 'আধুনিক ও নিরাপদ কৃষি বিনিয়োগ প্ল্যাটফর্ম',
+                ];
+            }
+        }
+        if (empty($sliders) && class_exists(\App\Models\Shop\ShopSlider::class)) {
+            $shopSliders = \App\Models\Shop\ShopSlider::active()->get();
+            foreach ($shopSliders as $s) {
+                $sliders[] = [
+                    'id' => $s->id,
+                    'image' => \Illuminate\Support\Str::startsWith($s->image, ['http://', 'https://']) ? $s->image : asset(ltrim($s->image, '/')),
+                    'title' => $s->title ?? 'কৃষি পরিবারে স্বাগতম',
+                    'description' => $s->subtitle ?? '',
                 ];
             }
         }
@@ -31,9 +52,17 @@ class FrontendController extends Controller
         // Offer Banner
         $offer_banner = null;
         $banner_img = setting('offer_banner_img');
-        if (!empty($banner_img) && file_exists(public_path('upload/slider/' . $banner_img))) {
+        if (!empty($banner_img)) {
+            $bannerPath = null;
+            if (file_exists(public_path('upload/slider/' . $banner_img))) {
+                $bannerPath = asset('upload/slider/' . $banner_img);
+            } elseif (file_exists(public_path('uploads/banner/' . $banner_img))) {
+                $bannerPath = asset('uploads/banner/' . $banner_img);
+            } else {
+                $bannerPath = asset('upload/slider/' . $banner_img);
+            }
             $offer_banner = [
-                'image' => asset('upload/slider/' . $banner_img),
+                'image' => $bannerPath,
                 'link' => setting('offer_banner_link') ?: '#',
                 'title' => setting('offer_banner_title') ?: 'স্পেশাল অফার',
             ];
@@ -61,22 +90,30 @@ class FrontendController extends Controller
                 'details_url' => route('stock.detials', $stock->id),
                 'is_unlimited' => (bool)($stock->is_unlimited ?? false),
             ];
-        });
+        })->values()->all();
 
         // Our Packages
         $packages = OurPackage::where('status', 1)->latest()->get()->map(function ($pkg) {
             return [
                 'id' => $pkg->id,
                 'title' => $pkg->title ?? 'প্যাকেজ',
-                'image' => asset($pkg->image),
+                'image' => \Illuminate\Support\Str::startsWith($pkg->image, ['http://', 'https://']) ? $pkg->image : asset(ltrim($pkg->image, '/')),
                 'description' => $pkg->description ?? '',
                 'price' => $pkg->price ?? '',
             ];
-        });
+        })->values()->all();
 
         // Card Benefits / Membership Cards
         $card_benefits = CardBenefit::where('status', 1)->orderBy('order_num', 'asc')->get()->map(function ($card) {
             $facilities = is_array($card->facilities) ? $card->facilities : (is_string($card->facilities) ? json_decode($card->facilities, true) ?? [] : []);
+            $cardImg = null;
+            if ($card->image) {
+                $cardImg = \Illuminate\Support\Str::startsWith($card->image, ['http://', 'https://']) ? $card->image : asset(ltrim($card->image, '/'));
+            }
+            $brochureImg = null;
+            if ($card->brochure_image) {
+                $brochureImg = \Illuminate\Support\Str::startsWith($card->brochure_image, ['http://', 'https://']) ? $card->brochure_image : asset(ltrim($card->brochure_image, '/'));
+            }
             return [
                 'id' => $card->id,
                 'card_name' => $card->card_name,
@@ -85,8 +122,8 @@ class FrontendController extends Controller
                 'badge_text' => $card->badge_text ?: ($card->card_color_theme === 'gold' ? 'গোল্ডেন মেম্বারশিপ' : 'নরমাল মেম্বারশিপ'),
                 'validity' => $card->validity,
                 'card_number_sample' => $card->card_number_sample,
-                'image' => $card->image && file_exists(public_path($card->image)) ? asset($card->image) : null,
-                'brochure_image' => $card->brochure_image && file_exists(public_path($card->brochure_image)) ? asset($card->brochure_image) : null,
+                'image' => $cardImg,
+                'brochure_image' => $brochureImg,
                 'short_description' => $card->short_description,
                 'card_fee' => $card->card_fee,
                 'investment_limit' => $card->investment_limit,
@@ -96,7 +133,7 @@ class FrontendController extends Controller
                 'action_button_text' => $card->action_button_text ?: 'কার্ডের জন্য আবেদন করুন',
                 'action_button_url' => $card->action_button_url ?: '/user/register',
             ];
-        });
+        })->values()->all();
 
         // Features (Why Choose Us)
         $features = Feature::all()->map(function ($feat) {
@@ -106,9 +143,9 @@ class FrontendController extends Controller
                 'description' => $feat->description,
                 'icon' => $feat->icon ?: 'fa-check-circle',
                 'color' => $feat->color ?: '#1b88ce',
-                'image' => (!empty($feat->image) && file_exists(public_path($feat->image))) ? asset($feat->image) : null,
+                'image' => (!empty($feat->image) && file_exists(public_path(ltrim($feat->image, '/')))) ? asset(ltrim($feat->image, '/')) : null,
             ];
-        });
+        })->values()->all();
 
         // Product Gallery
         $gallery = StockGallery::take(9)->get()->map(function ($img) {
@@ -117,7 +154,7 @@ class FrontendController extends Controller
                 'title' => 'কৃষি স্টক পণ্য',
                 'image' => asset('upload/stock_images/' . $img->image),
             ];
-        });
+        })->values()->all();
 
         // Site Settings & Branding
         $logo = setting('logo');
@@ -217,6 +254,37 @@ class FrontendController extends Controller
     public function apiHomepageData()
     {
         return response()->json($this->getHomepageData());
+    }
+
+    public function apiAbout()
+    {
+        $logo = setting('logo');
+        return response()->json([
+            'status' => 'success',
+            'title' => 'আমাদের সম্পর্কে (About Us)',
+            'subtitle' => 'কৃষি পরিবার - আপনার কৃষি সেবা ও শেয়ার বাজারের নির্ভরযোগ্য বিশ্বস্ত প্ল্যাটফর্ম',
+            'logo' => $logo ? asset('upload/images/backend/logo/' . $logo) : asset('assets/images/logo.png'),
+            'welcome_title' => 'স্বাগতম কৃষি পরিবারে',
+            'about_us_text' => setting('about_us_text') ?: 'কৃষি পরিবার একটি আধুনিক ও বিশ্বস্ত ডিজিটাল প্ল্যাটফর্ম। আমাদের মূল লক্ষ্য হল কৃষকদের সর্বোচ্চ সুবিধা প্রদান করা, মানসম্মত কৃষি পণ্য সরবরাহ করা এবং স্টকের সঠিক ও হালনাগাদ বাজারমূল্য নির্ধারণ ও পর্যবেক্ষণে সহায়তা করা।',
+            'about_us_full_text' => setting('about_us_full_text'),
+            'highlights' => [
+                ['icon' => 'check_circle', 'title' => 'স্টকের রিয়েল-টাইম সঠিক ক্রয় ও বিক্রয় মূল্য প্রদর্শন।'],
+                ['icon' => 'check_circle', 'title' => 'কৃষিজ পণ্য ও সেরা মানের বীজ/সার সরবরাহ।'],
+                ['icon' => 'check_circle', 'title' => '১০০% সুরক্ষিত, স্বচ্ছ ও দ্রুত লেনদেন সেবা।'],
+            ],
+            'vision' => [
+                'title' => 'আমাদের ভিশন',
+                'description' => 'কৃষি ও ব্যবসা খাতে আধুনিক প্রযুক্তির ব্যবহার নিশ্চিত করে প্রতিটি কৃষিজ স্টকের সর্বোচ্চ মান ধরে রাখা।',
+            ],
+            'market_trend' => [
+                'title' => 'মার্কেট ট্রেন্ড',
+                'description' => 'গ্রাফ চার্ট ও রিয়েল-টাইম ডাটার মাধ্যমে প্রতিটি পণ্যের দৈনিক ও সাপ্তাহিক প্রাইস ট্রেন্ড সহজে পর্যবেক্ষণ।',
+            ],
+            'customer_service' => [
+                'title' => 'গ্রাহক সেবা',
+                'description' => 'আমাদের নিবেদিত সাপোর্ট টিম সপ্তাহের ৬ দিন গ্রাহক ও শেয়ারহোল্ডারদের সার্বক্ষণিক সেবা দিতে প্রস্তুত।',
+            ],
+        ]);
     }
 
     public function apiLiveSearch(Request $request)
@@ -358,5 +426,38 @@ class FrontendController extends Controller
             ->paginate(12);
 
         return view('frontend.our_videos', compact('videos'));
+    }
+
+    /**
+     * Mobile App API for Our Videos.
+     */
+    public function apiOurVideos()
+    {
+        $videos = \App\Models\OurVideo::where('is_active', true)
+            ->orderBy('order_num', 'asc')
+            ->latest()
+            ->get()
+            ->map(function ($video) {
+                return [
+                    'id' => $video->id,
+                    'title' => $video->title,
+                    'video_url' => $video->video_url,
+                    'embed_url' => $video->embed_url,
+                    'thumbnail_url' => $video->thumbnail_url,
+                    'youtube_id' => $video->youtube_id,
+                    'is_direct_video' => $video->is_direct_video,
+                    'description' => $video->description,
+                    'button_text' => $video->button_text,
+                    'button_link' => $video->button_link,
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'title' => 'আমাদের ভিডিওসমূহ (Our Videos)',
+            'subtitle' => 'ভিডিও গ্যালারি (Video Gallery)',
+            'description' => 'ই-কৃষি সেবা ও আমাদের কৃষি পরিবারের কার্যক্রম, পণ্যের পরিচিতি এবং খামার পরিদর্শনের ভিডিও চিত্র',
+            'videos' => $videos,
+        ]);
     }
 }

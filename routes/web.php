@@ -810,46 +810,46 @@ Route::group(['prefix' => 'admin/ecommerce', 'middleware' => ['auth', 'role:supe
     // 2. Sliders
     Route::get('/sliders', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliders'])->name('admin.ecommerce.sliders');
     Route::post('/sliders/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderStore'])->name('admin.ecommerce.sliders.store');
-    Route::post('/sliders/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderUpdate'])->name('admin.ecommerce.sliders.update');
-    Route::get('/sliders/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderDestroy'])->name('admin.ecommerce.sliders.destroy');
+    Route::match(['post', 'put'], '/sliders/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderUpdate'])->name('admin.ecommerce.sliders.update');
+    Route::match(['get', 'delete'], '/sliders/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'sliderDestroy'])->name('admin.ecommerce.sliders.destroy');
 
     // 3. Banners
     Route::get('/banners', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'banners'])->name('admin.ecommerce.banners');
     Route::post('/banners/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerStore'])->name('admin.ecommerce.banners.store');
-    Route::post('/banners/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerUpdate'])->name('admin.ecommerce.banners.update');
-    Route::get('/banners/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerDestroy'])->name('admin.ecommerce.banners.destroy');
+    Route::match(['post', 'put'], '/banners/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerUpdate'])->name('admin.ecommerce.banners.update');
+    Route::match(['get', 'delete'], '/banners/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'bannerDestroy'])->name('admin.ecommerce.banners.destroy');
 
     // 4. Categories & Subcategories
     Route::get('/categories', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categories'])->name('admin.ecommerce.categories');
     Route::post('/categories/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryStore'])->name('admin.ecommerce.categories.store');
-    Route::post('/categories/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryUpdate'])->name('admin.ecommerce.categories.update');
-    Route::get('/categories/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryDestroy'])->name('admin.ecommerce.categories.destroy');
+    Route::match(['post', 'put'], '/categories/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryUpdate'])->name('admin.ecommerce.categories.update');
+    Route::match(['get', 'delete'], '/categories/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'categoryDestroy'])->name('admin.ecommerce.categories.destroy');
 
     Route::get('/subcategories', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategories'])->name('admin.ecommerce.subcategories');
     Route::post('/subcategories/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryStore'])->name('admin.ecommerce.subcategories.store');
-    Route::post('/subcategories/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryUpdate'])->name('admin.ecommerce.subcategories.update');
-    Route::get('/subcategories/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryDestroy'])->name('admin.ecommerce.subcategories.destroy');
+    Route::match(['post', 'put'], '/subcategories/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryUpdate'])->name('admin.ecommerce.subcategories.update');
+    Route::match(['get', 'delete'], '/subcategories/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'subcategoryDestroy'])->name('admin.ecommerce.subcategories.destroy');
 
     // 5. Brands
     Route::get('/brands', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brands'])->name('admin.ecommerce.brands');
     Route::post('/brands/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandStore'])->name('admin.ecommerce.brands.store');
-    Route::post('/brands/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandUpdate'])->name('admin.ecommerce.brands.update');
-    Route::get('/brands/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandDestroy'])->name('admin.ecommerce.brands.destroy');
+    Route::match(['post', 'put'], '/brands/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandUpdate'])->name('admin.ecommerce.brands.update');
+    Route::match(['get', 'delete'], '/brands/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'brandDestroy'])->name('admin.ecommerce.brands.destroy');
 
     // 6. Attributes & Values
     Route::get('/attributes', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributes'])->name('admin.ecommerce.attributes');
     Route::post('/attributes/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeStore'])->name('admin.ecommerce.attributes.store');
     Route::post('/attributes/values/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeValueStore'])->name('admin.ecommerce.attributes.values.store');
-    Route::get('/attributes/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeDestroy'])->name('admin.ecommerce.attributes.destroy');
-    Route::get('/attributes/values/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeValueDestroy'])->name('admin.ecommerce.attributes.values.destroy');
+    Route::match(['get', 'delete'], '/attributes/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeDestroy'])->name('admin.ecommerce.attributes.destroy');
+    Route::match(['get', 'delete'], '/attributes/values/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'attributeValueDestroy'])->name('admin.ecommerce.attributes.values.destroy');
 
     // 7. Products
     Route::get('/products', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'products'])->name('admin.ecommerce.products');
     Route::get('/products/create', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productCreate'])->name('admin.ecommerce.products.create');
     Route::post('/products/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productStore'])->name('admin.ecommerce.products.store');
     Route::get('/products/edit/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productEdit'])->name('admin.ecommerce.products.edit');
-    Route::post('/products/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productUpdate'])->name('admin.ecommerce.products.update');
-    Route::get('/products/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productDestroy'])->name('admin.ecommerce.products.destroy');
+    Route::match(['post', 'put'], '/products/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productUpdate'])->name('admin.ecommerce.products.update');
+    Route::match(['get', 'delete'], '/products/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productDestroy'])->name('admin.ecommerce.products.destroy');
     Route::post('/products/quick-stock/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'productQuickStock'])->name('admin.ecommerce.products.quick_stock');
 
     // 8. Inventory
@@ -889,12 +889,12 @@ Route::group(['prefix' => 'admin/ecommerce', 'middleware' => ['auth', 'role:supe
     // 13. Shipping Areas
     Route::get('/shipping', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shipping'])->name('admin.ecommerce.shipping');
     Route::post('/shipping/store', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingStore'])->name('admin.ecommerce.shipping.store');
-    Route::post('/shipping/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingUpdate'])->name('admin.ecommerce.shipping.update');
-    Route::get('/shipping/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingDestroy'])->name('admin.ecommerce.shipping.destroy');
+    Route::match(['post', 'put'], '/shipping/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingUpdate'])->name('admin.ecommerce.shipping.update');
+    Route::match(['get', 'delete'], '/shipping/destroy/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'shippingDestroy'])->name('admin.ecommerce.shipping.destroy');
 
     // 14. Payment Methods
     Route::get('/payments', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'payments'])->name('admin.ecommerce.payments');
-    Route::post('/payments/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'paymentUpdate'])->name('admin.ecommerce.payments.update');
+    Route::match(['post', 'put'], '/payments/update/{id}', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'paymentUpdate'])->name('admin.ecommerce.payments.update');
 
     // 15. Reports
     Route::get('/reports', [\App\Http\Controllers\Admin\Ecommerce\EcommerceAdminController::class, 'reports'])->name('admin.ecommerce.reports');
@@ -919,6 +919,7 @@ Route::group(['prefix' => 'admin/supershop', 'middleware' => ['auth', 'role:supe
 
     // 3. Branch Inventory & Stock Movement
     Route::get('/inventory', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'index'])->name('admin.supershop.inventory');
+    Route::match(['get', 'post'], '/inventory/sync', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'syncCatalog'])->name('admin.supershop.inventory.sync');
     Route::post('/inventory/adjust/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'adjustStock'])->name('admin.supershop.inventory.adjust');
     Route::post('/inventory/assign-product', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'assignProduct'])->name('admin.supershop.inventory.assign');
     Route::get('/inventory/movements', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'movements'])->name('admin.supershop.inventory.movements');

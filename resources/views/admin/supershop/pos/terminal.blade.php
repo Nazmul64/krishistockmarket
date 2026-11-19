@@ -84,29 +84,35 @@
 
                         <!-- Product Grid Container -->
                         <div id="productGrid" class="row g-2 overflow-auto" style="max-height: 520px; min-height: 400px;">
-                            @foreach($initialProducts as $invItem)
+                            @foreach($initialProducts as $p)
                                 @php
-                                    $p = $invItem->product;
-                                    $price = $invItem->selling_price ?: ($p ? $p->price : 0);
-                                    $cost = $invItem->purchase_price ?: round($price * 0.8, 2);
+                                    $price = $p->branch_selling_price ?: $p->price;
+                                    $cost = $p->branch_purchase_price ?: round($price * 0.8, 2);
+                                    $img = $p->image ?: $p->thumbnail;
+                                    $stock = (int)($p->branch_stock ?? $p->stock_quantity);
+                                    $isOut = $stock <= 0;
+                                    $isLow = $stock > 0 && $stock <= 10;
                                 @endphp
                                 <div class="col-xl-3 col-md-4 col-6 product-card-col">
-                                    <div class="card h-100 border text-center p-2 product-card shadow-none" 
-                                         style="cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;"
+                                    <div class="card h-100 border text-center p-2 product-card shadow-none {{ $isOut ? 'opacity-75 bg-light' : '' }}" 
+                                         style="cursor: {{ $isOut ? 'not-allowed' : 'pointer' }}; transition: transform 0.1s, box-shadow 0.1s;"
                                          data-id="{{ $p->id }}" 
                                          data-name="{{ addslashes($p->name) }}" 
                                          data-sku="{{ $p->sku }}" 
                                          data-price="{{ $price }}" 
                                          data-cost="{{ $cost }}" 
-                                         data-stock="{{ $invItem->stock_quantity }}"
+                                         data-stock="{{ $stock }}"
                                          onclick="addToCart(this.dataset)">
                                         <div class="position-relative">
-                                            <img src="{{ $p->thumbnail ? asset($p->thumbnail) : asset('assets/images/placeholder.png') }}" class="img-fluid rounded mb-1" style="height: 75px; object-fit: contain;" onerror="this.src='https://placehold.co/80x80?text=Shop'">
-                                            <span class="badge {{ $invItem->stock_quantity <= 10 ? 'bg-danger' : 'bg-success' }} position-absolute top-0 end-0 small">
-                                                {{ $invItem->stock_quantity }}
+                                            <img src="{{ $img ? asset($img) : asset('assets/images/placeholder.png') }}" class="img-fluid rounded mb-1" style="height: 75px; object-fit: contain;" onerror="this.src='https://placehold.co/80x80?text=Shop'">
+                                            <span class="badge {{ $isOut ? 'bg-danger' : ($isLow ? 'bg-warning text-dark' : 'bg-success') }} position-absolute top-0 end-0 small">
+                                                {{ $isOut ? 'স্টক শেষ' : 'স্টক: ' . $stock }}
                                             </span>
                                         </div>
                                         <div class="fw-bold text-dark text-truncate small" title="{{ $p->name }}">{{ $p->name }}</div>
+                                        @if($p->name_bn)
+                                            <div class="text-muted text-truncate" style="font-size: 11px;">{{ $p->name_bn }}</div>
+                                        @endif
                                         <div class="text-success fw-bold">৳ {{ number_format($price, 2) }}</div>
                                     </div>
                                 </div>
@@ -445,33 +451,53 @@ function fetchFilteredProducts() {
 function renderProductGrid(products) {
     let grid = document.getElementById('productGrid');
     if (products.length === 0) {
-        grid.innerHTML = '<div class="col-12 text-center text-muted py-4">কোনো পণ্য পাওয়া যায়নি।</div>';
+        grid.innerHTML = '<div class="col-12 text-center text-muted py-5"><i class="ti-package font-size-36 d-block mb-2"></i>কোনো পণ্য পাওয়া যায়নি।</div>';
         return;
     }
 
-    grid.innerHTML = products.map(p => `
+    grid.innerHTML = products.map(p => {
+        let stock = parseInt(p.stock || 0);
+        let isOut = stock <= 0;
+        let isLow = stock > 0 && stock <= 10;
+        let badgeClass = isOut ? 'bg-danger' : (isLow ? 'bg-warning text-dark' : 'bg-success');
+        let badgeText = isOut ? 'স্টক শেষ' : ('স্টক: ' + stock);
+
+        return `
         <div class="col-xl-3 col-md-4 col-6 product-card-col">
-            <div class="card h-100 border text-center p-2 product-card shadow-none" 
-                 style="cursor: pointer;"
+            <div class="card h-100 border text-center p-2 product-card shadow-none ${isOut ? 'opacity-75 bg-light' : ''}" 
+                 style="cursor: ${isOut ? 'not-allowed' : 'pointer'};"
                  onclick='addToCart(${JSON.stringify(p)})'>
                 <div class="position-relative">
                     <img src="${p.image || 'https://placehold.co/80x80?text=Shop'}" class="img-fluid rounded mb-1" style="height: 75px; object-fit: contain;">
-                    <span class="badge ${p.stock <= 10 ? 'bg-danger' : 'bg-success'} position-absolute top-0 end-0 small">
-                        ${p.stock}
+                    <span class="badge ${badgeClass} position-absolute top-0 end-0 small">
+                        ${badgeText}
                     </span>
                 </div>
-                <div class="fw-bold text-dark text-truncate small">${p.name}</div>
+                <div class="fw-bold text-dark text-truncate small" title="${p.name}">${p.name}</div>
+                ${p.name_bn ? `<div class="text-muted text-truncate" style="font-size: 11px;">${p.name_bn}</div>` : ''}
                 <div class="text-success fw-bold">৳ ${parseFloat(p.price).toFixed(2)}</div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function addToCart(item) {
     let id = parseInt(item.id);
+    let stock = parseInt(item.stock || 0);
+
+    if (stock <= 0) {
+        alert('দুঃখিত! এই পণ্যটির কোনো মজুত অবশিষ্ট নেই (Stock Out)।');
+        return;
+    }
+
     let existing = cart.find(ci => ci.id === id);
 
     if (existing) {
+        if (existing.qty >= stock) {
+            alert('দুঃখিত! বর্তমান মজুত স্টক (' + stock + ') এর বেশি বিক্রি করা সম্ভব নয়।');
+            return;
+        }
         existing.qty += 1;
     } else {
         cart.push({
@@ -480,6 +506,7 @@ function addToCart(item) {
             sku: item.sku || '',
             price: parseFloat(item.price),
             cost_price: parseFloat(item.cost_price || (item.price * 0.8)),
+            stock: stock,
             qty: 1
         });
     }
@@ -490,6 +517,10 @@ function addToCart(item) {
 function updateQty(id, delta) {
     let item = cart.find(ci => ci.id === id);
     if (!item) return;
+    if (delta > 0 && item.qty >= item.stock) {
+        alert('দুঃখিত! বর্তমান মজুত স্টক (' + item.stock + ') এর বেশি বিক্রি করা সম্ভব নয়।');
+        return;
+    }
     item.qty += delta;
     if (item.qty <= 0) {
         cart = cart.filter(ci => ci.id !== id);

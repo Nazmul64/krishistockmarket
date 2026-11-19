@@ -413,7 +413,7 @@
                             দেখানো হচ্ছে {{ $orders->firstItem() }} থেকে {{ $orders->lastItem() }} (মোট {{ $orders->total() }} টি অর্ডার)
                         </div>
                         <div>
-                            {{ $orders->links() }}
+                            {{ $orders->withQueryString()->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 @endif
