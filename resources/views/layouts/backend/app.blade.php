@@ -275,8 +275,8 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="waves-effect waves-light dropdown-toggle header-user-pill"
                                 data-bs-toggle="dropdown" title="User Profile">
-                                <img src="{{ !empty(Auth::user()->avatar) && file_exists(public_path('upload/images/user/' . Auth::user()->avatar)) ? asset('upload/images/user/' . Auth::user()->avatar) : asset('assets/images/avatar/avatar-1.png') }}"
-                                    class="header-avatar-circle" alt="User" />
+                                <img src="{{ !empty(Auth::user()->avatar) && file_exists(public_path('upload/images/user/' . Auth::user()->avatar)) ? asset('upload/images/user/' . Auth::user()->avatar) : asset('assets/images/avatar.png') }}"
+                                    class="header-avatar-circle" alt="User" onerror="this.src='{{ asset('assets/images/avatar.png') }}'" />
                                 <div class="d-none d-md-flex flex-column text-start">
                                     <span class="header-user-name">{{ Auth::user()->name ?? 'Super Admin' }}</span>
                                     <span class="header-user-role">{{ optional(Auth::user()->roleRelation)->name ?? (Auth::user()->role == 'super_admin' ? 'Super Admin' : (Auth::user()->role == 'admin' ? 'HR Manager' : ucfirst(Auth::user()->role))) }}</span>

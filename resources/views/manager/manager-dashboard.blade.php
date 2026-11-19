@@ -274,7 +274,7 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ !empty($m->avatar) && file_exists(public_path('upload/images/user/' . $m->avatar)) ? asset('upload/images/user/' . $m->avatar) : asset('assets/images/avatar/avatar-1.png') }}" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;" alt="">
+                                                <img src="{{ !empty($m->avatar) && file_exists(public_path('upload/images/user/' . $m->avatar)) ? asset('upload/images/user/' . $m->avatar) : asset('assets/images/avatar.png') }}" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;" alt="Avatar" onerror="this.src='{{ asset('assets/images/avatar.png') }}'">
                                                 <div>
                                                     <span class="fw-bold text-dark d-block">{{ $m->name }}</span>
                                                     <small class="text-muted">{{ $m->username }}</small>

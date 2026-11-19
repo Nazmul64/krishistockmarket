@@ -719,7 +719,7 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ !empty($u->avatar) && file_exists(public_path('upload/images/user/' . $u->avatar)) ? asset('upload/images/user/' . $u->avatar) : asset('assets/images/avatar/avatar-1.png') }}" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;" alt="">
+                                                <img src="{{ !empty($u->avatar) && file_exists(public_path('upload/images/user/' . $u->avatar)) ? asset('upload/images/user/' . $u->avatar) : asset('assets/images/avatar.png') }}" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;" alt="Avatar" onerror="this.src='{{ asset('assets/images/avatar.png') }}'">
                                                 <span class="fw-bold text-dark">{{ $u->name }}</span>
                                             </div>
                                         </td>
