@@ -355,6 +355,280 @@
                             </li>
                             <!-- ================================= /Common sidebar menu  Item-->
 
+                            <!-- ========================================================================= -->
+                            <!-- 1. Super Shop & Multi-Branch Retail Chain Ecosystem (Shwapno Model) -->
+                            <!-- ========================================================================= -->
+                            @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->role == 'manager' || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('manager'))
+                                <li class="header text-uppercase text-success fw-bold" style="letter-spacing: 0.5px;">
+                                    <i class="fa fa-shopping-bag text-success me-1"></i> সুপারশপ ও রিটেল চেইন (Multi-Branch POS)
+                                </li>
+                                <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'admin.supershop') ? 'menu-open active' : '' }}">
+                                    <a href="#">
+                                        <i class="ti-layout-grid2 text-success"></i>
+                                        <span>সুপারশপ ও মাল্টি-ব্রাঞ্চ</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-right pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu {{ Str::contains(optional(Request::route())->getName(), 'admin.supershop') ? 'd-block' : '' }}">
+                                        <!-- 1. Central Dashboard -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.dashboard' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.dashboard') }}">
+                                                <i class="ti-dashboard text-success"></i> <span>সেন্ট্রাল ড্যাশবোর্ড (Dashboard)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 2. Reports & Analytics (Branch, Date, Month & Product Breakdown) -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.reports' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.reports') }}">
+                                                <i class="ti-bar-chart text-info"></i> <span>ব্রাঞ্চ বিক্রয়, তারিখ ও লাভ-ক্ষতি</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 3. POS Terminal (Direct Billing) -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.pos' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.pos') }}">
+                                                <i class="ti-shopping-cart-full text-warning"></i> <span>POS কাউন্টার বিলিং (Terminal)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 4. Branch Management -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.branches' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.branches') }}">
+                                                <i class="ti-home text-primary"></i> <span>ব্রাঞ্চসমূহ ও ম্যানেজার তালিকা</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 5. Branch Inventory -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.inventory' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.inventory') }}">
+                                                <i class="ti-archive text-info"></i> <span>ব্রাঞ্চ স্টক ও ইনভেন্টরি (Inventory)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 6. Branch Expenses (Electricity, Rent, Wages) -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.expenses' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.expenses') }}">
+                                                <i class="ti-money text-danger"></i> <span>ব্রাঞ্চ পরিচালন ব্যয় (বিদ্যুৎ/ভাড়া)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 7. POS Sales History -->
+                                        <li class="{{ in_array(optional(Request::route())->getName(), ['admin.supershop.sales', 'admin.supershop.sales.show']) ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.sales') }}">
+                                                <i class="ti-receipt text-primary"></i> <span>POS বিক্রয় চালান (Sales & Return)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 8. Stock Transfers -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.transfers' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.transfers') }}">
+                                                <i class="ti-exchange-vertical text-warning"></i> <span>ব্রাঞ্চ ট্রান্সফার (Transfers)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 9. Central Procurement & Suppliers -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.procurement' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.procurement') }}">
+                                                <i class="ti-truck text-success"></i> <span>সাপ্লায়ার ও ক্রয় (PO & GRN)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 10. Cashier Shifts -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.shifts' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.shifts') }}">
+                                                <i class="ti-lock text-danger"></i> <span>ক্যাশিয়ার শিফট ও ড্রয়ার (Shifts)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 11. Stock Movements -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.inventory.movements' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.inventory.movements') }}">
+                                                <i class="ti-time text-secondary"></i> <span>স্টক অডিট ট্রেইল (Movements)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+
+                            <!-- ========================================================================= -->
+                            <!-- 2. Monthly Bazaar Management (মাসিক বাজার) -->
+                            <!-- ========================================================================= -->
+                            @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin') || Auth::user()->hasPermission('monthly_bazaar'))
+                                <li class="header text-uppercase text-warning fw-bold" style="letter-spacing: 0.5px;">
+                                    <i class="fa fa-shopping-basket text-warning me-1"></i> মাসিক বাজার ম্যানেজমেন্ট
+                                </li>
+                                <li class="treeview {{ (Str::contains(optional(Request::route())->getName(), 'admin.monthly_bazaar') || Str::contains(optional(Request::route())->getName(), 'admin.agent_points')) ? 'menu-open active' : '' }}">
+                                    <a href="#">
+                                        <i class="ti-shopping-cart text-warning"></i>
+                                        <span>মাসিক বাজার হিসাব ও প্যাকেজ</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-right pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu {{ (Str::contains(optional(Request::route())->getName(), 'admin.monthly_bazaar') || Str::contains(optional(Request::route())->getName(), 'admin.agent_points')) ? 'd-block' : '' }}">
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.monthly_bazaar.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.monthly_bazaar.index') }}">
+                                                <i class="ti-package text-info"></i>
+                                                <span>মাসিক বাজার প্যাকেজসমূহ</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.monthly_bazaar.orders' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.monthly_bazaar.orders') }}">
+                                                <i class="ti-receipt text-success"></i>
+                                                <span>অর্ডার রিকোয়েস্ট ও মোট চাহিদা</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.monthly_bazaar.distribution_reports' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.monthly_bazaar.distribution_reports') }}">
+                                                <i class="ti-bar-chart text-primary"></i>
+                                                <span>এলাকাভিত্তিক ডিস্ট্রিবিউশন হিসাব</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.agent_points.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.agent_points.index') }}">
+                                                <i class="fa fa-map-marker text-danger"></i>
+                                                <span>এজেন্ট পয়েন্ট ডেলিভারি হাব</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+
+                            <!-- ========================================================================= -->
+                            <!-- 3. Branch Staff, Attendance & Payroll (HRM System) -->
+                            <!-- ========================================================================= -->
+                            @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin') || Auth::user()->hasPermission('hrm_management'))
+                                <li class="header text-uppercase text-danger fw-bold" style="letter-spacing: 0.5px;">
+                                    <i class="fa fa-users text-danger me-1"></i> ব্রাঞ্চ কর্মী ও পে-রোল (HRM)
+                                </li>
+                                <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'admin.hrm') ? 'active menu-open' : '' }}">
+                                    <a href="#">
+                                        <i class="ti-user text-danger"></i>
+                                        <span>ব্রাঞ্চ স্টাফ ও বেতন (HRM)</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-right pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu {{ str_contains(optional(Request::route())->getName() ?? '', 'admin.hrm') ? 'd-block' : '' }}">
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.dashboard' ? 'active' : '' }}"><a href="{{ route('admin.hrm.dashboard') }}"><i class="ti-dashboard text-success"></i> <span>HRM ড্যাশবোর্ড</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.employees.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.employees.index') }}"><i class="ti-id-badge text-info"></i> <span>ব্রাঞ্চ স্টাফ ও কর্মী তালিকা</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.attendance.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.attendance.index') }}"><i class="ti-alarm-clock text-danger"></i> <span>দৈনিক কর্মী উপস্থিতি</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.payroll.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.payroll.index') }}"><i class="ti-money text-success"></i> <span>মাসিক পে-রোল & বেতন</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.loans.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.loans.index') }}"><i class="ti-hand-point-right text-warning"></i> <span>বেতন অগ্রিম (Advances)</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.leave.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.leave.index') }}"><i class="ti-calendar text-dark"></i> <span>ছুটি অনুমোদন (Leave)</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.branches.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.branches.index') }}"><i class="ti-location-pin text-info"></i> <span>ব্রাঞ্চসমূহ ও লোকেশন</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.departments.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.departments.index') }}"><i class="ti-layers text-primary"></i> <span>ডিপার্টমেন্টসমূহ</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.designations.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.designations.index') }}"><i class="ti-medall text-warning"></i> <span>পদবীসমূহ</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.shifts.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.shifts.index') }}"><i class="ti-time text-secondary"></i> <span>শিফট শিডিউল</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.recruitment.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.recruitment.index') }}"><i class="ti-briefcase text-info"></i> <span>নিয়োগ ও রিক্রুটমেন্ট</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.performance.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.performance.index') }}"><i class="ti-star text-warning"></i> <span>পারফরম্যান্স রিভিউ</span></a></li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.hrm.reports.index' ? 'active' : '' }}"><a href="{{ route('admin.hrm.reports.index') }}"><i class="ti-bar-chart text-primary"></i> <span>এইচআর রিপোর্টস</span></a></li>
+                                    </ul>
+                                </li>
+                            @endif
+
+                            <!-- ========================================================================= -->
+                            <!-- 4. E-commerce Management (সকল প্রোডাক্ট, ক্যাটাগরি ও অনলাইন সেলস) -->
+                            <!-- ========================================================================= -->
+                            @if (Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                                <li class="header text-uppercase text-info fw-bold" style="letter-spacing: 0.5px;">
+                                    <i class="fa fa-shopping-cart text-info me-1"></i> ই-কমার্স শপ ম্যানেজমেন্ট
+                                </li>
+                                <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'admin.ecommerce') ? 'menu-open active' : '' }}">
+                                    <a href="#">
+                                        <i class="ti-shopping-cart text-info"></i>
+                                        <span>ই-কমার্স পণ্য ও ক্যাটালগ</span>
+                                        <span class="pull-right-container">
+                                            <span class="badge bg-warning rounded-pill font-size-10 px-2 py-0">Shop Pro</span>
+                                            <i class="fa fa-angle-right pull-right ms-1"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu {{ Str::contains(optional(Request::route())->getName(), 'admin.ecommerce') ? 'd-block' : '' }}">
+                                        <!-- 1. Dashboard -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.dashboard' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.dashboard') }}">
+                                                <i class="ti-dashboard text-primary"></i> <span>ড্যাশবোর্ড (Dashboard)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 2. Products -->
+                                        <li class="{{ in_array(optional(Request::route())->getName(), ['admin.ecommerce.products', 'admin.ecommerce.products.edit']) ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.products') }}">
+                                                <i class="ti-package text-success"></i> <span>সকল পণ্য (All Products)</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.products.create' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.products.create') }}">
+                                                <i class="ti-plus text-primary"></i> <span>নতুন পণ্য যুক্ত করুন (Add)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 3. Categories & Brands -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.categories' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.categories') }}">
+                                                <i class="ti-layers-alt text-success"></i> <span>মেইন ক্যাটাগরি (Categories)</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.subcategories' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.subcategories') }}">
+                                                <i class="ti-split-v text-info"></i> <span>সাব-ক্যাটাগরি (Subcategories)</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.brands' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.brands') }}">
+                                                <i class="ti-bookmark-alt text-warning"></i> <span>ব্র্যান্ডসমূহ (Brands)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 4. Orders -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.orders' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.orders') }}">
+                                                <i class="ti-receipt text-danger"></i> <span>অনলাইন অর্ডারসমূহ (Orders)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 5. Sliders & Banners -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.sliders' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.sliders') }}">
+                                                <i class="ti-image text-info"></i> <span>হোমপেজ স্লাইডার (Sliders)</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.banners' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.banners') }}">
+                                                <i class="ti-layout-slider text-primary"></i> <span>অফার ব্যানার (Banners)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 6. Coupons -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.coupons' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.coupons') }}">
+                                                <i class="ti-gift text-danger"></i> <span>কুপন ও ডিসকাউন্ট (Coupons)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 7. Reports -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.reports' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.reports') }}">
+                                                <i class="ti-bar-chart text-info"></i> <span>বিক্রয় ও অর্ডার রিপোর্ট (Reports)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 8. Settings & Preview -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.settings' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.ecommerce.settings') }}">
+                                                <i class="ti-settings text-muted"></i> <span>ই-কমার্স সেটিংস (Settings)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('products.index') }}" target="_blank">
+                                                <i class="ti-new-window text-danger"></i> <span>সুপারশপ প্রিভিউ (Live)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+
                         <!-- ================================= RBAC Management menu (Super Admin & Admin) -->
                         @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
                             <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">RBAC & Access Control</li>
@@ -719,290 +993,6 @@
                             </li>
                             @endif
 
-                            <!-- ================================= Complete Independent E-commerce Module ================================= -->
-                            @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
-                                <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">
-                                    <i class="fa fa-shopping-cart text-warning me-1"></i> ই-কমার্স মডিউল (E-commerce Management)
-                                </li>
-                                <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'admin.ecommerce') ? 'menu-open active' : '' }}">
-                                    <a href="#">
-                                        <i class="ti-shopping-cart text-warning"></i>
-                                        <span>ই-কমার্স ম্যানেজমেন্ট</span>
-                                        <span class="pull-right-container">
-                                            <span class="badge bg-warning rounded-pill font-size-10 px-2 py-0">Shop Pro</span>
-                                            <i class="fa fa-angle-right pull-right ms-1"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu {{ Str::contains(optional(Request::route())->getName(), 'admin.ecommerce') ? 'd-block' : '' }}">
-                                        <!-- 1. Dashboard -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.dashboard' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.dashboard') }}">
-                                                <i class="ti-dashboard text-primary"></i> <span>ড্যাশবোর্ড (Dashboard)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 2. Sliders & Banners -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.sliders' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.sliders') }}">
-                                                <i class="ti-image text-info"></i> <span>হোমপেজ স্লাইডার (Sliders)</span>
-                                            </a>
-                                        </li>
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.banners' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.banners') }}">
-                                                <i class="ti-layout-slider text-primary"></i> <span>অফার ব্যানার (Banners)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 3. Category Management -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.categories' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.categories') }}">
-                                                <i class="ti-layers-alt text-success"></i> <span>মেইন ক্যাটাগরি (Categories)</span>
-                                            </a>
-                                        </li>
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.subcategories' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.subcategories') }}">
-                                                <i class="ti-split-v text-info"></i> <span>সাব-ক্যাটাগরি (Subcategories)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 4. Brands -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.brands' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.brands') }}">
-                                                <i class="ti-bookmark-alt text-warning"></i> <span>ব্র্যান্ডস (Brands)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 5. Attributes -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.attributes' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.attributes') }}">
-                                                <i class="ti-palette text-danger"></i> <span>সাইজ ও কালার অ্যাট্রিবিউট</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 6. Product Management -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.products' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.products') }}">
-                                                <i class="ti-package text-primary"></i> <span>সকল পণ্য (All Products)</span>
-                                            </a>
-                                        </li>
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.products.create' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.products.create') }}">
-                                                <i class="ti-plus text-success"></i> <span>নতুন পণ্য যোগ (Add Product)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 7. Inventory -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.inventory' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.inventory') }}">
-                                                <i class="ti-archive text-info"></i> <span>ইনভেন্টরি ও স্টক (Inventory)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 8. Offers & Campaigns -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.combo_offers' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.combo_offers') }}">
-                                                <i class="ti-gift text-warning"></i> <span>কম্বো অফার (Combo Offers)</span>
-                                            </a>
-                                        </li>
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.coupons' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.coupons') }}">
-                                                <i class="ti-ticket text-danger"></i> <span>কুপন ডিসকাউন্ট (Coupons)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 9. Orders -->
-                                        <li class="{{ in_array(optional(Request::route())->getName(), ['admin.ecommerce.orders', 'admin.ecommerce.orders.show', 'admin.ecommerce.orders.invoice']) ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.orders') }}">
-                                                <i class="ti-receipt text-success"></i> <span>অর্ডার ম্যানেজমেন্ট (Orders)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- Courier Settings (Steadfast & Pathao) -->
-                                        <li class="{{ in_array(optional(Request::route())->getName(), ['admin.ecommerce.courier.steadfast', 'admin.ecommerce.courier.pathao']) ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.courier.steadfast') }}">
-                                                <i class="fa fa-truck text-success"></i> <span>কুরিয়ার সেটিংস (Couriers)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 10. Customers -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.customers' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.customers') }}">
-                                                <i class="ti-user text-primary"></i> <span>কাস্টমার লিস্ট (Customers)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 11. Shipping -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.shipping' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.shipping') }}">
-                                                <i class="ti-truck text-secondary"></i> <span>শিপিং ও ডেলিভারি এরিয়া</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 12. Payments -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.payments' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.payments') }}">
-                                                <i class="ti-wallet text-success"></i> <span>পেমেন্ট গেটওয়ে ও বিকাশ/নগদ</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 13. Reports -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.reports' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.reports') }}">
-                                                <i class="ti-bar-chart text-info"></i> <span>বিক্রয় ও অর্ডার রিপোর্ট (Reports)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 14. Settings -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.ecommerce.settings' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.ecommerce.settings') }}">
-                                                <i class="ti-settings text-muted"></i> <span>ই-কমার্স সেটিংস (Settings)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 15. Live Shop Preview -->
-                                        <li>
-                                            <a href="{{ route('products.index') }}" target="_blank">
-                                                <i class="ti-new-window text-danger"></i> <span>সুপারশপ প্রিভিউ (Live)</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endif
-
-                            <!-- ========================================================================= -->
-                            <!-- Super Shop & Multi-Branch Retail Chain Ecosystem (Shwapno Model) -->
-                            <!-- ========================================================================= -->
-                            @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
-                                <li class="header text-uppercase text-success fw-bold" style="letter-spacing: 0.5px;">
-                                    <i class="fa fa-shopping-bag text-success me-1"></i> সুপারশপ ও রিটেল চেইন (Multi-Branch POS)
-                                </li>
-                                <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'admin.supershop') ? 'menu-open active' : '' }}">
-                                    <a href="#">
-                                        <i class="ti-layout-grid2 text-success"></i>
-                                        <span>সুপারশপ ও মাল্টি-ব্রাঞ্চ</span>
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-right pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu {{ Str::contains(optional(Request::route())->getName(), 'admin.supershop') ? 'd-block' : '' }}">
-                                        <!-- 1. Central Dashboard -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.dashboard' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.dashboard') }}">
-                                                <i class="ti-dashboard text-success"></i> <span>সেন্ট্রাল ড্যাশবোর্ড (Dashboard)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 2. POS Terminal (Direct Billing) -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.pos' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.pos') }}">
-                                                <i class="ti-shopping-cart-full text-warning"></i> <span>POS কাউন্টার বিলিং (Terminal)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 3. Branch Management -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.branches' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.branches') }}">
-                                                <i class="ti-home text-primary"></i> <span>ব্রাঞ্চ তালিকা (All Branches)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 4. Branch Inventory -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.inventory' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.inventory') }}">
-                                                <i class="ti-archive text-info"></i> <span>ব্রাঞ্চ স্টক ও ইনভেন্টরি (Inventory)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 5. Stock Movements -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.inventory.movements' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.inventory.movements') }}">
-                                                <i class="ti-time text-secondary"></i> <span>স্টক অডিট ট্রেইল (Movements)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 6. Cashier Shifts -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.shifts' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.shifts') }}">
-                                                <i class="ti-lock text-danger"></i> <span>ক্যাশিয়ার শিফট ও ড্রয়ার (Shifts)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 7. Central Procurement & Suppliers -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.procurement' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.procurement') }}">
-                                                <i class="ti-truck text-success"></i> <span>সাপ্লায়ার ও ক্রয় (PO & GRN)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 8. Stock Transfers -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.transfers' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.transfers') }}">
-                                                <i class="ti-exchange-vertical text-warning"></i> <span>ব্রাঞ্চ-টু-ব্রাঞ্চ ট্রান্সফার (Transfers)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 9. POS Sales History -->
-                                        <li class="{{ in_array(optional(Request::route())->getName(), ['admin.supershop.sales', 'admin.supershop.sales.show']) ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.sales') }}">
-                                                <i class="ti-receipt text-primary"></i> <span>POS বিক্রয় চালান (Sales & Return)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 10. Branch Expenses -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.expenses' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.expenses') }}">
-                                                <i class="ti-money text-danger"></i> <span>ব্রাঞ্চ পরিচালন ব্যয় (Expenses)</span>
-                                            </a>
-                                        </li>
-
-                                        <!-- 11. Reports & Analytics -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.reports' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.reports') }}">
-                                                <i class="ti-bar-chart text-info"></i> <span>লাভ-ক্ষতি ও পারফরম্যান্স (Reports)</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endif
-
-                            @if(Auth::user()->hasPermission('monthly_bazaar'))
-                            <li class="header">মাসিক বাজার Management</li>
-                            <li class="treeview {{ (optional(Request::route())->getName() == 'admin.monthly_bazaar.index') || (optional(Request::route())->getName() == 'admin.monthly_bazaar.orders') || (optional(Request::route())->getName() == 'admin.monthly_bazaar.distribution_reports') ? 'menu-open' : '' }}">
-                                <a href="#">
-                                    <span>মাসিক বাজার</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-right pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'admin.monthly_bazaar.index') || (optional(Request::route())->getName() == 'admin.monthly_bazaar.orders') || (optional(Request::route())->getName() == 'admin.monthly_bazaar.distribution_reports') ? 'd-block' : '' }}">
-                                    <li class="">
-                                        <a href="{{ route('admin.monthly_bazaar.index') }}">
-                                            <i class="ti-more"></i>
-                                            <span>প্যাকেজসমূহ</span>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="{{ route('admin.monthly_bazaar.orders') }}">
-                                            <i class="ti-more"></i>
-                                            <span>অর্ডার রিকোয়েস্ট ও ডিস্ট্রিবিউশন</span>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="{{ route('admin.monthly_bazaar.distribution_reports') }}">
-                                            <i class="ti-more"></i>
-                                            <span>এলাকা ডিস্ট্রিবিউশন রিপোর্ট</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="{{ (optional(Request::route())->getName() == 'admin.agent_points.index') ? 'active' : '' }}">
-                                <a href="{{ route('admin.agent_points.index') }}">
-                                    <i class="fa fa-map-marker text-danger"></i>
-                                    <span>এজেন্ট পয়েন্ট</span>
-                                </a>
-                            </li>
-                            @endif
-
                             @if(Auth::user()->hasPermission('user_financial'))
                             <li class="header">User Managment</li>
                             <li class="treeview {{ (optional(Request::route())->getName() == 'alluser') || (optional(Request::route())->getName() == 'admin.deposit.index') || (optional(Request::route())->getName() == 'admin.reports.index') ? 'menu-open' : '' }}">
@@ -1060,36 +1050,7 @@
                             </li>
                             @endif
 
-                            @if(Auth::user()->hasPermission('hrm_management'))
-                            <li class="header">HRM Management System</li>
-                            <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'admin.hrm') ? 'active menu-open' : '' }}">
-                                <a href="#">
-                                    <i class="ti-user text-danger"></i>
-                                    <span>HRM সিস্টেম</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-right pull-right"></i>
-                                    </span>
-                                </a>
-                                <ul class="treeview-menu {{ str_contains(optional(Request::route())->getName() ?? '', 'admin.hrm') ? 'd-block' : '' }}">
-                                    <li><a href="{{ route('admin.hrm.dashboard') }}"><i class="ti-dashboard text-success"></i> <span>HRM ড্যাশবোর্ড</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.employees.index') }}"><i class="ti-id-badge text-info"></i> <span>কর্মী ডিরেক্টরি</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.departments.index') }}"><i class="ti-layers text-primary"></i> <span>ডিপার্টমেন্টসমূহ</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.designations.index') }}"><i class="ti-medall text-warning"></i> <span>পদবীসমূহ</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.branches.index') }}"><i class="ti-location-pin text-info"></i> <span>ব্রাঞ্চসমূহ</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.shifts.index') }}"><i class="ti-time text-secondary"></i> <span>শিফট শিডিউল</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.attendance.index') }}"><i class="ti-alarm-clock text-danger"></i> <span>উপস্থিতি রেজিস্টার</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.leave.index') }}"><i class="ti-calendar text-dark"></i> <span>ছুটি অনুমোদন</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.payroll.index') }}"><i class="ti-money text-success"></i> <span>পে-রোল & বেতন</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.loans.index') }}"><i class="ti-hand-point-right text-warning"></i> <span>লোন & এডভান্স</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.recruitment.index') }}"><i class="ti-briefcase text-info"></i> <span>নিয়োগ ও রিক্রুটমেন্ট</span></a></li>
-                                    <li class="{{ Str::contains(optional(Request::route())->getName(), 'admin.career') ? 'active' : '' }}"><a href="{{ route('admin.career.index') }}"><i class="ti-id-badge text-success"></i> <span>ক্যারিয়ার আবেদনসমূহ</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.performance.index') }}"><i class="ti-star text-warning"></i> <span>পারফরম্যান্স রিভিউ</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.assets.index') }}"><i class="ti-desktop text-secondary"></i> <span>কোম্পানি অ্যাসেট</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.announcements.index') }}"><i class="ti-announcement text-danger"></i> <span>ঘোষণা & নোটিশ</span></a></li>
-                                    <li><a href="{{ route('admin.hrm.reports.index') }}"><i class="ti-bar-chart text-primary"></i> <span>এইচআর রিপোর্টস</span></a></li>
-                                </ul>
-                            </li>
-                            @endif
+                            
 
                             @if(Auth::user()->hasPermission('employee_agent'))
                             <li class="header">Employee Managment</li>

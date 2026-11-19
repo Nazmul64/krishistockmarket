@@ -10,6 +10,8 @@ class HrmBranch extends Model
 {
     use HasFactory;
 
+    protected $table = 'branches';
+
     protected $guarded = [];
 
     public function manager()
