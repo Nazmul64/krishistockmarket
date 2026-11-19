@@ -72,8 +72,15 @@ class AdminDashboardController extends Controller
         // Net Platform Vault Reserve (অনুমোদিত জমা - অনুমোদিত উত্তোলন)
         $netVaultBalance = $totalDepositsApproved - $totalWithdrawApproved;
 
+        // 5. Super Shop & Multi-Branch Retail Operations (সুপারশপ ও শাখা সেলস হিসাব)
+        $superShopBranchesCount = \App\Models\SuperShop\Branch::count();
+        $superShopTodaySales = (float) \App\Models\SuperShop\PosSale::whereDate('sale_time', today())->where('sale_status', 'completed')->sum('grand_total');
+        $superShopTotalSales = (float) \App\Models\SuperShop\PosSale::where('sale_status', 'completed')->sum('grand_total');
+        $superShopTodayInvoices = \App\Models\SuperShop\PosSale::whereDate('sale_time', today())->where('sale_status', 'completed')->count();
+        $superShopTotalInvoices = \App\Models\SuperShop\PosSale::where('sale_status', 'completed')->count();
+
         // Grand Platform Business Turnover (সর্বমোট প্ল্যাটফর্ম লেনদেন ও টার্নওভার)
-        $grandTotalTurnover = $bazaarTotalSales + $totalStockBuy + $propertyBookingVolume + $totalDepositsApproved;
+        $grandTotalTurnover = $bazaarTotalSales + $totalStockBuy + $propertyBookingVolume + $totalDepositsApproved + $superShopTotalSales;
 
         // Recent Financial Activities for Quick Audit
         $recentBazaarOrders = MonthlyBazaarOrder::with('user')->orderBy('id', 'desc')->take(5)->get();
@@ -135,7 +142,12 @@ class AdminDashboardController extends Controller
             'activeAlertsCount',
             'roles',
             'recentAuditLogs',
-            'recentUsers'
+            'recentUsers',
+            'superShopBranchesCount',
+            'superShopTodaySales',
+            'superShopTotalSales',
+            'superShopTodayInvoices',
+            'superShopTotalInvoices'
         ));
     }
 }

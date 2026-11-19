@@ -138,6 +138,80 @@
             </div>
             @endif
 
+            <!-- 1. Manager Assigned Branch Hero Banner & Quick POS Launch -->
+            @if(isset($branch) && $branch)
+            <div class="card border-0 shadow-sm rounded-4 mb-4 p-4 bg-white">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-4 border overflow-hidden d-flex align-items-center justify-content-center bg-light shadow-sm" style="width: 64px; height: 64px; min-width: 64px;">
+                            @if($branch->logo && file_exists(public_path($branch->logo)))
+                                <img src="{{ asset($branch->logo) }}" alt="{{ $branch->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <i class="ti-home text-success fs-1"></i>
+                            @endif
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                <h4 class="fw-bold text-dark mb-0">{{ $branch->name }}</h4>
+                                <span class="badge bg-dark fw-bold">{{ $branch->code }}</span>
+                                <span class="badge bg-success-light text-success fw-bold">সক্রিয় শাখা</span>
+                            </div>
+                            <div class="text-muted small">
+                                <i class="ti-location-pin text-danger me-1"></i>{{ $branch->address }}
+                                @if($branch->phone)
+                                    <span class="mx-2">•</span><i class="ti-mobile text-success me-1"></i>{{ $branch->phone }}
+                                @endif
+                                <span class="mx-2">•</span><i class="ti-time text-info me-1"></i>{{ substr($branch->opening_time, 0, 5) }} - {{ substr($branch->closing_time, 0, 5) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ route('admin.supershop.pos', ['branch_id' => $branch->id]) }}" class="btn btn-success fw-bold shadow-sm px-3 py-2">
+                            <i class="ti-shopping-cart me-1"></i> POS কাউন্টার টার্মিনাল খুলুন
+                        </a>
+                        <a href="{{ route('admin.supershop.inventory', ['branch_id' => $branch->id]) }}" class="btn btn-outline-info fw-bold px-3 py-2">
+                            <i class="ti-archive me-1"></i> ব্রাঞ্চ ইনভেন্টরি ও পণ্য ({{ number_format($branchInventoryCount ?? 0) }})
+                        </a>
+                        <a href="{{ route('admin.supershop.sales') }}" class="btn btn-outline-primary fw-bold px-3 py-2">
+                            <i class="ti-receipt me-1"></i> বিক্রয় হিস্ট্রি
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Branch Quick KPI Row -->
+                <div class="row g-3 mt-3 pt-3 border-top">
+                    <div class="col-xl-3 col-md-6 col-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <div class="text-muted smaller fw-bold text-uppercase">আজকের বিক্রয় (Today's Sales)</div>
+                            <div class="fs-4 fw-bold text-success mt-1">৳ {{ number_format($branchTodaySales ?? 0, 2) }}</div>
+                            <div class="smaller text-muted mt-1">{{ $branchTodayInvoices ?? 0 }} টি চালান সম্পন্ন</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <div class="text-muted smaller fw-bold text-uppercase">সর্বমোট বিক্রয় (Total Revenue)</div>
+                            <div class="fs-4 fw-bold text-dark mt-1">৳ {{ number_format($branchTotalSales ?? 0, 2) }}</div>
+                            <div class="smaller text-muted mt-1">{{ $branchTotalInvoices ?? 0 }} টি সর্বমোট চালান</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <div class="text-muted smaller fw-bold text-uppercase">মোট ইনভেন্টরি পণ্য (Catalog)</div>
+                            <div class="fs-4 fw-bold text-primary mt-1">{{ number_format($branchInventoryCount ?? 0) }} <span class="fs-6 fw-normal text-muted">টি পণ্য</span></div>
+                            <div class="smaller text-muted mt-1">১০০% ক্যাটালগ সিঙ্কড</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <div class="text-muted smaller fw-bold text-uppercase">ব্রাঞ্চ স্ট্যাটাস</div>
+                            <div class="fs-4 fw-bold text-info mt-1"><i class="fa fa-check-circle text-success me-1"></i>অনলাইন</div>
+                            <div class="smaller text-muted mt-1">বিলিং টার্মিনাল প্রস্তুত</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Top 4 Stat KPI Cards (Screenshot matching style) -->
             <div class="row g-3">
                 <!-- 1. Team Members -->
@@ -351,6 +425,69 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Recent POS Sales Table for this Branch -->
+            @if(isset($recentBranchSales) && $recentBranchSales->isNotEmpty())
+            <div class="row g-3 mt-1">
+                <div class="col-12">
+                    <div class="ch-card p-0">
+                        <div class="p-4 border-bottom border-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h5 class="fw-bold text-dark mb-0 font-size-16">
+                                <i class="fa fa-shopping-basket text-success me-2"></i> সাম্প্রতিক ব্রাঞ্চ বিক্রয় চালান (Recent POS Sales)
+                            </h5>
+                            <a href="{{ route('admin.supershop.sales') }}" class="btn btn-xs btn-outline-primary rounded-pill px-3">
+                                সকল বিক্রয় হিস্ট্রি <i class="fa fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table ch-table">
+                                <thead>
+                                    <tr>
+                                        <th>চালান নং</th>
+                                        <th>গ্রাহকের নাম ও ফোন</th>
+                                        <th>পেমেন্ট মেথড</th>
+                                        <th class="text-end">মোট মূল্য (Grand Total)</th>
+                                        <th class="text-center">স্ট্যাটাস</th>
+                                        <th>তারিখ ও সময়</th>
+                                        <th class="text-end">রসিদ / অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($recentBranchSales as $sale)
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold text-dark">{{ $sale->invoice_no }}</span>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-dark">{{ $sale->customer_name ?: 'Walk-in Customer' }}</div>
+                                            <small class="text-muted">{{ $sale->customer_phone ?: 'N/A' }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="ch-pill ch-pill-blue">{{ ucfirst($sale->payment_method) }}</span>
+                                        </td>
+                                        <td class="text-end fw-bold text-success fs-6">
+                                            ৳ {{ number_format($sale->grand_total, 2) }}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="ch-pill ch-pill-green">{{ ucfirst($sale->sale_status) }}</span>
+                                        </td>
+                                        <td class="text-muted small">
+                                            {{ $sale->sale_time ? \Carbon\Carbon::parse($sale->sale_time)->format('d M Y, h:i A') : $sale->created_at->format('d M Y, h:i A') }}
+                                        </td>
+                                        <td class="text-end">
+                                            <a href="{{ route('admin.supershop.pos.receipt', $sale->id) }}" class="btn btn-xs btn-outline-info rounded-pill px-3" target="_blank">
+                                                <i class="ti-printer me-1"></i> রসিদ
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
         </div>
     </div>

@@ -7,6 +7,9 @@ use App\Models\AuditLog;
 use App\Models\HRM\HrmAttendance;
 use App\Models\HRM\HrmEmployeeProfile;
 use App\Models\HRM\HrmLeaveRequest;
+use App\Models\SuperShop\Branch;
+use App\Models\SuperShop\PosSale;
+use App\Models\Shop\ShopProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,12 +26,57 @@ class ManagerDashboardController extends Controller
     {
         $manager = Auth::user();
 
-        // Scope: Own Team / Branch
-        $teamQuery = User::where(function ($q) use ($manager) {
+        // 1. Find Assigned Branch for this Manager
+        $branch = Branch::where('id', $manager->branch_id)
+            ->orWhere('manager_id', $manager->id)
+            ->first();
+
+        if (!$branch) {
+            $branch = Branch::where('status', 'active')->first();
+        }
+
+        // 2. Real-time Branch Retail & POS Metrics
+        $branchTodaySales = 0;
+        $branchTotalSales = 0;
+        $branchTodayInvoices = 0;
+        $branchTotalInvoices = 0;
+        $recentBranchSales = collect();
+        $branchInventoryCount = ShopProduct::where('is_active', true)->count();
+
+        if ($branch) {
+            $branchTodaySales = (float) PosSale::where('branch_id', $branch->id)
+                ->whereDate('sale_time', today())
+                ->where('sale_status', 'completed')
+                ->sum('grand_total');
+
+            $branchTotalSales = (float) PosSale::where('branch_id', $branch->id)
+                ->where('sale_status', 'completed')
+                ->sum('grand_total');
+
+            $branchTodayInvoices = PosSale::where('branch_id', $branch->id)
+                ->whereDate('sale_time', today())
+                ->where('sale_status', 'completed')
+                ->count();
+
+            $branchTotalInvoices = PosSale::where('branch_id', $branch->id)
+                ->where('sale_status', 'completed')
+                ->count();
+
+            $recentBranchSales = PosSale::where('branch_id', $branch->id)
+                ->orderBy('id', 'desc')
+                ->take(6)
+                ->get();
+        }
+
+        // 3. HRM & Team Oversight
+        $teamQuery = User::where(function ($q) use ($manager, $branch) {
             $q->where('manager_id', $manager->id)
               ->orWhere('department_id', $manager->department_id)
               ->orWhere('role', 'employee')
               ->orWhere('role', 'staff');
+            if ($branch) {
+                $q->orWhere('branch_id', $branch->id);
+            }
         });
 
         $teamMembers = $teamQuery->take(10)->get();
@@ -49,6 +97,13 @@ class ManagerDashboardController extends Controller
 
         return view('manager.manager-dashboard', compact(
             'manager',
+            'branch',
+            'branchTodaySales',
+            'branchTotalSales',
+            'branchTodayInvoices',
+            'branchTotalInvoices',
+            'branchInventoryCount',
+            'recentBranchSales',
             'teamMembers',
             'teamCount',
             'todayAttendance',

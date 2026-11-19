@@ -114,7 +114,7 @@
                         </div>
 
                         <!-- Category Filter -->
-                        <div class="col-lg-2 col-md-4 col-6">
+                        <div class="col-lg-2 col-md-3 col-6">
                             <select name="category_id" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="">সকল ক্যাটাগরি (All)</option>
                                 @foreach($categories as $cat)
@@ -125,8 +125,20 @@
                             </select>
                         </div>
 
+                        <!-- Subcategory Filter -->
+                        <div class="col-lg-2 col-md-3 col-6">
+                            <select name="subcategory_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">সকল সাব-ক্যাটাগরি</option>
+                                @foreach($subcategories ?? [] as $subcat)
+                                    <option value="{{ $subcat->id }}" {{ ($selectedSubcatId ?? '') == $subcat->id ? 'selected' : '' }}>
+                                        {{ $subcat->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <!-- Stock Status Filter -->
-                        <div class="col-lg-2 col-md-6 col-6">
+                        <div class="col-lg-2 col-md-3 col-6">
                             <select name="stock_filter" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="all" {{ $stockFilter === 'all' ? 'selected' : '' }}>সকল স্টক স্ট্যাটাস</option>
                                 <option value="in_stock" {{ $stockFilter === 'in_stock' ? 'selected' : '' }}>পর্যাপ্ত স্টক (>10)</option>
@@ -136,7 +148,7 @@
                         </div>
 
                         <!-- Submit & Reset -->
-                        <div class="col-lg-2 col-md-6 col-12 d-flex gap-2">
+                        <div class="col-lg-2 col-md-3 col-6 d-flex gap-2">
                             <button type="submit" class="btn btn-sm btn-primary w-100 fw-bold">
                                 <i class="ti-filter me-1"></i> ফিল্টার
                             </button>
@@ -198,12 +210,24 @@
 
                                         <!-- Category & Brand -->
                                         <td>
-                                            <span class="badge bg-light text-dark border px-2 py-1 mb-1 d-inline-block">
-                                                {{ $inv->category ? $inv->category->name : 'General' }}
-                                            </span>
-                                            @if($inv->brand)
-                                                <div class="small text-muted"><i class="ti-tag me-1"></i>{{ is_string($inv->brand) ? $inv->brand : ($inv->brand->name ?? '') }}</div>
-                                            @endif
+                                            <div class="d-flex flex-wrap gap-1 mb-1">
+                                                <span class="badge bg-light text-dark border px-2 py-1">
+                                                    {{ $inv->category ? $inv->category->name : 'General' }}
+                                                </span>
+                                                @if($inv->subcategory)
+                                                    <span class="badge bg-info-light text-info border-0 px-2 py-1">
+                                                        {{ $inv->subcategory->name }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 small text-muted">
+                                                @if($inv->brand)
+                                                    <span><i class="ti-tag me-1 text-primary"></i>{{ is_string($inv->brand) ? $inv->brand : ($inv->brand->name ?? '') }}</span>
+                                                @endif
+                                                @if($inv->unit || $inv->weight)
+                                                    <span class="badge bg-secondary-light text-secondary border px-1 py-0">{{ $inv->weight ? $inv->weight . ' ' : '' }}{{ $inv->unit }}</span>
+                                                @endif
+                                            </div>
                                         </td>
 
                                         <!-- Cost Price -->

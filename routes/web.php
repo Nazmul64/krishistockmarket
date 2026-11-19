@@ -907,7 +907,7 @@ Route::group(['prefix' => 'admin/ecommerce', 'middleware' => ['auth', 'role:supe
 // =========================================================================
 // Super Shop & Multi-Branch Management Enterprise Module Routes
 // =========================================================================
-Route::group(['prefix' => 'admin/supershop', 'middleware' => ['auth', 'role:super_admin,admin']], function () {
+Route::group(['prefix' => 'admin/supershop', 'middleware' => ['auth', 'role:super_admin,admin,manager']], function () {
     // 1. Central & Branch Executive Dashboard
     Route::get('/dashboard', [\App\Http\Controllers\Admin\SuperShop\SuperShopDashboardController::class, 'index'])->name('admin.supershop.dashboard');
 
@@ -915,6 +915,7 @@ Route::group(['prefix' => 'admin/supershop', 'middleware' => ['auth', 'role:supe
     Route::get('/branches', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'index'])->name('admin.supershop.branches');
     Route::post('/branches/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'store'])->name('admin.supershop.branches.store');
     Route::match(['post', 'put'], '/branches/update/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'update'])->name('admin.supershop.branches.update');
+    Route::post('/branches/reset-manager-password/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'resetManagerPassword'])->name('admin.supershop.branches.reset_password');
     Route::match(['get', 'delete'], '/branches/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'destroy'])->name('admin.supershop.branches.destroy');
 
     // 3. Branch Inventory & Stock Movement

@@ -446,11 +446,29 @@
 
                         <!-- ================================= Manager Dedicated Menu -->
                         @if (Auth::user()->hasRole('manager'))
-                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">ম্যানেজার মেনু</li>
+                            <li class="header text-uppercase font-size-11 fw-bold text-muted px-3 pt-3">ব্রাঞ্চ ম্যানেজার মেনু</li>
                             <li class="{{ optional(Request::route())->getName() == 'manager.dashboard' ? 'menu-open active' : '' }}">
                                 <a href="{{ route('manager.dashboard') }}">
-                                    <i class="ti-briefcase text-primary"></i>
-                                    <span>টিম ড্যাশবোর্ড ও অনুমোদন</span>
+                                    <i class="ti-dashboard text-primary"></i>
+                                    <span>ব্রাঞ্চ ড্যাশবোর্ড ও রিপোর্ট</span>
+                                </a>
+                            </li>
+                            <li class="{{ optional(Request::route())->getName() == 'admin.supershop.pos' ? 'active' : '' }}">
+                                <a href="{{ route('admin.supershop.pos') }}">
+                                    <i class="ti-shopping-cart-full text-success"></i>
+                                    <span>POS বিলিং কাউন্টার</span>
+                                </a>
+                            </li>
+                            <li class="{{ optional(Request::route())->getName() == 'admin.supershop.inventory' ? 'active' : '' }}">
+                                <a href="{{ route('admin.supershop.inventory') }}">
+                                    <i class="ti-archive text-info"></i>
+                                    <span>ব্রাঞ্চ স্টক ও পণ্য তালিকা</span>
+                                </a>
+                            </li>
+                            <li class="{{ optional(Request::route())->getName() == 'admin.supershop.sales' ? 'active' : '' }}">
+                                <a href="{{ route('admin.supershop.sales') }}">
+                                    <i class="ti-receipt text-warning"></i>
+                                    <span>বিক্রয় চালান ও রসিদ</span>
                                 </a>
                             </li>
                         @endif
@@ -854,7 +872,7 @@
                             <!-- ========================================================================= -->
                             <!-- Super Shop & Multi-Branch Retail Chain Ecosystem (Shwapno Model) -->
                             <!-- ========================================================================= -->
-                            @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin')
+                            @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->role == 'manager')
                                 <li class="header text-uppercase text-success fw-bold" style="letter-spacing: 0.5px;">
                                     <i class="fa fa-shopping-bag text-success me-1"></i> সুপারশপ ও রিটেল চেইন (Multi-Branch POS)
                                 </li>

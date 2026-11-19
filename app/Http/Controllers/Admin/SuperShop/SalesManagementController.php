@@ -23,6 +23,13 @@ class SalesManagementController extends Controller
     {
         $branches = Branch::where('status', 'active')->get();
         $selectedBranchId = $request->get('branch_id');
+        $user = Auth::user();
+        if ($user && $user->role === 'manager' && !$selectedBranchId) {
+            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
+            if ($managerBranch) {
+                $selectedBranchId = $managerBranch->id;
+            }
+        }
         $search = trim($request->get('search', ''));
         $paymentMethod = $request->get('payment_method');
         $fromDate = $request->get('from_date');

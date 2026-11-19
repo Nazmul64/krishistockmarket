@@ -10,6 +10,7 @@ use App\Models\SuperShop\StockMovement;
 use App\Models\SuperShop\PosSaleItem;
 use App\Models\Shop\ShopProduct;
 use App\Models\Shop\ShopCategory;
+use App\Models\Shop\ShopSubcategory;
 use App\Models\Shop\ShopOrderItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -35,9 +36,21 @@ class BranchInventoryController extends Controller
             $branches = collect([$defaultBranch]);
         }
 
+        $user = Auth::user();
+        if ($user && $user->role === 'manager') {
+            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
+            $selectedBranchId = $managerBranch ? (int)$request->get('branch_id', $managerBranch->id) : (int)$request->get('branch_id', $branches->first()?->id);
+        } else {
+            $selectedBranchId = (int)$request->get('branch_id', $branches->first()?->id);
+        }
+
         $categories = ShopCategory::where('is_active', true)->orderBy('name', 'asc')->get();
-        $selectedBranchId = (int)$request->get('branch_id', $branches->first()?->id);
+        $subcategories = ShopSubcategory::where('is_active', true)->orderBy('name', 'asc')->get();
+        $brands = ShopProduct::whereNotNull('brand')->where('brand', '!=', '')->distinct()->pluck('brand');
+
         $selectedCatId = $request->get('category_id');
+        $selectedSubcatId = $request->get('subcategory_id');
+        $selectedBrand = $request->get('brand');
         $stockFilter = $request->get('stock_filter', 'all'); // all, in_stock, low_stock, out_of_stock
         if ($request->has('low_stock')) {
             $stockFilter = 'low_stock';
@@ -45,7 +58,7 @@ class BranchInventoryController extends Controller
         $search = trim($request->get('search', ''));
 
         // Query ShopProduct catalog with leftJoin on BranchInventory for the selected branch
-        $query = ShopProduct::with(['category', 'brand'])
+        $query = ShopProduct::with(['category', 'subcategory', 'brand'])
             ->leftJoin('branch_inventories', function ($join) use ($selectedBranchId) {
                 $join->on('shop_products.id', '=', 'branch_inventories.product_id')
                      ->where('branch_inventories.branch_id', '=', $selectedBranchId);
@@ -63,6 +76,17 @@ class BranchInventoryController extends Controller
 
         if ($selectedCatId) {
             $query->where('shop_products.category_id', $selectedCatId);
+        }
+
+        if ($selectedSubcatId) {
+            $query->where('shop_products.subcategory_id', $selectedSubcatId);
+        }
+
+        if ($selectedBrand) {
+            $query->where(function ($q) use ($selectedBrand) {
+                $q->where('shop_products.brand', $selectedBrand)
+                  ->orWhere('shop_products.brand_id', $selectedBrand);
+            });
         }
 
         if ($stockFilter === 'in_stock') {
@@ -98,8 +122,12 @@ class BranchInventoryController extends Controller
         return view('admin.supershop.inventory.index', compact(
             'branches',
             'categories',
+            'subcategories',
+            'brands',
             'selectedBranchId',
             'selectedCatId',
+            'selectedSubcatId',
+            'selectedBrand',
             'stockFilter',
             'search',
             'inventories',

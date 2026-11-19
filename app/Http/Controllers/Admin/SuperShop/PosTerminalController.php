@@ -40,7 +40,13 @@ class PosTerminalController extends Controller
             $branches = collect([$defaultBranch]);
         }
 
-        $selectedBranchId = (int)$request->get('branch_id', $branches->first()?->id);
+        $user = Auth::user();
+        if ($user && $user->role === 'manager') {
+            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
+            $selectedBranchId = $managerBranch ? (int)$request->get('branch_id', $managerBranch->id) : (int)$request->get('branch_id', $branches->first()?->id);
+        } else {
+            $selectedBranchId = (int)$request->get('branch_id', $branches->first()?->id);
+        }
         $selectedBranch = Branch::with('posCounters')->find($selectedBranchId);
 
         $counters = $selectedBranch ? $selectedBranch->posCounters->where('status', 'active') : collect();
@@ -56,7 +62,7 @@ class PosTerminalController extends Controller
         $categories = ShopCategory::where('is_active', true)->orderBy('name', 'asc')->get();
 
         // Initial products available in this branch (ordered by latest from all 4,890 active e-commerce products)
-        $initialProducts = ShopProduct::with(['category', 'brand'])
+        $initialProducts = ShopProduct::with(['category', 'subcategory', 'brand'])
             ->leftJoin('branch_inventories', function ($join) use ($selectedBranchId) {
                 $join->on('shop_products.id', '=', 'branch_inventories.product_id')
                      ->where('branch_inventories.branch_id', '=', $selectedBranchId);
@@ -153,7 +159,7 @@ class PosTerminalController extends Controller
         $branchId = (int)$request->get('branch_id');
         $catId = $request->get('category_id');
 
-        $query = ShopProduct::with(['category', 'brand'])
+        $query = ShopProduct::with(['category', 'subcategory', 'brand'])
             ->leftJoin('branch_inventories', function ($join) use ($branchId) {
                 $join->on('shop_products.id', '=', 'branch_inventories.product_id')
                      ->where('branch_inventories.branch_id', '=', $branchId);
