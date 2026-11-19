@@ -204,6 +204,44 @@ html {
     border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
+/* Mobile Hamburger Toggle Button */
+.mobile-hamburger-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    color: #1e293b !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    padding: 0 !important;
+    margin-right: 8px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.mobile-hamburger-btn i {
+    color: #1e293b !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+.mobile-hamburger-btn:hover,
+.mobile-hamburger-btn:focus,
+.mobile-hamburger-btn:active {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+.mobile-hamburger-btn:hover i,
+.mobile-hamburger-btn:active i {
+    color: #0f172a !important;
+}
+
 /* Header User Profile Button (JIDOX Executive Pill) */
 .header-user-avatar {
     width: 28px !important;
@@ -1124,23 +1162,39 @@ body.sidebar-open .sidebar-overlay {
     }
 
     .mobile-hamburger-btn {
-        width: 38px !important;
-        height: 38px !important;
-        display: flex !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        background: #f1f5f9 !important;
+        border: 1px solid #e2e8f0 !important;
         border-radius: 8px !important;
-        color: #ffffff !important;
+        color: #1e293b !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
+        margin-right: 6px !important;
+        padding: 0 !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    .mobile-hamburger-btn i {
+        color: #1e293b !important;
+        font-size: 17px !important;
+        line-height: 1 !important;
     }
 
     .mobile-hamburger-btn:active,
     .mobile-hamburger-btn:hover {
-        background: #f59e0b !important;
-        color: #ffffff !important;
+        background: #e2e8f0 !important;
+        color: #0f172a !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    .mobile-hamburger-btn:active i,
+    .mobile-hamburger-btn:hover i {
+        color: #0f172a !important;
     }
 
     .main-header .logo {
@@ -1149,6 +1203,15 @@ body.sidebar-open .sidebar-overlay {
         height: 100% !important;
         width: auto !important;
         padding: 0 !important;
+    }
+
+    .main-header .logo img,
+    .main-header .logo-lg img {
+        height: 32px !important;
+        max-height: 34px !important;
+        max-width: 125px !important;
+        width: auto !important;
+        object-fit: contain !important;
     }
 
     .main-header .navbar {
@@ -1182,7 +1245,7 @@ body.sidebar-open .sidebar-overlay {
 
     .main-header .navbar-nav>li>a {
         padding: 4px 6px !important;
-        color: #ffffff !important;
+        color: #475569 !important;
     }
 
     .main-sidebar {

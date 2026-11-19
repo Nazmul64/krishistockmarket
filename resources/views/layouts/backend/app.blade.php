@@ -173,9 +173,9 @@
             <div class="d-flex align-items-center logo-box justify-content-start">
 
                 <!-- Mobile Menu Hamburger Button -->
-                <a href="#" class="waves-effect waves-light nav-link push-btn btn-outline no-border d-inline-block d-md-none mobile-hamburger-btn me-2"
-                    data-toggle="push-menu" role="button" aria-label="Toggle Navigation" title="মেনু খুলুন">
-                    <i class="fa fa-bars font-size-22 text-white"></i>
+                <a href="javascript:void(0);" class="waves-effect waves-light nav-link push-btn btn-outline no-border d-inline-flex d-md-none mobile-hamburger-btn me-2"
+                    id="mobileMenuToggle" role="button" aria-label="Toggle Navigation" title="মেনু খুলুন">
+                    <i class="fa fa-bars font-size-18 text-dark"></i>
                 </a>
 
                 <!-- Logo -->
@@ -334,8 +334,8 @@
                         <small class="text-muted font-size-11">{{ Auth::user()->name ?? 'Administrator' }}</small>
                     </div>
                 </div>
-                <button type="button" class="btn btn-sm btn-outline-light rounded-circle sidebar-mobile-close-btn" id="sidebarMobileCloseBtn" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);" title="মেনু বন্ধ করুন">
-                    <i class="fa fa-times text-white font-size-15"></i>
+                <button type="button" class="btn btn-sm rounded-circle sidebar-mobile-close-btn" id="sidebarMobileCloseBtn" style="width: 32px; height: 32px; min-width: 32px; padding: 0; display: flex; align-items: center; justify-content: center; background: #f1f5f9; border: 1px solid #e2e8f0; color: #334155;" title="মেনু বন্ধ করুন">
+                    <i class="fa fa-times text-dark font-size-14"></i>
                 </button>
             </div>
             <!-- sidebar-->
@@ -1831,6 +1831,13 @@
                     $body.removeClass('sidebar-open');
                 }
 
+                // Mobile Menu Toggle Button (Hamburger)
+                $(document).on('click', '#mobileMenuToggle, .mobile-hamburger-btn', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $body.toggleClass('sidebar-open');
+                });
+
                 // Overlay click/touch closes sidebar
                 if ($overlay.length) {
                     $overlay.on('click touchstart', function (e) {
@@ -1849,7 +1856,7 @@
 
                 // Close drawer when content-wrapper is clicked on mobile
                 $(document).on('click', '.content-wrapper', function () {
-                    if ($(window).width() <= 767 && $body.hasClass('sidebar-open')) {
+                    if ($body.hasClass('sidebar-open')) {
                         closeMobileMenu();
                     }
                 });
