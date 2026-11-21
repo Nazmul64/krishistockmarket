@@ -201,6 +201,18 @@ class FrontendController extends Controller
             'footer_copyright' => setting('footer_copyright') ?: ('© ' . date('Y') . ' ekrishisheba. All Rights Reserved.'),
             'footer_developed_by' => setting('footer_developed_by') ?: 'ekrishisheba',
             'footer_developed_by_url' => setting('footer_developed_by_url') ?: '#',
+            'header_color' => (\class_exists(\App\Models\Ui\UiConfiguration::class) && \App\Models\Ui\UiConfiguration::getActivePublished() && !empty(\App\Models\Ui\UiConfiguration::getActivePublished()->global_colors['header_bg']))
+                ? \App\Models\Ui\UiConfiguration::getActivePublished()->global_colors['header_bg']
+                : (setting('header_bg_color') ?: (setting('header_color') ?: '#ea580c')),
+            'header_bg_color' => (\class_exists(\App\Models\Ui\UiConfiguration::class) && \App\Models\Ui\UiConfiguration::getActivePublished() && !empty(\App\Models\Ui\UiConfiguration::getActivePublished()->global_colors['header_bg']))
+                ? \App\Models\Ui\UiConfiguration::getActivePublished()->global_colors['header_bg']
+                : (setting('header_bg_color') ?: (setting('header_color') ?: '#ea580c')),
+            'button_color' => (\class_exists(\App\Models\Ui\UiConfiguration::class) && \App\Models\Ui\UiConfiguration::getActivePublished() && !empty(\App\Models\Ui\UiConfiguration::getActivePublished()->global_colors['button']))
+                ? \App\Models\Ui\UiConfiguration::getActivePublished()->global_colors['button']
+                : (setting('button_color') ?: '#007e8a'),
+            'button_animation' => setting('button_animation', '1') !== '0' ? '1' : '0',
+            'preloader_status' => setting('preloader_status', '1') !== '0' ? '1' : '0',
+            'why_choose_us_status' => setting('why_choose_us_status', '1') !== '0' ? '1' : '0',
         ];
 
         // Auth state & Navigation URLs
@@ -261,8 +273,55 @@ class FrontendController extends Controller
                 })->values()->all();
         }
 
+        // Centralized Dynamic UI Configuration (Active Template, Dynamic Menus & Homepage Sections)
+        $uiConfigPayload = null;
+        if (\class_exists(\App\Models\Ui\UiConfiguration::class)) {
+            $activeUiConfig = \App\Models\Ui\UiConfiguration::getActivePublished() ?: \App\Models\Ui\UiConfiguration::first();
+            $activeTemplate = $activeUiConfig ? \App\Models\Ui\DesignTemplate::where('slug', $activeUiConfig->active_template_slug)->first() : null;
+            $homeSectionsWeb = \App\Models\Ui\HomepageSection::orderBy('sort_order_web', 'asc')->get();
+            $homeSectionsApp = \App\Models\Ui\HomepageSection::where('is_enabled_app', true)->orderBy('sort_order_app', 'asc')->get();
+            $headerMenu = \App\Models\Ui\NavigationMenu::where('key', 'header_menu')->first();
+            $appBottomMenu = \App\Models\Ui\NavigationMenu::where('key', 'app_bottom_nav')->first();
+
+            $uiConfigPayload = [
+                'active_template' => $activeTemplate ? $activeTemplate->slug : 'template_01_modern_agriculture',
+                'template_name_bn' => $activeTemplate ? $activeTemplate->name_bn : 'মডার্ন এগ্রিকালচার',
+                'template_category' => $activeTemplate ? $activeTemplate->category : 'General',
+                'global_colors' => $activeUiConfig ? $activeUiConfig->global_colors : [],
+                'typography' => $activeUiConfig ? $activeUiConfig->typography : [],
+                'header_config' => $activeUiConfig ? $activeUiConfig->header_config : [],
+                'footer_config' => $activeUiConfig ? $activeUiConfig->footer_config : [],
+                'dark_mode_config' => $activeUiConfig ? $activeUiConfig->dark_mode_config : [],
+                'mobile_app_config' => $activeUiConfig ? $activeUiConfig->mobile_app_config : [],
+                'sections_web' => $homeSectionsWeb,
+                'sections_app' => $homeSectionsApp,
+                'menus' => [
+                    'header_menu' => $headerMenu ? $headerMenu->allItems()->where('is_active', true)->where('show_on_web', true)->get() : [],
+                    'app_bottom_nav' => $appBottomMenu ? $appBottomMenu->allItems()->where('is_active', true)->where('show_on_app', true)->get() : [],
+                ],
+            ];
+        }
+
+        $componentSettings = \class_exists(\App\Models\Ui\UiComponentSetting::class) 
+            ? \App\Models\Ui\UiComponentSetting::getApiPayload() 
+            : [];
+
+        if (!empty($componentSettings)) {
+            $site['contact_section_enabled'] = $componentSettings['contact_section']['enabled'] ?? true;
+            $site['preloader_enabled'] = $componentSettings['preloader']['enabled'] ?? true;
+            $site['product_order_btn_text'] = $componentSettings['product_card']['order_button']['text'] ?? 'Order Now';
+            $site['button_color'] = $componentSettings['global_buttons']['bg_color'] ?? $site['button_color'];
+        }
+
         return [
             'site' => $site,
+            'header_color' => $site['header_color'],
+            'button_color' => $site['button_color'],
+            'button_animation' => $site['button_animation'],
+            'preloader_status' => !empty($componentSettings) && !($componentSettings['preloader']['enabled'] ?? true) ? '0' : $site['preloader_status'],
+            'why_choose_us_status' => $site['why_choose_us_status'],
+            'ui_config' => $uiConfigPayload,
+            'component_settings' => $componentSettings,
             'auth' => $auth,
             'routes' => $routes,
             'sliders' => $sliders,

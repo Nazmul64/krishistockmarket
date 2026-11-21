@@ -51,6 +51,8 @@ class User extends Authenticatable
         'agent_shop_name',
         'agent_type',
         'agent_area',
+        'assigned_agent_point_id',
+        'alt_phone',
         'dealer_id',
         'last_login_at',
         'last_login_ip',
@@ -132,6 +134,21 @@ class User extends Authenticatable
         return $this->hasMany(SupplierPayment::class, 'supplier_id');
     }
 
+    public function monthlyMarketRequests()
+    {
+        return $this->hasMany(MonthlyMarketRequest::class, 'user_id');
+    }
+
+    public function agentPoint()
+    {
+        return $this->hasOne(AgentPoint::class, 'agent_user_id');
+    }
+
+    public function assignedAgentPoint()
+    {
+        return $this->belongsTo(AgentPoint::class, 'assigned_agent_point_id');
+    }
+
     public function permission()
     {
         return $this->hasOne(Permission::class, 'user_id');
@@ -190,6 +207,22 @@ class User extends Authenticatable
     public function shopOrders()
     {
         return $this->hasMany(\App\Models\Shop\ShopOrder::class, 'user_id');
+    }
+
+    public function cardNumber()
+    {
+        return $this->hasOne(CardNumber::class, 'used_by');
+    }
+
+    public function cardHolderCollections()
+    {
+        return $this->hasMany(CardHolderCollection::class, 'user_id');
+    }
+
+    public function getCardNumberAttribute()
+    {
+        $card = CardNumber::where('used_by', $this->id)->value('number');
+        return $card ?? $this->customer_id ?? ('CRD-' . str_pad($this->id, 5, '0', STR_PAD_LEFT));
     }
 
     /**
@@ -263,7 +296,8 @@ class User extends Authenticatable
         return match($roleSlug) {
             'super_admin', 'admin', 'chairman', 'managing_director', 'ceo', 'finance_admin', 'investment_manager', 'hr_manager', 'marketing_manager' => '/admin',
             'manager'                        => '/manager',
-            'employee', 'agent'              => '/employee',
+            'agent'                          => '/agent',
+            'employee'                       => '/employee',
             'staff'                          => '/staff',
             'support_lead', 'support_agent'  => '/support',
             'security_analyst'               => '/security',
@@ -284,7 +318,10 @@ class User extends Authenticatable
         if ($this->hasRole('manager')) {
             return 'manager.dashboard';
         }
-        if ($this->hasAnyRole(['employee', 'agent'])) {
+        if ($this->hasRole('agent')) {
+            return 'agent.dashboard';
+        }
+        if ($this->hasRole('employee')) {
             return 'employee.dashboard';
         }
         if ($this->hasRole('staff')) {

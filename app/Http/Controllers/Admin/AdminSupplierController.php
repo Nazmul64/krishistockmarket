@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MonthlyBazaarItem;
 use App\Models\SupplierPayment;
 use App\Models\SupplierProfile;
 use App\Models\SupplierSupply;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminSupplierController extends Controller
 {
@@ -56,10 +58,16 @@ class AdminSupplierController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
+            'representative_name' => 'nullable|string|max:255',
             'phone' => 'required|string|max:20|unique:users,phone',
+            'alt_phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|unique:users,email',
+            'district' => 'nullable|string|max:100',
+            'thana' => 'nullable|string|max:100',
             'district_thana' => 'nullable|string|max:255',
             'address' => 'nullable|string',
+            'business_type' => 'nullable|string|max:100',
+            'nid_trade_license' => 'nullable|string|max:100',
             'opening_balance' => 'nullable|numeric|min:0',
             'password' => 'required|string|min:6',
         ]);
@@ -82,10 +90,17 @@ class AdminSupplierController extends Controller
                 'user_id' => $user->id,
                 'supplier_code' => $supplierCode,
                 'company_name' => $request->company_name,
-                'district_thana' => $request->district_thana,
+                'representative_name' => $request->representative_name ?? $request->name,
+                'alt_phone' => $request->alt_phone,
+                'district' => $request->district,
+                'thana' => $request->thana,
+                'district_thana' => $request->district_thana ?? ($request->thana . ', ' . $request->district),
                 'address' => $request->address,
+                'business_type' => $request->business_type ?? 'পাইকারী সরবরাহকারী',
+                'nid_trade_license' => $request->nid_trade_license,
                 'opening_balance' => $request->opening_balance ?? 0,
                 'opening_date' => Carbon::now()->toDateString(),
+                'status' => 'active',
                 'notes' => $request->notes,
             ]);
         });
@@ -158,7 +173,8 @@ class AdminSupplierController extends Controller
                 'description' => 'পরিশোধ (' . $methodText . ')' . ($pay->transaction_id ? ' TxID: ' . $pay->transaction_id : ''),
                 'debit' => 0,
                 'credit' => $pay->amount,
-                'ref' => 'Pay ID: #' . $pay->id,
+                'ref' => 'Receipt: #' . ($pay->receipt_no ?? $pay->id),
+                'pay_id' => $pay->id,
             ]);
         }
 
@@ -215,16 +231,39 @@ class AdminSupplierController extends Controller
             'status' => 'approved',
             'approved_by' => Auth::id(),
             'approved_at' => Carbon::now(),
+            'stock_updated' => true,
         ]);
 
-        return redirect()->back()->with('success', 'পণ্য সরবরাহ সফলভাবে অনুমোদন করা হয়েছে!');
+        // Stock Integration (SRD Section 4 & Development Advice #1862)
+        // Increasing Central Warehouse / Monthly Bazaar stock
+        $item = MonthlyBazaarItem::where('title', 'like', '%' . $supply->product_name . '%')
+            ->orWhere('package_name', 'like', '%' . $supply->product_name . '%')
+            ->first();
+
+        if ($item) {
+            $item->increment('quantity', $supply->quantity);
+        } else {
+            MonthlyBazaarItem::create([
+                'title' => $supply->product_name,
+                'package_name' => $supply->product_name,
+                'price' => $supply->rate,
+                'quantity' => $supply->quantity,
+                'is_unlimited' => 0,
+                'sold_quantity' => 0,
+                'description' => 'Supplier Supply Entry: ' . $supply->product_name . ' (' . $supply->unit . ')',
+                'status' => 'active',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'পণ্য সরবরাহ সফলভাবে অনুমোদন করা হয়েছে এবং সেন্ট্রাল স্টক বৃদ্ধি করা হয়েছে!');
     }
 
-    public function rejectSupply($id)
+    public function rejectSupply(Request $request, $id)
     {
         $supply = SupplierSupply::findOrFail($id);
         $supply->update([
             'status' => 'rejected',
+            'rejection_reason' => $request->rejection_reason ?? 'তথ্য বা চালানে গরমিল পাওয়া গেছে',
             'approved_by' => Auth::id(),
             'approved_at' => Carbon::now(),
         ]);
@@ -243,28 +282,43 @@ class AdminSupplierController extends Controller
             'account_name' => 'nullable|string|max:255',
             'account_number' => 'nullable|string|max:255',
             'transaction_id' => 'nullable|string|max:255',
+            'cash_account' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
             'note' => 'nullable|string',
         ]);
 
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('upload/payments'), $fileName);
+            $attachmentPath = 'upload/payments/' . $fileName;
+        }
+
+        $receiptNo = 'RCP-' . date('ym') . '-' . str_pad(SupplierPayment::count() + 1, 4, '0', STR_PAD_LEFT);
+
         SupplierPayment::create([
             'supplier_id' => $request->supplier_id,
+            'receipt_no' => $receiptNo,
             'payment_date' => $request->payment_date,
             'payment_method' => $request->payment_method,
+            'cash_account' => $request->cash_account ?? 'Main Cash Counter',
             'amount' => $request->amount,
             'bank_name' => $request->bank_name,
             'account_name' => $request->account_name,
             'account_number' => $request->account_number,
             'transaction_id' => $request->transaction_id,
+            'attachment' => $attachmentPath,
             'note' => $request->note,
             'created_by' => Auth::id(),
         ]);
 
-        return redirect()->back()->with('success', 'পেমেন্ট সফলভাবে সংরক্ষণ করা হয়েছে!');
+        return redirect()->back()->with('success', 'পেমেন্ট সফলভাবে সংরক্ষণ করা হয়েছে! রসিদ নম্বর: ' . $receiptNo);
     }
 
     public function reports(Request $request)
     {
-        $suppliers = User::where('role', 'supplier')->get();
+        $suppliers = User::where('role', 'supplier')->with('supplierProfile')->get();
 
         $query = SupplierSupply::with('supplier.supplierProfile');
 
@@ -330,7 +384,7 @@ class AdminSupplierController extends Controller
                 'description' => 'পরিশোধ (' . $methodText . ')' . ($pay->transaction_id ? ' TxID: ' . $pay->transaction_id : ''),
                 'debit' => 0,
                 'credit' => $pay->amount,
-                'ref' => 'Pay ID: #' . $pay->id,
+                'ref' => 'Receipt: #' . ($pay->receipt_no ?? $pay->id),
             ]);
         }
 
@@ -349,5 +403,11 @@ class AdminSupplierController extends Controller
     {
         $supply = SupplierSupply::with('supplier.supplierProfile')->findOrFail($id);
         return view('admin.suppliers.print_invoice', compact('supply'));
+    }
+
+    public function printReceipt($payment_id)
+    {
+        $payment = SupplierPayment::with('supplier.supplierProfile', 'creator')->findOrFail($payment_id);
+        return view('admin.suppliers.print_receipt', compact('payment'));
     }
 }

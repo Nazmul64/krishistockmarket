@@ -20,10 +20,15 @@ class ReportsController extends Controller
      */
     public function index(Request $request)
     {
-        $branches = Branch::where('status', 'active')->get();
-        $selectedBranchId = $request->get('branch_id');
-        if (auth()->check() && auth()->user()->role === 'manager' && auth()->user()->branch_id && !$selectedBranchId) {
-            $selectedBranchId = auth()->user()->branch_id;
+        $user = auth()->user();
+        if ($user && $user->role === 'manager') {
+            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
+            // STRICT ISOLATION: Manager can ONLY view their own branch reports & profit
+            $selectedBranchId = $managerBranch ? $managerBranch->id : -1;
+            $branches = $managerBranch ? collect([$managerBranch]) : collect();
+        } else {
+            $branches = Branch::where('status', 'active')->get();
+            $selectedBranchId = $request->get('branch_id');
         }
         $period = $request->get('period', 'monthly'); // daily, weekly, monthly, yearly, custom
         $fromDate = $request->get('from_date');
@@ -82,7 +87,16 @@ class ReportsController extends Controller
         $totalExpenses = (float)$expensesList->sum('amount');
 
         // Expenses breakdown by category (Rent, Electricity, Salary, etc.)
-        $expensesByCategory = $expensesList->groupBy(fn($e) => $e->category->name ?? 'বিবিধ')->map->sum('amount');
+        $expensesByCategory = $expensesList->groupBy(fn($e) => $e->category->name ?? 'বিবিধ')
+            ->map(function ($items, $catName) {
+                return (object) [
+                    'category_name' => $catName,
+                    'entry_count' => $items->count(),
+                    'total_amount' => (float)$items->sum('amount'),
+                ];
+            })
+            ->sortByDesc('total_amount')
+            ->values();
 
         $netProfit = $grossProfit - $totalExpenses;
 

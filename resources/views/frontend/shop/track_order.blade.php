@@ -11,10 +11,10 @@
             <!-- Main Tracking Card (Image 2 Reference) -->
             <div class="card border-0 shadow-lg mx-auto" style="border-radius: 24px; overflow: hidden; background: #ffffff;">
                 <div class="card-body p-4 p-md-5">
-                    <!-- Top Orange Package Icon -->
+                    <!-- Top Package Icon (Theme Dynamic) -->
                     <div class="text-center mb-3">
                         <div class="d-inline-flex align-items-center justify-content-center shadow-sm" 
-                             style="width: 76px; height: 76px; border-radius: 22px; background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);">
+                             style="width: 76px; height: 76px; border-radius: 22px; background: var(--btn-theme-color, #007e8a);">
                             <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -25,15 +25,15 @@
                         <p class="text-muted small mb-0">Enter your order details below to see its status</p>
                     </div>
 
-                    <!-- 3-Step Pill Bar (Image 2) -->
-                    <div class="d-flex align-items-center justify-content-between p-2 mb-4 rounded-pill" style="background-color: #fff7ed; border: 1px solid #fed7aa;">
+                    <!-- 3-Step Pill Bar (Theme Dynamic) -->
+                    <div class="d-flex align-items-center justify-content-between p-2 mb-4 rounded-pill" style="background-color: rgba(0, 126, 138, 0.06); border: 1px solid rgba(0, 126, 138, 0.2);">
                         <div class="d-flex align-items-center gap-1">
-                            <span class="badge rounded-circle bg-warning text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: #f97316 !important;">1</span>
+                            <span class="badge rounded-circle text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: var(--btn-theme-color, #007e8a) !important;">1</span>
                             <span class="fw-semibold text-dark" style="font-size: 11px;">Order ID</span>
                         </div>
                         <div class="text-muted" style="font-size: 10px;">➔</div>
                         <div class="d-flex align-items-center gap-1">
-                            <span class="badge rounded-circle bg-warning text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: #f97316 !important;">2</span>
+                            <span class="badge rounded-circle text-white fw-bold d-inline-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 11px; background-color: var(--btn-theme-color, #007e8a) !important;">2</span>
                             <span class="fw-semibold text-dark" style="font-size: 11px;">Phone number</span>
                         </div>
                         <div class="text-muted" style="font-size: 10px;">➔</div>
@@ -53,7 +53,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 12px 0 0 12px; border: 1.5px solid #e5e7eb; border-right: none;">
-                                        <span class="fw-bold font-monospace" style="color: #f97316; font-size: 16px;">#</span>
+                                        <span class="fw-bold font-monospace" style="color: var(--btn-theme-color, #007e8a); font-size: 16px;">#</span>
                                     </span>
                                     <input type="text" name="order_id" id="trackOrderId" class="form-control border-start-0 py-2" 
                                            style="border-radius: 0 12px 12px 0; border: 1.5px solid #e5e7eb; border-left: none;" 
@@ -70,7 +70,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white border-end-0 text-muted" style="border-radius: 12px 0 0 12px; border: 1.5px solid #e5e7eb; border-right: none;">
-                                        <i class="fa fa-phone" style="color: #f97316;"></i>
+                                        <i class="fa fa-phone" style="color: var(--btn-theme-color, #007e8a);"></i>
                                     </span>
                                     <input type="text" name="phone" id="trackPhone" class="form-control border-start-0 py-2" 
                                            style="border-radius: 0 12px 12px 0; border: 1.5px solid #e5e7eb; border-left: none;" 
@@ -93,9 +93,9 @@
                                 </div>
                             </div>
 
-                            <!-- Submit Button (Orange Gradient) -->
+                            <!-- Submit Button (Admin Theme Dynamic) -->
                             <button type="submit" class="btn w-100 text-white fw-bold py-3 shadow-sm d-flex align-items-center justify-content-center gap-2" 
-                                    style="border-radius: 14px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border: none; font-size: 16px;">
+                                    style="border-radius: var(--btn-theme-radius, 14px); background: var(--btn-theme-color, #007e8a); border: none; font-size: 16px;">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>

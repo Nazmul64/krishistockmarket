@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\AdminEmployeeController;
 use App\Http\Controllers\Admin\AdminFeatureController;
 use App\Http\Controllers\Admin\AdminOurPackageController;
 use App\Http\Controllers\Admin\AdminMonthlyBazaarController;
+use App\Http\Controllers\Admin\AdminMonthlyMarketRequestController;
+use App\Http\Controllers\Users\UserMonthlyMarketRequestController;
 use App\Http\Controllers\Admin\AdminPaymentSystemController;
 use App\Http\Controllers\Admin\AdminReportController;
 use App\Http\Controllers\Admin\AdminStockController;
@@ -35,6 +37,7 @@ use App\Http\Controllers\Admin\HRM\HrmRecruitmentController;
 use App\Http\Controllers\Admin\HRM\HrmReportController;
 use App\Http\Controllers\Admin\HRM\HrmShiftController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\UiCustomizationController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Employee\EmployeeStockLedgerController;
@@ -169,6 +172,25 @@ Route::get('/supplier/login', [App\Http\Controllers\Auth\PortalLoginController::
 Route::post('/supplier/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'supplier')->name('supplier.login.post');
 Route::get('/supplier/register', [RegisterController::class, 'showSupplierRegistrationForm'])->name('supplier.register');
 Route::post('/supplier/register', [RegisterController::class, 'supplierRegisterPost'])->name('supplier.register.post');
+
+// Agent & Agent Point Login Routes (SRD Module 02 & Module 09)
+Route::get('/agent/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'agent')->name('agent.login');
+Route::post('/agent/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'agent')->name('agent.login.post');
+
+Route::get('/agentpoint/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'agent')->name('agentpoint.login');
+Route::post('/agentpoint/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'agent')->name('agentpoint.login.post');
+
+Route::get('/agent-point/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'showLoginForm'])->defaults('portal', 'agent')->name('agent_point.login');
+Route::post('/agent-point/login', [App\Http\Controllers\Auth\PortalLoginController::class, 'login'])->defaults('portal', 'agent')->name('agent_point.login.post');
+
+Route::get('/agentpoint', fn() => redirect()->route('agent.login'));
+Route::get('/agent-point', fn() => redirect()->route('agent.login'));
+Route::get('/agent', function() {
+    if (Illuminate\Support\Facades\Auth::check() && Illuminate\Support\Facades\Auth::user()->hasRole('agent')) {
+        return redirect()->route('agent.dashboard');
+    }
+    return redirect()->route('agent.login');
+});
 
 // Common Profiles & Settings
 Route::resource('profile', 'App\Http\Controllers\ProfileController');
@@ -320,6 +342,23 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::post('/setting/offer-banner/post', [SiteSettingController::class, 'OfferBannerPost'])->name('setting.offer_banner.post');
     Route::get('/setting/offer-banner/delete', [SiteSettingController::class, 'OfferBannerDelete'])->name('setting.offer_banner.delete');
 
+    // =========================================================================
+    // 🎨 Appearance & Design Studio Routes (10 Templates, Drag & Drop Builders)
+    // =========================================================================
+    Route::get('/appearance-studio', [UiCustomizationController::class, 'index'])->name('admin.appearance.index');
+    Route::post('/appearance-studio/template/activate', [UiCustomizationController::class, 'activateTemplate'])->name('admin.appearance.template.activate');
+    Route::post('/appearance-studio/sections/order', [UiCustomizationController::class, 'updateSectionsOrder'])->name('admin.appearance.sections.order');
+    Route::post('/appearance-studio/sections/{id}/settings', [UiCustomizationController::class, 'updateSectionSettings'])->name('admin.appearance.sections.settings');
+    Route::post('/appearance-studio/menu/order', [UiCustomizationController::class, 'updateMenuOrder'])->name('admin.appearance.menu.order');
+    Route::post('/appearance-studio/menu/save-item', [UiCustomizationController::class, 'saveMenuItem'])->name('admin.appearance.menu.save_item');
+    Route::delete('/appearance-studio/menu/delete-item/{id}', [UiCustomizationController::class, 'deleteMenuItem'])->name('admin.appearance.menu.delete_item');
+    Route::post('/appearance-studio/save-settings', [UiCustomizationController::class, 'saveGlobalSettings'])->name('admin.appearance.save_settings');
+    Route::post('/appearance-studio/rollback/{versionId}', [UiCustomizationController::class, 'rollbackVersion'])->name('admin.appearance.rollback');
+
+    // 🎛️ UI Component Customizer (Product Card, Preloader, Buttons, Search, Live Chat)
+    Route::get('/appearance-studio/components', [\App\Http\Controllers\Admin\UiComponentSettingController::class, 'index'])->name('admin.appearance.components');
+    Route::post('/appearance-studio/components/save', [\App\Http\Controllers\Admin\UiComponentSettingController::class, 'saveSettings'])->name('admin.appearance.components.save');
+
     Route::get('/features', [AdminFeatureController::class, 'index'])->name('admin.feature.index');
     Route::post('/features/store', [AdminFeatureController::class, 'store'])->name('admin.feature.store');
     Route::get('/features/edit/{id}', [AdminFeatureController::class, 'edit'])->name('admin.feature.edit');
@@ -334,6 +373,36 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::get('/agent-points', [AdminAgentPointController::class, 'index'])->name('admin.agent_points.index');
     Route::post('/agent-points/store', [AdminAgentPointController::class, 'store'])->name('admin.agent_points.store');
     Route::get('/agent-points/destroy/{id}', [AdminAgentPointController::class, 'destroy'])->name('admin.agent_points.destroy');
+
+    // Agent Management Ecosystem (SRD Module 01, 04, 07)
+    Route::get('/agents', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'index'])->name('admin.agents.index');
+    Route::get('/agents/create', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'create'])->name('admin.agents.create');
+    Route::post('/agents/store', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'store'])->name('admin.agents.store');
+    Route::get('/agents/show/{id}', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'show'])->name('admin.agents.show');
+    Route::get('/agents/edit/{id}', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'edit'])->name('admin.agents.edit');
+    Route::post('/agents/update/{id}', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'update'])->name('admin.agents.update');
+    Route::get('/agents/toggle/{id}', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'toggleStatus'])->name('admin.agents.toggle');
+    Route::post('/agents/reset-password/{id}', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'resetPassword'])->name('admin.agents.reset_password');
+    Route::get('/agents/destroy/{id}', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'destroy'])->name('admin.agents.destroy');
+    Route::get('/agents/assign-cardholders', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'assignCardHoldersView'])->name('admin.agents.assign_cardholders');
+    Route::post('/agents/assign-cardholders/store', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'assignCardHoldersStore'])->name('admin.agents.assign_cardholders.store');
+    Route::get('/agents/supply-allocation', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'supplyAllocationView'])->name('admin.agents.supply_allocation');
+    Route::post('/agents/supply-allocation/store', [\App\Http\Controllers\Admin\AdminAgentManagementController::class, 'supplyAllocationStore'])->name('admin.agents.supply_allocation.store');
+
+    // Central Customer Distribution Monitoring System (Module 10)
+    Route::get('/customer-distribution', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'dashboard'])->name('admin.distribution.dashboard');
+    Route::get('/customer-distribution/point/{agent_point_id}', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'pointSummary'])->name('admin.distribution.point_summary');
+    Route::get('/customer-distribution/customers', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'customerList'])->name('admin.distribution.customer_list');
+    Route::get('/customer-distribution/transaction/{collection_id}', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'transactionDetails'])->name('admin.distribution.transaction_details');
+    Route::get('/customer-distribution/receipt/{collection_id}', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'printReceipt'])->name('admin.distribution.receipt');
+    Route::get('/customer-distribution/print-receipt/{collection_id}', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'printReceipt'])->name('admin.distribution.print_receipt');
+    Route::get('/customer-distribution/daily-agent-report', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'dailyAgentReport'])->name('admin.distribution.daily_agent_report');
+    Route::get('/customer-distribution/product-report', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'productReport'])->name('admin.distribution.product_report');
+    Route::get('/customer-distribution/date-wise-report', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'dateWiseReport'])->name('admin.distribution.date_wise_report');
+    Route::get('/customer-distribution/comparison-report', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'comparisonReport'])->name('admin.distribution.comparison_report');
+    Route::get('/customer-distribution/daily-closings', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'dailyClosings'])->name('admin.distribution.daily_closings');
+    Route::post('/customer-distribution/daily-closings/verify/{id}', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'verifyDailyClosing'])->name('admin.distribution.daily_closings.verify');
+    Route::post('/customer-distribution/verify-closing/{id}', [\App\Http\Controllers\Admin\AdminCustomerDistributionController::class, 'verifyDailyClosing'])->name('admin.distribution.verify_daily_closing');
 
 
 
@@ -409,10 +478,30 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::get('/suppliers/verify-supplies', [AdminSupplierController::class, 'pendingSupplies'])->name('admin.suppliers.pending_supplies');
     Route::get('/suppliers/supply/approve/{id}', [AdminSupplierController::class, 'approveSupply'])->name('admin.suppliers.supply.approve');
     Route::get('/suppliers/supply/reject/{id}', [AdminSupplierController::class, 'rejectSupply'])->name('admin.suppliers.supply.reject');
+    Route::post('/suppliers/supply/reject-post/{id}', [AdminSupplierController::class, 'rejectSupply'])->name('admin.suppliers.supply.reject_post');
     Route::post('/suppliers/payment/store', [AdminSupplierController::class, 'storePayment'])->name('admin.suppliers.payment.store');
+    Route::get('/suppliers/payment/receipt/{payment_id}', [AdminSupplierController::class, 'printReceipt'])->name('admin.suppliers.receipt.print');
     Route::get('/suppliers/reports', [AdminSupplierController::class, 'reports'])->name('admin.suppliers.reports');
     Route::get('/suppliers/statement/print/{id}', [AdminSupplierController::class, 'printStatement'])->name('admin.suppliers.statement.print');
     Route::get('/suppliers/invoice/print/{id}', [AdminSupplierController::class, 'printInvoice'])->name('admin.suppliers.invoice.print');
+
+    // Central Monthly Market Request & Distribution Admin Routes (SRD Modules 02, 03, 04)
+    Route::prefix('monthly-market')->name('admin.monthly_market.')->group(function () {
+        Route::get('/requests', [AdminMonthlyMarketRequestController::class, 'index'])->name('requests');
+        Route::get('/request/details/{id}', [AdminMonthlyMarketRequestController::class, 'show'])->name('request_details');
+        Route::get('/request/approve/{id}', [AdminMonthlyMarketRequestController::class, 'approve'])->name('approve');
+        Route::post('/request/reject/{id}', [AdminMonthlyMarketRequestController::class, 'reject'])->name('reject');
+        Route::post('/request/update-items/{id}', [AdminMonthlyMarketRequestController::class, 'updateItems'])->name('update_items');
+        Route::get('/demand-analysis', [AdminMonthlyMarketRequestController::class, 'demandAnalysis'])->name('demand_analysis');
+        Route::get('/allocations', [AdminMonthlyMarketRequestController::class, 'allocations'])->name('allocations');
+        Route::post('/allocations/store', [AdminMonthlyMarketRequestController::class, 'storeAllocation'])->name('store_allocation');
+        Route::get('/dispatches', [AdminMonthlyMarketRequestController::class, 'dispatches'])->name('dispatches');
+        Route::post('/dispatches/store', [AdminMonthlyMarketRequestController::class, 'storeDispatch'])->name('store_dispatch');
+        Route::get('/dispatch/print/{id}', [AdminMonthlyMarketRequestController::class, 'printDispatch'])->name('dispatch.print');
+        Route::post('/dispatch/receive/{id}', [AdminMonthlyMarketRequestController::class, 'receiveDispatch'])->name('dispatch.receive');
+        Route::post('/collection/confirm', [AdminMonthlyMarketRequestController::class, 'confirmCollection'])->name('collection.confirm');
+        Route::get('/comprehensive-reports', [AdminMonthlyMarketRequestController::class, 'comprehensiveReports'])->name('reports');
+    });
 
     // Our Packages Admin Routes
     Route::get('/our-packages', [AdminOurPackageController::class, 'index'])->name('admin.our_packages.index');
@@ -555,6 +644,30 @@ Route::group(['prefix' => 'supplier', 'middleware' => 'SupplierChecker'], functi
     Route::get('/invoice/print/{id}', [SupplierSupplyController::class, 'printInvoice'])->name('supplier.invoice.print');
 });
 
+// Agent Dedicated Portal Routes (SRD Module 02, 04, 05, 06)
+Route::group(['prefix' => 'agent', 'middleware' => ['auth', 'AgentChecker'], 'as' => 'agent.'], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Agent\AgentPortalController::class, 'dashboard'])->name('dashboard');
+    Route::get('/stock/incoming', [\App\Http\Controllers\Agent\AgentPortalController::class, 'incomingStock'])->name('stock.incoming');
+    Route::post('/stock/receive/{dispatch_id}', [\App\Http\Controllers\Agent\AgentPortalController::class, 'confirmReceive'])->name('stock.receive');
+    Route::get('/inventory', [\App\Http\Controllers\Agent\AgentPortalController::class, 'inventory'])->name('inventory');
+    Route::get('/stock/ledger', [\App\Http\Controllers\Agent\AgentPortalController::class, 'stockLedger'])->name('stock.ledger');
+    Route::get('/orders', [\App\Http\Controllers\Agent\AgentPortalController::class, 'orders'])->name('orders');
+    Route::post('/orders/process/{order_id}', [\App\Http\Controllers\Agent\AgentPortalController::class, 'processOrder'])->name('orders.process');
+    Route::post('/orders/delivery/{order_id}', [\App\Http\Controllers\Agent\AgentPortalController::class, 'confirmDelivery'])->name('orders.delivery');
+
+    // Customer-wise Product Collection & Daily Distribution (Module 09)
+    Route::post('/distribution/verify-customer', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'verifyCustomer'])->name('distribution.verify_customer');
+    Route::get('/distribution/entry', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'collectionEntryView'])->name('distribution.entry');
+    Route::post('/distribution/store', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'storeCollection'])->name('distribution.store');
+    Route::get('/distribution/receipt/{id}', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'printReceipt'])->name('distribution.receipt');
+    Route::get('/distribution/daily-register', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'dailyRegister'])->name('distribution.daily_register');
+    Route::get('/distribution/product-report', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'productDistributionReport'])->name('distribution.product_report');
+    Route::get('/distribution/customers', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'customerList'])->name('distribution.customers');
+    Route::get('/distribution/customer/{user_id}/history', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'customerHistory'])->name('distribution.customer.history');
+    Route::get('/distribution/daily-closing', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'dailyClosing'])->name('distribution.daily_closing');
+    Route::post('/distribution/daily-closing/store', [\App\Http\Controllers\Agent\AgentCustomerDistributionController::class, 'storeDailyClosing'])->name('distribution.daily_closing.store');
+});
+
 
 
 
@@ -605,6 +718,14 @@ Route::group(['prefix' => 'user', 'middleware' => 'UserChacker'], function () {
     Route::get('/monthly-bazaar', [UserMonthlyBazaarController::class, 'index'])->name('user.monthly_bazaar.index');
     Route::post('/monthly-bazaar/order', [UserMonthlyBazaarController::class, 'storeOrder'])->name('user.monthly_bazaar.order.post');
     Route::get('/monthly-bazaar/my-orders', [UserMonthlyBazaarController::class, 'myOrders'])->name('user.monthly_bazaar.my_orders');
+
+    // Card Holder Monthly Market Request Routes (SRD Module 02)
+    Route::prefix('monthly-market')->name('user.monthly_market.')->group(function () {
+        Route::get('/request', [UserMonthlyMarketRequestController::class, 'create'])->name('request');
+        Route::post('/request/store', [UserMonthlyMarketRequestController::class, 'store'])->name('store');
+        Route::get('/my-requests', [UserMonthlyMarketRequestController::class, 'myRequests'])->name('my_requests');
+        Route::get('/slip/{id}', [UserMonthlyMarketRequestController::class, 'showSlip'])->name('slip');
+    });
 
     // Customer Deposit & Wallet Ledger Routes
     Route::get('/deposit', [UserDepositController::class, 'index'])->name('user.deposit.index');
@@ -907,60 +1028,168 @@ Route::group(['prefix' => 'admin/ecommerce', 'middleware' => ['auth', 'role:supe
 // =========================================================================
 // Super Shop & Multi-Branch Management Enterprise Module Routes
 // =========================================================================
-Route::group(['prefix' => 'admin/supershop', 'middleware' => ['auth', 'role:super_admin,admin,manager']], function () {
-    // 1. Central & Branch Executive Dashboard
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\SuperShop\SuperShopDashboardController::class, 'index'])->name('admin.supershop.dashboard');
 
-    // 2. Branch Management
-    Route::get('/branches', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'index'])->name('admin.supershop.branches');
-    Route::post('/branches/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'store'])->name('admin.supershop.branches.store');
-    Route::match(['post', 'put'], '/branches/update/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'update'])->name('admin.supershop.branches.update');
-    Route::post('/branches/reset-manager-password/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'resetManagerPassword'])->name('admin.supershop.branches.reset_password');
-    Route::match(['get', 'delete'], '/branches/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'destroy'])->name('admin.supershop.branches.destroy');
+// Root Direct Entry Point & Standalone Login for http://127.0.0.1:8000/supershop
+Route::get('/supershop', function (\Illuminate\Http\Request $request) {
+    if (\Illuminate\Support\Facades\Auth::check()) {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($user->hasRole('manager')) {
+            $branchId = $user->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', $user->id)->value('id');
+            if ($branchId) {
+                return redirect()->route('supershop.branches.show', $branchId);
+            }
+        }
+        return redirect()->route('supershop.branches');
+    }
 
-    // 3. Branch Inventory & Stock Movement
-    Route::get('/inventory', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'index'])->name('admin.supershop.inventory');
-    Route::match(['get', 'post'], '/inventory/sync', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'syncCatalog'])->name('admin.supershop.inventory.sync');
-    Route::post('/inventory/adjust/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'adjustStock'])->name('admin.supershop.inventory.adjust');
-    Route::post('/inventory/assign-product', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'assignProduct'])->name('admin.supershop.inventory.assign');
-    Route::get('/inventory/movements', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'movements'])->name('admin.supershop.inventory.movements');
+    // When NOT logged in: STAY on URL /supershop (DO NOT redirect to /login!)
+    $portal = 'supershop';
+    $config = [
+        'title'       => 'Super Shop & Multi-Branch Portal',
+        'subtitle'    => 'সুপারশপ পিওএস টার্মিনাল, ইনভেন্টরি ও মাল্টি-ব্রাঞ্চ লগইন',
+        'badge'       => 'SuperShop Enterprise | Zero Trust',
+        'bg_gradient' => 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%)',
+        'header_grad' => 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
+        'action_url'  => url('/supershop'),
+        'icon'        => 'ti-shopping-cart',
+    ];
 
-    // 4. POS Terminal & Fast Billing
-    Route::get('/pos', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'terminal'])->name('admin.supershop.pos');
-    Route::get('/pos/barcode', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'barcodeSearch'])->name('admin.supershop.pos.barcode');
-    Route::get('/pos/search', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'searchProducts'])->name('admin.supershop.pos.search');
-    Route::get('/pos/customer-lookup', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'customerLookup'])->name('admin.supershop.pos.customer_lookup');
-    Route::post('/pos/checkout', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'checkout'])->name('admin.supershop.pos.checkout');
-    Route::get('/pos/receipt/{id}', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'receipt'])->name('admin.supershop.pos.receipt');
+    return view('auth.portal_login', compact('portal', 'config'));
+})->name('supershop');
 
-    // 5. Cashier Shift & Cash Drawer
-    Route::get('/shifts', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'index'])->name('admin.supershop.shifts');
-    Route::post('/shifts/open', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'openShift'])->name('admin.supershop.shifts.open');
-    Route::post('/shifts/close/{id}', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'closeShift'])->name('admin.supershop.shifts.close');
-    Route::post('/shifts/drawer-transaction', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'drawerTransaction'])->name('admin.supershop.shifts.drawer_transaction');
+Route::post('/supershop', function (\Illuminate\Http\Request $request) {
+    return app(\App\Http\Controllers\Auth\PortalLoginController::class)->login($request, 'supershop');
+})->name('supershop.post');
 
-    // 6. Central Procurement & Suppliers (PO & GRN)
-    Route::get('/procurement', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'index'])->name('admin.supershop.procurement');
-    Route::post('/procurement/suppliers/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'supplierStore'])->name('admin.supershop.procurement.suppliers.store');
-    Route::post('/procurement/po/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'poStore'])->name('admin.supershop.procurement.po.store');
-    Route::post('/procurement/grn/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'grnStore'])->name('admin.supershop.procurement.grn.store');
+$registerSuperShopModule = function ($routePrefix, $namePrefix) {
+    Route::group(['prefix' => $routePrefix, 'middleware' => ['auth', 'role:super_admin,admin,manager']], function () use ($namePrefix) {
+        // 1. Central & Branch Executive Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Admin\SuperShop\SuperShopDashboardController::class, 'index'])->name($namePrefix . 'dashboard');
 
-    // 7. Branch-to-Branch Stock Transfers
-    Route::get('/transfers', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'index'])->name('admin.supershop.transfers');
-    Route::post('/transfers/store', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'store'])->name('admin.supershop.transfers.store');
-    Route::post('/transfers/dispatch/{id}', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'dispatchTransfer'])->name('admin.supershop.transfers.dispatch');
-    Route::post('/transfers/receive/{id}', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'receiveTransfer'])->name('admin.supershop.transfers.receive');
+        // 2. Branch Management & Multi-Branch Hub
+        Route::get('/branches', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'index'])->name($namePrefix . 'branches');
+        Route::get('/branches/comparison', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'comparison'])->name($namePrefix . 'branches.comparison');
+        Route::get('/branches/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'show'])->name($namePrefix . 'branches.show');
+        Route::post('/branches/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'store'])->name($namePrefix . 'branches.store');
+        Route::match(['post', 'put'], '/branches/update/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'update'])->name($namePrefix . 'branches.update');
+        Route::post('/branches/reset-manager-password/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'resetManagerPassword'])->name($namePrefix . 'branches.reset_password');
+        Route::match(['get', 'delete'], '/branches/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'destroy'])->name($namePrefix . 'branches.destroy');
+        Route::post('/branches/stock-adjust/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'adjustStock'])->name($namePrefix . 'branches.stock_adjust');
+        Route::post('/branches/transfers/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'storeTransfer'])->name($namePrefix . 'branches.transfers.store');
+        Route::post('/branches/transfers/dispatch/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'dispatchTransfer'])->name($namePrefix . 'branches.transfers.dispatch');
+        Route::post('/branches/transfers/receive/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'receiveTransfer'])->name($namePrefix . 'branches.transfers.receive');
+        Route::post('/branches/expenses/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'storeExpense'])->name($namePrefix . 'branches.expenses.store');
+        Route::post('/branches/transactions/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'storeTransaction'])->name($namePrefix . 'branches.transactions.store');
+        Route::post('/branches/cash-closing', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'closeCashSession'])->name($namePrefix . 'branches.cash_closing');
+        Route::post('/branches/staff/store', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'storeStaff'])->name($namePrefix . 'branches.staff.store');
+        Route::post('/branches/salary/pay', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'paySalary'])->name($namePrefix . 'branches.salary.pay');
+        Route::post('/branches/salary/advance', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'storeSalaryAdvance'])->name($namePrefix . 'branches.salary.advance');
+        Route::post('/branches/orders/assign', [\App\Http\Controllers\Admin\SuperShop\BranchManagementController::class, 'assignOrder'])->name($namePrefix . 'branches.orders.assign');
 
-    // 8. POS Sales & Returns
-    Route::get('/sales', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'index'])->name('admin.supershop.sales');
-    Route::get('/sales/show/{id}', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'show'])->name('admin.supershop.sales.show');
-    Route::post('/sales/return', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'returnStore'])->name('admin.supershop.sales.return');
+        // 3. Branch Inventory & Stock Movement
+        Route::get('/inventory', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'index'])->name($namePrefix . 'inventory');
+        Route::match(['get', 'post'], '/inventory/sync', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'syncCatalog'])->name($namePrefix . 'inventory.sync');
+        Route::post('/inventory/adjust/{id}', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'adjustStock'])->name($namePrefix . 'inventory.adjust');
+        Route::post('/inventory/assign-product', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'assignProduct'])->name($namePrefix . 'inventory.assign');
+        Route::get('/inventory/movements', [\App\Http\Controllers\Admin\SuperShop\BranchInventoryController::class, 'movements'])->name($namePrefix . 'inventory.movements');
 
-    // 9. Branch Expenses
-    Route::get('/expenses', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'index'])->name('admin.supershop.expenses');
-    Route::post('/expenses/store', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'store'])->name('admin.supershop.expenses.store');
-    Route::match(['get', 'delete'], '/expenses/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'destroy'])->name('admin.supershop.expenses.destroy');
+        // 4. POS Terminal & Fast Billing
+        Route::get('/pos', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'terminal'])->name($namePrefix . 'pos');
+        Route::get('/pos/barcode', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'barcodeSearch'])->name($namePrefix . 'pos.barcode');
+        Route::get('/pos/search', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'searchProducts'])->name($namePrefix . 'pos.search');
+        Route::get('/pos/customer-lookup', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'customerLookup'])->name($namePrefix . 'pos.customer_lookup');
+        Route::post('/pos/checkout', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'checkout'])->name($namePrefix . 'pos.checkout');
+        Route::get('/pos/receipt/{id}', [\App\Http\Controllers\Admin\SuperShop\PosTerminalController::class, 'receipt'])->name($namePrefix . 'pos.receipt');
 
-    // 10. Reports & Business Intelligence
-    Route::get('/reports', [\App\Http\Controllers\Admin\SuperShop\ReportsController::class, 'index'])->name('admin.supershop.reports');
-});
+        // 5. Cashier Shift & Cash Drawer
+        Route::get('/shifts', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'index'])->name($namePrefix . 'shifts');
+        Route::post('/shifts/open', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'openShift'])->name($namePrefix . 'shifts.open');
+        Route::post('/shifts/close/{id}', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'closeShift'])->name($namePrefix . 'shifts.close');
+        Route::post('/shifts/drawer-transaction', [\App\Http\Controllers\Admin\SuperShop\ShiftManagementController::class, 'drawerTransaction'])->name($namePrefix . 'shifts.drawer_transaction');
+
+        // 6. Central Procurement & Suppliers (PO & GRN)
+        Route::get('/procurement', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'index'])->name($namePrefix . 'procurement');
+        Route::post('/procurement/suppliers/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'supplierStore'])->name($namePrefix . 'procurement.suppliers.store');
+        Route::post('/procurement/po/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'poStore'])->name($namePrefix . 'procurement.po.store');
+        Route::post('/procurement/grn/store', [\App\Http\Controllers\Admin\SuperShop\ProcurementController::class, 'grnStore'])->name($namePrefix . 'procurement.grn.store');
+
+        // 7. Branch-to-Branch Stock Transfers
+        Route::get('/transfers', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'index'])->name($namePrefix . 'transfers');
+        Route::post('/transfers/store', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'store'])->name($namePrefix . 'transfers.store');
+        Route::post('/transfers/dispatch/{id}', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'dispatchTransfer'])->name($namePrefix . 'transfers.dispatch');
+        Route::post('/transfers/receive/{id}', [\App\Http\Controllers\Admin\SuperShop\StockTransferController::class, 'receiveTransfer'])->name($namePrefix . 'transfers.receive');
+
+        // 8. POS Sales & Returns
+        Route::get('/sales', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'index'])->name($namePrefix . 'sales');
+        Route::get('/sales/show/{id}', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'show'])->name($namePrefix . 'sales.show');
+        Route::post('/sales/return', [\App\Http\Controllers\Admin\SuperShop\SalesManagementController::class, 'returnStore'])->name($namePrefix . 'sales.return');
+
+        // 9. Branch Expenses
+        Route::get('/expenses', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'index'])->name($namePrefix . 'expenses');
+        Route::post('/expenses/store', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'store'])->name($namePrefix . 'expenses.store');
+        Route::match(['get', 'delete'], '/expenses/destroy/{id}', [\App\Http\Controllers\Admin\SuperShop\ExpenseManagementController::class, 'destroy'])->name($namePrefix . 'expenses.destroy');
+
+        // 10. Reports & Business Intelligence
+        Route::get('/reports', [\App\Http\Controllers\Admin\SuperShop\ReportsController::class, 'index'])->name($namePrefix . 'reports');
+
+        // =========================================================================
+        // 11. Branch Employee, Attendance & Salary Advance Management System
+        // =========================================================================
+        Route::group(['prefix' => 'employee-system'], function () use ($namePrefix) {
+            // Dashboard
+            Route::get('/dashboard', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeDashboardController::class, 'index'])->name($namePrefix . 'employee_system.dashboard');
+
+            // Employees Master & Bio-Data
+            Route::get('/employees', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'index'])->name($namePrefix . 'employee_system.employees.index');
+            Route::get('/employees/create', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'create'])->name($namePrefix . 'employee_system.employees.create');
+            Route::post('/employees/store', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'store'])->name($namePrefix . 'employee_system.employees.store');
+            Route::get('/employees/show/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'show'])->name($namePrefix . 'employee_system.employees.show');
+            Route::get('/employees/edit/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'edit'])->name($namePrefix . 'employee_system.employees.edit');
+            Route::match(['post', 'put'], '/employees/update/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'update'])->name($namePrefix . 'employee_system.employees.update');
+            Route::post('/employees/toggle-status/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'toggleStatus'])->name($namePrefix . 'employee_system.employees.toggle_status');
+            Route::get('/employees/document/view/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'viewDocument'])->name($namePrefix . 'employee_system.employees.document.view');
+            Route::get('/employees/document/download/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeController::class, 'downloadDocument'])->name($namePrefix . 'employee_system.employees.document.download');
+
+            // Attendance (Manual & Absent Detection)
+            Route::get('/attendance', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchAttendanceController::class, 'index'])->name($namePrefix . 'employee_system.attendance.index');
+            Route::post('/attendance/store', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchAttendanceController::class, 'store'])->name($namePrefix . 'employee_system.attendance.store');
+            Route::get('/attendance/calendar', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchAttendanceController::class, 'calendar'])->name($namePrefix . 'employee_system.attendance.calendar');
+            Route::post('/attendance/correction/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchAttendanceController::class, 'correction'])->name($namePrefix . 'employee_system.attendance.correction');
+            Route::post('/attendance/detect-absent', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchAttendanceController::class, 'triggerAbsentDetection'])->name($namePrefix . 'employee_system.attendance.detect_absent');
+
+            // Biometric Fingerprint Machines
+            Route::get('/devices', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchBiometricDeviceController::class, 'index'])->name($namePrefix . 'employee_system.devices.index');
+            Route::post('/devices/store', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchBiometricDeviceController::class, 'store'])->name($namePrefix . 'employee_system.devices.store');
+            Route::match(['post', 'put'], '/devices/update/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchBiometricDeviceController::class, 'update'])->name($namePrefix . 'employee_system.devices.update');
+            Route::post('/devices/test/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchBiometricDeviceController::class, 'testConnection'])->name($namePrefix . 'employee_system.devices.test');
+            Route::post('/devices/sync/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchBiometricDeviceController::class, 'syncNow'])->name($namePrefix . 'employee_system.devices.sync');
+
+            // Salary Advances & Central Advance Monitoring
+            Route::get('/advances', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchSalaryAdvanceController::class, 'index'])->name($namePrefix . 'employee_system.advances.index');
+            Route::post('/advances/store', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchSalaryAdvanceController::class, 'store'])->name($namePrefix . 'employee_system.advances.store');
+            Route::post('/advances/adjust/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchSalaryAdvanceController::class, 'adjust'])->name($namePrefix . 'employee_system.advances.adjust');
+            Route::get('/advances/central-report', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchSalaryAdvanceController::class, 'centralReport'])->name($namePrefix . 'employee_system.advances.central_report');
+
+            // Payroll & Salary Payments
+            Route::get('/payroll', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchPayrollController::class, 'index'])->name($namePrefix . 'employee_system.payroll.index');
+            Route::get('/payroll/show/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchPayrollController::class, 'show'])->name($namePrefix . 'employee_system.payroll.show');
+            Route::post('/payroll/generate', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchPayrollController::class, 'generate'])->name($namePrefix . 'employee_system.payroll.generate');
+            Route::post('/payroll/payment', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchPayrollController::class, 'recordPayment'])->name($namePrefix . 'employee_system.payroll.payment');
+            Route::get('/payroll/payslip/{itemId}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchPayrollController::class, 'payslip'])->name($namePrefix . 'employee_system.payroll.payslip');
+
+            // Leaves Management
+            Route::get('/leaves', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchLeaveController::class, 'index'])->name($namePrefix . 'employee_system.leaves.index');
+            Route::post('/leaves/store', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchLeaveController::class, 'store'])->name($namePrefix . 'employee_system.leaves.store');
+            Route::post('/leaves/status/{id}', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchLeaveController::class, 'updateStatus'])->name($namePrefix . 'employee_system.leaves.status');
+
+            // Reports & Sales Privacy
+            Route::get('/reports', [\App\Http\Controllers\Admin\SuperShop\Employee\BranchEmployeeReportController::class, 'index'])->name($namePrefix . 'employee_system.reports.index');
+        });
+    });
+};
+
+// 1. Primary admin route prefix: admin/supershop/*
+$registerSuperShopModule('admin/supershop', 'admin.supershop.');
+
+// 2. Direct clean URL prefix: supershop/*
+$registerSuperShopModule('supershop', 'supershop.');

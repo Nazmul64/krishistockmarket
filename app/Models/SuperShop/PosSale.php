@@ -34,6 +34,13 @@ class PosSale extends Model
         'sale_time',
     ];
 
+    protected $casts = [
+        'sale_time' => 'datetime',
+        'subtotal' => 'float',
+        'grand_total' => 'float',
+        'paid_amount' => 'float',
+    ];
+
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');

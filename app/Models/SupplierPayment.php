@@ -11,13 +11,16 @@ class SupplierPayment extends Model
 
     protected $fillable = [
         'supplier_id',
+        'receipt_no',
         'payment_date',
         'payment_method',
+        'cash_account',
         'amount',
         'bank_name',
         'account_name',
         'account_number',
         'transaction_id',
+        'attachment',
         'note',
         'created_by',
     ];

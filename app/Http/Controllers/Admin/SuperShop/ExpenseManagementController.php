@@ -16,10 +16,18 @@ class ExpenseManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $branches = Branch::where('status', 'active')->get();
-        $categories = ExpenseCategory::where('is_active', true)->get();
+        $user = Auth::user();
+        if ($user && $user->role === 'manager') {
+            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
+            // STRICT ISOLATION: Manager can ONLY view their own branch expenses
+            $selectedBranchId = $managerBranch ? $managerBranch->id : -1;
+            $branches = $managerBranch ? collect([$managerBranch]) : collect();
+        } else {
+            $branches = Branch::where('status', 'active')->get();
+            $selectedBranchId = $request->get('branch_id');
+        }
 
-        $selectedBranchId = $request->get('branch_id');
+        $categories = ExpenseCategory::where('is_active', true)->get();
         $selectedCatId = $request->get('category_id');
         $fromDate = $request->get('from_date');
         $toDate = $request->get('to_date');

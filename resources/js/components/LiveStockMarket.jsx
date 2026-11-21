@@ -3,6 +3,7 @@ import React from 'react';
 export default function LiveStockMarket({
     stocks = [],
     routes = {},
+    site = {},
     lang = 'en',
     t = {}
 }) {
@@ -155,7 +156,15 @@ export default function LiveStockMarket({
 
                 {/* Section Bottom Button */}
                 <div className="text-center mt-4 mt-md-5">
-                    <a href={routes.stock_index || '/stocks'} className="btn-browse-all-stocks">
+                    <a
+                        href={routes.stock_index || '/stocks'}
+                        className="btn-browse-all-stocks"
+                        style={{
+                            background: (site && site.button_color) ? site.button_color : 'var(--btn-theme-color, #007e8a)',
+                            borderColor: (site && site.button_color) ? site.button_color : 'var(--btn-theme-color, #007e8a)',
+                            color: 'var(--btn-theme-text-color, #ffffff)'
+                        }}
+                    >
                         <span>{lang === 'bn' ? 'সকল স্টক ও পূর্ণ মার্কেট রেট দেখুন' : 'View All Stocks & Complete Market Rates'}</span>
                         <i className="fa fa-chevron-right ms-2"></i>
                     </a>

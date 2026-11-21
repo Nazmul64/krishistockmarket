@@ -4,7 +4,9 @@ export default function Footer({
     site = {},
     routes = {},
     lang = 'en',
-    t = {}
+    t = {},
+    uiConfig = {},
+    activeTemplate = 'template_01_modern_agriculture'
 }) {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -46,6 +48,8 @@ export default function Footer({
                                     <li><a href={routes.stock_index || '/stocks'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.stocks || 'Stock Market'}</a></li>
                                     <li><a href={routes.gallery || '/gallery'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.gallery || 'Produce Gallery'}</a></li>
                                     <li><a href={routes.our_videos || '/our-videos'}><i className="fa fa-angle-right me-2 text-warning"></i> {lang === 'bn' ? 'আমাদের ভিডিওসমূহ' : 'Our Videos'}</a></li>
+                                    <li><a href="/agentpoint/login"><i className="fa fa-angle-right me-2 text-warning"></i> {lang === 'bn' ? 'এজেন্ট পয়েন্ট লগইন' : 'Agent Point Login'}</a></li>
+                                    <li><a href="/supplier/login"><i className="fa fa-angle-right me-2 text-warning"></i> {lang === 'bn' ? 'সাপ্লায়ার পোর্টাল' : 'Supplier Portal'}</a></li>
                                     <li><a href={routes.privacy || '/privacy-policy'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.privacy || 'Privacy Policy'}</a></li>
                                     <li><a href={routes.terms || '/terms'}><i className="fa fa-angle-right me-2 text-warning"></i> {t.terms || 'Terms & Conditions'}</a></li>
                                 </ul>

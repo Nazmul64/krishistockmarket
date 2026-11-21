@@ -39,6 +39,20 @@ class LoginController extends Controller
     }
 
     /**
+     * The user has been authenticated.
+     */
+    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    {
+        if ($user->hasRole('manager')) {
+            $branchId = $user->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', $user->id)->value('id');
+            if ($branchId) {
+                return redirect()->route('admin.supershop.branches.show', $branchId);
+            }
+        }
+        return redirect()->intended(route($user->getDashboardRoute()));
+    }
+
+    /**
      * Get the login username to be used by the controller.
      *
      * @return string

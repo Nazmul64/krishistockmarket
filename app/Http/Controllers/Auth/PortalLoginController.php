@@ -180,6 +180,21 @@ class PortalLoginController extends Controller
         );
 
         // Redirect to isolated dashboard
+        if ($user->hasRole('agent') || $user->hasRole('agent_manager') || in_array($portal, ['agent', 'agentpoint', 'agent-point'])) {
+            return redirect()->route('agent.dashboard');
+        }
+        if ($user->hasRole('supplier') || $user->hasRole('seller')) {
+            return redirect()->route('supplier.dashboard');
+        }
+        if ($user->hasRole('manager')) {
+            $branchId = $user->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', $user->id)->value('id');
+            if ($branchId) {
+                return redirect()->route('supershop.branches.show', $branchId);
+            }
+        }
+        if ($portal === 'supershop' && $user->hasAnyRole(['super_admin', 'admin'])) {
+            return redirect()->route('supershop.branches');
+        }
         return redirect()->intended(route($user->getDashboardRoute()));
     }
 
@@ -210,14 +225,16 @@ class PortalLoginController extends Controller
         $request->session()->regenerateToken();
 
         $loginRoute = match($portal) {
-            'admin'    => 'admin.login',
-            'manager'  => 'manager.login',
-            'employee' => 'employee.login',
-            'staff'    => 'staff.login',
-            'support'  => 'support.login',
-            'security' => 'security.login',
-            'audit'    => 'audit.login',
-            default    => 'login',
+            'admin'                              => 'admin.login',
+            'agent', 'agentpoint', 'agent-point' => 'agent.login',
+            'manager'                            => 'manager.login',
+            'employee'                           => 'employee.login',
+            'staff'                              => 'staff.login',
+            'support'                            => 'support.login',
+            'security'                           => 'security.login',
+            'audit'                              => 'audit.login',
+            'supplier'                           => 'supplier.login',
+            default                              => 'login',
         };
 
         return redirect()->route($loginRoute)->with('success', 'আপনি সফলভাবে লগআউট হয়েছেন।');
@@ -229,14 +246,17 @@ class PortalLoginController extends Controller
     private function getAuthorizedRolesForPortal(string $portal): array
     {
         return match($portal) {
-            'admin'    => ['super_admin', 'admin'],
-            'manager'  => ['manager', 'super_admin'],
-            'employee' => ['employee'],
-            'staff'    => ['staff'],
-            'support'  => ['support_lead', 'support_agent', 'super_admin'],
-            'security' => ['security_analyst', 'super_admin'],
-            'audit'    => ['auditor', 'super_admin'],
-            default    => ['user', 'customer'],
+            'admin'                              => ['super_admin', 'admin'],
+            'agent', 'agentpoint', 'agent-point' => ['agent', 'agent_manager', 'super_admin', 'admin'],
+            'manager'                            => ['manager', 'super_admin'],
+            'employee'                           => ['employee'],
+            'staff'                              => ['staff'],
+            'support'                            => ['support_lead', 'support_agent', 'super_admin'],
+            'security'                           => ['security_analyst', 'super_admin'],
+            'audit'                              => ['auditor', 'super_admin'],
+            'supershop'                          => ['super_admin', 'admin', 'manager', 'staff', 'employee', 'user', 'customer', 'supplier', 'seller'],
+            'supplier'                           => ['supplier', 'seller', 'super_admin', 'admin'],
+            default                              => ['user', 'customer', 'agent', 'super_admin', 'admin', 'manager', 'employee', 'staff', 'support_lead', 'support_agent', 'security_analyst', 'auditor', 'supplier', 'seller'],
         };
     }
 
@@ -246,14 +266,17 @@ class PortalLoginController extends Controller
     private function getGuardNameForPortal(string $portal): string
     {
         return match($portal) {
-            'admin'    => 'admin_guard',
-            'manager'  => 'staff_guard',
-            'employee' => 'staff_guard',
-            'staff'    => 'staff_guard',
-            'support'  => 'support_guard',
-            'security' => 'security_guard',
-            'audit'    => 'audit_guard',
-            default    => 'customer_guard',
+            'admin'                              => 'admin_guard',
+            'agent', 'agentpoint', 'agent-point' => 'staff_guard',
+            'manager'                            => 'staff_guard',
+            'employee'                           => 'staff_guard',
+            'staff'                              => 'staff_guard',
+            'support'                            => 'support_guard',
+            'security'                           => 'security_guard',
+            'audit'                              => 'audit_guard',
+            'supershop'                          => 'staff_guard',
+            'supplier'                           => 'customer_guard',
+            default                              => 'customer_guard',
         };
     }
 
@@ -271,6 +294,33 @@ class PortalLoginController extends Controller
                 'header_grad' => 'linear-gradient(135deg, #ea580c 0%, #d97706 50%, #f59e0b 100%)',
                 'action_url'  => route('admin.login.post'),
                 'icon'        => 'ti-crown',
+            ],
+            'agent', 'agentpoint', 'agent-point' => [
+                'title'       => 'Agent Point Hub & Manager Portal',
+                'subtitle'    => 'পয়েন্ট স্টক রিসিভ, কার্ডহোল্ডার বাজার বিতরণ ও দৈনিক ক্লোজিং ম্যানেজমেন্ট',
+                'badge'       => 'Agent Point Hub | Verified Manager',
+                'bg_gradient' => 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%)',
+                'header_grad' => 'linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%)',
+                'action_url'  => route('agent.login.post'),
+                'icon'        => 'ti-home',
+            ],
+            'supplier' => [
+                'title'       => 'Supplier & Vendor Portal',
+                'subtitle'    => 'পণ্য সরবরাহ আবেদন, চালান ট্র্যাকিং ও লেজার হিসাব',
+                'badge'       => 'Supplier Portal | Verified Vendor',
+                'bg_gradient' => 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a8a 100%)',
+                'header_grad' => 'linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%)',
+                'action_url'  => route('supplier.login.post'),
+                'icon'        => 'ti-truck',
+            ],
+            'supershop' => [
+                'title'       => 'Super Shop & Multi-Branch Portal',
+                'subtitle'    => 'সুপারশপ পিওএস টার্মিনাল, ইনভেন্টরি ও মাল্টি-ব্রাঞ্চ লগইন',
+                'badge'       => 'SuperShop Enterprise | Zero Trust',
+                'bg_gradient' => 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #064e3b 100%)',
+                'header_grad' => 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
+                'action_url'  => url('/supershop'),
+                'icon'        => 'ti-shopping-cart',
             ],
             'manager' => [
                 'title'       => 'Manager Operations Portal',

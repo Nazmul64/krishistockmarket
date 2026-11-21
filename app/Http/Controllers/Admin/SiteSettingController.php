@@ -145,6 +145,27 @@ class SiteSettingController extends Controller
         SiteSetting::updateOrCreate(['name' => 'title'], ['value' => $request->title ?? '']);
         SiteSetting::updateOrCreate(['name' => 'site_font_family'], ['value' => $request->site_font_family ?? 'Hind Siliguri']);
         SiteSetting::updateOrCreate(['name' => 'top_notice'], ['value' => $request->top_notice ?? '']);
+
+        // Theme Colors & Frontend Display Controls (Header, Button, Animation, Preloader, Why Choose Us)
+        $headerColor = $request->header_bg_color ?: ($request->header_color ?: '#ea580c');
+        SiteSetting::updateOrCreate(['name' => 'header_bg_color'], ['value' => $headerColor]);
+        SiteSetting::updateOrCreate(['name' => 'header_color'], ['value' => $headerColor]);
+
+        $buttonColor = $request->button_color ?: '#007e8a';
+        SiteSetting::updateOrCreate(['name' => 'button_color'], ['value' => $buttonColor]);
+
+        // Button Animation toggle: 1 (on) or 0 (off)
+        $buttonAnimation = ($request->has('button_animation') && in_array($request->button_animation, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'button_animation'], ['value' => $buttonAnimation]);
+
+        // Preloader Status toggle: 1 (on) or 0 (off)
+        $preloaderStatus = ($request->has('preloader_status') && in_array($request->preloader_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'preloader_status'], ['value' => $preloaderStatus]);
+
+        // Why Choose Us Section toggle: 1 (on) or 0 (off)
+        $whyChooseUsStatus = ($request->has('why_choose_us_status') && in_array($request->why_choose_us_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'why_choose_us_status'], ['value' => $whyChooseUsStatus]);
+
         SiteSetting::updateOrCreate(['name' => 'google_map_embed'], ['value' => $request->google_map_embed ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address1'], ['value' => $request->address1 ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address2'], ['value' => $request->address2 ?? '']);

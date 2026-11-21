@@ -24,13 +24,13 @@ class SupplierChecker
                 return redirect()->route('login')->with('error', 'আপনার একাউন্টটি নিষ্ক্রিয় করা হয়েছে।');
             }
 
-            if ($user->hasRole('supplier') || $user->hasRole('super_admin') || $user->hasRole('admin')) {
+            if ($user->hasRole('supplier') || $user->hasRole('seller') || $user->hasRole('super_admin') || $user->hasRole('admin')) {
                 return $next($request);
             }
 
             return redirect()->route($user->getDashboardRoute())->with('error', 'সাপ্লায়ার প্যানেলে অন্য ব্যবহারকারীর প্রবেশের অনুমতি নেই।');
         }
 
-        return redirect()->route('login');
+        return redirect()->route('supplier.login');
     }
 }

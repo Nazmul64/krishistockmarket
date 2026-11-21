@@ -45,8 +45,128 @@ export default function HomeApp({ data = {} }) {
     const features = data.features || [];
     const gallery = data.gallery || [];
 
+    // Centralized Dynamic UI Configuration (Active Template, Sections, Menus)
+    const uiConfig = data.ui_config || {};
+    const activeTemplate = uiConfig.active_template || 'template_01_modern_agriculture';
+    const sectionsWeb = uiConfig.sections_web || [];
+
+    // Section Component Registry
+    const sectionComponents = {
+        hero_slider: (
+            <HeroSlider
+                key="hero_slider"
+                sliders={sliders}
+                offerBanner={offerBanner}
+                routes={routes}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+        monthly_bazar: (
+            <MonthlyBazarSection
+                key="monthly_bazar"
+                products={data.monthly_bazar_products || []}
+                routes={routes}
+                site={site}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+        stock_market: (
+            <LiveStockMarket
+                key="stock_market"
+                stocks={stocks}
+                routes={routes}
+                site={site}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+        our_packages: (
+            <PackageSection
+                key="our_packages"
+                packages={packages}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+        membership_cards: (
+            <MembershipCards
+                key="membership_cards"
+                cardBenefits={cardBenefits}
+                routes={routes}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+        why_choose_us: (site.why_choose_us_status !== '0' && site.why_choose_us_status !== false && site.why_choose_us_status !== 0) ? (
+            <WhyChooseUs
+                key="why_choose_us"
+                features={features}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ) : null,
+        gallery: (
+            <ProductGallery
+                key="gallery"
+                gallery={gallery}
+                routes={routes}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+        contact_us: (
+            <ContactSection
+                key="contact_us"
+                site={site}
+                routes={routes}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ),
+    };
+
+    // Render sections either dynamically from admin configuration or default fallback
+    const renderHomepageSections = () => {
+        const isContactEnabled = site && site.contact_section_enabled !== false && site.contact_section_enabled !== '0';
+
+        if (sectionsWeb && sectionsWeb.length > 0) {
+            return sectionsWeb
+                .filter(sec => sec.is_enabled_web)
+                .filter(sec => sec.section_key !== 'contact_us' || isContactEnabled)
+                .map(sec => sectionComponents[sec.section_key])
+                .filter(Boolean);
+        }
+
+        // Default Fallback Ordering
+        const defaultList = [
+            sectionComponents.hero_slider,
+            sectionComponents.monthly_bazar,
+            sectionComponents.stock_market,
+            sectionComponents.our_packages,
+            sectionComponents.membership_cards,
+            sectionComponents.why_choose_us,
+            sectionComponents.gallery,
+        ];
+
+        if (isContactEnabled) {
+            defaultList.push(sectionComponents.contact_us);
+        }
+
+        return defaultList.filter(Boolean);
+    };
+
     return (
-        <div className="react-homepage-wrapper">
+        <div className={`react-homepage-wrapper theme-template-${activeTemplate}`}>
             {/* Topbar & Sticky Navigation with Live Search, Language Switcher & Dark Mode */}
             <Navbar
                 site={site}
@@ -60,72 +180,13 @@ export default function HomeApp({ data = {} }) {
                 theme={theme}
                 onToggleTheme={handleToggleTheme}
                 t={t}
+                uiConfig={uiConfig}
+                activeTemplate={activeTemplate}
             />
 
-            {/* Main Content Area */}
+            {/* Main Content Area: Dynamically rendered in exact admin drag-and-drop order */}
             <main className="react-main-body">
-                {/* Hero / Slider Section */}
-                <HeroSlider
-                    sliders={sliders}
-                    offerBanner={offerBanner}
-                    routes={routes}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* Monthly Bazar Showcase (Right below slider upon website entry) */}
-                <MonthlyBazarSection
-                    products={data.monthly_bazar_products || []}
-                    routes={routes}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* Live Stock Market Section */}
-                <LiveStockMarket
-                    stocks={stocks}
-                    routes={routes}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* Our Packages Showcase */}
-                <PackageSection
-                    packages={packages}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* SME & Golden Cards Section */}
-                <MembershipCards
-                    cardBenefits={cardBenefits}
-                    routes={routes}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* Why Choose Us */}
-                <WhyChooseUs
-                    features={features}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* Product Gallery Showcase */}
-                <ProductGallery
-                    gallery={gallery}
-                    routes={routes}
-                    lang={lang}
-                    t={t}
-                />
-
-                {/* Contact Section */}
-                <ContactSection
-                    site={site}
-                    routes={routes}
-                    lang={lang}
-                    t={t}
-                />
+                {renderHomepageSections()}
             </main>
 
             {/* Dynamic Footer */}
@@ -134,6 +195,8 @@ export default function HomeApp({ data = {} }) {
                 routes={routes}
                 lang={lang}
                 t={t}
+                uiConfig={uiConfig}
+                activeTemplate={activeTemplate}
             />
         </div>
     );

@@ -21,9 +21,12 @@ class SupplierSupply extends Model
         'supply_date',
         'invoice_file',
         'note',
-        'status',
+        'status', // pending, approved, rejected, under_review
+        'rejection_reason',
+        'delivery_note',
         'approved_by',
         'approved_at',
+        'stock_updated',
     ];
 
     public function supplier()

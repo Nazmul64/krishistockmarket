@@ -122,9 +122,9 @@
             <i class="fa fa-phone"></i>
             <span>হটলাইন: {{ $settings['shop_hotline'] ?? '09617900200' }}</span>
         </a>
-        <a href="{{ route('shop.track_order') }}" class="btn btn-sm w-100 fw-bold d-flex align-items-center justify-content-center gap-1 mt-2" style="background: #fff7ed; color: #ea580c; border: 1px solid #fdba74; font-size: 11px; border-radius: 6px; padding: 4px;">
+        <a href="{{ route('shop.track_order') }}" class="btn btn-sm w-100 fw-bold d-flex align-items-center justify-content-center gap-1 mt-2 text-white shadow-sm" style="background: var(--btn-theme-color, #007e8a); border: 1px solid var(--btn-theme-color, #007e8a); font-size: 11.5px; border-radius: 6px; padding: 6px 10px;">
             <i class="fa fa-truck-fast"></i>
-            <span>অর্ডার ট্র্যাক করুন (Track)</span>
+            <span>অর্ডার ট্র্যাক করুন</span>
         </a>
     </div>
 </div>

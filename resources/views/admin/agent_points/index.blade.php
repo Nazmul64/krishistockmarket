@@ -38,10 +38,13 @@
                                     <thead class="bg-primary text-white">
                                         <tr>
                                             <th>#</th>
+                                            <th>পয়েন্ট কোড</th>
                                             <th>এজেন্ট পয়েন্টের নাম</th>
+                                            <th>এজেন্ট / কর্মকর্তার নাম</th>
                                             <th>এলাকা / জেলা</th>
                                             <th>ঠিকানা</th>
-                                            <th>যোগাযোগ নাম্বার</th>
+                                            <th>মোবাইল</th>
+                                            <th>সদস্য ক্যাপাসিটি</th>
                                             <th>স্ট্যাটাস</th>
                                             <th class="text-center">অ্যাকশন</th>
                                         </tr>
@@ -50,10 +53,13 @@
                                         @forelse($agent_points as $key => $point)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
+                                                <td><span class="badge bg-secondary">{{ $point->code ?? ('AGP-' . $point->id) }}</span></td>
                                                 <td><strong class="text-dark">{{ $point->name }}</strong></td>
+                                                <td>{{ $point->agent_name ?? 'N/A' }}</td>
                                                 <td><span class="badge bg-info">{{ $point->area }}</span></td>
                                                 <td>{{ $point->address ?? 'N/A' }}</td>
                                                 <td>{{ $point->contact_number ?? 'N/A' }}</td>
+                                                <td><span class="badge bg-primary">{{ $point->capacity ?? 500 }} সদস্য</span></td>
                                                 <td>
                                                     @if($point->status === 'active')
                                                         <span class="badge bg-success">Active</span>
@@ -75,7 +81,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center text-muted py-4">
+                                                <td colspan="10" class="text-center text-muted py-4">
                                                     কোনো এজেন্ট পয়েন্ট পাওয়া যায়নি। নতুন যুক্ত করুন।
                                                 </td>
                                             </tr>
@@ -111,9 +117,26 @@
                         <input type="text" class="form-control" name="name" id="point_name" required placeholder="যেমন: নওগাঁ সেন্ট্রাল এজেন্ট পয়েন্ট">
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">এলাকা / জেলা <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="area" id="point_area" required placeholder="যেমন: নওগাঁ, বগুড়া, গাজীপুর, ঢাকা">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-bold">এজেন্ট / কর্মকর্তার নাম</label>
+                            <input type="text" class="form-control" name="agent_name" id="point_agent_name" placeholder="যেমন: মো: রফিকুল ইসলাম">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-bold">সদস্য ধারণক্ষমতা (Capacity)</label>
+                            <input type="number" class="form-control" name="capacity" id="point_capacity" value="500" placeholder="500">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-bold">এলাকা / এরিয়া <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="area" id="point_area" required placeholder="যেমন: নওগাঁ, বগুড়া, গাজীপুর, ঢাকা">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-bold">জেলা</label>
+                            <input type="text" class="form-control" name="district" id="point_district" placeholder="যেমন: নওগাঁ">
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -149,7 +172,10 @@ function editAgentPoint(point) {
     document.getElementById('modalTitle').innerHTML = '<i class="fa fa-edit me-2"></i> এজেন্ট পয়েন্ট এডিট করুন';
     document.getElementById('agent_point_id').value = point.id;
     document.getElementById('point_name').value = point.name;
+    document.getElementById('point_agent_name').value = point.agent_name || '';
+    document.getElementById('point_capacity').value = point.capacity || 500;
     document.getElementById('point_area').value = point.area;
+    document.getElementById('point_district').value = point.district || '';
     document.getElementById('point_address').value = point.address || '';
     document.getElementById('point_contact').value = point.contact_number || '';
     document.getElementById('point_status').value = point.status;

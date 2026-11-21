@@ -48,17 +48,286 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets') }}/css/style.css">
     <link id="color" href="{{ asset('frontend/assets') }}/css/color-schemes/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/react-frontend.css') }}?v={{ file_exists(public_path('css/react-frontend.css')) ? filemtime(public_path('css/react-frontend.css')) : time() }}">
+    <link rel="stylesheet" href="{{ asset('css/dynamic-templates.css') }}?v={{ file_exists(public_path('css/dynamic-templates.css')) ? filemtime(public_path('css/dynamic-templates.css')) : time() }}">
     <style>
         @php
             $activeFont = getActiveFontConfig();
             $fontFamilyCss = "'" . $activeFont['name'] . "', 'Hind Siliguri', " . $activeFont['fallback'];
+            $customHeaderColor = setting('header_bg_color') ?: (setting('header_color') ?: '#ea580c');
+            $customButtonColor = \App\Models\Ui\UiComponentSetting::get('global_button_bg_color', setting('button_color') ?: '#007e8a');
+            $btnAnimationActive = \App\Models\Ui\UiComponentSetting::get('global_button_animation', true);
+            $preloaderEnabled = \App\Models\Ui\UiComponentSetting::get('preloader_enabled', true);
+            $preloaderType = \App\Models\Ui\UiComponentSetting::get('preloader_type', 'cinematic_orbital');
+            $contactSectionEnabled = \App\Models\Ui\UiComponentSetting::get('contact_section_enabled', true);
+            $chatButtonEnabled = \App\Models\Ui\UiComponentSetting::get('chat_button_enabled', true);
+            $scrollButtonEnabled = \App\Models\Ui\UiComponentSetting::get('scroll_button_enabled', true);
         @endphp
+
+        {!! \App\Models\Ui\UiComponentSetting::getCssVariables() !!}
+
         :root {
             --site-font-family: {!! $fontFamilyCss !!};
+            --header-bg-custom: {{ $customHeaderColor }};
+            --golden-nav-bg: {{ $customHeaderColor }};
         }
         body, html, h1, h2, h3, h4, h5, h6, p, a, span, button, input, select, textarea {
             font-family: var(--site-font-family) !important;
         }
+
+        /* Dynamic Header Background Color for Website & Navbar */
+        html:not([data-theme="dark"]) .react-main-header.golden-navbar,
+        html:not([data-theme="dark"]) header.golden-navbar,
+        html:not([data-theme="dark"]) header.react-main-header,
+        html:not([data-theme="dark"]) header.sticky-top,
+        .golden-navbar:not(.dark-mode-override) {
+            background: {{ $customHeaderColor }} !important;
+        }
+
+        /* Dynamic Primary Action / All Buttons Across System */
+        .btn-theme-custom,
+        .btn-order-now,
+        .product-order-btn,
+        .btn-golden-action,
+        .monthly-bazar-home-showcase .card a.btn,
+        .stock-market-card a.btn,
+        .btn-primary-theme,
+        .btn-view-all {
+            background-color: var(--btn-theme-color) !important;
+            border-color: var(--btn-theme-color) !important;
+            color: var(--btn-theme-text-color, #ffffff) !important;
+            border-radius: var(--btn-theme-radius, 50px) !important;
+        }
+
+        .btn-theme-custom:hover,
+        .btn-order-now:hover,
+        .product-order-btn:hover,
+        .btn-golden-action:hover,
+        .monthly-bazar-home-showcase .card a.btn:hover {
+            background-color: var(--btn-theme-hover, #005f69) !important;
+            border-color: var(--btn-theme-hover, #005f69) !important;
+            color: var(--btn-theme-text-color, #ffffff) !important;
+        }
+
+        /* Dynamic Product Card Typography & Dimensions (Desktop & Mobile) */
+        .product-title,
+        .monthly-bazar-home-showcase .card a.text-dark {
+            font-size: var(--product-title-size) !important;
+            color: var(--product-title-color) !important;
+            font-weight: var(--product-title-weight) !important;
+        }
+
+        .product-price,
+        .monthly-bazar-home-showcase .card .product-price,
+        .monthly-bazar-home-showcase .card .text-success {
+            font-size: var(--product-price-size) !important;
+            color: var(--product-price-color) !important;
+            font-weight: var(--product-price-weight) !important;
+        }
+
+        .product-order-btn,
+        .monthly-bazar-home-showcase .card a.product-order-btn,
+        .monthly-bazar-home-showcase .card a.btn {
+            font-size: var(--product-btn-size) !important;
+            border-radius: var(--btn-theme-radius, 50px) !important;
+            background-color: var(--btn-theme-color, #007e8a) !important;
+            border-color: var(--btn-theme-color, #007e8a) !important;
+            color: var(--btn-theme-text-color, #ffffff) !important;
+            transition: all 0.25s ease !important;
+        }
+
+        @media (max-width: 767.98px) {
+            .product-order-btn,
+            .monthly-bazar-home-showcase .card a.product-order-btn,
+            .monthly-bazar-home-showcase .card a.btn {
+                font-size: var(--product-btn-size) !important;
+                padding-top: calc(var(--product-btn-size) * 0.45) !important;
+                padding-bottom: calc(var(--product-btn-size) * 0.45) !important;
+                padding-left: calc(var(--product-btn-size) * 0.65) !important;
+                padding-right: calc(var(--product-btn-size) * 0.65) !important;
+                min-height: calc(var(--product-btn-size) * 2.4) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                line-height: 1.2 !important;
+            }
+        }
+
+        .product-img-wrap,
+        .monthly-bazar-home-showcase .card a.bg-light {
+            height: var(--product-img-height) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .product-img-wrap img,
+        .monthly-bazar-home-showcase .card img {
+            width: var(--product-img-width) !important;
+            height: 100% !important;
+            object-fit: var(--product-img-fit) !important;
+        }
+
+        /* Dynamic Search Bar & Submit Button */
+        .header-search-bar-unified {
+            background-color: var(--search-bar-bg, #ffffff) !important;
+            border: 1.5px solid var(--search-bar-border, #e2e8f0) !important;
+        }
+
+        .header-search-bar-unified .unified-search-input {
+            background-color: transparent !important;
+        }
+
+        .unified-search-submit-btn,
+        .header-search-bar-unified .unified-search-submit-btn {
+            background: var(--search-btn-bg, #ea580c) !important;
+            color: var(--search-btn-text, #ffffff) !important;
+            border-color: var(--search-btn-bg, #ea580c) !important;
+        }
+
+        /* Floating Triggers: Live Chat & Scroll-to-Top Button */
+        #krishi-chat-trigger {
+            background: var(--chat-trigger-bg, #ea580c) !important;
+            color: var(--chat-trigger-icon, #ffffff) !important;
+        }
+        #krishi-chat-trigger i {
+            color: var(--chat-trigger-icon, #ffffff) !important;
+        }
+
+        .scroll-to-top-btn {
+            background: var(--scroll-trigger-bg, #ea580c) !important;
+            color: var(--scroll-trigger-icon, #ffffff) !important;
+        }
+        .scroll-to-top-btn i {
+            color: var(--scroll-trigger-icon, #ffffff) !important;
+        }
+
+        @if(!$chatButtonEnabled)
+        #krishi-chat-widget-wrapper {
+            display: none !important;
+        }
+        @endif
+
+        @if(!$scrollButtonEnabled)
+        .scroll-to-top-btn {
+            display: none !important;
+        }
+        @endif
+
+        @if(!$contactSectionEnabled)
+        #contact,
+        .contact-modern-section,
+        section#contact {
+            display: none !important;
+        }
+        @endif
+
+        /* Preloader Styles for Multiple Types */
+        .spinner-dual-ring {
+            display: inline-block;
+            width: 64px;
+            height: 64px;
+        }
+        .spinner-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 50px;
+            height: 50px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 5px solid var(--preloader-accent, #ea580c);
+            border-color: var(--preloader-accent, #ea580c) transparent var(--preloader-accent, #ea580c) transparent;
+            animation: spinner-dual-ring 1.2s linear infinite;
+        }
+        @keyframes spinner-dual-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pulse-wave-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--preloader-accent, #ea580c);
+            animation: pulseWave 1.8s ease-out infinite;
+            opacity: 0.8;
+        }
+        .pulse-wave-ring.wave-delay {
+            animation-delay: 0.9s;
+        }
+        @keyframes pulseWave {
+            0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+        }
+
+        .eco-leaf-spin {
+            animation: leafSway 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes leafSway {
+            0% { transform: rotate(-15deg) scale(0.95); }
+            100% { transform: rotate(15deg) scale(1.1); }
+        }
+        .eco-dots-loader span {
+            width: 10px;
+            height: 10px;
+            background: var(--preloader-accent, #10b981);
+            border-radius: 50%;
+            display: inline-block;
+            animation: ecoBounce 1.4s infinite ease-in-out both;
+        }
+        .eco-dots-loader span:nth-child(1) { animation-delay: -0.32s; }
+        .eco-dots-loader span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes ecoBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .top-progress-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 5px;
+            background: rgba(0,0,0,0.05);
+            z-index: 99999999;
+        }
+        .top-progress-bar-flow {
+            height: 100%;
+            background: var(--preloader-accent, #ea580c);
+            animation: progressFlow 1.6s infinite ease-in-out;
+        }
+        @keyframes progressFlow {
+            0% { width: 0%; left: 0; }
+            50% { width: 70%; left: 20%; }
+            100% { width: 100%; left: 100%; }
+        }
+
+        @if($btnAnimationActive)
+        /* Button Pulse & Shimmer Keyframes */
+        @keyframes dynamicBtnPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 126, 138, 0.65);
+            }
+            70% {
+                transform: scale(1.035);
+                box-shadow: 0 0 0 8px rgba(0, 126, 138, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 126, 138, 0);
+            }
+        }
+        .btn-animated-pulse,
+        .btn-order-pulse,
+        .btn-pulse-active {
+            animation: dynamicBtnPulse 2.2s infinite ease-in-out !important;
+            transition: all 0.3s ease !important;
+        }
+        @endif
         .rev_slider > ul li.slider-shape .slotholder::before {
             display: none !important;
             background: transparent !important;
@@ -571,39 +840,72 @@
 </head>
 
 <body class="{{ $siteTheme === 'dark' ? 'dark-theme' : '' }}" data-offset="200" data-spy="scroll" data-target=".ownavigation">
-    <!-- Seamless Cinematic ekrishisheba Animated Preloader -->
-    <div id="site-preloader" class="ekrishi-preloader-wrap">
-        <div class="ekrishi-preloader-stage">
-            <!-- Center Brand Core & Dual Orbital Glow -->
-            <div class="preloader-brand-core">
-                <div class="preloader-ambient-glow"></div>
-                <div class="preloader-orbital-ring"></div>
-                <div class="preloader-orbital-ring ring-reverse"></div>
-                <div class="preloader-logo-frame">
-                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" 
-                         alt="{{ setting('site_title', 'ekrishisheba') }}" 
-                         class="preloader-brand-img"
-                         onerror="this.onerror=null;this.src='{{ asset('upload/images/backend/logo/1794574025FD2hX.png') }}';">
-                    <div class="preloader-light-glint"></div>
+    @if($preloaderEnabled)
+    <!-- Dynamic Multi-Style Preloader System (Enabled / Controlled from Admin) -->
+    <div id="site-preloader" class="ekrishi-preloader-wrap preloader-type-{{ $preloaderType }}">
+        @if($preloaderType === 'cinematic_orbital')
+            <!-- 1. Cinematic Orbital Ring -->
+            <div class="ekrishi-preloader-stage">
+                <div class="preloader-brand-core">
+                    <div class="preloader-ambient-glow"></div>
+                    <div class="preloader-orbital-ring"></div>
+                    <div class="preloader-orbital-ring ring-reverse"></div>
+                    <div class="preloader-logo-frame">
+                        <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" 
+                             alt="{{ setting('site_title', 'ekrishisheba') }}" 
+                             class="preloader-brand-img"
+                             onerror="this.onerror=null;this.src='{{ asset('upload/images/backend/logo/1794574025FD2hX.png') }}';">
+                        <div class="preloader-light-glint"></div>
+                    </div>
+                </div>
+
+                <div class="preloader-meta-wrap">
+                    <p class="preloader-meta-subtitle">{{ $isBn ? 'স্মার্ট ডিজিটাল কৃষি সেবা প্ল্যাটফর্ম' : 'Smart Digital Agriculture Platform' }}</p>
+                    <div class="preloader-line-track">
+                        <div class="preloader-line-flow"></div>
+                    </div>
+                    <div class="preloader-status-meta">
+                        <span class="preloader-live-beacon"></span>
+                        <span class="preloader-status-caption">{{ $isBn ? 'লোড হচ্ছে...' : 'Loading...' }}</span>
+                    </div>
                 </div>
             </div>
-
-            <!-- Sleek Minimalist Meta & Progress Row -->
-            <div class="preloader-meta-wrap">
-                <p class="preloader-meta-subtitle">{{ $isBn ? 'স্মার্ট ডিজিটাল কৃষি সেবা প্ল্যাটফর্ম' : 'Smart Digital Agriculture Platform' }}</p>
-
-                <!-- Razor-sharp 3px Progress Line -->
-                <div class="preloader-line-track">
-                    <div class="preloader-line-flow"></div>
-                </div>
-
-                <div class="preloader-status-meta">
-                    <span class="preloader-live-beacon"></span>
-                    <span class="preloader-status-caption">{{ $isBn ? 'লোড হচ্ছে...' : 'Loading...' }}</span>
-                </div>
+        @elseif($preloaderType === 'spinner_circular')
+            <!-- 2. Circular Dual Spinner -->
+            <div class="text-center p-4">
+                <div class="spinner-dual-ring mb-3"></div>
+                <h5 class="fw-bold text-dark mt-2">{{ setting('title') ?: 'ekrishisheba' }}</h5>
+                <small class="text-muted">{{ $isBn ? 'অনুগ্রহ করে অপেক্ষা করুন...' : 'Please wait...' }}</small>
             </div>
-        </div>
+        @elseif($preloaderType === 'pulse_logo')
+            <!-- 3. Pulse Logo Wave -->
+            <div class="text-center p-4">
+                <div class="pulse-logo-container mb-3 position-relative d-inline-block" style="width: 100px; height: 100px; display: inline-flex; align-items: center; justify-content: center;">
+                    <div class="pulse-wave-ring"></div>
+                    <div class="pulse-wave-ring wave-delay"></div>
+                    <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" style="max-height: 52px; position: relative; z-index: 2;" onerror="this.onerror=null;this.src='{{ asset('upload/images/backend/logo/1794574025FD2hX.png') }}';">
+                </div>
+                <h6 class="fw-bold text-success mt-2">{{ $isBn ? 'লোড হচ্ছে...' : 'Loading...' }}</h6>
+            </div>
+        @elseif($preloaderType === 'leaf_agriculture')
+            <!-- 4. Eco Leaf & Dot Loader -->
+            <div class="text-center p-4">
+                <div class="eco-leaf-spin mb-3">
+                    <i class="fa fa-leaf fa-3x" style="color: var(--preloader-accent, #10b981);"></i>
+                </div>
+                <div class="eco-dots-loader d-flex justify-content-center gap-2 mt-2">
+                    <span></span><span></span><span></span>
+                </div>
+                <p class="fw-bold text-dark mt-2 small">{{ $isBn ? 'ডিজিটাল কৃষি সেবা লোড হচ্ছে...' : 'Loading Agriculture Services...' }}</p>
+            </div>
+        @elseif($preloaderType === 'progress_bar')
+            <!-- 5. Minimal Top Bar -->
+            <div class="top-progress-preloader">
+                <div class="top-progress-bar-flow"></div>
+            </div>
+        @endif
     </div>
+    @endif
 
     @if(!Route::is('/'))
     @php
@@ -615,7 +917,7 @@
         <div class="container">
             <div class="d-flex align-items-center w-100">
                 <!-- Notice Badge -->
-                <div class="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style="margin-right: 14px !important;">
+                <div class="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style="background: var(--btn-theme-color, #007e8a) !important; margin-right: 14px !important;">
                     <span class="marquee-live-dot" style="margin-right: 6px !important;"></span>
                     <i class="fa fa-bullhorn marquee-icon" style="margin-right: 6px !important;"></i>
                     <span class="marquee-badge-title">{{ $isBn ? 'নোটিশ:' : 'Notice:' }}</span>
@@ -1250,6 +1552,58 @@
                     });
                 }
             }
+
+            // Dynamic Typewriter Animation for Blade Search Inputs (Synchronized with App)
+            (function initSearchTypewriter() {
+                var isBn = {{ (app()->getLocale() === 'bn' || session('locale') === 'bn' || (isset($isBn) && $isBn)) ? 'true' : 'false' }};
+                var phrases = isBn ? [
+                    'সার্চ করুন স্টক, প্যাকেজ, পণ্য ও কার্ড...',
+                    'মাসিক বাজার ও নিত্যপ্রয়োজনীয় সুপারশপ অফার খুঁজুন...',
+                    'কৃষি প্যাকেজ, স্টোর ও স্পেশাল ডিসকাউন্ট খুঁজুন...',
+                    'লাইভ স্টক মার্কেট রেট ও বাজারদর যাচাই করুন...',
+                    'জমি, প্লট, ফ্ল্যাট ও প্রোপার্টি লিস্ট খুঁজুন...',
+                    'মেম্বারশিপ কার্ড ও বিশেষ ক্যাশব্যাক অফার খুঁজুন...'
+                ] : [
+                    'Search stocks, packages, products & cards...',
+                    'Search monthly bazar & daily supermarket items...',
+                    'Search agri packages, store items & cart deals...',
+                    'Search live stock market & commodity rates...',
+                    'Search land, plots, flats & properties...',
+                    'Search membership cards & exclusive bonus...'
+                ];
+
+                var pIdx = 0, cIdx = 0, isDeleting = false;
+
+                function stepTypewriter() {
+                    var deskInp = document.getElementById('bladeSearchInput');
+                    var mobInp = document.getElementById('bladeMobileSearchInput');
+                    var current = phrases[pIdx % phrases.length];
+                    var text = isDeleting ? current.substring(0, cIdx - 1) : current.substring(0, cIdx + 1);
+                    if (isDeleting) cIdx--; else cIdx++;
+
+                    if (deskInp && document.activeElement !== deskInp && !deskInp.value) {
+                        deskInp.setAttribute('placeholder', text);
+                    }
+                    if (mobInp && document.activeElement !== mobInp && !mobInp.value) {
+                        mobInp.setAttribute('placeholder', text);
+                    }
+
+                    var delay = isDeleting ? 35 : 75;
+                    if (!isDeleting && cIdx === current.length) {
+                        delay = 2200;
+                        isDeleting = true;
+                    } else if (isDeleting && cIdx === 0) {
+                        isDeleting = false;
+                        pIdx++;
+                        delay = 400;
+                    }
+                    setTimeout(stepTypewriter, delay);
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    setTimeout(stepTypewriter, 600);
+                });
+            })();
 
             document.addEventListener('DOMContentLoaded', function () {
                 bindBladeSearch('bladeSearchInput', 'bladeSearchResults', 'bladeSearchClear');

@@ -3,6 +3,7 @@
 namespace App\Models\Shop;
 
 use App\Models\User;
+use App\Models\SuperShop\Branch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,11 +19,22 @@ class ShopOrder extends Model
         'shipping_charge' => 'float',
         'discount_amount' => 'float',
         'total_amount' => 'float',
+        'assigned_at' => 'datetime',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function assignedByUser()
+    {
+        return $this->belongsTo(User::class, 'assigned_by');
     }
 
     public function items()

@@ -393,11 +393,31 @@
                                         </li>
 
                                         <!-- 4. Branch Management -->
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.branches' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.supershop.branches') }}">
-                                                <i class="ti-home text-primary"></i> <span>ব্রাঞ্চসমূহ ও ম্যানেজার তালিকা</span>
-                                            </a>
-                                        </li>
+                                        @if(Auth::check() && Auth::user()->role === 'manager')
+                                            @php
+                                                $myBranchId = Auth::user()->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', Auth::id())->value('id');
+                                            @endphp
+                                            @if($myBranchId)
+                                                <li class="{{ optional(Request::route())->getName() == 'admin.supershop.branches.show' && Request::route('id') == $myBranchId ? 'active' : '' }}">
+                                                    <a href="{{ route('admin.supershop.branches.show', $myBranchId) }}">
+                                                        <i class="ti-home text-primary"></i> <span>আমার ব্রাঞ্চ ড্যাশবোর্ড (My Branch)</span>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        @else
+                                            <li class="{{ optional(Request::route())->getName() == 'admin.supershop.branches' ? 'active' : '' }}">
+                                                <a href="{{ route('admin.supershop.branches') }}">
+                                                    <i class="ti-home text-primary"></i> <span>সকল ব্রাঞ্চ ওভারভিউ (Overview)</span>
+                                                </a>
+                                            </li>
+
+                                            <!-- 4.1 Branch Comparison -->
+                                            <li class="{{ optional(Request::route())->getName() == 'admin.supershop.branches.comparison' ? 'active' : '' }}">
+                                                <a href="{{ route('admin.supershop.branches.comparison') }}">
+                                                    <i class="ti-stats-up text-success"></i> <span>ব্রাঞ্চ পারফর্ম্যান্স তুলনা (Comparison)</span>
+                                                </a>
+                                            </li>
+                                        @endif
 
                                         <!-- 5. Branch Inventory -->
                                         <li class="{{ optional(Request::route())->getName() == 'admin.supershop.inventory' ? 'active' : '' }}">
@@ -452,6 +472,104 @@
                             @endif
 
                             <!-- ========================================================================= -->
+                            <!-- Branch Employee, Attendance & Salary Advance Management System -->
+                            <!-- ========================================================================= -->
+                            @if(Auth::check() && (Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->role == 'manager' || (method_exists(Auth::user(), 'hasRole') && (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin') || Auth::user()->hasRole('manager')))))
+                                <li class="header text-uppercase text-success fw-bold" style="letter-spacing: 0.5px;">
+                                    <i class="fa fa-users text-success me-1"></i> ব্রাঞ্চ কর্মচারী ও হাজিরা সিস্টেম
+                                </li>
+                                <li class="treeview {{ Str::contains(optional(Request::route())->getName(), 'employee_system') ? 'menu-open active' : '' }}">
+                                    <a href="#">
+                                        <i class="ti-id-badge text-success"></i>
+                                        <span>কর্মচারী, হাজিরা ও অগ্রিম</span>
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-right pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu {{ Str::contains(optional(Request::route())->getName(), 'employee_system') ? 'd-block' : '' }}">
+                                        <!-- 1. Dashboard -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.dashboard' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.dashboard') }}">
+                                                <i class="ti-dashboard text-primary"></i> <span>কর্মচারী ড্যাশবোর্ড</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 2. Employees Master List -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.employees.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.employees.index') }}">
+                                                <i class="ti-user text-info"></i> <span>স্টাফ তালিকা ও বায়োডাটা</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 3. Add Employee -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.employees.create' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.employees.create') }}">
+                                                <i class="ti-plus text-success"></i> <span>নতুন কর্মচারী নিবন্ধন</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 4. Daily Attendance Sheet -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.attendance.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.attendance.index') }}">
+                                                <i class="ti-calendar text-primary"></i> <span>দৈনিক উপস্থিতি (Attendance)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 5. Attendance Calendar -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.attendance.calendar' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.attendance.calendar') }}">
+                                                <i class="ti-layout-grid3 text-warning"></i> <span>মাসিক উপস্থিতি ক্যালেন্ডার</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 6. Biometric Fingerprint Machines -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.devices.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.devices.index') }}">
+                                                <i class="ti-thumb-up text-secondary"></i> <span>বায়োমেট্রিক মেশিন সিঙ্ক</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 7. Salary Advance -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.advances.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.advances.index') }}">
+                                                <i class="ti-wallet text-warning"></i> <span>বেতন অগ্রিম (Advance)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 8. Central Advance Report (Admin only) -->
+                                        @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || (method_exists(Auth::user(), 'hasRole') && (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))))
+                                            <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.advances.central_report' ? 'active' : '' }}">
+                                                <a href="{{ route('admin.supershop.employee_system.advances.central_report') }}">
+                                                    <i class="ti-bar-chart-alt text-danger"></i> <span>অল-ব্রাঞ্চ অগ্রিম রিপোর্ট</span>
+                                                </a>
+                                            </li>
+                                        @endif
+
+                                        <!-- 9. Monthly Payroll -->
+                                        <li class="{{ in_array(optional(Request::route())->getName(), ['admin.supershop.employee_system.payroll.index', 'admin.supershop.employee_system.payroll.show']) ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.payroll.index') }}">
+                                                <i class="ti-receipt text-success"></i> <span>মাসিক বেতন ও পে-রোল</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 10. Leaves -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.leaves.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.leaves.index') }}">
+                                                <i class="ti-time text-info"></i> <span>ছুটি ব্যবস্থাপনা (Leaves)</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- 11. Reports -->
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.supershop.employee_system.reports.index' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.supershop.employee_system.reports.index') }}">
+                                                <i class="ti-bar-chart text-dark"></i> <span>হাজিরা, বেতন ও সেলস রিপোর্ট</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+
+                            <!-- ========================================================================= -->
                             <!-- 2. Monthly Bazaar Management (মাসিক বাজার) -->
                             <!-- ========================================================================= -->
                             @if(Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin' || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin') || Auth::user()->hasPermission('monthly_bazaar'))
@@ -485,10 +603,69 @@
                                                 <span>এলাকাভিত্তিক ডিস্ট্রিবিউশন হিসাব</span>
                                             </a>
                                         </li>
-                                        <li class="{{ optional(Request::route())->getName() == 'admin.agent_points.index' ? 'active' : '' }}">
-                                            <a href="{{ route('admin.agent_points.index') }}">
-                                                <i class="fa fa-map-marker text-danger"></i>
-                                                <span>এজেন্ট পয়েন্ট ডেলিভারি হাব</span>
+                                        <li class="{{ Str::startsWith(optional(Request::route())->getName() ?? '', 'admin.agents.') ? 'active' : '' }}">
+                                            <a href="{{ route('admin.agents.index') }}">
+                                                <i class="fa fa-users text-primary"></i>
+                                                <span>এজেন্ট ও পয়েন্ট ব্যবস্থাপনা</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.agents.assign_cardholders' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.agents.assign_cardholders') }}">
+                                                <i class="fa fa-id-card text-info"></i>
+                                                <span>কার্ডহোল্ডার পয়েন্ট ম্যাপিং</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.agents.supply_allocation' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.agents.supply_allocation') }}">
+                                                <i class="fa fa-truck text-warning"></i>
+                                                <span>পণ্য বরাদ্দ ও ডিস্ট্রিবিউশন</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- Module 10: Central Customer Distribution Monitoring -->
+                                        <li class="header text-uppercase text-info fw-bold py-2 px-3 font-size-11" style="letter-spacing: 0.5px;">
+                                            <i class="fa fa-cubes text-info me-1"></i> ডিস্ট্রিবিউশন মনিটরিং
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.dashboard' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.dashboard') }}">
+                                                <i class="fa fa-dashboard text-danger"></i>
+                                                <span>সেন্ট্রাল বিতরণ ড্যাশবোর্ড</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.customer_list' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.customer_list') }}">
+                                                <i class="fa fa-id-card text-success"></i>
+                                                <span>গ্রাহক সংগ্রহ খতিয়ান</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.daily_agent_report' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.daily_agent_report') }}">
+                                                <i class="fa fa-calendar-check-o text-warning"></i>
+                                                <span>দৈনিক ক্রস-এজেন্ট রিপোর্ট</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.product_report' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.product_report') }}">
+                                                <i class="fa fa-cubes text-info"></i>
+                                                <span>পণ্যভিত্তিক বিতরণ খতিয়ান</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.date_wise_report' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.date_wise_report') }}">
+                                                <i class="fa fa-filter text-primary"></i>
+                                                <span>তারিখ ও ভাউচার ফিল্টার</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.comparison_report' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.comparison_report') }}">
+                                                <i class="fa fa-line-chart text-success"></i>
+                                                <span>পয়েন্ট পারফরম্যান্স তুলনা</span>
+                                            </a>
+                                        </li>
+                                        <li class="{{ optional(Request::route())->getName() == 'admin.distribution.daily_closings' ? 'active' : '' }}">
+                                            <a href="{{ route('admin.distribution.daily_closings') }}">
+                                                <i class="fa fa-lock text-danger"></i>
+                                                <span>দৈনিক ক্লোজিং অডিট অনুমোদন</span>
                                             </a>
                                         </li>
                                     </ul>
@@ -852,6 +1029,22 @@
                             @endif
 
                             @if(Auth::user()->hasPermission('settings') || Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                            <li class="treeview {{ (Str::startsWith(optional(Request::route())->getName(), 'admin.appearance')) ? 'active menu-open' : '' }}">
+                                <a href="javascript:void(0);" title="Appearance & Customization Studio">
+                                    <i class="fa fa-paint-brush text-success"></i>
+                                    <span class="fw-bold text-success">ডিজাইন ও টেমপ্লেট স্টুডিও</span>
+                                    <span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.appearance.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.appearance.index') }}"><i class="fa fa-th-large text-warning"></i> ১০টি টেমপ্লেট ও মেনু বিল্ডার</a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.appearance.components' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.appearance.components') }}"><i class="fa fa-sliders text-success"></i> প্রোডাক্ট ও কম্পোনেন্ট কাস্টমাইজার</a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="{{ (optional(Request::route())->getName() == 'setting.index') ? 'active menu-open' : '' }}">
                                 <a href="{{ route('setting.index') }}" title="ফন্ট সেটিংস">
                                     <i class="fa fa-font text-warning"></i>
@@ -1089,6 +1282,12 @@
                                 </a>
                                 <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'setting.index')||(optional(Request::route())->getName() == 'setting.slider')||(optional(Request::route())->getName() == 'admin.our_packages.index')||(optional(Request::route())->getName() == 'setting.offer_banner')||(optional(Request::route())->getName() == 'profile.index')||(optional(Request::route())->getName() == 'admin.payment.index')||Str::startsWith(optional(Request::route())->getName(), 'admin.our_videos') ? 'd-block' : '' }}">
                                     <li class="">
+                                        <a href="{{ route('setting.index') }}#theme_display_settings_card">
+                                            <i class="ti-more"></i>
+                                            <span class="text-success fw-bold"><i class="fa fa-paint-brush me-1"></i> Theme & Colors (হেডার ও বাটন)</span>
+                                        </a>
+                                    </li>
+                                    <li class="">
                                         <a href="{{ route('setting.index') }}">
                                             <i class="ti-more"></i>
                                             <span>Site & Font Setting (ফন্ট ও সাইট সেটিংস)</span>
@@ -1203,69 +1402,159 @@
                             </li>
                             @endif
 
+                            <!-- Monthly Market Request & Area Distribution System (SRD Modules 02, 03, 04) -->
+                            <li class="header">মাসিক বাজার ও ডিস্ট্রিবিউশন</li>
+                            <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'admin.monthly_market.') || str_contains(optional(Request::route())->getName() ?? '', 'admin.agent_points.') ? 'menu-open' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-shopping-basket text-success"></i>
+                                    <span>বাজার চাহিদা ও ডিস্ট্রিবিউশন</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ str_contains(optional(Request::route())->getName() ?? '', 'admin.monthly_market.') || str_contains(optional(Request::route())->getName() ?? '', 'admin.agent_points.') ? 'd-block' : '' }}">
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.monthly_market.requests' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.monthly_market.requests') }}">
+                                            <i class="ti-more"></i>
+                                            <span>বাজার চাহিদা রিকোয়েস্ট</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.monthly_market.demand_analysis' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.monthly_market.demand_analysis') }}">
+                                            <i class="ti-more"></i>
+                                            <span>ডিমান্ড অ্যানালাইসিস</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.monthly_market.allocations' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.monthly_market.allocations') }}">
+                                            <i class="ti-more"></i>
+                                            <span>এজেন্ট পয়েন্ট বরাদ্দ</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.monthly_market.dispatches' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.monthly_market.dispatches') }}">
+                                            <i class="ti-more"></i>
+                                            <span>সেন্ট্রাল ডিসপ্যাচ ও চালান</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.agent_points.index' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.agent_points.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>এজেন্ট পয়েন্ট ব্যবস্থাপনা</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.monthly_market.reports' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.monthly_market.reports') }}">
+                                            <i class="ti-more"></i>
+                                            <span>সার্বিক ডিস্ট্রিবিউশন রিপোর্ট</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                         <!-- ================================= /Admin sidebar menu-->
 
                         <!-- ================================= User sidebar menu-->
                         @elseif (Auth::user()->role == "user")
-                            <li class="{{ (optional(Request::route())->getName() == 'stock.index') ? 'menu-open' : '' }}">
-                                <a href="{{ route('stock.index') }}">
-                                    
-                                    <span>Stock</span>
+                            <li class="{{ (optional(Request::route())->getName() == 'portal.dashboard' || optional(Request::route())->getName() == 'home' || optional(Request::route())->getName() == 'user.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('portal.dashboard') }}">
+                                    <i class="ti-dashboard text-success"></i>
+                                    <span>ড্যাশবোর্ড (Dashboard)</span>
                                 </a>
                             </li>
-                            <li class="header">User Managment</li>
 
+                            <li class="header text-uppercase text-success fw-bold" style="letter-spacing: 0.5px;">
+                                <i class="fa fa-user-circle text-success me-1"></i> কাস্টমার সার্ভিস পোর্টাল
+                            </li>
 
-                            <li class="treeview {{ (optional(Request::route())->getName() == 'userbuystocklist')||(optional(Request::route())->getName() == 'usersellstocklist') ? 'menu-open' : '' }}">
+                            <!-- Digital Membership & 3D Cards -->
+                            <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'user.corporate.card') ? 'menu-open' : '' }}">
                                 <a href="#">
-                                    
-                                    <span>My Stock</span>
+                                    <i class="fa fa-id-card me-2" style="color: #8b5cf6;"></i>
+                                    <span>মেম্বারশিপ ও কার্ড</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
                                 </a>
-                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'userbuystocklist')||(optional(Request::route())->getName() == 'usersellstocklist') ? 'd-block' : '' }}">
-
-                                    <li class="">
-                                        <a href="{{ route('userbuystocklist') }}">
+                                <ul class="treeview-menu {{ str_contains(optional(Request::route())->getName() ?? '', 'user.corporate.card') ? 'd-block' : '' }}">
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.corporate.card') ? 'active' : '' }}">
+                                        <a href="{{ route('user.corporate.card') }}">
                                             <i class="ti-more"></i>
-                                            <span>Buy list</span>
+                                            <span>ডিজিটাল কার্ড (3D Card)</span>
                                         </a>
                                     </li>
-                                    <li class="">
-                                        <a href="{{ route('usersellstocklist') }}">
-                                            <i class="ti-more"></i>
-                                            <span>Sell List</span>
-                                        </a>
-                                    </li>
-
                                 </ul>
                             </li>
 
-                            <li class="treeview {{ (optional(Request::route())->getName() == 'user.monthly_bazaar.index') || (optional(Request::route())->getName() == 'user.monthly_bazaar.my_orders') ? 'menu-open' : '' }}">
+                            <!-- Stock Management -->
+                            <li class="treeview {{ (optional(Request::route())->getName() == 'stock.index')||(optional(Request::route())->getName() == 'userbuystocklist')||(optional(Request::route())->getName() == 'usersellstocklist') ? 'menu-open' : '' }}">
                                 <a href="#">
-                                    
-                                    <span>মাসিক বাজার</span>
+                                    <i class="fa fa-line-chart text-primary me-2"></i>
+                                    <span>স্টক ম্যানেজমেন্ট (Stock)</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
                                 </a>
-                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'user.monthly_bazaar.index') || (optional(Request::route())->getName() == 'user.monthly_bazaar.my_orders') ? 'd-block' : '' }}">
-                                    <li class="">
+                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'stock.index')||(optional(Request::route())->getName() == 'userbuystocklist')||(optional(Request::route())->getName() == 'usersellstocklist') ? 'd-block' : '' }}">
+                                    <li class="{{ (optional(Request::route())->getName() == 'stock.index') ? 'active' : '' }}">
+                                        <a href="{{ route('stock.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span>লাইভ স্টক মার্কেট</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'userbuystocklist') ? 'active' : '' }}">
+                                        <a href="{{ route('userbuystocklist') }}">
+                                            <i class="ti-more"></i>
+                                            <span>বাই লিস্ট (Buy list)</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'usersellstocklist') ? 'active' : '' }}">
+                                        <a href="{{ route('usersellstocklist') }}">
+                                            <i class="ti-more"></i>
+                                            <span>সেল লিস্ট (Sell List)</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Monthly Bazaar & Card Holder Market Request -->
+                            <li class="treeview {{ (optional(Request::route())->getName() == 'user.monthly_bazaar.index') || (optional(Request::route())->getName() == 'user.monthly_bazaar.my_orders') || (optional(Request::route())->getName() == 'user.monthly_market.request') || (optional(Request::route())->getName() == 'user.monthly_market.my_requests') ? 'menu-open' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-shopping-basket text-warning me-2"></i>
+                                    <span>মাসিক বাজার ও চাহিদা</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ (optional(Request::route())->getName() == 'user.monthly_bazaar.index') || (optional(Request::route())->getName() == 'user.monthly_bazaar.my_orders') || (optional(Request::route())->getName() == 'user.monthly_market.request') || (optional(Request::route())->getName() == 'user.monthly_market.my_requests') ? 'd-block' : '' }}">
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.monthly_market.request') ? 'active' : '' }}">
+                                        <a href="{{ route('user.monthly_market.request') }}">
+                                            <i class="ti-more"></i>
+                                            <span>বাজার চাহিদা সাবমিট করুন</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.monthly_market.my_requests') ? 'active' : '' }}">
+                                        <a href="{{ route('user.monthly_market.my_requests') }}">
+                                            <i class="ti-more"></i>
+                                            <span>আমার চাহিদা ও টোকেন স্লিপ</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.monthly_bazaar.index') ? 'active' : '' }}">
                                         <a href="{{ route('user.monthly_bazaar.index') }}">
                                             <i class="ti-more"></i>
                                             <span>মাসিক বাজার প্যাকেজ</span>
                                         </a>
                                     </li>
-                                    <li class="">
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.monthly_bazaar.my_orders') ? 'active' : '' }}">
                                         <a href="{{ route('user.monthly_bazaar.my_orders') }}">
                                             <i class="ti-more"></i>
-                                            <span>আমার অর্ডারসমূহ</span>
+                                            <span>আমার প্যাকেজ অর্ডারসমূহ</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
 
+                            <!-- Properties & Real Estate -->
                             <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'user.properties.') ? 'menu-open' : '' }}">
                                 <a href="#">
                                     <i class="fa fa-map-signs text-success me-2"></i>
@@ -1296,23 +1585,64 @@
                                 </ul>
                             </li>
 
-                            <li class="{{ (optional(Request::route())->getName() == 'user.deposit.index') ? 'menu-open' : '' }}">
+                            <!-- Share, Investments & Corporate Services -->
+                            <li class="treeview {{ str_contains(optional(Request::route())->getName() ?? '', 'user.corporate.') ? 'menu-open' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-university text-info me-2"></i>
+                                    <span>শেয়ার ও প্রাতিষ্ঠানিক সেবা</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ str_contains(optional(Request::route())->getName() ?? '', 'user.corporate.') ? 'd-block' : '' }}">
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.corporate.investments') ? 'active' : '' }}">
+                                        <a href="{{ route('user.corporate.investments') }}">
+                                            <i class="ti-more"></i>
+                                            <span>আমার বিনিয়োগ ও লভ্যাংশ</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.corporate.shareholder') ? 'active' : '' }}">
+                                        <a href="{{ route('user.corporate.shareholder') }}">
+                                            <i class="ti-more"></i>
+                                            <span>শেয়ারহোল্ডার প্রোফাইল</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.corporate.partnership') ? 'active' : '' }}">
+                                        <a href="{{ route('user.corporate.partnership') }}">
+                                            <i class="ti-more"></i>
+                                            <span>পার্টনারশিপ প্রোফাইল</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ (optional(Request::route())->getName() == 'user.corporate.community') ? 'active' : '' }}">
+                                        <a href="{{ route('user.corporate.community') }}">
+                                            <i class="ti-more"></i>
+                                            <span>মেম্বার কমিউনিটি ফোরাম</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Wallet & Transactions -->
+                            <li class="{{ (optional(Request::route())->getName() == 'user.deposit.index') ? 'active' : '' }}">
                                 <a href="{{ route('user.deposit.index') }}">
-                                    
+                                    <i class="fa fa-plus-circle text-success me-2"></i>
                                     <span>Deposit Money (ডিপোজিট)</span>
                                 </a>
                             </li>
 
-                            <li class="{{ (optional(Request::route())->getName() == 'user.wallet.ledger') ? 'menu-open' : '' }}">
+                            <li class="{{ (optional(Request::route())->getName() == 'user.wallet.ledger') ? 'active' : '' }}">
                                 <a href="{{ route('user.wallet.ledger') }}">
-                                    
+                                    <i class="fa fa-file-text-o text-warning me-2"></i>
                                     <span>Wallet Ledger (ওয়ালেট খতিয়ান)</span>
                                 </a>
                             </li>
 
-                            <li class="{{ (optional(Request::route())->getName() == 'my.cart') ? 'menu-open' : '' }}">
+                            <li class="{{ (optional(Request::route())->getName() == 'my.cart') ? 'active' : '' }}">
                                 <a href="{{ route('my.cart') }}" class="d-flex align-items-center justify-content-between">
-                                    <span>My Cart</span>
+                                    <span>
+                                        <i class="fa fa-shopping-cart text-danger me-2"></i>
+                                        My Cart (শপিং ব্যাগ)
+                                    </span>
                                     @php
                                         $sidebarCartCount = \App\Models\UserCart::where('user_id', Auth::id())->sum('quantity');
                                     @endphp
@@ -1322,8 +1652,8 @@
 
                             <li class="treeview {{ (optional(Request::route())->getName() == 'withdraw.index')||(optional(Request::route())->getName() == 'withdraw.form') ? 'menu-open' : '' }}">
                                 <a href="#">
-                                    
-                                        <span>Withdraw</span>
+                                    <i class="fa fa-money text-success me-2"></i>
+                                    <span>Withdraw (উত্তোলন)</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
@@ -1344,17 +1674,18 @@
                                 </ul>
                             </li>
 
-
                             <li class="{{ (optional(Request::route())->getName() == 'payment.index') ? 'active' : '' }}">
                                 <a href="{{ route('payment.index') }}">
-                                    <i class="ti-more"></i>
+                                    <i class="fa fa-credit-card text-info me-2"></i>
                                     <span>পেমেন্ট মেথড</span>
                                 </a>
                             </li>
 
+                            <!-- Settings & Logout -->
                             <li class="treeview {{ (optional(Request::route())->getName() == 'profile.index') ? 'menu-open' : '' }}">
                                 <a href="#">
-                                    <span>Settings</span>
+                                    <i class="fa fa-cog text-secondary me-2"></i>
+                                    <span>Settings (সেটিংস)</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
@@ -1366,34 +1697,120 @@
                                             <span>My Profile</span>
                                         </a>
                                     </li>
+                                    <li class="">
+                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('customer-logout-form').submit();" class="text-danger">
+                                            <i class="ti-power-off text-danger"></i>
+                                            <span class="text-danger">লগআউট (Logout)</span>
+                                        </a>
+                                        <form id="customer-logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </li>
                                 </ul>
                             </li>
                         <!-- ================================ /User sidebar menu -->
-                        @elseif (Auth::user()->role == "supplier")
+                        @elseif (Auth::user()->role == "supplier" || Auth::user()->hasRole('supplier') || Auth::user()->hasRole('seller'))
 
                         <!-- ================================ Supplier sidebar menu -->
-                        <li class="{{ (optional(Request::route())->getName() == 'supplier.dashboard') ? 'menu-open' : '' }}">
+                        <li class="{{ (optional(Request::route())->getName() == 'supplier.dashboard') ? 'menu-open active' : '' }}">
                             <a href="{{ route('supplier.dashboard') }}">
-                                
+                                <i class="fa fa-dashboard text-success me-2"></i>
                                 <span>সাপ্লায়ার ড্যাশবোর্ড</span>
                             </a>
                         </li>
-                        <li class="{{ (optional(Request::route())->getName() == 'supplier.supplies.index') ? 'menu-open' : '' }}">
+                        <li class="{{ (optional(Request::route())->getName() == 'supplier.supplies.index') ? 'menu-open active' : '' }}">
                             <a href="{{ route('supplier.supplies.index') }}">
-                                
+                                <i class="fa fa-cubes text-info me-2"></i>
                                 <span>আমার সরবরাহকৃত পণ্য</span>
                             </a>
                         </li>
-                        <li class="{{ (optional(Request::route())->getName() == 'supplier.supplies.create') ? 'menu-open' : '' }}">
+                        <li class="{{ (optional(Request::route())->getName() == 'supplier.supplies.create') ? 'menu-open active' : '' }}">
                             <a href="{{ route('supplier.supplies.create') }}">
-                                
+                                <i class="fa fa-plus-circle text-warning me-2"></i>
                                 <span>নতুন পণ্য এন্ট্রি/পোস্টিং</span>
                             </a>
                         </li>
-                        <li class="{{ (optional(Request::route())->getName() == 'supplier.statement') ? 'menu-open' : '' }}">
+                        <li class="{{ (optional(Request::route())->getName() == 'supplier.statement') ? 'menu-open active' : '' }}">
                             <a href="{{ route('supplier.statement') }}">
-                                
+                                <i class="fa fa-file-text-o text-primary me-2"></i>
                                 <span>অ্যাকাউন্ট স্টেটমেন্ট</span>
+                            </a>
+                        </li>
+                        @elseif (Auth::user()->role == "agent" || Auth::user()->hasRole('agent'))
+
+                        <!-- ================================ Agent Point Dedicated Sidebar Menu ================================ -->
+                        <li class="header text-uppercase text-warning fw-bold px-3 pt-3 font-size-11" style="letter-spacing: 0.5px;">
+                            <i class="fa fa-building-o text-warning me-1"></i> এজেন্ট পয়েন্ট হাব
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.dashboard') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.dashboard') }}">
+                                <i class="fa fa-dashboard text-warning me-2"></i>
+                                <span>এজেন্ট ড্যাশবোর্ড</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.stock.incoming') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.stock.incoming') }}">
+                                <i class="fa fa-truck text-info me-2"></i>
+                                <span>আগত পণ্য রিসিভ (Incoming Stock)</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.inventory') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.inventory') }}">
+                                <i class="fa fa-cubes text-success me-2"></i>
+                                <span>পয়েন্ট স্টক ও ইনভেন্টরি</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.stock.ledger') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.stock.ledger') }}">
+                                <i class="fa fa-list-alt text-primary me-2"></i>
+                                <span>স্টক লেজার ও ট্রানজেকশন</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.orders') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.orders') }}">
+                                <i class="fa fa-shopping-basket text-danger me-2"></i>
+                                <span>কার্ডহোল্ডার অর্ডার ডেলিভারি</span>
+                            </a>
+                        </li>
+
+                        <!-- Module 09: Agent Point Customer Distribution System -->
+                        <li class="header text-uppercase text-success fw-bold py-2 px-3 font-size-11" style="letter-spacing: 0.5px;">
+                            <i class="fa fa-shopping-bag text-success me-1"></i> গ্রাহক বাজার বিতরণ (Module 09)
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.distribution.entry') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.distribution.entry') }}">
+                                <i class="fa fa-qrcode text-warning me-2"></i>
+                                <span>বাজার বিতরণ এন্ট্রি (QR/Card)</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.distribution.daily_register') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.distribution.daily_register') }}">
+                                <i class="fa fa-calendar-check-o text-info me-2"></i>
+                                <span>দৈনিক বিতরণ রেজিস্টার</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.distribution.customers') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.distribution.customers') }}">
+                                <i class="fa fa-users text-primary me-2"></i>
+                                <span>পয়েন্ট কার্ডহোল্ডার তালিকা</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.distribution.product_report') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.distribution.product_report') }}">
+                                <i class="fa fa-bar-chart text-success me-2"></i>
+                                <span>বিতরণকৃত পণ্য রিপোর্ট</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'agent.distribution.daily_closing') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('agent.distribution.daily_closing') }}">
+                                <i class="fa fa-lock text-danger me-2"></i>
+                                <span>দৈনিক ক্লোজিং দাখিল</span>
+                            </a>
+                        </li>
+                        <li class="{{ (optional(Request::route())->getName() == 'profile.index') ? 'menu-open active' : '' }}">
+                            <a href="{{ route('profile.index') }}">
+                                <i class="fa fa-user me-2 text-secondary"></i>
+                                <span>এজেন্ট প্রোফাইল</span>
                             </a>
                         </li>
                         @else

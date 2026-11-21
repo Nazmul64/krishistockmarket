@@ -1,7 +1,8 @@
 @extends('layouts.backend.app')
 
 @section('content')
-<div class="container-full">
+<div class="content-wrapper">
+    <div class="container-full">
     <div class="content-header">
         <div class="d-flex align-items-center justify-content-between">
             <div>
@@ -178,5 +179,6 @@
             </div>
         </div>
     </section>
+    </div>
 </div>
 @endsection

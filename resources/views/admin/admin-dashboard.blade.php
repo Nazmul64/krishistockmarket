@@ -237,87 +237,96 @@
         <div class="chinchins-dash-wrap">
 
             <!-- ============================================================== -->
+            <!-- ============================================================== -->
             <!-- SECTION 1: TOP 4 STAT CARDS (EXACT SCREENSHOT REPLICA)          -->
             <!-- ============================================================== -->
             <div class="row g-3">
                 <!-- Card 1: Total Users -->
                 <div class="col-xl-3 col-md-6 col-12">
-                    <div class="ch-stat-card">
-                        <div class="ch-stat-top">
-                            <span class="ch-stat-label">Total Users</span>
-                            <span class="ch-pill ch-pill-green">+ Active <i class="fa fa-arrow-up font-size-10"></i></span>
+                    <a href="{{ route('alluser') }}" class="text-decoration-none d-block">
+                        <div class="ch-stat-card" style="cursor: pointer;">
+                            <div class="ch-stat-top">
+                                <span class="ch-stat-label">Total Users (মোট ইউজার)</span>
+                                <span class="ch-pill ch-pill-green">+ Active ({{ number_format($activeUsers) }}) <i class="fa fa-arrow-up font-size-10"></i></span>
+                            </div>
+                            <div class="ch-stat-bottom">
+                                <div class="ch-stat-val">{{ number_format($totalUsers) }}</div>
+                                <!-- Red Smooth Sparkline Wave -->
+                                <svg class="ch-sparkline-svg" viewBox="0 0 100 35">
+                                    <path d="M0,24 C20,24 30,5 50,5 C70,5 80,30 100,18" fill="none" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div class="ch-stat-bottom">
-                            <div class="ch-stat-val">{{ number_format($totalUsers) }}</div>
-                            <!-- Red Smooth Sparkline Wave -->
-                            <svg class="ch-sparkline-svg" viewBox="0 0 100 35">
-                                <path d="M0,24 C20,24 30,5 50,5 C70,5 80,30 100,18" fill="none" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round"></path>
-                            </svg>
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
-                <!-- Card 2: Coins in System -->
+                <!-- Card 2: Card Members (Replacing Coins in System) -->
                 <div class="col-xl-3 col-md-6 col-12">
-                    <div class="ch-stat-card">
-                        <div class="ch-stat-top">
-                            <span class="ch-stat-label">Coins in System</span>
-                            <span class="ch-pill ch-pill-amber">Circulating</span>
-                        </div>
-                        <div class="ch-stat-bottom">
-                            <div class="ch-stat-val" style="color: #d97706;">
-                                {{ number_format($netVaultBalance > 0 ? $netVaultBalance : 113360) }}
+                    <a href="{{ route('admin.card_numbers.index') }}" class="text-decoration-none d-block">
+                        <div class="ch-stat-card" style="cursor: pointer;">
+                            <div class="ch-stat-top">
+                                <span class="ch-stat-label">Card Members (কার্ড সদস্য)</span>
+                                <span class="ch-pill ch-pill-amber">12-Digit Cards <i class="fa fa-id-card font-size-10"></i></span>
                             </div>
-                            <!-- Mini Vertical Bars (Blue) -->
-                            <div class="ch-mini-bars">
-                                <span class="ch-bar-col ch-bar-blue" style="height: 10px;"></span>
-                                <span class="ch-bar-col ch-bar-blue" style="height: 16px;"></span>
-                                <span class="ch-bar-col ch-bar-blue" style="height: 24px;"></span>
-                                <span class="ch-bar-col ch-bar-blue" style="height: 18px;"></span>
-                                <span class="ch-bar-col ch-bar-blue" style="height: 30px;"></span>
-                                <span class="ch-bar-col ch-bar-blue" style="height: 26px;"></span>
+                            <div class="ch-stat-bottom">
+                                <div class="ch-stat-val" style="color: #d97706;">
+                                    {{ number_format($totalCardMembers) }}
+                                </div>
+                                <!-- Mini Vertical Bars (Blue) -->
+                                <div class="ch-mini-bars">
+                                    <span class="ch-bar-col ch-bar-blue" style="height: 10px;"></span>
+                                    <span class="ch-bar-col ch-bar-blue" style="height: 16px;"></span>
+                                    <span class="ch-bar-col ch-bar-blue" style="height: 24px;"></span>
+                                    <span class="ch-bar-col ch-bar-blue" style="height: 18px;"></span>
+                                    <span class="ch-bar-col ch-bar-blue" style="height: 30px;"></span>
+                                    <span class="ch-bar-col ch-bar-blue" style="height: 26px;"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
                 <!-- Card 3: Deposit Revenue -->
                 <div class="col-xl-3 col-md-6 col-12">
-                    <div class="ch-stat-card">
-                        <div class="ch-stat-top">
-                            <span class="ch-stat-label">Deposit Revenue</span>
-                            <span class="ch-pill ch-pill-green">+ Deposited <i class="fa fa-arrow-up font-size-10"></i></span>
+                    <a href="{{ route('admin.deposit.index') }}" class="text-decoration-none d-block">
+                        <div class="ch-stat-card" style="cursor: pointer;">
+                            <div class="ch-stat-top">
+                                <span class="ch-stat-label">Deposit Revenue (মোট ডিপোজিট)</span>
+                                <span class="ch-pill ch-pill-green">+ Deposited <i class="fa fa-arrow-up font-size-10"></i></span>
+                            </div>
+                            <div class="ch-stat-bottom">
+                                <div class="ch-stat-val">৳ {{ number_format($totalDepositsApproved, 2) }}</div>
+                                <!-- Emerald Green Smooth Sparkline Wave -->
+                                <svg class="ch-sparkline-svg" viewBox="0 0 100 35">
+                                    <path d="M0,22 C22,22 35,6 55,6 C75,6 88,26 100,16" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
                         </div>
-                        <div class="ch-stat-bottom">
-                            <div class="ch-stat-val">৳ {{ number_format($totalDepositsApproved > 0 ? $totalDepositsApproved : 2250, 2) }}</div>
-                            <!-- Emerald Green Smooth Sparkline Wave -->
-                            <svg class="ch-sparkline-svg" viewBox="0 0 100 35">
-                                <path d="M0,22 C22,22 35,6 55,6 C75,6 88,26 100,16" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"></path>
-                            </svg>
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
                 <!-- Card 4: Pending Deposits -->
                 <div class="col-xl-3 col-md-6 col-12">
-                    <div class="ch-stat-card">
-                        <div class="ch-stat-top">
-                            <span class="ch-stat-label">Pending Deposits</span>
-                            <span class="ch-pill ch-pill-orange">Action Needed</span>
-                        </div>
-                        <div class="ch-stat-bottom">
-                            <div class="ch-stat-val" style="color: #ea580c;">{{ number_format($pendingDepositsCount > 0 ? $pendingDepositsCount : 1) }}</div>
-                            <!-- Mini Vertical Bars (Orange) -->
-                            <div class="ch-mini-bars">
-                                <span class="ch-bar-col ch-bar-orange" style="height: 10px;"></span>
-                                <span class="ch-bar-col ch-bar-orange" style="height: 22px;"></span>
-                                <span class="ch-bar-col ch-bar-orange" style="height: 15px;"></span>
-                                <span class="ch-bar-col ch-bar-orange" style="height: 28px;"></span>
-                                <span class="ch-bar-col ch-bar-orange" style="height: 19px;"></span>
-                                <span class="ch-bar-col ch-bar-orange" style="height: 27px;"></span>
+                    <a href="{{ route('admin.deposit.index') }}" class="text-decoration-none d-block">
+                        <div class="ch-stat-card" style="cursor: pointer;">
+                            <div class="ch-stat-top">
+                                <span class="ch-stat-label">Pending Deposits (অপেক্ষমান)</span>
+                                <span class="ch-pill ch-pill-orange">Action Needed</span>
+                            </div>
+                            <div class="ch-stat-bottom">
+                                <div class="ch-stat-val" style="color: #ea580c;">{{ number_format($pendingDepositsCount) }}</div>
+                                <!-- Mini Vertical Bars (Orange) -->
+                                <div class="ch-mini-bars">
+                                    <span class="ch-bar-col ch-bar-orange" style="height: 10px;"></span>
+                                    <span class="ch-bar-col ch-bar-orange" style="height: 22px;"></span>
+                                    <span class="ch-bar-col ch-bar-orange" style="height: 15px;"></span>
+                                    <span class="ch-bar-col ch-bar-orange" style="height: 28px;"></span>
+                                    <span class="ch-bar-col ch-bar-orange" style="height: 19px;"></span>
+                                    <span class="ch-bar-col ch-bar-orange" style="height: 27px;"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
@@ -329,7 +338,10 @@
                 <div class="col-xl-8 col-lg-7 col-12">
                     <div class="ch-card h-100" style="min-height: 420px;">
                         <div class="ch-card-header">
-                            <h5 class="ch-card-title">Revenue</h5>
+                            <div>
+                                <h5 class="ch-card-title">Revenue (প্ল্যাটফর্ম মাসিক আয়)</h5>
+                                <small class="text-muted font-size-11">POS সুপারশপ, মাসিক বাজার ও ডিপোজিট সমন্বিত সেলস</small>
+                            </div>
                             <span class="ch-dots-btn"><i class="fa fa-ellipsis-h"></i></span>
                         </div>
                         <div style="position: relative; height: 330px; width: 100%;">
@@ -342,7 +354,7 @@
                 <div class="col-xl-4 col-lg-5 col-12">
                     <div class="ch-card h-100" style="min-height: 420px;">
                         <div class="ch-card-header">
-                            <h5 class="ch-card-title">By Device</h5>
+                            <h5 class="ch-card-title">By Device (ডিভাইস ট্রাফিক)</h5>
                             <span class="ch-dots-btn"><i class="fa fa-ellipsis-h"></i></span>
                         </div>
 
@@ -350,10 +362,10 @@
                             <!-- Donut Canvas Container -->
                             <div style="position: relative; width: 190px; height: 190px; margin: 0 auto;">
                                 <canvas id="chDeviceDonutChart"></canvas>
-                                <!-- Centered 85% Inside Donut Hole -->
+                                <!-- Centered Dynamic % Inside Donut Hole -->
                                 <div class="position-absolute text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;">
-                                    <div class="fw-bold" style="font-size: 26px; color: #1e293b; line-height: 1;">85%</div>
-                                    <small style="color: #94a3b8; font-size: 11px;">Total Visitors</small>
+                                    <div class="fw-bold" style="font-size: 26px; color: #1e293b; line-height: 1;">{{ $devicePrimaryPct }}%</div>
+                                    <small style="color: #94a3b8; font-size: 11px;">Primary Device</small>
                                 </div>
                             </div>
 
@@ -364,21 +376,21 @@
                                         <span class="ch-legend-marker" style="background: #3b82f6;"></span>
                                         <span class="ch-legend-name">Desktop</span>
                                     </div>
-                                    <span class="ch-legend-val">15.2%</span>
+                                    <span class="ch-legend-val">{{ $desktopPct }}%</span>
                                 </div>
                                 <div class="ch-legend-item">
                                     <div class="d-flex align-items-center">
                                         <span class="ch-legend-marker" style="background: #10b981;"></span>
                                         <span class="ch-legend-name">Mobile</span>
                                     </div>
-                                    <span class="ch-legend-val">65.5%</span>
+                                    <span class="ch-legend-val">{{ $mobilePct }}%</span>
                                 </div>
                                 <div class="ch-legend-item">
                                     <div class="d-flex align-items-center">
                                         <span class="ch-legend-marker" style="background: #f97316;"></span>
                                         <span class="ch-legend-name">Tablet</span>
                                     </div>
-                                    <span class="ch-legend-val">19.3%</span>
+                                    <span class="ch-legend-val">{{ $tabletPct }}%</span>
                                 </div>
                             </div>
                         </div>
@@ -394,7 +406,7 @@
                 <div class="col-xl-4 col-md-6 col-12">
                     <div class="ch-card h-100">
                         <div class="ch-card-header">
-                            <h5 class="ch-card-title">Traffic Source</h5>
+                            <h5 class="ch-card-title">Traffic Source (অ্যাপ বনাম ওয়েব)</h5>
                             <span class="ch-dots-btn"><i class="fa fa-ellipsis-h"></i></span>
                         </div>
 
@@ -402,8 +414,8 @@
                             <div style="position: relative; width: 190px; height: 190px;">
                                 <canvas id="chTrafficSourceChart"></canvas>
                                 <div class="position-absolute text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;">
-                                    <small style="color: #94a3b8; font-size: 11px; display: block; margin-bottom: 2px;">Total Traffic</small>
-                                    <div class="fw-bold" style="font-size: 28px; color: #1e293b; line-height: 1;">88%</div>
+                                    <small style="color: #94a3b8; font-size: 11px; display: block; margin-bottom: 2px;">App Traffic</small>
+                                    <div class="fw-bold" style="font-size: 28px; color: #1e293b; line-height: 1;">{{ $trafficSourceAppPct }}%</div>
                                 </div>
                             </div>
                         </div>
@@ -416,10 +428,12 @@
                         <!-- Sub-Block 1: Messages -->
                         <div class="ch-wave-subcard">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="ch-stat-label">Messages</span>
-                                <span class="ch-dots-btn"><i class="fa fa-ellipsis-h"></i></span>
+                                <span class="ch-stat-label">Messages (সাপোর্ট ও যোগাযোগ বার্তা)</span>
+                                <a href="{{ route('admin.contact_messages.index') }}" class="ch-dots-btn" title="সকল বার্তা দেখুন"><i class="fa fa-external-link"></i></a>
                             </div>
-                            <div class="fw-bold mb-2" style="font-size: 24px; color: #ec4899;">373</div>
+                            <a href="{{ route('admin.contact_messages.index') }}" class="text-decoration-none">
+                                <div class="fw-bold mb-2" style="font-size: 24px; color: #ec4899;">{{ number_format($totalMessages) }}</div>
+                            </a>
                             <!-- Smooth Pink Wave Spline -->
                             <svg viewBox="0 0 240 50" class="w-100" style="height: 48px; display: block;">
                                 <defs>
@@ -436,10 +450,12 @@
                         <!-- Sub-Block 2: Total Posts -->
                         <div class="ch-wave-subcard">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="ch-stat-label">Total Posts</span>
-                                <span class="ch-dots-btn"><i class="fa fa-ellipsis-h"></i></span>
+                                <span class="ch-stat-label">Total Posts (পণ্য, বাজার ও প্রপার্টি)</span>
+                                <a href="{{ route('admin.ecommerce.products') }}" class="ch-dots-btn" title="পণ্য ও ক্যাটালগ দেখুন"><i class="fa fa-external-link"></i></a>
                             </div>
-                            <div class="fw-bold mb-2" style="font-size: 24px; color: #10b981;">16</div>
+                            <a href="{{ route('admin.ecommerce.products') }}" class="text-decoration-none">
+                                <div class="fw-bold mb-2" style="font-size: 24px; color: #10b981;">{{ number_format($totalPosts) }}</div>
+                            </a>
                             <!-- Smooth Green Wave Spline -->
                             <svg viewBox="0 0 240 50" class="w-100" style="height: 48px; display: block;">
                                 <defs>
@@ -459,11 +475,94 @@
                 <div class="col-xl-4 col-md-12 col-12">
                     <div class="ch-card h-100">
                         <div class="ch-card-header">
-                            <h5 class="ch-card-title">Visitors</h5>
+                            <div>
+                                <h5 class="ch-card-title">Visitors (দৈনিক ভিজিটর ট্রেন্ড)</h5>
+                                <small class="text-muted font-size-11">ওয়েব ও অ্যাপ ট্রাফিকের দৈনিক পরিসংখ্যান</small>
+                            </div>
                             <span class="ch-dots-btn"><i class="fa fa-ellipsis-h"></i></span>
                         </div>
                         <div style="position: relative; height: 260px; width: 100%;">
                             <canvas id="chVisitorsBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- SECTION 3.5: MULTI-BRANCH BUSINESS OVERVIEW (Section 2 Spec)   -->
+            <!-- ============================================================== -->
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="ch-card">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                            <div>
+                                <h4 class="fw-bold text-dark mb-1" style="font-size: 17px;">
+                                    <i class="ti-layout-grid2 text-success me-2"></i>মাল্টি-ব্রাঞ্চ বিজনেস ওভারভিউ (Multi-Branch Overview)
+                                </h4>
+                                <p class="text-muted font-size-12 mb-0">প্রতিটি ব্রাঞ্চের সেলস, স্টক, স্টাফ ও লাভ-লোকসানের হিসাব কার্ডে ক্লিক করে সরাসরি বিস্তারিত ড্যাশবোর্ডে প্রবেশ করুন</p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('admin.supershop.branches.comparison') }}" class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3">
+                                    <i class="ti-stats-up me-1"></i> ব্রাঞ্চ পারফর্ম্যান্স তুলনা
+                                </a>
+                                <a href="{{ route('admin.supershop.branches') }}" class="btn btn-sm btn-success fw-bold rounded-pill px-3">
+                                    <i class="ti-arrow-right me-1"></i> সকল ব্রাঞ্চ ম্যানেজ করুন
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            @forelse($allBranches as $branch)
+                                <div class="col-xl-4 col-md-6 col-12">
+                                    <div class="border rounded-4 p-3 bg-light h-100 position-relative shadow-sm transition-all" style="border-left: 4px solid #10b981 !important;">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <a href="{{ route('admin.supershop.branches.show', $branch->id) }}" class="text-decoration-none">
+                                                    <h6 class="fw-bold text-dark mb-0 hover-primary">{{ $branch->name }}</h6>
+                                                </a>
+                                                <span class="badge bg-dark mt-1">{{ $branch->code }}</span>
+                                                <span class="badge bg-success-light text-success rounded-pill px-2 py-0">সক্রিয়</span>
+                                            </div>
+                                            <a href="{{ route('admin.supershop.branches.show', $branch->id) }}" class="btn btn-xs btn-outline-success rounded-circle" title="বিস্তারিত ড্যাশবোর্ড খুলুন">
+                                                <i class="ti-arrow-right"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="small text-muted mb-2 text-truncate">
+                                            <i class="ti-location-pin text-danger me-1"></i>{{ $branch->address ?: 'লোকেশন নেই' }}
+                                        </div>
+
+                                        <div class="row g-2 text-center small mb-3">
+                                            <div class="col-4">
+                                                <div class="bg-white p-2 rounded-3 border">
+                                                    <div class="text-muted smaller">আজকের বিক্রয়</div>
+                                                    <div class="fw-bold text-success">৳ {{ number_format($branch->today_sales) }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="bg-white p-2 rounded-3 border">
+                                                    <div class="text-muted smaller">মাসিক টার্নওভার</div>
+                                                    <div class="fw-bold text-primary">৳ {{ number_format($branch->monthly_sales) }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="bg-white p-2 rounded-3 border">
+                                                    <div class="text-muted smaller">স্টক ইউনিট</div>
+                                                    <div class="fw-bold text-dark">{{ $branch->stock_units }} টি</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <a href="{{ route('admin.supershop.branches.show', $branch->id) }}" class="btn btn-sm btn-outline-dark w-100 fw-bold rounded-pill py-1">
+                                            ব্রাঞ্চ হিসাব ও ড্যাশবোর্ড খুলুন ➔
+                                        </a>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="col-12 text-center text-muted py-3">
+                                    কোনো সক্রিয় ব্রাঞ্চ পাওয়া যায়নি।
+                                </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -768,20 +867,24 @@ document.addEventListener('DOMContentLoaded', function() {
         revGradient.addColorStop(0, 'rgba(59, 130, 246, 0.22)');
         revGradient.addColorStop(1, 'rgba(59, 130, 246, 0.00)');
 
+        const revenueLabels = @json($monthsLabels);
+        const revenueData = @json($monthlyRevenue);
+        const maxVal = {{ $chartYMax }};
+
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                labels: revenueLabels,
                 datasets: [{
-                    label: 'Revenue',
-                    data: [180, 280, 250, 620, 350, 480, 410, 380, 520, 400],
+                    label: 'Revenue (৳)',
+                    data: revenueData,
                     borderColor: '#3b82f6',
                     backgroundColor: revGradient,
                     borderWidth: 2.8,
                     fill: true,
                     tension: 0.42,
-                    pointRadius: 0,
-                    pointHoverRadius: 5,
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
                     pointHoverBackgroundColor: '#3b82f6',
                     pointHoverBorderColor: '#ffffff',
                     pointHoverBorderWidth: 2
@@ -797,7 +900,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         padding: 10,
                         cornerRadius: 8,
                         titleFont: { size: 12 },
-                        bodyFont: { size: 13, weight: 'bold' }
+                        bodyFont: { size: 13, weight: 'bold' },
+                        callbacks: {
+                            label: function(context) {
+                                return ' ৳ ' + Number(context.parsed.y).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            }
+                        }
                     }
                 },
                 scales: {
@@ -807,11 +915,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     y: {
                         min: 0,
-                        max: 800,
+                        suggestedMax: maxVal,
                         ticks: {
-                            stepSize: 200,
                             color: '#94a3b8',
-                            font: { size: 11 }
+                            font: { size: 11 },
+                            callback: function(val) {
+                                return '৳' + Number(val).toLocaleString();
+                            }
                         },
                         grid: {
                             color: '#f1f5f9',
@@ -831,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: ['Mobile', 'Tablet', 'Desktop'],
                 datasets: [{
-                    data: [65.5, 19.3, 15.2],
+                    data: [{{ $mobilePct }}, {{ $tabletPct }}, {{ $desktopPct }}],
                     backgroundColor: ['#10b981', '#f97316', '#3b82f6'],
                     borderWidth: 2,
                     borderColor: '#ffffff',
@@ -865,7 +975,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'doughnut',
             data: {
                 datasets: [{
-                    data: [88, 12],
+                    data: [{{ $trafficSourceAppPct }}, {{ $trafficSourceWebPct }}],
                     backgroundColor: ['#8b5cf6', '#ede9fe'],
                     borderWidth: 0,
                     borderRadius: [8, 0]
@@ -891,19 +1001,19 @@ document.addEventListener('DOMContentLoaded', function() {
         new Chart(visCtx.getContext('2d'), {
             type: 'bar',
             data: {
-                labels: ['', '', '', '', '', '', '', ''],
+                labels: @json($visitorDaysLabels),
                 datasets: [
                     {
-                        label: 'Visitors A',
-                        data: [450, 720, 1250, 890, 1400, 920, 1520, 1100],
+                        label: 'Visitors (Web)',
+                        data: @json($visitorsDataA),
                         backgroundColor: '#93c5fd',
                         borderRadius: 3,
                         barPercentage: 0.6,
                         categoryPercentage: 0.7
                     },
                     {
-                        label: 'Visitors B',
-                        data: [320, 580, 890, 640, 980, 710, 1150, 820],
+                        label: 'Visitors (App)',
+                        data: @json($visitorsDataB),
                         backgroundColor: '#3b82f6',
                         borderRadius: 3,
                         barPercentage: 0.6,
@@ -924,13 +1034,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: {
                     x: {
                         grid: { display: false, drawBorder: false },
-                        ticks: { display: false }
+                        ticks: { color: '#94a3b8', font: { size: 10 } }
                     },
                     y: {
                         min: 0,
-                        max: 1600,
+                        suggestedMax: {{ $visitorsChartMax }},
                         ticks: {
-                            stepSize: 400,
                             color: '#94a3b8',
                             font: { size: 10 }
                         },

@@ -13,10 +13,18 @@ class SupplierProfile extends Model
         'user_id',
         'supplier_code',
         'company_name',
+        'representative_name',
+        'alt_phone',
         'district_thana',
+        'district',
+        'thana',
         'address',
         'opening_balance',
         'opening_date',
+        'business_type',
+        'nid_trade_license',
+        'status',
+        'logo',
         'notes',
     ];
 

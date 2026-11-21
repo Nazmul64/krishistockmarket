@@ -368,7 +368,11 @@ html, body {
 
       <!-- Title -->
       <h3 class="title">
-        @if(isset($portal) && $portal !== 'customer')
+        @if(isset($portal) && $portal === 'supershop')
+          SUPERSHOP LOGIN
+        @elseif(isset($portal) && in_array($portal, ['agent', 'agentpoint', 'agent-point']))
+          AGENT POINT LOGIN
+        @elseif(isset($portal) && $portal !== 'customer')
           {{ strtoupper($portal) }} LOGIN
         @else
           LOGIN
@@ -392,7 +396,7 @@ html, body {
           <span>{{ session('success') }}</span>
         </div>
       @endif
-      @if($errors->any())
+      @if(isset($errors) && $errors->any())
         <div class="login-alert error">
           <i class="fa fa-exclamation-circle"></i>
           <span>{{ $errors->first() }}</span>
@@ -429,6 +433,40 @@ html, body {
         </div>
         <button type="submit" class="login-btn">login</button>
       </form>
+
+      <!-- Portal Quick Access / Switcher -->
+      <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center;">
+        <div style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+          অন্যান্য পোর্টাল লগইন (Portals)
+        </div>
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 6px;">
+          @if(!in_array($portal ?? '', ['agent', 'agentpoint', 'agent-point']))
+            <a href="{{ route('agentpoint.login') }}" style="font-size: 11px; color: #10b981; background: rgba(16,185,129,0.12); padding: 4px 9px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(16,185,129,0.3); transition: 0.2s;">
+              <i class="fa fa-building-o me-1"></i> এজেন্ট পয়েন্ট
+            </a>
+          @endif
+          @if(($portal ?? '') !== 'supplier')
+            <a href="{{ route('supplier.login') }}" style="font-size: 11px; color: #3b82f6; background: rgba(59,130,246,0.12); padding: 4px 9px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(59,130,246,0.3); transition: 0.2s;">
+              <i class="fa fa-truck me-1"></i> সাপ্লায়ার
+            </a>
+          @endif
+          @if(($portal ?? '') !== 'supershop')
+            <a href="{{ url('/supershop') }}" style="font-size: 11px; color: #f59e0b; background: rgba(245,158,11,0.12); padding: 4px 9px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(245,158,11,0.3); transition: 0.2s;">
+              <i class="fa fa-shopping-cart me-1"></i> সুপারশপ
+            </a>
+          @endif
+          @if(($portal ?? '') !== 'admin')
+            <a href="{{ route('admin.login') }}" style="font-size: 11px; color: #f97316; background: rgba(249,115,22,0.12); padding: 4px 9px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(249,115,22,0.3); transition: 0.2s;">
+              <i class="fa fa-shield me-1"></i> অ্যাডমিন
+            </a>
+          @endif
+          @if(($portal ?? '') !== 'customer')
+            <a href="{{ route('login') }}" style="font-size: 11px; color: #ffa500; background: rgba(255,165,0,0.12); padding: 4px 9px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(255,165,0,0.3); transition: 0.2s;">
+              <i class="fa fa-user me-1"></i> গ্রাহক লগইন
+            </a>
+          @endif
+        </div>
+      </div>
     </div>
   </div>
 </div>

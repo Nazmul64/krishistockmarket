@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Supplier;
 
 use App\Http\Controllers\Controller;
+use App\Models\MonthlyBazaarItem;
 use App\Models\SupplierPayment;
 use App\Models\SupplierSupply;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SupplierSupplyController extends Controller
 {
@@ -23,6 +25,7 @@ class SupplierSupplyController extends Controller
         $totalSuppliesCount = $supplies->count();
         $approvedCount = $approvedSupplies->count();
         $pendingCount = $supplies->where('status', 'pending')->count();
+        $rejectedCount = $supplies->where('status', 'rejected')->count();
 
         $totalQuantitySupplied = $approvedSupplies->sum('quantity');
         $totalSupplyAmount = $approvedSupplies->sum('total_amount');
@@ -39,6 +42,7 @@ class SupplierSupplyController extends Controller
             'totalSuppliesCount',
             'approvedCount',
             'pendingCount',
+            'rejectedCount',
             'totalQuantitySupplied',
             'totalSupplyAmount',
             'totalPaidAmount',
@@ -56,26 +60,21 @@ class SupplierSupplyController extends Controller
 
     public function create()
     {
-        return view('supplier.supplies.create');
+        $availableProducts = MonthlyBazaarItem::where('status', 'active')->get();
+        return view('supplier.supplies.create', compact('availableProducts'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'invoice_no' => 'required|string|max:255',
-            'product_name' => 'required|string|max:255',
-            'category' => 'nullable|string|max:255',
-            'quantity' => 'required|numeric|min:0.01',
-            'unit' => 'required|string|max:50',
-            'rate' => 'required|numeric|min:0.01',
             'supply_date' => 'required|date',
-            'invoice_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120',
+            'delivery_note' => 'nullable|string',
             'note' => 'nullable|string',
+            'invoice_file' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:10240',
         ]);
 
-        $totalAmount = $request->quantity * $request->rate;
         $invoiceFilePath = null;
-
         if ($request->hasFile('invoice_file')) {
             $file = $request->file('invoice_file');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
@@ -83,22 +82,56 @@ class SupplierSupplyController extends Controller
             $invoiceFilePath = 'upload/invoices/' . $fileName;
         }
 
-        SupplierSupply::create([
-            'supplier_id' => Auth::id(),
-            'invoice_no' => $request->invoice_no,
-            'product_name' => $request->product_name,
-            'category' => $request->category,
-            'quantity' => $request->quantity,
-            'unit' => $request->unit,
-            'rate' => $request->rate,
-            'total_amount' => $totalAmount,
-            'supply_date' => $request->supply_date,
-            'invoice_file' => $invoiceFilePath,
-            'note' => $request->note,
-            'status' => 'pending',
-        ]);
+        // Multi-item supply support
+        if ($request->has('items') && is_array($request->items) && count($request->items) > 0) {
+            DB::transaction(function () use ($request, $invoiceFilePath) {
+                foreach ($request->items as $item) {
+                    if (empty($item['product_name']) || empty($item['quantity']) || empty($item['rate'])) {
+                        continue;
+                    }
+                    $qty = floatval($item['quantity']);
+                    $rate = floatval($item['rate']);
+                    $total = $qty * $rate;
 
-        return redirect()->route('supplier.supplies.index')->with('success', 'পণ্য সরবরাহ এন্ট্রি সফলভাবে সম্পন্ন হয়েছে! অ্যাডমিন অনুমোদনের জন্য পেন্ডিং রয়েছে।');
+                    SupplierSupply::create([
+                        'supplier_id' => Auth::id(),
+                        'invoice_no' => $request->invoice_no,
+                        'product_name' => $item['product_name'],
+                        'category' => $item['category'] ?? 'খাদ্যদ্রব্য ও বাজার',
+                        'quantity' => $qty,
+                        'unit' => $item['unit'] ?? 'KG',
+                        'rate' => $rate,
+                        'total_amount' => $total,
+                        'supply_date' => $request->supply_date,
+                        'invoice_file' => $invoiceFilePath,
+                        'delivery_note' => $request->delivery_note,
+                        'note' => $request->note,
+                        'status' => 'pending',
+                    ]);
+                }
+            });
+        } elseif ($request->filled('product_name')) {
+            // Single-item fallback
+            $qty = floatval($request->quantity);
+            $rate = floatval($request->rate);
+            SupplierSupply::create([
+                'supplier_id' => Auth::id(),
+                'invoice_no' => $request->invoice_no,
+                'product_name' => $request->product_name,
+                'category' => $request->category ?? 'খাদ্যদ্রব্য ও বাজার',
+                'quantity' => $qty,
+                'unit' => $request->unit ?? 'KG',
+                'rate' => $rate,
+                'total_amount' => $qty * $rate,
+                'supply_date' => $request->supply_date,
+                'invoice_file' => $invoiceFilePath,
+                'delivery_note' => $request->delivery_note,
+                'note' => $request->note,
+                'status' => 'pending',
+            ]);
+        }
+
+        return redirect()->route('supplier.supplies.index')->with('success', 'পণ্য সরবরাহ এন্ট্রি সফলভাবে সম্পন্ন হয়েছে! অ্যাডমিন অনুমোদনের পর লেজারে যুক্ত হবে।');
     }
 
     public function statement()
@@ -151,6 +184,7 @@ class SupplierSupplyController extends Controller
         }
 
         $sortedTransactions = $transactions->sortBy('date')->values();
+
         $runningBalance = 0;
         $ledger = $sortedTransactions->map(function ($item) use (&$runningBalance) {
             $runningBalance += ($item['debit'] - $item['credit']);
@@ -158,12 +192,22 @@ class SupplierSupplyController extends Controller
             return $item;
         });
 
-        return view('supplier.statement', compact('supplier', 'openingBalance', 'totalSupply', 'totalPaid', 'currentBalance', 'ledger'));
+        return view('supplier.statement', compact(
+            'supplier',
+            'openingBalance',
+            'totalSupply',
+            'totalPaid',
+            'currentBalance',
+            'ledger'
+        ));
     }
 
     public function printInvoice($id)
     {
-        $supply = SupplierSupply::where('supplier_id', Auth::id())->with('supplier.supplierProfile')->findOrFail($id);
-        return view('admin.suppliers.print_invoice', compact('supply'));
+        $supply = SupplierSupply::with('supplier.supplierProfile')->findOrFail($id);
+        if ($supply->supplier_id != Auth::id()) {
+            abort(403);
+        }
+        return view('supplier.invoice_print', compact('supply'));
     }
 }

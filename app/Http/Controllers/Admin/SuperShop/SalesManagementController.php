@@ -21,14 +21,15 @@ class SalesManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $branches = Branch::where('status', 'active')->get();
-        $selectedBranchId = $request->get('branch_id');
         $user = Auth::user();
-        if ($user && $user->role === 'manager' && !$selectedBranchId) {
+        if ($user && $user->role === 'manager') {
             $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
-            if ($managerBranch) {
-                $selectedBranchId = $managerBranch->id;
-            }
+            // STRICT ISOLATION: Branch Manager can ONLY view their own branch sales!
+            $selectedBranchId = $managerBranch ? $managerBranch->id : -1;
+            $branches = $managerBranch ? collect([$managerBranch]) : collect();
+        } else {
+            $branches = Branch::where('status', 'active')->get();
+            $selectedBranchId = $request->get('branch_id');
         }
         $search = trim($request->get('search', ''));
         $paymentMethod = $request->get('payment_method');
@@ -85,6 +86,16 @@ class SalesManagementController extends Controller
     public function show($id)
     {
         $sale = PosSale::with(['branch', 'cashier', 'items.product', 'payments', 'returns.items'])->findOrFail($id);
+        
+        // Strict Manager Isolation: Prevent viewing other branches' sales invoices
+        $user = Auth::user();
+        if ($user && $user->role === 'manager') {
+            $managerBranchId = $user->branch_id ?: Branch::where('manager_id', $user->id)->value('id');
+            if ($sale->branch_id != $managerBranchId) {
+                abort(403, 'নিরাপত্তা অ্যালার্ট: আপনি শুধুমাত্র আপনার নিজ ব্রাঞ্চের বিক্রয় চালান দেখতে পারবেন। অন্য ব্রাঞ্চের বিক্রয় দেখার অনুমতি নেই।');
+            }
+        }
+
         return view('admin.supershop.sales.show', compact('sale'));
     }
 

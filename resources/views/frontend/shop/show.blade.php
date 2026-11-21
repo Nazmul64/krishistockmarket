@@ -242,26 +242,28 @@
         outline: none;
     }
 
-    /* Action Buttons Matching Screenshot */
+    /* Action Buttons Matching Admin Appearance & Theme */
     .btn-buy-now {
-        background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-        color: #ffffff;
+        background: var(--btn-theme-color, #007e8a) !important;
+        color: var(--btn-theme-text-color, #ffffff) !important;
         font-weight: 800;
-        font-size: 15px;
+        font-size: var(--product-btn-size, 15px) !important;
         padding: 10px 24px;
-        border-radius: 8px;
-        border: none;
+        border-radius: var(--btn-theme-radius, 8px) !important;
+        border: 1px solid var(--btn-theme-color, #007e8a) !important;
         display: inline-flex;
         align-items: center;
         gap: 8px;
         cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+        transition: all 0.25s;
+        box-shadow: 0 4px 14px rgba(0, 126, 138, 0.3);
     }
     .btn-buy-now:hover {
-        background: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
-        color: #ffffff;
+        background: var(--btn-theme-hover, #005f69) !important;
+        border-color: var(--btn-theme-hover, #005f69) !important;
+        color: var(--btn-theme-text-color, #ffffff) !important;
         transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 126, 138, 0.45);
     }
 
     .btn-add-cart-outline {
@@ -567,10 +569,14 @@
                 </div>
 
                 <!-- Primary Action Buttons (অর্ডার করুন & কার্টে রাখুন) -->
+                @php
+                    $dynOrderText = \App\Models\Ui\UiComponentSetting::get('product_order_btn_text', 'অর্ডার করুন');
+                    $dynBtnAnim = \App\Models\Ui\UiComponentSetting::get('global_button_animation', true);
+                @endphp
                 <div class="d-flex flex-wrap gap-2 mb-3">
-                    <button type="button" class="btn btn-buy-now" onclick="buyNowCurrentProduct()">
+                    <button type="button" class="btn btn-buy-now {{ $dynBtnAnim ? 'btn-animated-pulse' : '' }}" onclick="buyNowCurrentProduct()">
                         <i class="fa fa-bolt"></i>
-                        <span>অর্ডার করুন</span>
+                        <span>{{ $dynOrderText }}</span>
                     </button>
                     <button type="button" class="btn btn-add-cart-outline" onclick="addCurrentProductToBag()">
                         <i class="fa fa-shopping-bag"></i>

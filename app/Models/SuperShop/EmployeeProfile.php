@@ -11,19 +11,7 @@ class EmployeeProfile extends Model
     use HasFactory;
 
     protected $table = 'employee_profiles';
-
-    protected $fillable = [
-        'user_id',
-        'branch_id',
-        'employee_code',
-        'name',
-        'phone',
-        'email',
-        'designation',
-        'salary',
-        'joining_date',
-        'status',
-    ];
+    protected $guarded = [];
 
     public function branch()
     {
@@ -39,5 +27,24 @@ class EmployeeProfile extends Model
     {
         return $this->hasMany(EmployeeAttendance::class, 'employee_id');
     }
-}
 
+    public function salaryStructure()
+    {
+        return $this->hasOne(SalaryStructure::class, 'employee_id');
+    }
+
+    public function salaryPayments()
+    {
+        return $this->hasMany(SalaryPayment::class, 'employee_id');
+    }
+
+    public function salaryAdvances()
+    {
+        return $this->hasMany(SalaryAdvance::class, 'employee_id');
+    }
+
+    public function leaves()
+    {
+        return $this->hasMany(EmployeeLeave::class, 'employee_id');
+    }
+}

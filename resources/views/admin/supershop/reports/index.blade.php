@@ -504,19 +504,24 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @forelse($expensesByCategory as $exp)
+                                                        @forelse($expensesByCategory as $catKey => $exp)
+                                                            @php
+                                                                $catName = is_object($exp) ? ($exp->category_name ?? $catKey) : (is_array($exp) ? ($exp['category_name'] ?? $catKey) : $catKey);
+                                                                $count = is_object($exp) ? ($exp->entry_count ?? 1) : (is_array($exp) ? ($exp['entry_count'] ?? 1) : 1);
+                                                                $amount = is_object($exp) ? ($exp->total_amount ?? 0) : (is_array($exp) ? ($exp['total_amount'] ?? 0) : (float)$exp);
+                                                            @endphp
                                                             <tr>
                                                                 <td class="fw-bold text-dark">
-                                                                    <i class="ti-receipt text-danger me-2"></i>{{ $exp->category_name }}
+                                                                    <i class="ti-receipt text-danger me-2"></i>{{ $catName }}
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    <span class="badge bg-light text-dark border">{{ $exp->entry_count }} টি</span>
+                                                                    <span class="badge bg-light text-dark border">{{ $count }} টি</span>
                                                                 </td>
                                                                 <td class="text-end fw-bold text-danger fs-6">
-                                                                    ৳ {{ number_format($exp->total_amount, 2) }}
+                                                                    ৳ {{ number_format($amount, 2) }}
                                                                 </td>
                                                                 <td class="text-end text-muted">
-                                                                    {{ $totalExpenses > 0 ? round(($exp->total_amount / $totalExpenses) * 100, 1) : 0 }}%
+                                                                    {{ $totalExpenses > 0 ? round(($amount / $totalExpenses) * 100, 1) : 0 }}%
                                                                 </td>
                                                             </tr>
                                                         @empty

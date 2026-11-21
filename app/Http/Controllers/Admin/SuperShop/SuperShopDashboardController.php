@@ -22,14 +22,15 @@ class SuperShopDashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $selectedBranchId = $request->get('branch_id');
         $user = \Illuminate\Support\Facades\Auth::user();
-        if ($user && $user->role === 'manager' && !$selectedBranchId) {
-            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
-            if ($managerBranch) {
-                $selectedBranchId = $managerBranch->id;
+        if ($user && $user->role === 'manager') {
+            $branchId = $user->branch_id ?: Branch::where('manager_id', $user->id)->value('id');
+            if ($branchId) {
+                return redirect()->route('admin.supershop.branches.show', $branchId);
             }
         }
+
+        $selectedBranchId = $request->get('branch_id');
         $dateFilter = $request->get('date_filter', 'today');
         $fromDate = $request->get('from_date');
         $toDate = $request->get('to_date');

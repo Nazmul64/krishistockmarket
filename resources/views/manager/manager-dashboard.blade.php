@@ -166,8 +166,12 @@
                         </div>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
+                        @if($branch)
+                        <a href="{{ route('admin.supershop.branches.show', $branch->id) }}" class="btn btn-primary fw-bold shadow-sm px-3 py-2">
+                            <i class="ti-dashboard me-1"></i> ব্রাঞ্চ বিস্তারিত ড্যাশবোর্ড (14 Modules & P&L)
+                        </a>
                         <a href="{{ route('admin.supershop.pos', ['branch_id' => $branch->id]) }}" class="btn btn-success fw-bold shadow-sm px-3 py-2">
-                            <i class="ti-shopping-cart me-1"></i> POS কাউন্টার টার্মিনাল খুলুন
+                            <i class="ti-shopping-cart me-1"></i> POS কাউন্টার টার্মিনাল
                         </a>
                         <a href="{{ route('admin.supershop.inventory', ['branch_id' => $branch->id]) }}" class="btn btn-outline-info fw-bold px-3 py-2">
                             <i class="ti-archive me-1"></i> ব্রাঞ্চ ইনভেন্টরি ও পণ্য ({{ number_format($branchInventoryCount ?? 0) }})
@@ -175,6 +179,7 @@
                         <a href="{{ route('admin.supershop.sales') }}" class="btn btn-outline-primary fw-bold px-3 py-2">
                             <i class="ti-receipt me-1"></i> বিক্রয় হিস্ট্রি
                         </a>
+                        @endif
                     </div>
                 </div>
 

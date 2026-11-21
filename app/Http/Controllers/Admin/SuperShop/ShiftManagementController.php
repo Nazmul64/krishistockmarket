@@ -17,8 +17,16 @@ class ShiftManagementController extends Controller
      */
     public function index(Request $request)
     {
-        $branches = Branch::where('status', 'active')->get();
-        $selectedBranchId = $request->get('branch_id');
+        $user = Auth::user();
+        if ($user && $user->role === 'manager') {
+            $managerBranch = Branch::where('id', $user->branch_id)->orWhere('manager_id', $user->id)->first();
+            // STRICT ISOLATION: Manager can ONLY view their own branch shifts
+            $selectedBranchId = $managerBranch ? $managerBranch->id : -1;
+            $branches = $managerBranch ? collect([$managerBranch]) : collect();
+        } else {
+            $branches = Branch::where('status', 'active')->get();
+            $selectedBranchId = $request->get('branch_id');
+        }
 
         $query = CashierShift::with(['branch', 'counter', 'cashier', 'verifier'])->orderBy('id', 'desc');
 

@@ -233,11 +233,22 @@
                                                 {{ ($orders->currentPage() - 1) * $orders->perPage() + $index + 1 }}
                                             </td>
 
-                                            <!-- Order ID -->
+                                            <!-- Order ID & Branch Assignment -->
                                             <td>
                                                 <a href="{{ route('admin.ecommerce.orders.show', $ord->id) }}" class="fw-bold text-primary font-monospace text-decoration-none">
                                                     {{ $ord->order_number }}
                                                 </a>
+                                                <div class="mt-1">
+                                                    @if($ord->branch)
+                                                        <a href="{{ route('admin.supershop.branches.show', $ord->branch_id) }}" class="badge bg-success bg-opacity-10 text-success border border-success text-decoration-none" title="ব্রাঞ্চ ফুলফিলমেন্ট ড্যাশবোর্ড">
+                                                            <i class="fa fa-building me-1"></i>{{ $ord->branch->code }}
+                                                        </a>
+                                                    @else
+                                                        <button type="button" class="btn btn-xs btn-outline-secondary py-0 px-1 border" data-bs-toggle="modal" data-bs-target="#assignBranchModal{{ $ord->id }}" style="font-size: 9px;" title="ব্রাঞ্চে ফুলফিলমেন্ট অ্যাসাইন করুন">
+                                                            + ব্রাঞ্চে দিন
+                                                        </button>
+                                                    @endif
+                                                </div>
                                             </td>
 
                                             <!-- Customer -->
@@ -393,6 +404,44 @@
                                                 </div>
                                             </td>
                                         </tr>
+
+                                        <!-- Assign Branch Modal -->
+                                        <div class="modal fade" id="assignBranchModal{{ $ord->id }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content rounded-4 border-0 shadow">
+                                                    <div class="modal-header bg-success text-white rounded-top-4 py-3">
+                                                        <h5 class="modal-title fw-bold text-white">ব্রাঞ্চে অর্ডার ফুলফিলমেন্ট বরাদ্দ করুন</h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <form action="{{ route('admin.supershop.branches.orders.assign') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="order_id" value="{{ $ord->id }}">
+                                                        <div class="modal-body p-4 text-start">
+                                                            <div class="mb-3">
+                                                                <label class="form-label small fw-bold">অর্ডার নম্বর:</label>
+                                                                <div class="fw-bold text-primary font-monospace">{{ $ord->order_number }} (৳ {{ number_format($ord->total_amount, 2) }})</div>
+                                                                <div class="text-muted small">গ্রাহকের ঠিকানা: {{ $ord->address }}, {{ $ord->city }}</div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label small fw-bold">ডেলিভারি প্রদানকারী ব্রাঞ্চ নির্বাচন করুন <span class="text-danger">*</span></label>
+                                                                <select name="branch_id" class="form-select" required>
+                                                                    <option value="">-- ব্রাঞ্চ বাছাই করুন --</option>
+                                                                    @foreach($branches as $br)
+                                                                        <option value="{{ $br->id }}" {{ $ord->branch_id == $br->id ? 'selected' : '' }}>
+                                                                            {{ $br->name }} ({{ $br->code }}) - {{ $br->address }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer bg-light rounded-bottom-4 py-3">
+                                                            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">বাতিল</button>
+                                                            <button type="submit" class="btn btn-success rounded-pill fw-bold">অর্ডার বরাদ্দ করুন</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @empty
                                         <tr>
                                             <td colspan="12" class="text-center py-5 text-muted">

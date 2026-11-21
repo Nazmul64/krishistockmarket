@@ -10,7 +10,7 @@ class AdminAgentPointController extends Controller
 {
     public function index()
     {
-        $agent_points = AgentPoint::latest()->get();
+        $agent_points = AgentPoint::withCount('marketRequests')->latest()->get();
         return view('admin.agent_points.index', compact('agent_points'));
     }
 
@@ -18,18 +18,25 @@ class AdminAgentPointController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'agent_name' => 'nullable|string|max:255',
             'area' => 'required|string|max:255',
+            'district' => 'nullable|string|max:100',
             'address' => 'nullable|string',
             'contact_number' => 'nullable|string|max:50',
+            'capacity' => 'nullable|integer|min:1',
             'status' => 'required|in:active,inactive',
         ]);
 
+        $data = $request->only(['name', 'agent_name', 'area', 'district', 'address', 'contact_number', 'capacity', 'status']);
+
         if ($request->id) {
             $point = AgentPoint::findOrFail($request->id);
-            $point->update($request->only(['name', 'area', 'address', 'contact_number', 'status']));
+            $point->update($data);
             $msg = 'সংগ্রহ এজেন্ট পয়েন্ট সফলভাবে আপডেট করা হয়েছে!';
         } else {
-            AgentPoint::create($request->only(['name', 'area', 'address', 'contact_number', 'status']));
+            $count = AgentPoint::count();
+            $data['code'] = 'AGP-' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+            $point = AgentPoint::create($data);
             $msg = 'নতুন সংগ্রহ এজেন্ট পয়েন্ট সফলভাবে যুক্ত করা হয়েছে!';
         }
 

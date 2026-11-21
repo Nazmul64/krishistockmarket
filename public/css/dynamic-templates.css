@@ -1,0 +1,181 @@
+/**
+ * Krishi Sheba - 10 Distinct Design Templates Engine
+ * Dynamic CSS Layouts, Typographies, Card Styles & Color Schemes
+ */
+
+/* ==========================================================================
+   Template 01: Modern Agriculture – Clean & Professional (Default)
+   ========================================================================== */
+.theme-template-template_01_modern_agriculture .card,
+.theme-template-template_01_modern_agriculture .product-card-hover {
+    border-radius: 14px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+}
+.theme-template-template_01_modern_agriculture .btn-animated-pulse {
+    animation: dynamicBtnPulse 2.2s infinite ease-in-out !important;
+}
+
+/* ==========================================================================
+   Template 02: Premium Corporate – Business & Investment Focused
+   ========================================================================== */
+.theme-template-template_02_premium_corporate {
+    background-color: #f8fafc;
+}
+.theme-template-template_02_premium_corporate h1,
+.theme-template-template_02_premium_corporate h2,
+.theme-template-template_02_premium_corporate h3,
+.theme-template-template_02_premium_corporate h4 {
+    letter-spacing: -0.02em;
+    font-weight: 700 !important;
+}
+.theme-template-template_02_premium_corporate .card,
+.theme-template-template_02_premium_corporate .product-card-hover {
+    border-radius: 4px !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+    border-top: 3px solid #0f172a !important;
+}
+.theme-template-template_02_premium_corporate .btn {
+    border-radius: 4px !important;
+    text-transform: uppercase;
+    font-size: 13px !important;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   Template 03: E-commerce Marketplace – High Density & Conversion
+   ========================================================================== */
+.theme-template-template_03_ecommerce_marketplace .card,
+.theme-template-template_03_ecommerce_marketplace .product-card-hover {
+    border-radius: 12px !important;
+    border: 2px solid #f1f5f9 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07) !important;
+}
+.theme-template-template_03_ecommerce_marketplace .card:hover {
+    border-color: #ea580c !important;
+    transform: translateY(-4px) !important;
+}
+.theme-template-template_03_ecommerce_marketplace .btn {
+    border-radius: 50px !important;
+    font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   Template 04: Green Nature – Organic & Bio Theme
+   ========================================================================== */
+.theme-template-template_04_green_nature {
+    background: #fbfdf9;
+}
+.theme-template-template_04_green_nature .card,
+.theme-template-template_04_green_nature .product-card-hover {
+    border-radius: 24px !important;
+    border: 1px solid #dcfce7 !important;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(77, 124, 15, 0.06) !important;
+}
+.theme-template-template_04_green_nature .badge {
+    border-radius: 20px !important;
+}
+
+/* ==========================================================================
+   Template 05: Dark Premium – Modern High-Tech Dark UI
+   ========================================================================== */
+.theme-template-template_05_dark_premium {
+    background-color: #0b0f19 !important;
+    color: #e2e8f0 !important;
+}
+.theme-template-template_05_dark_premium section {
+    background-color: #0f172a !important;
+    border-bottom: 1px solid #1e293b !important;
+}
+.theme-template-template_05_dark_premium .text-dark {
+    color: #f8fafc !important;
+}
+.theme-template-template_05_dark_premium .card,
+.theme-template-template_05_dark_premium .product-card-hover {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    border-radius: 16px !important;
+    color: #f1f5f9 !important;
+}
+.theme-template-template_05_dark_premium .border-top,
+.theme-template-template_05_dark_premium .border-bottom {
+    border-color: #334155 !important;
+}
+
+/* ==========================================================================
+   Template 06: Minimal – Clean, Grayscale & Typography Focused
+   ========================================================================== */
+.theme-template-template_06_minimal {
+    background-color: #ffffff;
+}
+.theme-template-template_06_minimal .card,
+.theme-template-template_06_minimal .product-card-hover {
+    border-radius: 0px !important;
+    border: 1px solid #e4e4e7 !important;
+    box-shadow: none !important;
+}
+.theme-template-template_06_minimal .btn {
+    border-radius: 0px !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================================================
+   Template 07: Magazine & Content – News & Media Style
+   ========================================================================== */
+.theme-template-template_07_magazine_news .card,
+.theme-template-template_07_magazine_news .product-card-hover {
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+    border-left: 4px solid #dc2626 !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ==========================================================================
+   Template 08: Dashboard Style – Data & Stock Market Focused
+   ========================================================================== */
+.theme-template-template_08_dashboard_style .card,
+.theme-template-template_08_dashboard_style .product-card-hover {
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06) !important;
+}
+.theme-template-template_08_dashboard_style h3,
+.theme-template-template_08_dashboard_style h4 {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* ==========================================================================
+   Template 09: Colorful Modern – Vibrant & Dynamic Gradients
+   ========================================================================== */
+.theme-template-template_09_colorful_modern .card,
+.theme-template-template_09_colorful_modern .product-card-hover {
+    border-radius: 20px !important;
+    border: 1px solid rgba(124, 58, 237, 0.15) !important;
+    box-shadow: 0 10px 25px rgba(124, 58, 237, 0.08) !important;
+}
+.theme-template-template_09_colorful_modern .btn {
+    border-radius: 25px !important;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35) !important;
+}
+
+/* ==========================================================================
+   Template 10: Custom Premium – Luxury & Gold Accents
+   ========================================================================== */
+.theme-template-template_10_custom_premium .card,
+.theme-template-template_10_custom_premium .product-card-hover {
+    border-radius: 16px !important;
+    border: 1px solid #fef08a !important;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(217, 119, 6, 0.1) !important;
+}
+.theme-template-template_10_custom_premium .btn {
+    border-radius: 30px !important;
+    background: linear-gradient(135deg, #d97706, #b45309) !important;
+    border-color: #d97706 !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25) !important;
+}

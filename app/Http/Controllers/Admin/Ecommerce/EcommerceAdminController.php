@@ -777,7 +777,17 @@ class EcommerceAdminController extends Controller
      */
     public function orders(Request $request)
     {
-        $query = ShopOrder::with(['items.product', 'user']);
+        $query = ShopOrder::with(['items.product', 'user', 'branch']);
+
+        $currentUser = Auth::user();
+        $managerBranchId = null;
+        if ($currentUser && $currentUser->role === 'manager') {
+            $managerBranchId = $currentUser->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', $currentUser->id)->value('id');
+            // Strict Isolation: Managers only see orders assigned to their branch
+            $query->where('branch_id', $managerBranchId ?: -1);
+        } elseif ($request->filled('branch_id') && $request->branch_id !== 'all') {
+            $query->where('branch_id', $request->branch_id);
+        }
 
         if ($request->filled('status') && $request->status !== 'all') {
             if ($request->status === 'cancelled' || $request->status === 'canceled') {
@@ -831,13 +841,25 @@ class EcommerceAdminController extends Controller
         ];
 
         $products = ShopProduct::where('is_active', true)->select('id', 'name', 'price', 'sku')->get();
+        if ($currentUser && $currentUser->role === 'manager' && $managerBranchId) {
+            $branches = \App\Models\SuperShop\Branch::where('id', $managerBranchId)->get();
+        } else {
+            $branches = \App\Models\SuperShop\Branch::where('status', 'active')->orderBy('id', 'asc')->get();
+        }
 
-        return view('admin.ecommerce.orders.index', compact('orders', 'counts', 'products'));
+        return view('admin.ecommerce.orders.index', compact('orders', 'counts', 'products', 'branches'));
     }
 
     public function orderShow($id)
     {
-        $order = ShopOrder::with(['items.product', 'user'])->findOrFail($id);
+        $order = ShopOrder::with(['items.product', 'user', 'branch'])->findOrFail($id);
+        $currentUser = Auth::user();
+        if ($currentUser && $currentUser->role === 'manager') {
+            $managerBranchId = $currentUser->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', $currentUser->id)->value('id');
+            if ($order->branch_id && $order->branch_id != $managerBranchId) {
+                abort(403, 'নিরাপত্তা অ্যালার্ট: আপনি শুধুমাত্র আপনার ব্রাঞ্চের অর্ডার দেখতে পারবেন।');
+            }
+        }
         return view('admin.ecommerce.orders.show', compact('order'));
     }
 

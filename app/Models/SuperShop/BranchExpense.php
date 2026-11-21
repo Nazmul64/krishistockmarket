@@ -26,6 +26,11 @@ class BranchExpense extends Model
         'status',
     ];
 
+    protected $casts = [
+        'expense_date' => 'date',
+        'amount' => 'float',
+    ];
+
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');

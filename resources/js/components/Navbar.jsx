@@ -11,7 +11,9 @@ export default function Navbar({
     onSwitchLang = () => {},
     theme = 'light',
     onToggleTheme = () => {},
-    t = {}
+    t = {},
+    uiConfig = {},
+    activeTemplate = 'template_01_modern_agriculture'
 }) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,6 +33,63 @@ export default function Navbar({
     const searchWrapRef = useRef(null);
     const mobileSearchWrapRef = useRef(null);
     const debounceTimerRef = useRef(null);
+
+    // Dynamic Typewriter Search Placeholder Effect (Web & Apps synchronization)
+    const searchPhrases = lang === 'bn' ? [
+        'সার্চ করুন স্টক, প্যাকেজ, পণ্য ও কার্ড...',
+        'মাসিক বাজার ও নিত্যপ্রয়োজনীয় সুপারশপ অফার খুঁজুন...',
+        'কৃষি প্যাকেজ, স্টোর ও স্পেশাল ডিসকাউন্ট খুঁজুন...',
+        'লাইভ স্টক মার্কেট রেট ও বাজারদর যাচাই করুন...',
+        'জমি, প্লট, ফ্ল্যাট ও প্রোপার্টি লিস্ট খুঁজুন...',
+        'মেম্বারশিপ কার্ড ও বিশেষ ক্যাশব্যাক অফার খুঁজুন...'
+    ] : [
+        'Search stocks, packages, products & cards...',
+        'Search monthly bazar & daily supermarket items...',
+        'Search agri packages, store items & cart deals...',
+        'Search live stock market & commodity rates...',
+        'Search land, plots, flats & properties...',
+        'Search membership cards & exclusive bonus...'
+    ];
+
+    const [typedPlaceholder, setTypedPlaceholder] = useState('');
+
+    useEffect(() => {
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        let timer = null;
+
+        const loop = () => {
+            const current = searchPhrases[phraseIdx % searchPhrases.length];
+
+            if (isDeleting) {
+                setTypedPlaceholder(current.substring(0, charIdx - 1));
+                charIdx--;
+            } else {
+                setTypedPlaceholder(current.substring(0, charIdx + 1));
+                charIdx++;
+            }
+
+            let delay = isDeleting ? 35 : 75;
+
+            if (!isDeleting && charIdx === current.length) {
+                delay = 2200;
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                phraseIdx++;
+                delay = 400;
+            }
+
+            timer = setTimeout(loop, delay);
+        };
+
+        loop();
+
+        return () => {
+            if (timer) clearTimeout(timer);
+        };
+    }, [lang]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -72,37 +131,51 @@ export default function Navbar({
 
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
 
-    const navLinks = [
-        { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
-        { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
-        { 
-            label: lang === 'bn' ? 'আমাদের পণ্য' : 'Our Products', 
-            url: routes.our_products || '/our-products', 
-            active: currentPath.includes('/our-products') || currentPath.includes('/shop'),
-            badge: 'Shop',
-            highlight: true
-        },
-        { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
-        { 
-            label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 
-            url: routes.properties || '/properties', 
-            active: currentPath.includes('/properties')
-        },
-        { label: t.packages_nav || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
-        { label: t.cards_nav || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
-        { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
-        { 
-            label: t.career || (lang === 'bn' ? 'ক্যারিয়ার' : 'Career'), 
-            url: routes.career || '/career', 
-            active: currentPath.includes('/career')
-        },
-        { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
-        { 
-            label: lang === 'bn' ? 'আমাদের ভিডিও' : 'Our Videos', 
-            url: routes.our_videos || '/our-videos', 
-            active: currentPath.includes('/our-videos') 
-        },
-    ];
+    // Dynamic Navigation Menu from Admin Appearance Builder
+    const dynamicHeaderMenuItems = (uiConfig && uiConfig.menus && Array.isArray(uiConfig.menus.header_menu) && uiConfig.menus.header_menu.length > 0)
+        ? uiConfig.menus.header_menu
+        : null;
+
+    const navLinks = dynamicHeaderMenuItems
+        ? dynamicHeaderMenuItems.map((item) => ({
+            label: lang === 'bn' ? item.title_bn : item.title_en,
+            url: item.url || '/',
+            active: currentPath === item.url || (item.url !== '/' && currentPath.includes(item.url)),
+            badge: (item.badge_text === 'Shop' || item.badge_text === 'সব') ? null : item.badge_text,
+            highlight: false,
+            icon: item.icon,
+        }))
+        : [
+            { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
+            { 
+                label: lang === 'bn' ? 'আমাদের পণ্য' : 'Our Products', 
+                url: routes.our_products || '/our-products', 
+                active: currentPath.includes('/our-products') || currentPath.includes('/shop'),
+                badge: null,
+                highlight: false
+            },
+            { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
+            { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
+            { 
+                label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 
+                url: routes.properties || '/properties', 
+                active: currentPath.includes('/properties')
+            },
+            { label: t.packages_nav || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
+            { label: t.cards_nav || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
+            { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
+            { 
+                label: t.career || (lang === 'bn' ? 'ক্যারিয়ার' : 'Career'), 
+                url: routes.career || '/career', 
+                active: currentPath.includes('/career')
+            },
+            { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
+            { 
+                label: lang === 'bn' ? 'আমাদের ভিডিও' : 'Our Videos', 
+                url: routes.our_videos || '/our-videos', 
+                active: currentPath.includes('/our-videos') 
+            },
+        ];
 
     // Static pages lookup definition
     const staticPages = [
@@ -117,6 +190,8 @@ export default function Navbar({
         { title: t.terms || 'Terms & Conditions', subtitle: 'Platform Policies', url: routes.terms || '/terms', keywords: 'terms conditions নিয়মাবলী শর্তাবলী টার্মস' },
         { title: t.privacy || 'Privacy Policy', subtitle: 'User Data Security', url: routes.privacy || '/privacy-policy', keywords: 'privacy policy সিকিউরিটি প্রাইভেসি পলিসি' },
         { title: t.login || 'Login', subtitle: 'Access Account', url: routes.login || '/login', keywords: 'login signin প্রবেশ লগইন একাউন্ট' },
+        { title: lang === 'bn' ? 'এজেন্ট পয়েন্ট লগইন' : 'Agent Point Login', subtitle: 'Agent Point Hub & Manager Portal', url: '/agentpoint/login', keywords: 'agent point login এজেন্ট পয়েন্ট ম্যানেজার লগইন hub' },
+        { title: lang === 'bn' ? 'সাপ্লায়ার পোর্টাল' : 'Supplier Portal', subtitle: 'Vendor & Supply Management', url: '/supplier/login', keywords: 'supplier vendor supply বিক্রেতা সরবরাহকারী লগইন' },
         { title: t.register || 'Register', subtitle: 'Create Account', url: routes.register || '/register', keywords: 'register signup registration নিবন্ধন রেজিস্ট্রেশন অ্যাকাউন্ট তৈরি' },
     ];
 
@@ -403,7 +478,13 @@ export default function Navbar({
                 <div className="container">
                     <div className="d-flex align-items-center w-100">
                         {/* Notice Badge */}
-                        <div className="marquee-badge-wrap d-flex align-items-center flex-shrink-0" style={{ marginRight: '14px' }}>
+                        <div
+                            className="marquee-badge-wrap d-flex align-items-center flex-shrink-0"
+                            style={{
+                                background: (site && site.button_color) ? site.button_color : 'var(--btn-theme-color, #007e8a)',
+                                marginRight: '14px'
+                            }}
+                        >
                             <span className="marquee-live-dot" style={{ marginRight: '6px' }}></span>
                             <i className="fa fa-bullhorn marquee-icon" style={{ marginRight: '6px' }}></i>
                             <span className="marquee-badge-title">{t.notice_badge}</span>
@@ -429,7 +510,10 @@ export default function Navbar({
             </div>
 
             {/* Main Header Row: Logo + Prominent Full-Width Search Bar + Language + Dark Mode + Auth */}
-            <header className={`react-main-header golden-navbar sticky-top ${scrolled ? 'header-scrolled shadow-lg' : ''}`}>
+            <header
+                className={`react-main-header golden-navbar sticky-top ${scrolled ? 'header-scrolled shadow-lg' : ''}`}
+                style={theme !== 'dark' && site.header_color ? { background: site.header_color } : undefined}
+            >
                 <div className="container">
                     <div className="d-flex align-items-center justify-content-between header-inner-row">
                         {/* Brand Logo */}
@@ -443,7 +527,7 @@ export default function Navbar({
                                 <input
                                     type="text"
                                     className="unified-search-input"
-                                    placeholder={t.search_placeholder}
+                                    placeholder={typedPlaceholder || t.search_placeholder}
                                     value={searchQuery}
                                     onChange={handleSearchChange}
                                     onFocus={() => { if (searchQuery.trim().length > 0) setSearchOpen(true); }}
@@ -535,11 +619,11 @@ export default function Navbar({
                         <div className="mobile-header-controls d-flex d-lg-none align-items-center">
                             <button
                                 type="button"
-                                className={`mobile-nav-toggle-btn-golden ${mobileMenuOpen ? 'active' : ''}`}
-                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                aria-label="Toggle Navigation Menu"
+                                className="mobile-nav-toggle-btn-golden"
+                                onClick={() => setMobileMenuOpen(true)}
+                                aria-label="Open Navigation Menu"
                             >
-                                <i className={`fa ${mobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                                <i className="fa fa-bars"></i>
                             </button>
                         </div>
                     </div>
@@ -567,14 +651,25 @@ export default function Navbar({
             {/* Mobile Slide-out Drawer */}
             <div className={`mobile-drawer-overlay ${mobileMenuOpen ? 'show' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
             <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
-                <div className="mobile-drawer-header golden-drawer-head">
-                    <img src={site.logo} alt="Logo" className="mobile-drawer-logo" />
-                    <button className="mobile-drawer-close" onClick={() => setMobileMenuOpen(false)} aria-label="Close Menu">
-                        <i className="fa fa-times"></i>
+                {/* 0. Mobile Drawer Header with Logo & Close Button */}
+                <div
+                    className="mobile-drawer-header golden-drawer-head"
+                    style={theme !== 'dark' ? { background: site.header_color || site.button_color || 'var(--btn-theme-color, #007e8a)' } : undefined}
+                >
+                    <a href={routes.home || '/'} className="d-inline-flex align-items-center text-decoration-none">
+                        <img src={site.logo} alt={site.title} className="mobile-drawer-logo" />
+                    </a>
+                    <button
+                        type="button"
+                        className="mobile-drawer-close"
+                        onClick={() => setMobileMenuOpen(false)}
+                        aria-label="Close navigation"
+                    >
+                        <i className="fa fa-times font-size-18"></i>
                     </button>
                 </div>
 
-                <div className="mobile-drawer-body">
+                <div className="mobile-drawer-body pt-3">
                     {/* 1. Login & Registration / Dashboard in Mobile Drawer */}
                     <div className="mobile-user-card mb-3 p-3 rounded-3" style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)', border: '1px solid #fed7aa' }}>
                         {auth.is_authenticated ? (
@@ -650,7 +745,7 @@ export default function Navbar({
                             <input
                                 type="text"
                                 className="unified-search-input"
-                                placeholder={t.search_placeholder}
+                                placeholder={typedPlaceholder || t.search_placeholder}
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 onFocus={() => { if (searchQuery.trim().length > 0) setSearchOpen(true); }}

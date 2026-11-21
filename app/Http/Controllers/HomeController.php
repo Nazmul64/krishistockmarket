@@ -45,6 +45,10 @@ class HomeController extends Controller
         }
 
         if ($user->hasRole('manager')) {
+            $branchId = $user->branch_id ?: \App\Models\SuperShop\Branch::where('manager_id', $user->id)->value('id');
+            if ($branchId) {
+                return redirect()->route('admin.supershop.branches.show', $branchId);
+            }
             return redirect()->route('manager.dashboard');
         }
 
