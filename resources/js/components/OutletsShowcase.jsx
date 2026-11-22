@@ -24,7 +24,7 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                         {isBn ? 'শোরুম ও আউটলেট' : 'STORE LOCATIONS'}
                     </span>
                     <h2
-                        className="fw-bold text-dark mb-2"
+                        className="fw-bold text-dark mb-0"
                         style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', letterSpacing: '-0.5px' }}
                     >
                         {isBn ? 'আমাদের নিকটস্থ' : 'Find Your Nearest'}{' '}
@@ -32,41 +32,6 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                             {isBn ? 'আউটলেট ও শোরুম' : 'Store & Outlets'}
                         </span>
                     </h2>
-                    <p className="text-muted mx-auto mb-0" style={{ maxWidth: '650px', fontSize: '15px' }}>
-                        {isBn
-                            ? 'সারাদেশে ১৮+ আধুনিক সুপারশপ ও এগ্রিকালচার আউটলেট নেটওয়ার্ক — আপনার নিকটস্থ শোরুমে সরাসরি যোগাযোগ করুন'
-                            : 'Our 18+ Super Shop & Agricultural Showrooms Across Bangladesh — Visit Our Store Near You'}
-                    </p>
-
-                    {/* Stats Counters */}
-                    <div className="d-flex justify-content-center align-items-center flex-wrap gap-4 gap-md-5 my-4">
-                        <div className="text-center">
-                            <div className="fw-bold" style={{ fontSize: '26px', color: '#ea580c', lineHeight: 1 }}>
-                                18+
-                            </div>
-                            <small className="text-muted text-uppercase fw-bold" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>
-                                {isBn ? 'আউটলেট' : 'OUTLETS'}
-                            </small>
-                        </div>
-                        <div className="border-start d-none d-sm-block" style={{ height: '30px', borderColor: '#e2e8f0' }}></div>
-                        <div className="text-center">
-                            <div className="fw-bold" style={{ fontSize: '26px', color: '#ea580c', lineHeight: 1 }}>
-                                10K+
-                            </div>
-                            <small className="text-muted text-uppercase fw-bold" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>
-                                {isBn ? 'সন্তুষ্ট গ্রাহক' : 'HAPPY CUSTOMERS'}
-                            </small>
-                        </div>
-                        <div className="border-start d-none d-sm-block" style={{ height: '30px', borderColor: '#e2e8f0' }}></div>
-                        <div className="text-center">
-                            <div className="fw-bold" style={{ fontSize: '26px', color: '#ea580c', lineHeight: 1 }}>
-                                24/7
-                            </div>
-                            <small className="text-muted text-uppercase fw-bold" style={{ fontSize: '11px', letterSpacing: '0.5px' }}>
-                                {isBn ? 'সাপোর্ট' : 'SUPPORT'}
-                            </small>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Outlets Cards Grid */}

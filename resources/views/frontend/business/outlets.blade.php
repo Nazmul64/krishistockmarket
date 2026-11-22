@@ -23,30 +23,9 @@
             <span class="badge border px-3 py-1 rounded-pill mb-2 fw-bold text-uppercase" style="border-color: #fb923c !important; color: #ea580c; font-size: 11px; letter-spacing: 1.5px; background: #fff7ed;">
                 STORE LOCATIONS
             </span>
-            <h1 class="fw-bold text-dark mb-2" style="font-size: clamp(26px, 4vw, 42px); letter-spacing: -0.5px;">
+            <h1 class="fw-bold text-dark mb-4" style="font-size: clamp(26px, 4vw, 42px); letter-spacing: -0.5px;">
                 Find Your Nearest <span style="color: #ea580c;">{{ setting('title') ?: 'ekrishisheba' }}</span> Outlet
             </h1>
-            <p class="text-muted mx-auto mb-4" style="max-width: 650px; font-size: 15px;">
-                Our Super Shop & Agricultural Showrooms Across Bangladesh — Visit Our Store Near You
-            </p>
-
-            <!-- 3 Modern Stats Badges -->
-            <div class="d-flex justify-content-center align-items-center flex-wrap gap-4 gap-md-5 my-4">
-                <div class="text-center">
-                    <div class="fw-bold" style="font-size: 28px; color: #ea580c; line-height: 1;">{{ $outlets->count() }}</div>
-                    <small class="text-muted text-uppercase fw-bold font-size-11" style="letter-spacing: 0.5px;">OUTLETS</small>
-                </div>
-                <div class="border-start" style="height: 35px; border-color: #cbd5e1 !important;"></div>
-                <div class="text-center">
-                    <div class="fw-bold" style="font-size: 28px; color: #ea580c; line-height: 1;">10K+</div>
-                    <small class="text-muted text-uppercase fw-bold font-size-11" style="letter-spacing: 0.5px;">HAPPY CUSTOMERS</small>
-                </div>
-                <div class="border-start" style="height: 35px; border-color: #cbd5e1 !important;"></div>
-                <div class="text-center">
-                    <div class="fw-bold" style="font-size: 28px; color: #ea580c; line-height: 1;">24/7</div>
-                    <small class="text-muted text-uppercase fw-bold font-size-11" style="letter-spacing: 0.5px;">ONLINE SUPPORT</small>
-                </div>
-            </div>
 
             <!-- Search Bar on right / centered -->
             <div class="d-flex justify-content-center justify-content-md-end mt-4">
