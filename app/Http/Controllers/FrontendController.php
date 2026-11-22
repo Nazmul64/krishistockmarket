@@ -296,6 +296,34 @@ class FrontendController extends Controller
             $headerMenu = \App\Models\Ui\NavigationMenu::where('key', 'header_menu')->first();
             $appBottomMenu = \App\Models\Ui\NavigationMenu::where('key', 'app_bottom_nav')->first();
 
+            $headerMenuItems = $headerMenu ? $headerMenu->allItems()->where('is_active', true)->where('show_on_web', true)->get() : collect();
+            $pkgStatus = setting('menu_packages_status', '1') !== '0';
+            $stockStatus = setting('menu_stock_status', '1') !== '0';
+            $cardStatus = setting('menu_membership_status', '1') !== '0';
+
+            $filteredHeaderMenu = $headerMenuItems->filter(function($item) use ($pkgStatus, $stockStatus, $cardStatus) {
+                $url = strtolower($item->url ?? '');
+                $title = strtolower($item->title_en ?? '') . ' ' . strtolower($item->title_bn ?? '');
+                if (!$pkgStatus && (str_contains($url, 'package') || str_contains($title, 'package') || str_contains($title, 'প্যাকেজ'))) return false;
+                if (!$stockStatus && (str_contains($url, 'stock') || str_contains($title, 'stock') || str_contains($title, 'স্টক'))) return false;
+                if (!$cardStatus && (str_contains($url, 'card') || str_contains($title, 'card') || str_contains($title, 'কার্ড'))) return false;
+                return true;
+            })->map(function($item) {
+                $url = strtolower($item->url ?? '');
+                $title = strtolower($item->title_en ?? '');
+                if (str_contains($url, 'package') || str_contains($title, 'package')) {
+                    $item->title_bn = setting('menu_packages_name_bn') ?: $item->title_bn;
+                    $item->title_en = setting('menu_packages_name_en') ?: $item->title_en;
+                } elseif (str_contains($url, 'stock') || str_contains($title, 'stock')) {
+                    $item->title_bn = setting('menu_stock_name_bn') ?: $item->title_bn;
+                    $item->title_en = setting('menu_stock_name_en') ?: $item->title_en;
+                } elseif (str_contains($url, 'card') || str_contains($title, 'card')) {
+                    $item->title_bn = setting('menu_membership_name_bn') ?: $item->title_bn;
+                    $item->title_en = setting('menu_membership_name_en') ?: $item->title_en;
+                }
+                return $item;
+            })->values();
+
             $uiConfigPayload = [
                 'active_template' => $activeTemplate ? $activeTemplate->slug : 'template_01_modern_agriculture',
                 'template_name_bn' => $activeTemplate ? $activeTemplate->name_bn : 'মডার্ন এগ্রিকালচার',
@@ -309,7 +337,7 @@ class FrontendController extends Controller
                 'sections_web' => $homeSectionsWeb,
                 'sections_app' => $homeSectionsApp,
                 'menus' => [
-                    'header_menu' => $headerMenu ? $headerMenu->allItems()->where('is_active', true)->where('show_on_web', true)->get() : [],
+                    'header_menu' => $filteredHeaderMenu,
                     'app_bottom_nav' => $appBottomMenu ? $appBottomMenu->allItems()->where('is_active', true)->where('show_on_app', true)->get() : [],
                 ],
             ];
@@ -350,8 +378,34 @@ class FrontendController extends Controller
 
     public function index()
     {
+        if (setting('coming_soon_status') === '1') {
+            $user = Auth::user();
+            $isAdmin = $user && in_array($user->role, ['admin', 'super_admin']);
+            if (!$isAdmin) {
+                return view('frontend.coming_soon');
+            }
+        }
         $data = $this->getHomepageData();
         return view('frontend.index', compact('data'));
+    }
+
+    public function comingSoon()
+    {
+        return view('frontend.coming_soon');
+    }
+
+    public function comingSoonSubscribe(Request $request)
+    {
+        $email = $request->input('email');
+        if ($email && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            try {
+                \Illuminate\Support\Facades\DB::table('newsletters')->updateOrInsert(
+                    ['email' => $email],
+                    ['created_at' => now(), 'updated_at' => now()]
+                );
+            } catch (\Exception $e) {}
+        }
+        return response()->json(['status' => 'success', 'message' => 'Subscribed successfully']);
     }
 
     public function apiHomepageData()

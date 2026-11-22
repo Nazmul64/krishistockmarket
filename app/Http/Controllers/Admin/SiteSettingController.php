@@ -166,6 +166,13 @@ class SiteSettingController extends Controller
         $whyChooseUsStatus = ($request->has('why_choose_us_status') && in_array($request->why_choose_us_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
         SiteSetting::updateOrCreate(['name' => 'why_choose_us_status'], ['value' => $whyChooseUsStatus]);
 
+        // Coming Soon Mode (শীঘ্রই উদ্বোধন মোড)
+        $comingSoonStatus = ($request->has('coming_soon_status') && in_array($request->coming_soon_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'coming_soon_status'], ['value' => $comingSoonStatus]);
+        SiteSetting::updateOrCreate(['name' => 'coming_soon_date'], ['value' => $request->coming_soon_date ?: '2026-12-31 00:00:00']);
+        SiteSetting::updateOrCreate(['name' => 'coming_soon_title'], ['value' => $request->coming_soon_title ?: 'COMING SOON']);
+        SiteSetting::updateOrCreate(['name' => 'coming_soon_subtitle'], ['value' => $request->coming_soon_subtitle ?: 'আমাদের ওয়েবসাইট ও ডিজিটাল কৃষিপণ্য সেবা খুব শীঘ্রই উদ্বোধন হতে যাচ্ছে!']);
+
         // 3 Header Navigation Controls (On/Off & Custom Titles: Packages, Stock Market, Membership Cards)
         $menuPackagesStatus = ($request->has('menu_packages_status') && in_array($request->menu_packages_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
         SiteSetting::updateOrCreate(['name' => 'menu_packages_status'], ['value' => $menuPackagesStatus]);

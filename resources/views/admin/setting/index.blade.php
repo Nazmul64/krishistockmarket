@@ -286,6 +286,65 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <!-- 5. Coming Soon Mode (শীঘ্রই উদ্বোধন / কামিং সুন মোড) -->
+                                                    <div class="col-12">
+                                                        <div class="p-3 rounded-3" style="background: linear-gradient(135deg, #090d16 0%, #1e293b 100%); border: 2px solid #007e8a; color: #ffffff; box-shadow: 0 4px 18px rgba(0, 126, 138, 0.2);">
+                                                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 border-bottom border-secondary pb-2">
+                                                                <div>
+                                                                    <label class="fw-bold text-white mb-0" style="font-size: 16px;">
+                                                                        <i class="fa fa-clock-o text-warning me-1"></i> ৫. কামিং সুন / শীঘ্রই উদ্বোধন মোড (Coming Soon Mode)
+                                                                    </label>
+                                                                    <p class="text-white-50 small mb-0">
+                                                                        অন (ON) করে রাখলে সাধারণ ভিজিটররা পূর্ণাঙ্গ কামিং সুন ও কাউন্টডাউন পেজ দেখতে পাবেন। এডমিনরা স্বাভাবিকভাবেই প্যানেলে কাজ করতে পারবেন।
+                                                                    </p>
+                                                                </div>
+                                                                @php
+                                                                    $currentComingSoon = setting('coming_soon_status') === '1';
+                                                                @endphp
+                                                                <div class="d-flex align-items-center gap-2">
+                                                                    <a href="{{ route('coming_soon') }}" target="_blank" class="btn btn-xs btn-outline-light px-2 py-1">
+                                                                        <i class="fa fa-external-link me-1"></i> প্রিভিউ দেখুন
+                                                                    </a>
+                                                                    <span class="badge {{ $currentComingSoon ? 'bg-danger' : 'bg-success' }}">
+                                                                        {{ $currentComingSoon ? 'কামিং সুন সক্রিয় (ACTIVE)' : 'ওয়েবসাইট লাইভ (LIVE)' }}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row g-3">
+                                                                <div class="col-md-3 col-12">
+                                                                    <label class="small text-white-50 fw-bold mb-1">মোড অন / অফ (Status):</label>
+                                                                    <div class="btn-group w-100" role="group">
+                                                                        <input type="radio" class="btn-check" name="coming_soon_status" id="coming_soon_on" value="1" {{ $currentComingSoon ? 'checked' : '' }}>
+                                                                        <label class="btn btn-sm btn-outline-danger fw-bold" for="coming_soon_on">
+                                                                            <i class="fa fa-clock-o me-1"></i> অন (ON)
+                                                                        </label>
+
+                                                                        <input type="radio" class="btn-check" name="coming_soon_status" id="coming_soon_off" value="0" {{ !$currentComingSoon ? 'checked' : '' }}>
+                                                                        <label class="btn btn-sm btn-outline-success fw-bold" for="coming_soon_off">
+                                                                            <i class="fa fa-check me-1"></i> অফ (OFF)
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-3 col-12">
+                                                                    <label class="small text-white-50 fw-bold mb-1">উদ্বোধন তারিখ ও সময় (Target Date):</label>
+                                                                    <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" name="coming_soon_date" value="{{ setting('coming_soon_date') ?: '2026-12-31 00:00:00' }}" placeholder="YYYY-MM-DD HH:MM:SS">
+                                                                </div>
+
+                                                                <div class="col-md-3 col-12">
+                                                                    <label class="small text-white-50 fw-bold mb-1">টাইটেল (Main Title):</label>
+                                                                    <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" name="coming_soon_title" value="{{ setting('coming_soon_title') ?: 'COMING SOON' }}" placeholder="COMING SOON">
+                                                                </div>
+
+                                                                <div class="col-md-3 col-12">
+                                                                    <label class="small text-white-50 fw-bold mb-1">সাবটাইটেল (Subtitle):</label>
+                                                                    <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary" name="coming_soon_subtitle" value="{{ setting('coming_soon_subtitle') ?: 'আমাদের ওয়েবসাইট ও ডিজিটাল কৃষিপণ্য সেবা খুব শীঘ্রই উদ্বোধন হতে যাচ্ছে!' }}" placeholder="সাবটাইটেল লিখুন...">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

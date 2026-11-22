@@ -23,9 +23,9 @@ class RbacUserSeeder extends Seeder
             [
                 'name'         => 'সুপার এডমিন (Super Admin)',
                 'username'     => 'superadmin',
-                'email'        => 'admin@gmail.com',
+                'email'        => 'ekrishisheba123@gmail.com',
                 'phone'        => '01711000001',
-                'password'     => 'admin@gmail.com',
+                'password'     => 'ekrishisheba123@gmail.com',
                 'role'         => 'super_admin',
                 'role_code'    => 'super_admin',
                 'user_type_id' => $internalType ? $internalType->id : null,

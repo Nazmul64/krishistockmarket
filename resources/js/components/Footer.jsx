@@ -95,69 +95,6 @@ export default function Footer({
                 </div>
             </div>
 
-            {/* 2. Newsletter & Direct Hotline CTA Ribbon */}
-            <div className="footer-newsletter-hotline-ribbon py-4">
-                <div className="container">
-                    <div className="newsletter-hotline-inner-card">
-                        <div className="row align-items-center g-4">
-                            <div className="col-12 col-lg-7">
-                                <div className="d-flex align-items-center flex-wrap gap-3">
-                                    <div className="newsletter-bell-icon">
-                                        <i className="fa fa-bell-o"></i>
-                                    </div>
-                                    <div className="flex-fill">
-                                        <h4 className="newsletter-heading mb-1">
-                                            {lang === 'bn' ? 'দৈনিক বাজার দর ও বিশেষ অফারের আপডেট পান' : 'Get Daily Market Rates & Agro Offers'}
-                                        </h4>
-                                        <p className="newsletter-sub mb-0">
-                                            {lang === 'bn' ? 'আপনার ইমেইল সাবস্ক্রাইব করে রাখুন এবং সাশ্রয়ী অফার সবার আগে জানুন' : 'Subscribe to receive stock commodity rates and grocery deals directly'}
-                                        </p>
-                                    </div>
-                                </div>
-                                <form onSubmit={handleNewsletterSubmit} className="newsletter-form-modern mt-3">
-                                    <div className="newsletter-input-group">
-                                        <input
-                                            type="email"
-                                            value={newsletterEmail}
-                                            onChange={(e) => setNewsletterEmail(e.target.value)}
-                                            placeholder={lang === 'bn' ? 'আপনার ইমেইল ঠিকানা লিখুন...' : 'Enter your email address...'}
-                                            required
-                                            className="newsletter-input"
-                                        />
-                                        <button type="submit" className="newsletter-submit-btn">
-                                            <i className="fa fa-paper-plane me-1"></i> {lang === 'bn' ? 'সাবস্ক্রাইব' : 'Subscribe'}
-                                        </button>
-                                    </div>
-                                    {isSubscribed && (
-                                        <div className="newsletter-success-alert mt-2">
-                                            <i className="fa fa-check-circle me-1"></i>
-                                            {lang === 'bn' ? 'ধন্যবাদ! আপনি সফলভাবে সাবস্ক্রাইব হয়েছেন।' : 'Thank you! You have successfully subscribed.'}
-                                        </div>
-                                    )}
-                                </form>
-                            </div>
-
-                            <div className="col-12 col-lg-5">
-                                <div className="footer-hotline-banner-card">
-                                    <div className="hotline-icon-pulse">
-                                        <i className="fa fa-headphones"></i>
-                                    </div>
-                                    <div>
-                                        <span className="hotline-label">{lang === 'bn' ? 'গ্রাহক সেবা ও কল সেন্টার' : 'Customer Care Hotline'}</span>
-                                        <a href={`tel:${phone}`} className="hotline-number-link">
-                                            {phone}
-                                        </a>
-                                        <span className="hotline-timing">
-                                            <i className="fa fa-clock-o me-1"></i> {lang === 'bn' ? 'সকাল ৮:০০টা - রাত ১০:০০টা' : '8:00 AM - 10:00 PM (Daily)'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* 3. Main Footer Links & Information Grid */}
             <div className="footer-main-grid-wrap py-5">
                 <div className="container">

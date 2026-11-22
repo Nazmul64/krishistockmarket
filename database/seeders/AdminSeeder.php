@@ -21,10 +21,10 @@ class AdminSeeder extends Seeder
             'username'          => 'superadmin',
             'role'              => 'admin',
             'referral_id'       => '0',
-            'email'             => 'admin@gmail.com',
+            'email'             => 'ekrishisheba123@gmail.com',
             'avatar'            => "default-user.png",
             'phone'             => $faker->phoneNumber,
-            'password'          => Hash::make('admin@gmail.com'),
+            'password'          => Hash::make('ekrishisheba123@gmail.com'),
             'email_verified_at' => now(),
         ]);
     }

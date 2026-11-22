@@ -183,11 +183,13 @@ export default function Navbar({
     const navLinks = dynamicHeaderMenuItems
         ? dynamicHeaderMenuItems.map((item) => {
             let label = lang === 'bn' ? item.title_bn : item.title_en;
-            if (item.url && item.url.includes('#packages')) {
+            const u = (item.url || '').toLowerCase();
+            const lbl = (label || '').toLowerCase();
+            if (u.includes('package') || lbl.includes('package') || lbl.includes('প্যাকেজ')) {
                 label = lang === 'bn' ? (site.menu_packages_name_bn || label) : (site.menu_packages_name_en || label);
-            } else if (item.url && (item.url.includes('/stocks') || item.url.includes('/stock'))) {
+            } else if (u.includes('stock') || lbl.includes('stock') || lbl.includes('স্টক')) {
                 label = lang === 'bn' ? (site.menu_stock_name_bn || label) : (site.menu_stock_name_en || label);
-            } else if (item.url && item.url.includes('#card-benefits')) {
+            } else if (u.includes('card') || lbl.includes('card') || lbl.includes('কার্ড')) {
                 label = lang === 'bn' ? (site.menu_membership_name_bn || label) : (site.menu_membership_name_en || label);
             }
             return {
@@ -199,9 +201,15 @@ export default function Navbar({
                 icon: item.icon,
             };
         }).filter(item => {
-            if (item.url && item.url.includes('#packages') && (site.menu_packages_status === false || site.menu_packages_status === '0')) return false;
-            if (item.url && (item.url.includes('/stocks') || item.url.includes('/stock')) && (site.menu_stock_status === false || site.menu_stock_status === '0')) return false;
-            if (item.url && item.url.includes('#card-benefits') && (site.menu_membership_status === false || site.menu_membership_status === '0')) return false;
+            const u = (item.url || '').toLowerCase();
+            const lbl = (item.label || '').toLowerCase();
+            const isPkg = u.includes('package') || lbl.includes('package') || lbl.includes('প্যাকেজ');
+            const isStock = u.includes('stock') || lbl.includes('stock') || lbl.includes('স্টক');
+            const isCard = u.includes('card') || lbl.includes('card') || lbl.includes('কার্ড');
+
+            if (isPkg && (site.menu_packages_status === false || site.menu_packages_status === '0')) return false;
+            if (isStock && (site.menu_stock_status === false || site.menu_stock_status === '0')) return false;
+            if (isCard && (site.menu_membership_status === false || site.menu_membership_status === '0')) return false;
             return true;
         })
         : defaultNavItems;
