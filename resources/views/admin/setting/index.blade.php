@@ -617,6 +617,41 @@
                                             </div>
                                         </div>
 
+                                        <!-- About Corporate Support PDF Upload -->
+                                        <div class="form-group pb-4 border-bottom">
+                                            <div class="row align-items-center">
+                                                <label class="col-lg-3 control-label text-lg-start pt-2 fw-bold"
+                                                    for="corporate_support_pdf">
+                                                    <i class="fa fa-file-pdf-o text-danger me-1"></i> অ্যাবাউট কর্পোরেট সাপোর্ট PDF (Corporate Support PDF)
+                                                </label>
+                                                <div class="col-lg-5">
+                                                    <input type="file" class="form-control" id="corporate_support_pdf" name="corporate_support_pdf" accept="application/pdf">
+                                                    <small class="text-muted d-block mt-1">ফুটারে "About Corporate Support" এ ক্লিক করলে এই PDF ডকুমেন্টটি ভিউয়ারে ওপেন হবে। (শুধুমাত্র .PDF ফাইল, সর্বোচ্চ 10MB)</small>
+                                                    <span class="text-danger">
+                                                        @error('corporate_support_pdf')
+                                                        {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    @if(setting('corporate_support_pdf'))
+                                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                                            <a href="{{ route('corporate.support.pdf') }}" target="_blank" class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa fa-file-pdf-o me-1"></i> বর্তমান PDF দেখুন (View PDF)
+                                                            </a>
+                                                            <span class="badge bg-success">আপলোড করা আছে</span>
+                                                        </div>
+                                                        <small class="text-muted d-block">{{ setting('corporate_support_pdf') }}</small>
+                                                    @else
+                                                        <a href="{{ route('corporate.support.pdf') }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                                            <i class="fa fa-file-pdf-o me-1"></i> ডিফল্ট PDF দেখুন
+                                                        </a>
+                                                        <small class="text-muted d-block mt-1">কাস্টম PDF দিলে এটি প্রতিস্থাপিত হবে</small>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+
 
 
 

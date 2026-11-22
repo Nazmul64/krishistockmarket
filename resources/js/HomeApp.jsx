@@ -130,6 +130,7 @@ export default function HomeApp({ data = {} }) {
                 key="outlets"
                 outlets={outlets}
                 routes={routes}
+                site={site}
                 lang={lang}
                 t={t}
                 activeTemplate={activeTemplate}

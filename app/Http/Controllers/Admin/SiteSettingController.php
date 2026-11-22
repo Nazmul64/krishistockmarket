@@ -104,7 +104,8 @@ class SiteSettingController extends Controller
             'title' => 'required',
             'logo' => 'nullable|image',
             'favicon' => 'nullable|image',
-            'ssl_payment_logo' => 'nullable|image|max:4096'
+            'ssl_payment_logo' => 'nullable|image|max:4096',
+            'corporate_support_pdf' => 'nullable|mimes:pdf|max:10240',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -158,6 +159,28 @@ class SiteSettingController extends Controller
             SiteSetting::updateOrCreate(
                 ['name' => 'ssl_payment_logo'],
                 ['value' => $sslName]
+            );
+        }
+
+        if ($request->hasFile('corporate_support_pdf')) {
+            $setting = SiteSetting::where('name', 'corporate_support_pdf')->first();
+            if ($setting && $setting->value) {
+                $oldPath = public_path('upload/documents/' . $setting->value);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
+            }
+            $uploadDir = public_path('upload/documents');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $pdfFile = $request->file('corporate_support_pdf');
+            $pdfName = 'corporate_support_' . time() . '_' . Str::random(6) . '.' . $pdfFile->getClientOriginalExtension();
+            $pdfFile->move($uploadDir, $pdfName);
+
+            SiteSetting::updateOrCreate(
+                ['name' => 'corporate_support_pdf'],
+                ['value' => $pdfName]
             );
         }
 

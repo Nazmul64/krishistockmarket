@@ -1,10 +1,11 @@
 import React from 'react';
 
-export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn', activeTemplate = '' }) {
+export default function OutletsShowcase({ outlets = [], routes = {}, site = {}, lang = 'bn', activeTemplate = '' }) {
     if (!outlets || outlets.length === 0) return null;
 
     const isBn = lang === 'bn';
     const allOutletsUrl = routes.outlets || '/outlets';
+    const activeBtnColor = (site && site.button_color) ? site.button_color : '#007e8a';
 
     return (
         <section className="py-5 bg-white border-top border-bottom" style={{ borderColor: '#f1f5f9' }} id="outlets-section">
@@ -14,11 +15,11 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                     <span
                         className="badge border px-3 py-1 rounded-pill mb-2 fw-bold text-uppercase"
                         style={{
-                            borderColor: '#fed7aa',
-                            color: '#ea580c',
+                            borderColor: activeBtnColor,
+                            color: activeBtnColor,
                             fontSize: '11px',
                             letterSpacing: '1.5px',
-                            background: '#fff7ed'
+                            background: 'rgba(0, 126, 138, 0.08)'
                         }}
                     >
                         {isBn ? 'শোরুম ও আউটলেট' : 'STORE LOCATIONS'}
@@ -28,7 +29,7 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                         style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', letterSpacing: '-0.5px' }}
                     >
                         {isBn ? 'আমাদের নিকটস্থ' : 'Find Your Nearest'}{' '}
-                        <span style={{ color: '#ea580c' }}>
+                        <span style={{ color: activeBtnColor }}>
                             {isBn ? 'আউটলেট ও শোরুম' : 'Store & Outlets'}
                         </span>
                     </h2>
@@ -47,12 +48,12 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                                 <div
                                     className="card h-100 rounded-4 border-0 shadow-sm overflow-hidden bg-white"
                                     style={{
-                                        border: '1.5px solid #fed7aa',
+                                        border: `1.5px solid ${activeBtnColor}33`,
                                         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                                     }}
                                     onMouseEnter={(e) => {
                                         e.currentTarget.style.transform = 'translateY(-3px)';
-                                        e.currentTarget.style.boxShadow = '0 10px 25px rgba(234, 88, 12, 0.12)';
+                                        e.currentTarget.style.boxShadow = `0 10px 25px ${activeBtnColor}25`;
                                     }}
                                     onMouseLeave={(e) => {
                                         e.currentTarget.style.transform = 'translateY(0)';
@@ -62,16 +63,19 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                                     {/* Card Header: OUTLET - 01 */}
                                     <div
                                         className="px-4 py-2 d-flex align-items-center justify-content-between"
-                                        style={{ background: '#fff7ed', borderBottom: '1px solid #ffedd5' }}
+                                        style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}
                                     >
                                         <span
                                             className="fw-bold text-uppercase"
-                                            style={{ color: '#ea580c', fontSize: '12px', letterSpacing: '0.5px' }}
+                                            style={{ color: activeBtnColor, fontSize: '12px', letterSpacing: '0.5px' }}
                                         >
                                             {outlet.code || `OUTLET - 0${index + 1}`}
                                         </span>
                                         {isDailyOpen ? (
-                                            <span className="badge bg-success rounded-pill px-2 py-1" style={{ fontSize: '10px' }}>
+                                            <span
+                                                className="badge rounded-pill px-2 py-1 text-white"
+                                                style={{ backgroundColor: activeBtnColor, fontSize: '10px' }}
+                                            >
                                                 {isBn ? 'সপ্তাহে ৭ দিন খোলা' : 'Open 7 Days'}
                                             </span>
                                         ) : (
@@ -139,12 +143,11 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                                                 href={mapUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="btn btn-sm w-100 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2"
+                                                className="btn btn-sm w-100 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2 text-white shadow-sm"
                                                 style={{
-                                                    background: '#fff7ed',
-                                                    color: '#ea580c',
-                                                    border: '1px solid #fed7aa',
-                                                    padding: '7px 14px',
+                                                    backgroundColor: activeBtnColor,
+                                                    borderColor: activeBtnColor,
+                                                    padding: '8px 14px',
                                                     fontSize: '12.5px',
                                                 }}
                                             >
@@ -165,9 +168,9 @@ export default function OutletsShowcase({ outlets = [], routes = {}, lang = 'bn'
                         href={allOutletsUrl}
                         className="btn rounded-pill px-4 py-2 fw-bold text-white shadow-sm"
                         style={{
-                            background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                            backgroundColor: activeBtnColor,
+                            borderColor: activeBtnColor,
                             fontSize: '14px',
-                            border: 'none',
                         }}
                     >
                         <span>{isBn ? 'সকল আউটলেট দেখুন (১৮+ আউটলেট)' : 'View All 18+ Outlets'}</span>

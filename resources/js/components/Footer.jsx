@@ -148,6 +148,11 @@ export default function Footer({
                                             <i className="fa fa-angle-right"></i> {t.terms || (lang === 'bn' ? 'শর্তাবলী ও নিয়মাবলী' : 'Terms & Conditions')}
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href={routes.corporate_support || '/corporate-support'} target="_blank" rel="noopener noreferrer">
+                                            <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'অ্যাবাউট কর্পোরেট সাপোর্ট' : 'About Corporate Support'}
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

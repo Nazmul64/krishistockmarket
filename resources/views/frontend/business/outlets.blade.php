@@ -1,6 +1,7 @@
 @php
     $siteLang = request()->cookie('ekrishi_lang', 'bn');
     $isBn = ($siteLang === 'bn');
+    $btnColor = setting('button_color') ?: '#007e8a';
 @endphp
 
 @extends('layouts.frontend.app')
@@ -20,11 +21,11 @@
 
         <!-- Centered Modern Store Locations Header -->
         <div class="text-center mb-5">
-            <span class="badge border px-3 py-1 rounded-pill mb-2 fw-bold text-uppercase" style="border-color: #fb923c !important; color: #ea580c; font-size: 11px; letter-spacing: 1.5px; background: #fff7ed;">
+            <span class="badge border px-3 py-1 rounded-pill mb-2 fw-bold text-uppercase" style="border-color: {{ $btnColor }} !important; color: {{ $btnColor }}; font-size: 11px; letter-spacing: 1.5px; background: rgba(0, 126, 138, 0.08);">
                 STORE LOCATIONS
             </span>
             <h1 class="fw-bold text-dark mb-4" style="font-size: clamp(26px, 4vw, 42px); letter-spacing: -0.5px;">
-                Find Your Nearest <span style="color: #ea580c;">{{ setting('title') ?: 'ekrishisheba' }}</span> Outlet
+                Find Your Nearest <span style="color: {{ $btnColor }};">{{ setting('title') ?: 'ekrishisheba' }}</span> Outlet
             </h1>
 
             <!-- Search Bar on right / centered -->
@@ -55,15 +56,15 @@
                     $mapUrl = $outlet->google_map_url ?: ('https://maps.google.com/?q=' . urlencode($outlet->name . ', ' . $outlet->address));
                 @endphp
                 <div class="col-12 col-md-6 col-lg-4 outlet-card-col">
-                    <div class="card h-100 rounded-4 border-0 shadow-sm overflow-hidden bg-white outlet-card-item" style="border: 1.5px solid #fed7aa !important; transition: all 0.25s ease;">
+                    <div class="card h-100 rounded-4 border-0 shadow-sm overflow-hidden bg-white outlet-card-item" style="border: 1.5px solid {{ $btnColor }}33 !important; transition: all 0.25s ease;">
                         
                         <!-- Card Top Bar: OUTLET - 01 -->
-                        <div class="px-4 py-2 d-flex align-items-center justify-content-between" style="background: #fff7ed; border-bottom: 1px solid #ffedd5;">
-                            <span class="fw-bold font-size-11 text-uppercase" style="color: #ea580c; letter-spacing: 0.5px;">
+                        <div class="px-4 py-2 d-flex align-items-center justify-content-between" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                            <span class="fw-bold font-size-11 text-uppercase" style="color: {{ $btnColor }}; letter-spacing: 0.5px;">
                                 {{ $outlet->code }}
                             </span>
                             @if($isDailyOpen)
-                                <span class="badge bg-success rounded-pill font-size-10 px-2 py-1">Open 7 Days</span>
+                                <span class="badge rounded-pill font-size-10 px-2 py-1 text-white" style="background-color: {{ $btnColor }};">Open 7 Days</span>
                             @else
                                 <span class="badge bg-secondary rounded-pill font-size-10 px-2 py-1">Off: {{ ucfirst($outlet->weekly_off_day) }}</span>
                             @endif
@@ -134,7 +135,7 @@
                                     </span>
 
                                     <!-- Google Map Link Button -->
-                                    <a href="{{ $mapUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm text-white rounded-3 px-3 py-1 fw-bold d-inline-flex align-items-center gap-1 shadow-sm" style="background: #ea580c; border-color: #ea580c; font-size: 12px;">
+                                    <a href="{{ $mapUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm text-white rounded-3 px-3 py-1 fw-bold d-inline-flex align-items-center gap-1 shadow-sm" style="background: {{ $btnColor }}; border-color: {{ $btnColor }}; font-size: 12px;">
                                         <i class="fa fa-map-o"></i> Google Map
                                     </a>
                                 </div>

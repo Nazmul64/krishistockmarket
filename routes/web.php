@@ -96,6 +96,7 @@ Route::get('/umrah-haj', [\App\Http\Controllers\BusinessProgramController::class
 Route::post('/umrah-haj/apply', [\App\Http\Controllers\BusinessProgramController::class, 'submitUmrahHaj'])->name('business.umrah_haj.apply');
 
 Route::get('/outlets', [\App\Http\Controllers\BusinessProgramController::class, 'outlets'])->name('business.outlets');
+Route::get('/corporate-support', [\App\Http\Controllers\FrontendController::class, 'corporateSupportPdf'])->name('corporate.support.pdf');
 
 // E-commerce Superstore / Our Products System
 Route::get('/our-products', [\App\Http\Controllers\EcommerceShopController::class, 'index'])->name('products.index');

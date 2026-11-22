@@ -1282,6 +1282,7 @@
                                 <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ক্যারিয়ার' : 'Career' }}</a></li>
                                 <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'প্রাইভেসি পলিসি' : 'Privacy' }}</a></li>
                                 <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms' }}</a></li>
+                                <li><a href="{{ route('corporate.support.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o me-2 text-danger"></i> {{ $isBn ? 'অ্যাবাউট কর্পোরেট সাপোর্ট' : 'About Corporate Support' }}</a></li>
                             </ul>
                         </div>
                     </div>

@@ -236,6 +236,7 @@ class FrontendController extends Controller
                         ? asset('upload/payments/' . setting('ssl_payment_logo'))
                         : asset(ltrim(setting('ssl_payment_logo'), '/')))
             ) : null,
+            'corporate_support_pdf' => setting('corporate_support_pdf') ? asset('upload/documents/' . setting('corporate_support_pdf')) : route('corporate.support.pdf'),
         ];
 
         // Auth state & Navigation URLs
@@ -263,6 +264,7 @@ class FrontendController extends Controller
             'career' => route('career'),
             'our_videos' => route('our_videos'),
             'outlets' => route('business.outlets'),
+            'corporate_support' => route('corporate.support.pdf'),
             'investor' => route('business.investor'),
             'wholesale' => route('business.wholesale'),
             'franchise' => route('business.franchise'),
@@ -685,5 +687,32 @@ class FrontendController extends Controller
             'description' => 'ই-কৃষি সেবা ও আমাদের কৃষি পরিবারের কার্যক্রম, পণ্যের পরিচিতি এবং খামার পরিদর্শনের ভিডিও চিত্র',
             'videos' => $videos,
         ]);
+    }
+
+    /**
+     * View Corporate Support PDF Document.
+     */
+    public function corporateSupportPdf()
+    {
+        $pdf = setting('corporate_support_pdf');
+        if ($pdf) {
+            $path = public_path('upload/documents/' . $pdf);
+            if (file_exists($path)) {
+                return response()->file($path, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="Corporate_Support_ekrishisheba.pdf"'
+                ]);
+            }
+        }
+
+        $defaultPath = public_path('upload/documents/corporate_support.pdf');
+        if (file_exists($defaultPath)) {
+            return response()->file($defaultPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="Corporate_Support_ekrishisheba.pdf"'
+            ]);
+        }
+
+        return redirect()->route('about')->with('info', 'Corporate support PDF will be available soon.');
     }
 }
