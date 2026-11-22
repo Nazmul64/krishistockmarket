@@ -202,16 +202,6 @@ export default function Footer({
                                         </a>
                                     </li>
                                     <li>
-                                        <a href={routes.stock_index || '/stocks'}>
-                                            <i className="fa fa-angle-right"></i> {t.stocks || (lang === 'bn' ? 'স্টক মার্কেট' : 'Stock Market')}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href={routes.packages || '/our-packages'}>
-                                            <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'প্যাকেজ ও কার্ড' : 'Packages & Cards'}
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a href="/shop">
                                             <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'মাসিক বাজার শপ' : 'Monthly Bazaar'}
                                         </a>
@@ -230,30 +220,13 @@ export default function Footer({
                             </div>
                         </div>
 
-                        {/* Col 3: Portals & Legal */}
+                        {/* Col 3: Support & Policies */}
                         <div className="col-12 col-md-6 col-lg-3">
                             <div className="footer-modern-col">
                                 <h4 className="footer-modern-title">
-                                    <span>{lang === 'bn' ? 'পোর্টাল ও সহায়তা' : 'Portals & Support'}</span>
+                                    <span>{lang === 'bn' ? 'তথ্য ও পলিসি' : 'Info & Policies'}</span>
                                 </h4>
                                 <ul className="footer-modern-links">
-                                    <li>
-                                        <a href="/agentpoint/login" className="portal-highlight-link agent">
-                                            <i className="fa fa-building-o text-success"></i> {lang === 'bn' ? 'এজেন্ট পয়েন্ট হাব' : 'Agent Point Hub'}
-                                            <span className="badge-portal-mini">{lang === 'bn' ? 'লগইন' : 'Login'}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/supplier/login" className="portal-highlight-link supplier">
-                                            <i className="fa fa-truck text-info"></i> {lang === 'bn' ? 'সাপ্লায়ার পোর্টাল' : 'Supplier Portal'}
-                                            <span className="badge-portal-mini">{lang === 'bn' ? 'লগইন' : 'Login'}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/supershop">
-                                            <i className="fa fa-shopping-cart text-warning"></i> {lang === 'bn' ? 'সুপারশপ পিওএস' : 'SuperShop POS'}
-                                        </a>
-                                    </li>
                                     <li>
                                         <a href={routes.about || '/about'}>
                                             <i className="fa fa-angle-right"></i> {t.about || (lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us')}

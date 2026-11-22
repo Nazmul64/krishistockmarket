@@ -1950,7 +1950,6 @@
                         <li><a href="{{ route('our_videos') }}"><i class="fa fa-angle-right"></i> Our Videos (ভিডিওসমূহ)</a></li>
                         <li><a href="{{ route('contact') }}"><i class="fa fa-angle-right"></i> Contact Us</a></li>
                         <li><a href="{{ route('career') }}"><i class="fa fa-angle-right"></i> Career</a></li>
-                        <li><a href="{{ route('corporate.board') }}"><i class="fa fa-angle-right"></i> About Corporate Support</a></li>
                     </ul>
                 </div>
 

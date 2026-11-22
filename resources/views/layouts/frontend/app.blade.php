@@ -1264,7 +1264,6 @@
                             <ul class="footer-links-list">
                                 <li><a href="{{ route('/') }}"><i class="fa fa-angle-right me-2 text-warning"></i> হোমপেজ</a></li>
                                 <li><a href="{{ route('about') }}"><i class="fa fa-angle-right me-2 text-warning"></i> আমাদের সম্পর্কে</a></li>
-                                <li><a href="{{ route('stock.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> স্টক মার্কেট</a></li>
                                 <li><a href="{{ route('properties.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> জমি ও প্রপার্টি</a></li>
                                 <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রোডাক্ট গ্যালারি</a></li>
                                 <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> ক্যারিয়ার</a></li>
