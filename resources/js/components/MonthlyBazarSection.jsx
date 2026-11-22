@@ -13,44 +13,6 @@ export default function MonthlyBazarSection({ products = [], routes = {}, site =
     return (
         <section className="monthly-bazar-home-showcase py-4" style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
             <div className="container">
-                {/* Header */}
-                <div className="d-flex align-items-center justify-content-between gap-2 mb-3 pb-2 border-bottom flex-nowrap">
-                    <div className="d-flex align-items-center gap-2 min-w-0">
-                        <div className="d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '40px', height: '40px' }}>
-                            <img
-                                src="/uploads/icons/icon-monthly-bazar.png"
-                                alt="Monthly Bazar"
-                                style={{ width: '36px', height: '36px', objectFit: 'contain' }}
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                }}
-                            />
-                        </div>
-                        <div className="text-truncate">
-                            <h3 className="fw-bold text-dark mb-0 text-truncate" style={{ fontSize: 'clamp(15px, 3.8vw, 22px)', lineHeight: '1.2' }}>
-                                <span>{lang === 'bn' ? 'মাসিক বাজার' : 'Monthly Bazar'}</span>
-                                <span className="d-none d-md-inline ms-1" style={{ color: '#007e8a', fontSize: '0.88em' }}>
-                                    {lang === 'bn' ? '(সুপারশপ অফার)' : '(SuperShop Deals)'}
-                                </span>
-                            </h3>
-                            <p className="text-muted small mb-0 d-none d-md-block text-truncate">
-                                {lang === 'bn' ? 'নিত্যপ্রয়োজনীয় ফ্রেশ মাসিক বাজার তালিকা ও সাশ্রয়ী মূল্যে পণ্য' : ''}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex-shrink-0 ms-auto">
-                        <a
-                            href={shopUrl}
-                            className="btn btn-sm btn-outline-success rounded-pill px-2 px-md-3 py-1 fw-bold shadow-sm d-inline-flex align-items-center gap-1 text-nowrap"
-                            style={{ fontSize: 'clamp(11px, 2.5vw, 13px)' }}
-                        >
-                            <span className="d-none d-sm-inline">{lang === 'bn' ? 'সকল মাসিক বাজার পণ্য দেখুন (৯২৬+)' : 'View All Monthly Bazar (926+)'}</span>
-                            <span className="d-inline d-sm-none">{lang === 'bn' ? 'সকল দেখুন (৯২৬+)' : 'View All (926+)'}</span>
-                            <i className="fa fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
                 {/* Product Grid */}
                 <div className="row g-3">
                     {products.slice(0, 10).map((prod) => (
