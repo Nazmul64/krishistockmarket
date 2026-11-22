@@ -40,61 +40,6 @@ export default function Footer({
             {/* Top Multi-Color Gradient Wave Strip */}
             <div className="footer-top-accent-line"></div>
 
-            {/* 1. Top Value Proposition / Trust Features Bar */}
-            <div className="footer-trust-features-bar py-4">
-                <div className="container">
-                    <div className="row g-3">
-                        <div className="col-12 col-sm-6 col-lg-3">
-                            <div className="trust-feature-card">
-                                <div className="trust-icon-box bg-emerald">
-                                    <i className="fa fa-truck"></i>
-                                </div>
-                                <div className="trust-feature-text">
-                                    <h5 className="trust-title">{lang === 'bn' ? 'দেশব্যাপী হোম ডেলিভারি' : 'Fast Home Delivery'}</h5>
-                                    <p className="trust-desc">{lang === 'bn' ? 'নির্ধারিত পয়েন্ট ও দ্রুততম হোম ডেলিভারি' : 'Reliable delivery across all districts'}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-sm-6 col-lg-3">
-                            <div className="trust-feature-card">
-                                <div className="trust-icon-box bg-amber">
-                                    <i className="fa fa-shield"></i>
-                                </div>
-                                <div className="trust-feature-text">
-                                    <h5 className="trust-title">{lang === 'bn' ? '১০০% খাঁটি ও তাজা পণ্য' : '100% Quality Guaranteed'}</h5>
-                                    <p className="trust-desc">{lang === 'bn' ? 'কৃষকের খাঁটি ফসল ও পুষ্টিকর খাবার' : 'Fresh, verified organic produce'}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-sm-6 col-lg-3">
-                            <div className="trust-feature-card">
-                                <div className="trust-icon-box bg-cyan">
-                                    <i className="fa fa-credit-card"></i>
-                                </div>
-                                <div className="trust-feature-text">
-                                    <h5 className="trust-title">{lang === 'bn' ? 'সুরক্ষিত ক্যাশলেস পেমেন্ট' : 'Safe & Secure Payment'}</h5>
-                                    <p className="trust-desc">{lang === 'bn' ? 'বিকাশ, নগদ, কার্ড ও ক্যাশ অন ডেলিভারি' : 'Multiple cashless payment methods'}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-sm-6 col-lg-3">
-                            <div className="trust-feature-card">
-                                <div className="trust-icon-box bg-purple">
-                                    <i className="fa fa-phone"></i>
-                                </div>
-                                <div className="trust-feature-text">
-                                    <h5 className="trust-title">{lang === 'bn' ? '২৪/৭ সার্বক্ষণিক হেল্পলাইন' : 'Dedicated Support 24/7'}</h5>
-                                    <p className="trust-desc">{lang === 'bn' ? 'যেকোনো সহায়তায় আমাদের টিম প্রস্তুত' : 'Always here to assist your needs'}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* 3. Main Footer Links & Information Grid */}
             <div className="footer-main-grid-wrap py-5">
                 <div className="container">
