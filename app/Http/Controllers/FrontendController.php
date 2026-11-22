@@ -213,6 +213,19 @@ class FrontendController extends Controller
             'button_animation' => setting('button_animation', '1') !== '0' ? '1' : '0',
             'preloader_status' => setting('preloader_status', '1') !== '0' ? '1' : '0',
             'why_choose_us_status' => setting('why_choose_us_status', '1') !== '0' ? '1' : '0',
+
+            // Dynamic Header Menu Controls (On/Off & Custom Titles)
+            'menu_packages_status' => setting('menu_packages_status', '1') !== '0',
+            'menu_packages_name_bn' => setting('menu_packages_name_bn') ?: 'প্যাকেজসমূহ',
+            'menu_packages_name_en' => setting('menu_packages_name_en') ?: 'Our Packages',
+
+            'menu_stock_status' => setting('menu_stock_status', '1') !== '0',
+            'menu_stock_name_bn' => setting('menu_stock_name_bn') ?: 'স্টক মার্কেট',
+            'menu_stock_name_en' => setting('menu_stock_name_en') ?: 'Stock Market',
+
+            'menu_membership_status' => setting('menu_membership_status', '1') !== '0',
+            'menu_membership_name_bn' => setting('menu_membership_name_bn') ?: 'মেম্বারশিপ কার্ড',
+            'menu_membership_name_en' => setting('menu_membership_name_en') ?: 'Membership Cards',
         ];
 
         // Auth state & Navigation URLs
@@ -503,6 +516,19 @@ class FrontendController extends Controller
             'cards' => $cards,
             'pages' => $pages,
         ]);
+    }
+
+    /**
+     * Frontend Gallery page.
+     */
+    public function gallery()
+    {
+        $galleries = \App\Models\Gallery::where('status', 1)
+            ->orderBy('sort_order', 'asc')
+            ->latest()
+            ->paginate(16);
+
+        return view('frontend.gallery', compact('galleries'));
     }
 
     /**

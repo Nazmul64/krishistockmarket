@@ -1335,6 +1335,12 @@
                                             <span class="text-danger fw-bold"><i class="fa fa-play-circle me-1"></i> Our Videos (আমাদের ভিডিওসমূহ)</span>
                                         </a>
                                     </li>
+                                    <li class="{{ (Str::startsWith(optional(Request::route())->getName(), 'admin.gallery')) ? 'active' : '' }}">
+                                        <a href="{{ route('admin.gallery.index') }}">
+                                            <i class="ti-more"></i>
+                                            <span class="text-success fw-bold"><i class="fa fa-picture-o me-1"></i> Photo Gallery (ফটো গ্যালারি)</span>
+                                        </a>
+                                    </li>
                                     <li class="{{ (optional(Request::route())->getName() == 'setting.offer_banner') ? 'active' : '' }}">
                                         <a href="{{ route('setting.offer_banner') }}">
                                             <i class="ti-more"></i>

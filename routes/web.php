@@ -71,7 +71,7 @@ Route::post('/properties/inquiry', [\App\Http\Controllers\PropertyFrontendContro
 Route::get('/api/home-data', [\App\Http\Controllers\FrontendController::class, 'apiHomepageData'])->name('api.home_data');
 Route::get('/api/live-search', [\App\Http\Controllers\FrontendController::class, 'apiLiveSearch'])->name('api.live_search');
 Route::get('/about', function () {return view('frontend.about-us');})->name('about');
-Route::get('/gallery', function () {return view('frontend.gallery');})->name('gallery');
+Route::get('/gallery', [\App\Http\Controllers\FrontendController::class, 'gallery'])->name('gallery');
 Route::get('/contact', function () {return view('frontend.contact');})->name('contact');
 Route::post('/contact/send', [ContactController::class, 'store'])->name('contact.send');
 Route::get('/career', [\App\Http\Controllers\CareerController::class, 'index'])->name('career');
@@ -341,6 +341,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::get('/setting/offer-banner', [SiteSettingController::class, 'OfferBannerSetting'])->name('setting.offer_banner');
     Route::post('/setting/offer-banner/post', [SiteSettingController::class, 'OfferBannerPost'])->name('setting.offer_banner.post');
     Route::get('/setting/offer-banner/delete', [SiteSettingController::class, 'OfferBannerDelete'])->name('setting.offer_banner.delete');
+
+    // Gallery Manager Routes
+    Route::get('/gallery-manager', [\App\Http\Controllers\Admin\GalleryController::class, 'index'])->name('admin.gallery.index');
+    Route::post('/gallery-manager/store', [\App\Http\Controllers\Admin\GalleryController::class, 'store'])->name('admin.gallery.store');
+    Route::post('/gallery-manager/status/{id}', [\App\Http\Controllers\Admin\GalleryController::class, 'status'])->name('admin.gallery.status');
+    Route::get('/gallery-manager/destroy/{id}', [\App\Http\Controllers\Admin\GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
 
     // =========================================================================
     // 🎨 Appearance & Design Studio Routes (10 Templates, Drag & Drop Builders)

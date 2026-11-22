@@ -323,6 +323,93 @@
                                         </div>
 
                                         <!-- ============================================== -->
+                                        <!-- 🧭 Header Navigation Control: On/Off & Titles -->
+                                        <!-- ============================================== -->
+                                        <div id="header_menus_control_card" class="form-group pb-4 p-4 mb-4 rounded-3" style="background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%); border: 2.5px solid #007e8a; box-shadow: 0 8px 24px rgba(0, 126, 138, 0.12); border-radius: 16px;">
+                                            <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="avatar avatar-md rounded-circle text-white me-3 d-flex align-items-center justify-content-center shadow-sm" style="background: #007e8a; width: 42px; height: 42px;">
+                                                        <i class="fa fa-bars font-size-18"></i>
+                                                    </span>
+                                                    <div>
+                                                        <h4 class="fw-bold text-dark mb-0 font-size-17">
+                                                            হেডার মেনু নিয়ন্ত্রণ ও কাস্টম নাম (Header Navigation Controls)
+                                                        </h4>
+                                                        <p class="text-muted small mb-0">প্যাকেজ, স্টক মার্কেট ও মেম্বারশিপ কার্ড মেনু অন/অফ করুন এবং নিজের মতো নাম লিখে দিন</p>
+                                                    </div>
+                                                </div>
+                                                <span class="badge bg-success font-size-12 px-3 py-2 rounded-pill">
+                                                    <i class="fa fa-sliders me-1"></i> লাইভ কন্ট্রোল
+                                                </span>
+                                            </div>
+
+                                            <div class="row g-4">
+                                                <!-- Menu 1: Our Packages -->
+                                                <div class="col-xl-4 col-md-6 col-12">
+                                                    <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #ea580c !important;">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="fw-bold text-dark"><i class="fa fa-gift text-warning me-1"></i> ১. আওয়ার প্যাকেজ (Packages)</span>
+                                                            <div class="form-check form-switch m-0">
+                                                                <input class="form-check-input cursor-pointer" type="checkbox" name="menu_packages_status" id="menu_packages_status" value="1" {{ setting('menu_packages_status', '1') !== '0' ? 'checked' : '' }}>
+                                                                <label class="form-check-label small fw-bold" for="menu_packages_status">অন / অফ</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <label class="form-label small text-muted mb-1 fw-bold">বাংলা নাম (Bangla Title):</label>
+                                                            <input type="text" class="form-control form-control-sm fw-bold" name="menu_packages_name_bn" value="{{ setting('menu_packages_name_bn') ?: 'প্যাকেজসমূহ' }}" placeholder="প্যাকেজসমূহ">
+                                                        </div>
+                                                        <div>
+                                                            <label class="form-label small text-muted mb-1 fw-bold">English Name:</label>
+                                                            <input type="text" class="form-control form-control-sm fw-bold" name="menu_packages_name_en" value="{{ setting('menu_packages_name_en') ?: 'Our Packages' }}" placeholder="Our Packages">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Menu 2: Stock Market -->
+                                                <div class="col-xl-4 col-md-6 col-12">
+                                                    <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #007e8a !important;">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="fw-bold text-dark"><i class="fa fa-line-chart text-info me-1"></i> ২. স্টক মার্কেট (Stock Market)</span>
+                                                            <div class="form-check form-switch m-0">
+                                                                <input class="form-check-input cursor-pointer" type="checkbox" name="menu_stock_status" id="menu_stock_status" value="1" {{ setting('menu_stock_status', '1') !== '0' ? 'checked' : '' }}>
+                                                                <label class="form-check-label small fw-bold" for="menu_stock_status">অন / অফ</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <label class="form-label small text-muted mb-1 fw-bold">বাংলা নাম (Bangla Title):</label>
+                                                            <input type="text" class="form-control form-control-sm fw-bold" name="menu_stock_name_bn" value="{{ setting('menu_stock_name_bn') ?: 'স্টক মার্কেট' }}" placeholder="স্টক মার্কেট">
+                                                        </div>
+                                                        <div>
+                                                            <label class="form-label small text-muted mb-1 fw-bold">English Name:</label>
+                                                            <input type="text" class="form-control form-control-sm fw-bold" name="menu_stock_name_en" value="{{ setting('menu_stock_name_en') ?: 'Stock Market' }}" placeholder="Stock Market">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Menu 3: Membership Cards -->
+                                                <div class="col-xl-4 col-md-6 col-12">
+                                                    <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #3b82f6 !important;">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="fw-bold text-dark"><i class="fa fa-credit-card text-primary me-1"></i> ৩. মেম্বারশিপ কার্ড (Membership Cards)</span>
+                                                            <div class="form-check form-switch m-0">
+                                                                <input class="form-check-input cursor-pointer" type="checkbox" name="menu_membership_status" id="menu_membership_status" value="1" {{ setting('menu_membership_status', '1') !== '0' ? 'checked' : '' }}>
+                                                                <label class="form-check-label small fw-bold" for="menu_membership_status">অন / অফ</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <label class="form-label small text-muted mb-1 fw-bold">বাংলা নাম (Bangla Title):</label>
+                                                            <input type="text" class="form-control form-control-sm fw-bold" name="menu_membership_name_bn" value="{{ setting('menu_membership_name_bn') ?: 'মেম্বারশিপ কার্ড' }}" placeholder="মেম্বারশিপ কার্ড">
+                                                        </div>
+                                                        <div>
+                                                            <label class="form-label small text-muted mb-1 fw-bold">English Name:</label>
+                                                            <input type="text" class="form-control form-control-sm fw-bold" name="menu_membership_name_en" value="{{ setting('menu_membership_name_en') ?: 'Membership Cards' }}" placeholder="Membership Cards">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- ============================================== -->
                                         <!-- 100 Font Families Selector & Live Font Preview -->
                                         <!-- ============================================== -->
                                         <div id="site_font_family_card" class="form-group pb-4 p-3 mb-4 rounded-3" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #ea580c; box-shadow: 0 6px 20px rgba(234, 88, 12, 0.12); border-radius: 14px;">

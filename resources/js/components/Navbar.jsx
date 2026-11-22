@@ -131,60 +131,104 @@ export default function Navbar({
 
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
 
-    // Dynamic Navigation Menu from Admin Appearance Builder
+    // Dynamic Navigation Menu from Admin Settings & Appearance Builder
     const dynamicHeaderMenuItems = (uiConfig && uiConfig.menus && Array.isArray(uiConfig.menus.header_menu) && uiConfig.menus.header_menu.length > 0)
         ? uiConfig.menus.header_menu
         : null;
 
+    const defaultNavItems = [
+        { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
+        { 
+            label: lang === 'bn' ? 'আমাদের পণ্য' : 'Our Products', 
+            url: routes.our_products || '/our-products', 
+            active: currentPath.includes('/our-products') || currentPath.includes('/shop'),
+            badge: null,
+            highlight: false
+        },
+        ...(site.menu_packages_status !== false && site.menu_packages_status !== '0' ? [{
+            label: lang === 'bn' ? (site.menu_packages_name_bn || 'প্যাকেজসমূহ') : (site.menu_packages_name_en || 'Our Packages'),
+            url: (routes.home || '/') + '#packages',
+            active: false
+        }] : []),
+        ...(site.menu_stock_status !== false && site.menu_stock_status !== '0' ? [{
+            label: lang === 'bn' ? (site.menu_stock_name_bn || 'স্টক মার্কেট') : (site.menu_stock_name_en || 'Stock Market'),
+            url: routes.stock_index || '/stocks',
+            active: currentPath.includes('/stocks') || currentPath.includes('/stock')
+        }] : []),
+        { 
+            label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 
+            url: routes.properties || '/properties', 
+            active: currentPath.includes('/properties')
+        },
+        ...(site.menu_membership_status !== false && site.menu_membership_status !== '0' ? [{
+            label: lang === 'bn' ? (site.menu_membership_name_bn || 'মেম্বারশিপ কার্ড') : (site.menu_membership_name_en || 'Membership Cards'),
+            url: (routes.home || '/') + '#card-benefits',
+            active: false
+        }] : []),
+        { label: t.gallery || (lang === 'bn' ? 'গ্যালারি' : 'Gallery'), url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
+        { 
+            label: lang === 'bn' ? 'আমাদের ভিডিও' : 'Our Videos', 
+            url: routes.our_videos || '/our-videos', 
+            active: currentPath.includes('/our-videos') 
+        },
+        { 
+            label: t.career || (lang === 'bn' ? 'ক্যারিয়ার' : 'Career'), 
+            url: routes.career || '/career', 
+            active: currentPath.includes('/career')
+        },
+        { label: t.about || (lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'), url: routes.about || '/about', active: currentPath.includes('/about') },
+        { label: t.contact || (lang === 'bn' ? 'যোগাযোগ' : 'Contact'), url: routes.contact || '/contact', active: currentPath.includes('/contact') },
+    ];
+
     const navLinks = dynamicHeaderMenuItems
-        ? dynamicHeaderMenuItems.map((item) => ({
-            label: lang === 'bn' ? item.title_bn : item.title_en,
-            url: item.url || '/',
-            active: currentPath === item.url || (item.url !== '/' && currentPath.includes(item.url)),
-            badge: (item.badge_text === 'Shop' || item.badge_text === 'সব') ? null : item.badge_text,
-            highlight: false,
-            icon: item.icon,
-        }))
-        : [
-            { label: t.home || 'Home', url: routes.home || '/', active: currentPath === '/' || currentPath === '' },
-            { 
-                label: lang === 'bn' ? 'আমাদের পণ্য' : 'Our Products', 
-                url: routes.our_products || '/our-products', 
-                active: currentPath.includes('/our-products') || currentPath.includes('/shop'),
-                badge: null,
-                highlight: false
-            },
-            { label: t.about || 'About Us', url: routes.about || '/about', active: currentPath.includes('/about') },
-            { label: t.stocks || 'Stock Market', url: routes.stock_index || '/stocks', active: currentPath.includes('/stocks') || currentPath.includes('/stock') },
-            { 
-                label: t.properties || (lang === 'bn' ? 'জমি ও প্রপার্টি' : 'Land & Properties'), 
-                url: routes.properties || '/properties', 
-                active: currentPath.includes('/properties')
-            },
-            { label: t.packages_nav || 'Our Packages', url: (routes.home || '/') + '#packages', active: false },
-            { label: t.cards_nav || 'Membership Cards', url: (routes.home || '/') + '#card-benefits', active: false },
-            { label: t.gallery || 'Gallery', url: routes.gallery || '/gallery', active: currentPath.includes('/gallery') },
-            { 
-                label: t.career || (lang === 'bn' ? 'ক্যারিয়ার' : 'Career'), 
-                url: routes.career || '/career', 
-                active: currentPath.includes('/career')
-            },
-            { label: t.contact || 'Contact', url: routes.contact || '/contact', active: currentPath.includes('/contact') },
-            { 
-                label: lang === 'bn' ? 'আমাদের ভিডিও' : 'Our Videos', 
-                url: routes.our_videos || '/our-videos', 
-                active: currentPath.includes('/our-videos') 
-            },
-        ];
+        ? dynamicHeaderMenuItems.map((item) => {
+            let label = lang === 'bn' ? item.title_bn : item.title_en;
+            if (item.url && item.url.includes('#packages')) {
+                label = lang === 'bn' ? (site.menu_packages_name_bn || label) : (site.menu_packages_name_en || label);
+            } else if (item.url && (item.url.includes('/stocks') || item.url.includes('/stock'))) {
+                label = lang === 'bn' ? (site.menu_stock_name_bn || label) : (site.menu_stock_name_en || label);
+            } else if (item.url && item.url.includes('#card-benefits')) {
+                label = lang === 'bn' ? (site.menu_membership_name_bn || label) : (site.menu_membership_name_en || label);
+            }
+            return {
+                label,
+                url: item.url || '/',
+                active: currentPath === item.url || (item.url !== '/' && currentPath.includes(item.url)),
+                badge: (item.badge_text === 'Shop' || item.badge_text === 'সব') ? null : item.badge_text,
+                highlight: false,
+                icon: item.icon,
+            };
+        }).filter(item => {
+            if (item.url && item.url.includes('#packages') && (site.menu_packages_status === false || site.menu_packages_status === '0')) return false;
+            if (item.url && (item.url.includes('/stocks') || item.url.includes('/stock')) && (site.menu_stock_status === false || site.menu_stock_status === '0')) return false;
+            if (item.url && item.url.includes('#card-benefits') && (site.menu_membership_status === false || site.menu_membership_status === '0')) return false;
+            return true;
+        })
+        : defaultNavItems;
 
     // Static pages lookup definition
     const staticPages = [
         { title: t.home || 'Home', subtitle: 'Main Homepage', url: routes.home || '/', keywords: 'home main index হোম ekrishisheba' },
         { title: t.about || 'About Us', subtitle: 'Who We Are', url: routes.about || '/about', keywords: 'about us info কোম্পানি আমাদের সম্পর্কে' },
-        { title: t.stocks || 'Stock Market', subtitle: 'Live Rates & Trading', url: routes.stock_index || '/stocks', keywords: 'stocks market live price দর স্টক মার্কেট কৃষি পণ্য' },
-        { title: t.pkg_title || 'Our Packages', subtitle: 'Exclusive Packages', url: (routes.home || '/') + '#packages', keywords: 'packages offer discount প্যাকেজ আওয়ার প্যাকেজ' },
-        { title: t.card_title || 'Membership Cards', subtitle: 'SME & Gold Cards', url: (routes.home || '/') + '#card-benefits', keywords: 'cards sme gold card membership মেম্বারশিপ কার্ড গোল্ড' },
-        { title: t.gallery || 'Produce Gallery', subtitle: 'Farm & Commodity Photos', url: routes.gallery || '/gallery', keywords: 'gallery photo images ছবি গ্যালারি প্রোডাক্ট' },
+        ...(site.menu_stock_status !== false && site.menu_stock_status !== '0' ? [{
+            title: lang === 'bn' ? (site.menu_stock_name_bn || 'স্টক মার্কেট') : (site.menu_stock_name_en || 'Stock Market'),
+            subtitle: 'Live Rates & Trading',
+            url: routes.stock_index || '/stocks',
+            keywords: 'stocks market live price দর স্টক মার্কেট কৃষি পণ্য'
+        }] : []),
+        ...(site.menu_packages_status !== false && site.menu_packages_status !== '0' ? [{
+            title: lang === 'bn' ? (site.menu_packages_name_bn || 'প্যাকেজসমূহ') : (site.menu_packages_name_en || 'Our Packages'),
+            subtitle: 'Exclusive Packages',
+            url: (routes.home || '/') + '#packages',
+            keywords: 'packages offer discount প্যাকেজ আওয়ার প্যাকেজ'
+        }] : []),
+        ...(site.menu_membership_status !== false && site.menu_membership_status !== '0' ? [{
+            title: lang === 'bn' ? (site.menu_membership_name_bn || 'মেম্বারশিপ কার্ড') : (site.menu_membership_name_en || 'Membership Cards'),
+            subtitle: 'SME & Gold Cards',
+            url: (routes.home || '/') + '#card-benefits',
+            keywords: 'cards sme gold card membership মেম্বারশিপ কার্ড গোল্ড'
+        }] : []),
+        { title: t.gallery || 'Produce Gallery', subtitle: 'Farm & Commodity Photos', url: routes.gallery || '/gallery', keywords: 'gallery photo images ছবি গ্যালারি' },
         { title: t.contact || 'Contact Us', subtitle: 'Support & Helpline', url: routes.contact || '/contact', keywords: 'contact support helpline যোগাযোগ হেল্পলাইন ফোন' },
         { title: lang === 'bn' ? 'আমাদের ভিডিওসমূহ' : 'Our Videos', subtitle: 'Video Gallery', url: routes.our_videos || '/our-videos', keywords: 'video videos youtube আমাদের ভিডিও গ্যালারি প্লেয়ার' },
         { title: t.terms || 'Terms & Conditions', subtitle: 'Platform Policies', url: routes.terms || '/terms', keywords: 'terms conditions নিয়মাবলী শর্তাবলী টার্মস' },

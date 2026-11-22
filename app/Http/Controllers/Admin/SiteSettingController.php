@@ -166,6 +166,22 @@ class SiteSettingController extends Controller
         $whyChooseUsStatus = ($request->has('why_choose_us_status') && in_array($request->why_choose_us_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
         SiteSetting::updateOrCreate(['name' => 'why_choose_us_status'], ['value' => $whyChooseUsStatus]);
 
+        // 3 Header Navigation Controls (On/Off & Custom Titles: Packages, Stock Market, Membership Cards)
+        $menuPackagesStatus = ($request->has('menu_packages_status') && in_array($request->menu_packages_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'menu_packages_status'], ['value' => $menuPackagesStatus]);
+        SiteSetting::updateOrCreate(['name' => 'menu_packages_name_bn'], ['value' => $request->menu_packages_name_bn ?: 'প্যাকেজসমূহ']);
+        SiteSetting::updateOrCreate(['name' => 'menu_packages_name_en'], ['value' => $request->menu_packages_name_en ?: 'Our Packages']);
+
+        $menuStockStatus = ($request->has('menu_stock_status') && in_array($request->menu_stock_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'menu_stock_status'], ['value' => $menuStockStatus]);
+        SiteSetting::updateOrCreate(['name' => 'menu_stock_name_bn'], ['value' => $request->menu_stock_name_bn ?: 'স্টক মার্কেট']);
+        SiteSetting::updateOrCreate(['name' => 'menu_stock_name_en'], ['value' => $request->menu_stock_name_en ?: 'Stock Market']);
+
+        $menuMembershipStatus = ($request->has('menu_membership_status') && in_array($request->menu_membership_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'menu_membership_status'], ['value' => $menuMembershipStatus]);
+        SiteSetting::updateOrCreate(['name' => 'menu_membership_name_bn'], ['value' => $request->menu_membership_name_bn ?: 'মেম্বারশিপ কার্ড']);
+        SiteSetting::updateOrCreate(['name' => 'menu_membership_name_en'], ['value' => $request->menu_membership_name_en ?: 'Membership Cards']);
+
         SiteSetting::updateOrCreate(['name' => 'google_map_embed'], ['value' => $request->google_map_embed ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address1'], ['value' => $request->address1 ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address2'], ['value' => $request->address2 ?? '']);
