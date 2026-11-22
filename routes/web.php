@@ -99,6 +99,7 @@ Route::get('/outlets', [\App\Http\Controllers\BusinessProgramController::class, 
 Route::get('/corporate-support', [\App\Http\Controllers\FrontendController::class, 'corporateSupportPdf'])->name('corporate.support.pdf');
 
 // E-commerce Superstore / Our Products System
+Route::get('/shop', [\App\Http\Controllers\EcommerceShopController::class, 'index'])->name('shop.index');
 Route::get('/our-products', [\App\Http\Controllers\EcommerceShopController::class, 'index'])->name('products.index');
 Route::get('/our-products/{slug}', [\App\Http\Controllers\EcommerceShopController::class, 'show'])->name('products.show');
 Route::get('/shop/checkout', [\App\Http\Controllers\EcommerceShopController::class, 'checkout'])->name('shop.checkout');
@@ -106,6 +107,8 @@ Route::post('/shop/checkout', [\App\Http\Controllers\EcommerceShopController::cl
 Route::post('/shop/checkout/incomplete', [\App\Http\Controllers\EcommerceShopController::class, 'recordIncompleteOrder'])->name('shop.checkout.incomplete');
 Route::post('/shop/apply-coupon', [\App\Http\Controllers\EcommerceShopController::class, 'applyCoupon'])->name('shop.apply_coupon');
 Route::get('/shop/order-success/{orderNumber}', [\App\Http\Controllers\EcommerceShopController::class, 'orderSuccess'])->name('shop.order_success');
+Route::get('/shop/product/{slug}', [\App\Http\Controllers\EcommerceShopController::class, 'show'])->name('shop.product.show');
+Route::get('/shop/{slug}', [\App\Http\Controllers\EcommerceShopController::class, 'show'])->name('shop.show');
 Route::get('/api/shop/search', [\App\Http\Controllers\EcommerceShopController::class, 'apiSearch'])->name('shop.api.search');
 Route::get('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrder'])->name('shop.track_order');
 Route::post('/track-order', [\App\Http\Controllers\EcommerceShopController::class, 'trackOrderPost'])->name('shop.track_order.post');

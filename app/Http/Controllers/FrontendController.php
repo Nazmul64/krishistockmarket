@@ -256,6 +256,7 @@ class FrontendController extends Controller
             'about' => route('about'),
             'stock_index' => route('stock.index'),
             'our_products' => route('products.index'),
+            'shop' => route('shop.index'),
             'gallery' => route('gallery'),
             'contact' => route('contact'),
             'contact_send' => route('contact.send'),
