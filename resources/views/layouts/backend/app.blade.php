@@ -1051,6 +1051,49 @@
                                     <span>ফন্ট সেটিংস (Fonts)</span>
                                 </a>
                             </li>
+
+                            <!-- Business Applications Manager -->
+                            <li class="treeview {{ Str::startsWith(optional(Request::route())->getName(), 'admin.business_applications') ? 'active menu-open' : '' }}">
+                                <a href="#">
+                                    <i class="fa fa-briefcase text-success"></i>
+                                    <span>বিজনেস আবেদনসমূহ</span>
+                                    <span class="pull-right-container">
+                                        @php
+                                            $pendingBizCount = \App\Models\BusinessApplication::where('status', 'pending')->count();
+                                        @endphp
+                                        @if($pendingBizCount > 0)
+                                            <span class="label label-warning pull-right">{{ $pendingBizCount }}</span>
+                                        @else
+                                            <i class="fa fa-angle-right pull-right"></i>
+                                        @endif
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu {{ Str::startsWith(optional(Request::route())->getName(), 'admin.business_applications') ? 'd-block' : '' }}">
+                                    <li class="{{ optional(Request::route())->getName() == 'admin.business_applications.index' && request('type', 'all') == 'all' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.business_applications.index') }}"><i class="fa fa-list text-primary"></i> সব আবেদন</a>
+                                    </li>
+                                    <li class="{{ request('type') == 'investor' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.business_applications.index', ['type' => 'investor']) }}"><i class="fa fa-line-chart text-primary"></i> ইনভেস্টর আবেদন</a>
+                                    </li>
+                                    <li class="{{ request('type') == 'wholesale' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.business_applications.index', ['type' => 'wholesale']) }}"><i class="fa fa-shopping-cart text-warning"></i> হোলসেল আবেদন</a>
+                                    </li>
+                                    <li class="{{ request('type') == 'franchise' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.business_applications.index', ['type' => 'franchise']) }}"><i class="fa fa-building text-info"></i> ফ্র্যাঞ্চাইজি আবেদন</a>
+                                    </li>
+                                    <li class="{{ request('type') == 'umrah_haj' ? 'active' : '' }}">
+                                        <a href="{{ route('admin.business_applications.index', ['type' => 'umrah_haj']) }}"><i class="fa fa-moon-o text-success"></i> উমরাহ/হজ নিবন্ধন</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Outlets & Branches Manager -->
+                            <li class="{{ (optional(Request::route())->getName() == 'admin.outlets.index') ? 'active menu-open' : '' }}">
+                                <a href="{{ route('admin.outlets.index') }}" title="আউটলেট ও ব্রাঞ্চসমূহ">
+                                    <i class="fa fa-map-marker text-danger"></i>
+                                    <span>আউটলেট ও ব্রাঞ্চসমূহ</span>
+                                </a>
+                            </li>
                             @endif
 
                             @if(Auth::user()->hasPermission('contact_messages'))

@@ -262,9 +262,36 @@ class FrontendController extends Controller
             'privacy' => route('privacy'),
             'career' => route('career'),
             'our_videos' => route('our_videos'),
+            'outlets' => route('business.outlets'),
+            'investor' => route('business.investor'),
+            'wholesale' => route('business.wholesale'),
+            'franchise' => route('business.franchise'),
+            'umrah_haj' => route('business.umrah_haj'),
             'live_search' => route('api.live_search'),
             'csrf_token' => csrf_token(),
         ];
+
+        // Active Outlets / Showrooms for Homepage Showcase
+        $outlets = [];
+        if (class_exists(\App\Models\SuperShop\Branch::class)) {
+            $outlets = \App\Models\SuperShop\Branch::where('status', 'active')
+                ->orderBy('sort_order', 'asc')
+                ->take(6)
+                ->get()
+                ->map(function ($b) {
+                    return [
+                        'id' => $b->id,
+                        'name' => $b->name,
+                        'code' => $b->code,
+                        'phone' => $b->phone,
+                        'address' => $b->address,
+                        'google_map_url' => $b->google_map_url ?: ('https://maps.google.com/?q=' . urlencode($b->name . ', ' . $b->address)),
+                        'weekly_off_day' => $b->weekly_off_day ?: 'Daily Open',
+                        'open_days_text' => $b->open_days_text ?: 'Open 7 Days',
+                        'operating_days' => $b->operating_days ?: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                    ];
+                })->values()->all();
+        }
 
         // Monthly Bazar Products for Homepage Showcase (Right below slider)
         $monthly_bazar_products = [];
@@ -400,6 +427,7 @@ class FrontendController extends Controller
             'card_benefits' => $card_benefits,
             'features' => $features,
             'gallery' => $gallery,
+            'outlets' => $outlets,
             'monthly_bazar_products' => $monthly_bazar_products,
         ];
     }

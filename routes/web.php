@@ -82,6 +82,21 @@ Route::get('/our-videos', [\App\Http\Controllers\FrontendController::class, 'our
 Route::get('/terms', function () {return view('frontend.terms');})->name('terms');
 Route::get('/privacy-policy', function () { return view('frontend.privacy');})->name('privacy');
 
+// Business & Programs Ecosystem (Investor, Wholesale, Franchise, Umrah Haj, Outlets)
+Route::get('/investor', [\App\Http\Controllers\BusinessProgramController::class, 'investor'])->name('business.investor');
+Route::post('/investor/apply', [\App\Http\Controllers\BusinessProgramController::class, 'submitInvestor'])->name('business.investor.apply');
+
+Route::get('/wholesale', [\App\Http\Controllers\BusinessProgramController::class, 'wholesale'])->name('business.wholesale');
+Route::post('/wholesale/apply', [\App\Http\Controllers\BusinessProgramController::class, 'submitWholesale'])->name('business.wholesale.apply');
+
+Route::get('/franchise', [\App\Http\Controllers\BusinessProgramController::class, 'franchise'])->name('business.franchise');
+Route::post('/franchise/apply', [\App\Http\Controllers\BusinessProgramController::class, 'submitFranchise'])->name('business.franchise.apply');
+
+Route::get('/umrah-haj', [\App\Http\Controllers\BusinessProgramController::class, 'umrahHaj'])->name('business.umrah_haj');
+Route::post('/umrah-haj/apply', [\App\Http\Controllers\BusinessProgramController::class, 'submitUmrahHaj'])->name('business.umrah_haj.apply');
+
+Route::get('/outlets', [\App\Http\Controllers\BusinessProgramController::class, 'outlets'])->name('business.outlets');
+
 // E-commerce Superstore / Our Products System
 Route::get('/our-products', [\App\Http\Controllers\EcommerceShopController::class, 'index'])->name('products.index');
 Route::get('/our-products/{slug}', [\App\Http\Controllers\EcommerceShopController::class, 'show'])->name('products.show');
@@ -349,6 +364,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'AdminCheck'], function () {
     Route::post('/gallery-manager/store', [\App\Http\Controllers\Admin\GalleryController::class, 'store'])->name('admin.gallery.store');
     Route::post('/gallery-manager/status/{id}', [\App\Http\Controllers\Admin\GalleryController::class, 'status'])->name('admin.gallery.status');
     Route::get('/gallery-manager/destroy/{id}', [\App\Http\Controllers\Admin\GalleryController::class, 'destroy'])->name('admin.gallery.destroy');
+
+    // Business Applications Management (Investor, Wholesale, Franchise, Umrah Haj)
+    Route::get('/business-applications', [\App\Http\Controllers\Admin\BusinessApplicationController::class, 'index'])->name('admin.business_applications.index');
+    Route::get('/business-applications/{id}', [\App\Http\Controllers\Admin\BusinessApplicationController::class, 'show'])->name('admin.business_applications.show');
+    Route::post('/business-applications/status/{id}', [\App\Http\Controllers\Admin\BusinessApplicationController::class, 'updateStatus'])->name('admin.business_applications.update_status');
+    Route::delete('/business-applications/{id}', [\App\Http\Controllers\Admin\BusinessApplicationController::class, 'destroy'])->name('admin.business_applications.destroy');
+
+    // Outlets & Showrooms Management (Our Outlets Across Bangladesh)
+    Route::get('/outlets-manager', [\App\Http\Controllers\Admin\OutletManagementController::class, 'index'])->name('admin.outlets.index');
+    Route::post('/outlets-manager/store', [\App\Http\Controllers\Admin\OutletManagementController::class, 'store'])->name('admin.outlets.store');
+    Route::put('/outlets-manager/update/{id}', [\App\Http\Controllers\Admin\OutletManagementController::class, 'update'])->name('admin.outlets.update');
+    Route::delete('/outlets-manager/destroy/{id}', [\App\Http\Controllers\Admin\OutletManagementController::class, 'destroy'])->name('admin.outlets.destroy');
 
     // =========================================================================
     // 🎨 Appearance & Design Studio Routes (10 Templates, Drag & Drop Builders)

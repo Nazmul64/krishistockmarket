@@ -1270,23 +1270,36 @@
                     </div>
 
                     <!-- Col 2: Quick Links -->
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-6 col-md-3 col-lg-2">
                         <div class="footer-col-content">
-                            <h4 class="footer-col-title">প্রয়োজনীয় লিঙ্ক</h4>
+                            <h4 class="footer-col-title">{{ $isBn ? 'প্রয়োজনীয় লিঙ্ক' : 'Quick Links' }}</h4>
                             <ul class="footer-links-list">
-                                <li><a href="{{ route('/') }}"><i class="fa fa-angle-right me-2 text-warning"></i> হোমপেজ</a></li>
-                                <li><a href="{{ route('about') }}"><i class="fa fa-angle-right me-2 text-warning"></i> আমাদের সম্পর্কে</a></li>
-                                <li><a href="{{ route('properties.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> জমি ও প্রপার্টি</a></li>
-                                <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রোডাক্ট গ্যালারি</a></li>
-                                <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> ক্যারিয়ার</a></li>
-                                <li><a href="{{ route('our_videos') }}"><i class="fa fa-angle-right me-2 text-warning"></i> আমাদের ভিডিওসমূহ</a></li>
-                                <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> প্রাইভেসি পলিসি</a></li>
-                                <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> টার্মস এন্ড কন্ডিশন</a></li>
+                                <li><a href="{{ route('/') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'হোমপেজ' : 'Home' }}</a></li>
+                                <li><a href="{{ route('about') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a></li>
+                                <li><a href="{{ route('business.outlets') }}"><i class="fa fa-angle-right me-2 text-warning"></i> <strong class="text-warning">{{ $isBn ? 'আমাদের আউটলেট' : 'Our Outlets' }}</strong></a></li>
+                                <li><a href="{{ route('properties.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'জমি ও প্রপার্টি' : 'Properties' }}</a></li>
+                                <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a></li>
+                                <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ক্যারিয়ার' : 'Career' }}</a></li>
+                                <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'প্রাইভেসি পলিসি' : 'Privacy' }}</a></li>
+                                <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms' }}</a></li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Col 3: Contact Info -->
+                    <!-- Col 3: Business Column -->
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="footer-col-content">
+                            <h4 class="footer-col-title">{{ $isBn ? 'বিজনেস' : 'Business' }}</h4>
+                            <ul class="footer-links-list">
+                                <li><a href="{{ route('business.investor') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ইনভেস্টর' : 'Investor' }}</a></li>
+                                <li><a href="{{ route('business.wholesale') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'হোলসেল' : 'Wholesale' }}</a></li>
+                                <li><a href="{{ route('business.franchise') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ফ্র্যাঞ্চাইজি' : 'Franchise' }}</a></li>
+                                <li><a href="{{ route('business.umrah_haj') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'উমরাহ/হজ' : 'Umrah Haj' }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Col 4: Contact Info -->
                     <div class="col-12 col-md-6 col-lg-3">
                         <div class="footer-col-content">
                             <h4 class="footer-col-title">যোগাযোগ করুন</h4>

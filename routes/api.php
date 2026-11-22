@@ -47,6 +47,8 @@ Route::post('/contact/send', [\App\Http\Controllers\ContactController::class, 's
 Route::get('/career/info', [\App\Http\Controllers\CareerController::class, 'apiCareerInfo'])->name('api.mobile.career_info');
 Route::post('/career/apply', [\App\Http\Controllers\CareerController::class, 'apiApply'])->name('api.mobile.career_apply');
 Route::get('/our-videos', [\App\Http\Controllers\FrontendController::class, 'apiOurVideos'])->name('api.mobile.our_videos');
+Route::get('/outlets', [\App\Http\Controllers\Api\BusinessProgramApiController::class, 'getOutlets'])->name('api.mobile.outlets');
+Route::post('/business-applications/submit', [\App\Http\Controllers\Api\BusinessProgramApiController::class, 'submitApplication'])->name('api.mobile.business_applications.submit');
 
 // Land, Plots & Properties Real Estate Showcase API
 Route::get('/properties', [\App\Http\Controllers\PropertyFrontendController::class, 'apiIndex'])->name('api.mobile.properties.index');

@@ -7,6 +7,7 @@ import PackageSection from './components/PackageSection';
 import MembershipCards from './components/MembershipCards';
 import WhyChooseUs from './components/WhyChooseUs';
 import ProductGallery from './components/ProductGallery';
+import OutletsShowcase from './components/OutletsShowcase';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import { translations, getInitialLang, saveLang } from './utils/translations';
@@ -44,6 +45,7 @@ export default function HomeApp({ data = {} }) {
     const cardBenefits = data.card_benefits || [];
     const features = data.features || [];
     const gallery = data.gallery || [];
+    const outlets = data.outlets || [];
 
     // Centralized Dynamic UI Configuration (Active Template, Sections, Menus)
     const uiConfig = data.ui_config || {};
@@ -123,6 +125,16 @@ export default function HomeApp({ data = {} }) {
                 activeTemplate={activeTemplate}
             />
         ),
+        outlets: (outlets && outlets.length > 0) ? (
+            <OutletsShowcase
+                key="outlets"
+                outlets={outlets}
+                routes={routes}
+                lang={lang}
+                t={t}
+                activeTemplate={activeTemplate}
+            />
+        ) : null,
         contact_us: (
             <ContactSection
                 key="contact_us"
@@ -145,7 +157,7 @@ export default function HomeApp({ data = {} }) {
         const isMonthlyBazarEnabled = site && site.monthly_bazar_status !== false && site.monthly_bazar_status !== '0' && site.monthly_bazar_status !== 0;
 
         if (sectionsWeb && sectionsWeb.length > 0) {
-            return sectionsWeb
+            const list = sectionsWeb
                 .filter(sec => sec.is_enabled_web)
                 .filter(sec => sec.section_key !== 'stock_market' || isStockEnabled)
                 .filter(sec => sec.section_key !== 'our_packages' || isPackagesEnabled)
@@ -155,6 +167,12 @@ export default function HomeApp({ data = {} }) {
                 .filter(sec => sec.section_key !== 'contact_us' || isContactEnabled)
                 .map(sec => sectionComponents[sec.section_key])
                 .filter(Boolean);
+
+            const hasOutlets = sectionsWeb.some(sec => sec.section_key === 'outlets');
+            if (!hasOutlets && sectionComponents.outlets) {
+                list.push(sectionComponents.outlets);
+            }
+            return list;
         }
 
         // Default Fallback Ordering
@@ -165,6 +183,7 @@ export default function HomeApp({ data = {} }) {
             sectionComponents.our_packages,
             sectionComponents.membership_cards,
             sectionComponents.why_choose_us,
+            sectionComponents.outlets,
             sectionComponents.gallery,
         ];
 

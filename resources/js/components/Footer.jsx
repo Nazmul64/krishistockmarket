@@ -45,8 +45,8 @@ export default function Footer({
                 <div className="container">
                     <div className="row g-4">
                         {/* Col 1: Brand & About */}
-                        <div className="col-12 col-md-6 col-lg-4">
-                            <div className="footer-modern-col pe-lg-3">
+                        <div className="col-12 col-md-6 col-lg-3">
+                            <div className="footer-modern-col pe-lg-2">
                                 <a href={routes.home || '/'} className="footer-brand-logo-modern d-inline-block mb-3">
                                     <img src={site.logo} alt={site.title} />
                                 </a>
@@ -60,10 +60,10 @@ export default function Footer({
                         </div>
 
                         {/* Col 2: Services & Market */}
-                        <div className="col-12 col-md-6 col-lg-2">
+                        <div className="col-6 col-md-3 col-lg-2">
                             <div className="footer-modern-col">
                                 <h4 className="footer-modern-title">
-                                    <span>{lang === 'bn' ? 'আমাদের সেবাসমূহ' : 'Our Services'}</span>
+                                    <span>{lang === 'bn' ? 'সেবাসমূহ' : 'Our Services'}</span>
                                 </h4>
                                 <ul className="footer-modern-links">
                                     <li>
@@ -90,8 +90,39 @@ export default function Footer({
                             </div>
                         </div>
 
-                        {/* Col 3: Support & Policies */}
-                        <div className="col-12 col-md-6 col-lg-3">
+                        {/* Col 3: Business Ecosystem (Investor, Wholesale, Franchise, Umrah Haj) */}
+                        <div className="col-6 col-md-3 col-lg-2">
+                            <div className="footer-modern-col">
+                                <h4 className="footer-modern-title">
+                                    <span>{lang === 'bn' ? 'বিজনেস' : 'Business'}</span>
+                                </h4>
+                                <ul className="footer-modern-links">
+                                    <li>
+                                        <a href="/investor">
+                                            <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'ইনভেস্টর' : 'Investor'}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/wholesale">
+                                            <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'হোলসেল' : 'Wholesale'}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/franchise">
+                                            <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'ফ্র্যাঞ্চাইজি' : 'Franchise'}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/umrah-haj">
+                                            <i className="fa fa-angle-right"></i> {lang === 'bn' ? 'উমরাহ/হজ' : 'Umrah Haj'}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Col 4: Support & Policies (including Outlets) */}
+                        <div className="col-6 col-md-4 col-lg-2">
                             <div className="footer-modern-col">
                                 <h4 className="footer-modern-title">
                                     <span>{lang === 'bn' ? 'তথ্য ও পলিসি' : 'Info & Policies'}</span>
@@ -100,6 +131,11 @@ export default function Footer({
                                     <li>
                                         <a href={routes.about || '/about'}>
                                             <i className="fa fa-angle-right"></i> {t.about || (lang === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us')}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/outlets">
+                                            <i className="fa fa-angle-right"></i> <strong className="text-warning">{lang === 'bn' ? 'আমাদের আউটলেট' : 'Our Outlets'}</strong>
                                         </a>
                                     </li>
                                     <li>
@@ -116,8 +152,8 @@ export default function Footer({
                             </div>
                         </div>
 
-                        {/* Col 4: Corporate Contact & Social */}
-                        <div className="col-12 col-md-6 col-lg-3">
+                        {/* Col 5: Corporate Contact & Social */}
+                        <div className="col-12 col-md-8 col-lg-3">
                             <div className="footer-modern-col">
                                 <h4 className="footer-modern-title">
                                     <span>{lang === 'bn' ? 'যোগাযোগ ও সোশ্যাল মিডিয়া' : 'Contact & Connect'}</span>
