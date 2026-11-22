@@ -227,6 +227,8 @@ class FrontendController extends Controller
             'menu_membership_name_bn' => setting('menu_membership_name_bn') ?: 'মেম্বারশিপ কার্ড',
             'menu_membership_name_en' => setting('menu_membership_name_en') ?: 'Membership Cards',
 
+            'monthly_bazar_status' => setting('monthly_bazar_status', '1') !== '0',
+
             'ssl_payment_logo' => setting('ssl_payment_logo') ? (
                 file_exists(public_path('upload/images/backend/logo/' . setting('ssl_payment_logo')))
                     ? asset('upload/images/backend/logo/' . setting('ssl_payment_logo'))
@@ -308,6 +310,24 @@ class FrontendController extends Controller
             $pkgStatus = setting('menu_packages_status', '1') !== '0';
             $stockStatus = setting('menu_stock_status', '1') !== '0';
             $cardStatus = setting('menu_membership_status', '1') !== '0';
+            $whyChooseStatus = setting('why_choose_us_status', '1') !== '0';
+            $monthlyBazarStatus = setting('monthly_bazar_status', '1') !== '0';
+
+            // Filter and synchronize homeSectionsWeb with site settings
+            $homeSectionsWeb = $homeSectionsWeb->map(function($sec) use ($stockStatus, $pkgStatus, $cardStatus, $whyChooseStatus, $monthlyBazarStatus) {
+                if ($sec->section_key === 'stock_market') {
+                    $sec->is_enabled_web = (bool)($sec->is_enabled_web && $stockStatus);
+                } elseif ($sec->section_key === 'our_packages') {
+                    $sec->is_enabled_web = (bool)($sec->is_enabled_web && $pkgStatus);
+                } elseif ($sec->section_key === 'membership_cards') {
+                    $sec->is_enabled_web = (bool)($sec->is_enabled_web && $cardStatus);
+                } elseif ($sec->section_key === 'why_choose_us') {
+                    $sec->is_enabled_web = (bool)($sec->is_enabled_web && $whyChooseStatus);
+                } elseif ($sec->section_key === 'monthly_bazar') {
+                    $sec->is_enabled_web = (bool)($sec->is_enabled_web && $monthlyBazarStatus);
+                }
+                return $sec;
+            });
 
             $filteredHeaderMenu = $headerMenuItems->filter(function($item) use ($pkgStatus, $stockStatus, $cardStatus) {
                 $url = strtolower($item->url ?? '');

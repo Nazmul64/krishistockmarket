@@ -203,10 +203,22 @@ class SiteSettingController extends Controller
         SiteSetting::updateOrCreate(['name' => 'menu_stock_name_bn'], ['value' => $request->menu_stock_name_bn ?: 'স্টক মার্কেট']);
         SiteSetting::updateOrCreate(['name' => 'menu_stock_name_en'], ['value' => $request->menu_stock_name_en ?: 'Stock Market']);
 
-        $menuMembershipStatus = ($request->has('menu_membership_status') && in_array($request->menu_membership_status, ['1', 'on', 'true', 1], true)) ? '1' : '0';
+        $menuMembershipStatus = ($request->has('menu_membership_status') && in_array((string)$request->menu_membership_status, ['1', 'on', 'true'], true)) ? '1' : '0';
         SiteSetting::updateOrCreate(['name' => 'menu_membership_status'], ['value' => $menuMembershipStatus]);
         SiteSetting::updateOrCreate(['name' => 'menu_membership_name_bn'], ['value' => $request->menu_membership_name_bn ?: 'মেম্বারশিপ কার্ড']);
         SiteSetting::updateOrCreate(['name' => 'menu_membership_name_en'], ['value' => $request->menu_membership_name_en ?: 'Membership Cards']);
+
+        $monthlyBazarStatus = ($request->has('monthly_bazar_status') && in_array((string)$request->monthly_bazar_status, ['1', 'on', 'true'], true)) ? '1' : '0';
+        SiteSetting::updateOrCreate(['name' => 'monthly_bazar_status'], ['value' => $monthlyBazarStatus]);
+
+        // Sync with HomepageSection table so UI configuration and mobile app stay 100% in sync
+        if (class_exists(\App\Models\Ui\HomepageSection::class)) {
+            \App\Models\Ui\HomepageSection::where('section_key', 'stock_market')->update(['is_enabled_web' => $menuStockStatus === '1']);
+            \App\Models\Ui\HomepageSection::where('section_key', 'our_packages')->update(['is_enabled_web' => $menuPackagesStatus === '1']);
+            \App\Models\Ui\HomepageSection::where('section_key', 'membership_cards')->update(['is_enabled_web' => $menuMembershipStatus === '1']);
+            \App\Models\Ui\HomepageSection::where('section_key', 'why_choose_us')->update(['is_enabled_web' => $whyChooseUsStatus === '1']);
+            \App\Models\Ui\HomepageSection::where('section_key', 'monthly_bazar')->update(['is_enabled_web' => $monthlyBazarStatus === '1']);
+        }
 
         SiteSetting::updateOrCreate(['name' => 'google_map_embed'], ['value' => $request->google_map_embed ?? '']);
         SiteSetting::updateOrCreate(['name' => 'address1'], ['value' => $request->address1 ?? '']);

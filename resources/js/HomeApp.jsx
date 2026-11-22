@@ -63,7 +63,7 @@ export default function HomeApp({ data = {} }) {
                 activeTemplate={activeTemplate}
             />
         ),
-        monthly_bazar: (
+        monthly_bazar: (site && site.monthly_bazar_status !== false && site.monthly_bazar_status !== '0' && site.monthly_bazar_status !== 0) ? (
             <MonthlyBazarSection
                 key="monthly_bazar"
                 products={data.monthly_bazar_products || []}
@@ -73,8 +73,8 @@ export default function HomeApp({ data = {} }) {
                 t={t}
                 activeTemplate={activeTemplate}
             />
-        ),
-        stock_market: (
+        ) : null,
+        stock_market: (site && site.menu_stock_status !== false && site.menu_stock_status !== '0' && site.menu_stock_status !== 0) ? (
             <LiveStockMarket
                 key="stock_market"
                 stocks={stocks}
@@ -84,8 +84,8 @@ export default function HomeApp({ data = {} }) {
                 t={t}
                 activeTemplate={activeTemplate}
             />
-        ),
-        our_packages: (
+        ) : null,
+        our_packages: (site && site.menu_packages_status !== false && site.menu_packages_status !== '0' && site.menu_packages_status !== 0) ? (
             <PackageSection
                 key="our_packages"
                 packages={packages}
@@ -93,8 +93,8 @@ export default function HomeApp({ data = {} }) {
                 t={t}
                 activeTemplate={activeTemplate}
             />
-        ),
-        membership_cards: (
+        ) : null,
+        membership_cards: (site && site.menu_membership_status !== false && site.menu_membership_status !== '0' && site.menu_membership_status !== 0) ? (
             <MembershipCards
                 key="membership_cards"
                 cardBenefits={cardBenefits}
@@ -103,7 +103,7 @@ export default function HomeApp({ data = {} }) {
                 t={t}
                 activeTemplate={activeTemplate}
             />
-        ),
+        ) : null,
         why_choose_us: (site.why_choose_us_status !== '0' && site.why_choose_us_status !== false && site.why_choose_us_status !== 0) ? (
             <WhyChooseUs
                 key="why_choose_us"
@@ -138,10 +138,20 @@ export default function HomeApp({ data = {} }) {
     // Render sections either dynamically from admin configuration or default fallback
     const renderHomepageSections = () => {
         const isContactEnabled = site && site.contact_section_enabled !== false && site.contact_section_enabled !== '0';
+        const isStockEnabled = site && site.menu_stock_status !== false && site.menu_stock_status !== '0' && site.menu_stock_status !== 0;
+        const isPackagesEnabled = site && site.menu_packages_status !== false && site.menu_packages_status !== '0' && site.menu_packages_status !== 0;
+        const isMembershipEnabled = site && site.menu_membership_status !== false && site.menu_membership_status !== '0' && site.menu_membership_status !== 0;
+        const isWhyChooseEnabled = site && site.why_choose_us_status !== false && site.why_choose_us_status !== '0' && site.why_choose_us_status !== 0;
+        const isMonthlyBazarEnabled = site && site.monthly_bazar_status !== false && site.monthly_bazar_status !== '0' && site.monthly_bazar_status !== 0;
 
         if (sectionsWeb && sectionsWeb.length > 0) {
             return sectionsWeb
                 .filter(sec => sec.is_enabled_web)
+                .filter(sec => sec.section_key !== 'stock_market' || isStockEnabled)
+                .filter(sec => sec.section_key !== 'our_packages' || isPackagesEnabled)
+                .filter(sec => sec.section_key !== 'membership_cards' || isMembershipEnabled)
+                .filter(sec => sec.section_key !== 'why_choose_us' || isWhyChooseEnabled)
+                .filter(sec => sec.section_key !== 'monthly_bazar' || isMonthlyBazarEnabled)
                 .filter(sec => sec.section_key !== 'contact_us' || isContactEnabled)
                 .map(sec => sectionComponents[sec.section_key])
                 .filter(Boolean);

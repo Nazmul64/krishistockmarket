@@ -382,19 +382,19 @@
                                         </div>
 
                                         <!-- ============================================== -->
-                                        <!-- 🧭 Header Navigation Control: On/Off & Titles -->
+                                        <!-- 🧭 Header Navigation & Homepage Sections Control: On/Off & Titles -->
                                         <!-- ============================================== -->
                                         <div id="header_menus_control_card" class="form-group pb-4 p-4 mb-4 rounded-3" style="background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%); border: 2.5px solid #007e8a; box-shadow: 0 8px 24px rgba(0, 126, 138, 0.12); border-radius: 16px;">
                                             <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
                                                 <div class="d-flex align-items-center">
                                                     <span class="avatar avatar-md rounded-circle text-white me-3 d-flex align-items-center justify-content-center shadow-sm" style="background: #007e8a; width: 42px; height: 42px;">
-                                                        <i class="fa fa-bars font-size-18"></i>
+                                                        <i class="fa fa-sliders font-size-18"></i>
                                                     </span>
                                                     <div>
                                                         <h4 class="fw-bold text-dark mb-0 font-size-17">
-                                                            হেডার মেনু নিয়ন্ত্রণ ও কাস্টম নাম (Header Navigation Controls)
+                                                            হেডার মেনু ও হোমপেজ সেকশন নিয়ন্ত্রণ (Header Navigation & Homepage Sections Control)
                                                         </h4>
-                                                        <p class="text-muted small mb-0">প্যাকেজ, স্টক মার্কেট ও মেম্বারশিপ কার্ড মেনু অন/অফ করুন এবং নিজের মতো নাম লিখে দিন</p>
+                                                        <p class="text-muted small mb-0">প্যাকেজ, স্টক মার্কেট, মেম্বারশিপ কার্ড ও মাসিক বাজার মেনু এবং হোমপেজের সংশ্লিষ্ট সেকশন অন/অফ করুন ও কাস্টম নাম দিন। অফ করলে হেডার মেনু ও হোমপেজ সেকশন উভয়ই সম্পূর্ণ হাইড থাকবে।</p>
                                                     </div>
                                                 </div>
                                                 <span class="badge bg-success font-size-12 px-3 py-2 rounded-pill">
@@ -404,13 +404,16 @@
 
                                             <div class="row g-4">
                                                 <!-- Menu 1: Our Packages -->
-                                                <div class="col-xl-4 col-md-6 col-12">
+                                                <div class="col-xl-3 col-md-6 col-12">
                                                     <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #ea580c !important;">
                                                         <div class="d-flex align-items-center justify-content-between mb-2">
-                                                            <span class="fw-bold text-dark"><i class="fa fa-gift text-warning me-1"></i> ১. আওয়ার প্যাকেজ (Packages)</span>
+                                                            <span class="fw-bold text-dark"><i class="fa fa-gift text-warning me-1"></i> ১. আওয়ার প্যাকেজ</span>
                                                             <div class="form-check form-switch m-0">
+                                                                <input type="hidden" name="menu_packages_status" value="0">
                                                                 <input class="form-check-input cursor-pointer" type="checkbox" name="menu_packages_status" id="menu_packages_status" value="1" {{ setting('menu_packages_status', '1') !== '0' ? 'checked' : '' }}>
-                                                                <label class="form-check-label small fw-bold" for="menu_packages_status">অন / অফ</label>
+                                                                <label class="form-check-label small fw-bold text-{{ setting('menu_packages_status', '1') !== '0' ? 'success' : 'danger' }}" for="menu_packages_status">
+                                                                    {{ setting('menu_packages_status', '1') !== '0' ? 'অন' : 'অফ' }}
+                                                                </label>
                                                             </div>
                                                         </div>
                                                         <div class="mb-2">
@@ -425,13 +428,16 @@
                                                 </div>
 
                                                 <!-- Menu 2: Stock Market -->
-                                                <div class="col-xl-4 col-md-6 col-12">
+                                                <div class="col-xl-3 col-md-6 col-12">
                                                     <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #007e8a !important;">
                                                         <div class="d-flex align-items-center justify-content-between mb-2">
-                                                            <span class="fw-bold text-dark"><i class="fa fa-line-chart text-info me-1"></i> ২. স্টক মার্কেট (Stock Market)</span>
+                                                            <span class="fw-bold text-dark"><i class="fa fa-line-chart text-info me-1"></i> ২. স্টক মার্কেট</span>
                                                             <div class="form-check form-switch m-0">
+                                                                <input type="hidden" name="menu_stock_status" value="0">
                                                                 <input class="form-check-input cursor-pointer" type="checkbox" name="menu_stock_status" id="menu_stock_status" value="1" {{ setting('menu_stock_status', '1') !== '0' ? 'checked' : '' }}>
-                                                                <label class="form-check-label small fw-bold" for="menu_stock_status">অন / অফ</label>
+                                                                <label class="form-check-label small fw-bold text-{{ setting('menu_stock_status', '1') !== '0' ? 'success' : 'danger' }}" for="menu_stock_status">
+                                                                    {{ setting('menu_stock_status', '1') !== '0' ? 'অন' : 'অফ' }}
+                                                                </label>
                                                             </div>
                                                         </div>
                                                         <div class="mb-2">
@@ -446,13 +452,16 @@
                                                 </div>
 
                                                 <!-- Menu 3: Membership Cards -->
-                                                <div class="col-xl-4 col-md-6 col-12">
+                                                <div class="col-xl-3 col-md-6 col-12">
                                                     <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #3b82f6 !important;">
                                                         <div class="d-flex align-items-center justify-content-between mb-2">
-                                                            <span class="fw-bold text-dark"><i class="fa fa-credit-card text-primary me-1"></i> ৩. মেম্বারশিপ কার্ড (Membership Cards)</span>
+                                                            <span class="fw-bold text-dark"><i class="fa fa-credit-card text-primary me-1"></i> ৩. মেম্বারশিপ কার্ড</span>
                                                             <div class="form-check form-switch m-0">
+                                                                <input type="hidden" name="menu_membership_status" value="0">
                                                                 <input class="form-check-input cursor-pointer" type="checkbox" name="menu_membership_status" id="menu_membership_status" value="1" {{ setting('menu_membership_status', '1') !== '0' ? 'checked' : '' }}>
-                                                                <label class="form-check-label small fw-bold" for="menu_membership_status">অন / অফ</label>
+                                                                <label class="form-check-label small fw-bold text-{{ setting('menu_membership_status', '1') !== '0' ? 'success' : 'danger' }}" for="menu_membership_status">
+                                                                    {{ setting('menu_membership_status', '1') !== '0' ? 'অন' : 'অফ' }}
+                                                                </label>
                                                             </div>
                                                         </div>
                                                         <div class="mb-2">
@@ -463,6 +472,23 @@
                                                             <label class="form-label small text-muted mb-1 fw-bold">English Name:</label>
                                                             <input type="text" class="form-control form-control-sm fw-bold" name="menu_membership_name_en" value="{{ setting('menu_membership_name_en') ?: 'Membership Cards' }}" placeholder="Membership Cards">
                                                         </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Menu 4: Monthly Bazar -->
+                                                <div class="col-xl-3 col-md-6 col-12">
+                                                    <div class="p-3 bg-white rounded-3 border h-100 shadow-sm" style="border-left: 4px solid #10b981 !important;">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="fw-bold text-dark"><i class="fa fa-shopping-basket text-success me-1"></i> ৪. মাসিক বাজার (Deals)</span>
+                                                            <div class="form-check form-switch m-0">
+                                                                <input type="hidden" name="monthly_bazar_status" value="0">
+                                                                <input class="form-check-input cursor-pointer" type="checkbox" name="monthly_bazar_status" id="monthly_bazar_status" value="1" {{ setting('monthly_bazar_status', '1') !== '0' ? 'checked' : '' }}>
+                                                                <label class="form-check-label small fw-bold text-{{ setting('monthly_bazar_status', '1') !== '0' ? 'success' : 'danger' }}" for="monthly_bazar_status">
+                                                                    {{ setting('monthly_bazar_status', '1') !== '0' ? 'অন' : 'অফ' }}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <p class="small text-muted mb-0">হোমপেজে স্লাইডারের নিচের 'মাসিক বাজার' সুপারশপ ডিল সেকশন প্রদর্শন নিয়ন্ত্রণ করুন। বন্ধ রাখলে হোমপেজ থেকে হাইড থাকবে।</p>
                                                     </div>
                                                 </div>
                                             </div>
