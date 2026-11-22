@@ -1,3 +1,7 @@
+@php
+    $activeBtnColor = setting('button_color') ?: '#007e8a';
+@endphp
+
 @forelse($properties as $item)
     <div class="col-lg-4 col-md-6 col-12 property-item-card-col">
         <div class="card property-card h-100 border-0 rounded-4 shadow-sm overflow-hidden property-card-hover" style="transition: transform 0.25s ease, box-shadow 0.25s ease;">
@@ -96,7 +100,8 @@
                         </div>
                         <div class="col-6">
                             <button type="button" 
-                                    class="btn btn-success btn-sm w-100 py-2 fw-bold"
+                                    class="btn text-white btn-sm w-100 py-2 fw-bold"
+                                    style="background-color: {{ $activeBtnColor }}; border-color: {{ $activeBtnColor }};"
                                     onclick="openBookingModal('{{ $item->id }}', '{{ addslashes($item->property_name) }}', '{{ number_format($item->selling_price) }}')">
                                 <i class="fa fa-paper-plane me-1"></i> {{ $isBn ? 'বুকিং / সাইট' : 'Book / Visit' }}
                             </button>
@@ -114,7 +119,7 @@
             </div>
             <h4 class="fw-bold text-dark mb-2">{{ $isBn ? 'কোনো প্রপার্টি খুঁজে পাওয়া যায়নি!' : 'No Properties Found!' }}</h4>
             <p class="text-muted small mb-4">{{ $isBn ? 'আপনার ফিল্টারের সাথে মিল রেখে কোনো প্রপার্টি পাওয়া যায়নি। অন্য কিওয়ার্ড দিয়ে অনুসন্ধান করুন অথবা ফিল্টার রিসেট করুন।' : 'No properties matched your search filters. Please try searching with different keywords or reset filters.' }}</p>
-            <button type="button" onclick="resetAllPropertyFilters()" class="btn btn-success fw-bold px-4 rounded-pill">
+            <button type="button" onclick="resetAllPropertyFilters()" class="btn text-white fw-bold px-4 rounded-pill" style="background-color: {{ $activeBtnColor }}; border-color: {{ $activeBtnColor }};">
                 <i class="fa fa-refresh me-1"></i> {{ $isBn ? 'সকল প্রপার্টি দেখুন' : 'View All Properties' }}
             </button>
         </div>

@@ -3,6 +3,7 @@
 @section('content')
 @php
     $isBn = $isBn ?? (request()->cookie('ekrishi_lang', 'en') === 'bn');
+    $activeBtnColor = setting('button_color') ?: '#007e8a';
 @endphp
 <!-- Floating Animated Toast Notification for Booking / Inquiries -->
 <div id="propertyToastNotification" class="property-toast-wrap" style="display: none;">
@@ -267,7 +268,7 @@
                 </div>
                 <div class="modal-footer bg-light py-3 px-4">
                     <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">{{ $isBn ? 'বাতিল' : 'Cancel' }}</button>
-                    <button type="submit" id="modalSubmitBtn" class="btn btn-success fw-bold px-4 rounded-pill">
+                    <button type="submit" id="modalSubmitBtn" class="btn text-white fw-bold px-4 rounded-pill" style="background-color: {{ $activeBtnColor }}; border-color: {{ $activeBtnColor }};">
                         <i class="fa fa-send me-1"></i> {{ $isBn ? 'আবেদন সাবমিট করুন' : 'Submit Application' }}
                     </button>
                 </div>
@@ -635,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function() {
     color: #ef4444;
 }
 .property-search-submit-btn {
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    background: {{ $activeBtnColor }};
     color: #ffffff;
     border: none;
     padding: 8px 22px;
@@ -643,16 +644,17 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+    box-shadow: 0 2px 8px {{ $activeBtnColor }}40;
     white-space: nowrap;
     display: inline-flex;
     align-items: center;
     transition: all 0.2s ease;
 }
 .property-search-submit-btn:hover {
-    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    background: {{ $activeBtnColor }};
+    opacity: 0.9;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4);
+    box-shadow: 0 4px 14px {{ $activeBtnColor }}55;
 }
 .property-filter-select-wrap {
     display: flex;
@@ -709,10 +711,10 @@ document.addEventListener('DOMContentLoaded', function() {
     border-color: #cbd5e1;
 }
 .property-cat-pill.active {
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    background: {{ $activeBtnColor }} !important;
     color: #ffffff !important;
-    border-color: #15803d !important;
-    box-shadow: 0 3px 10px rgba(22, 163, 74, 0.35);
+    border-color: {{ $activeBtnColor }} !important;
+    box-shadow: 0 3px 10px {{ $activeBtnColor }}40;
 }
 .property-title-link {
     color: #0f172a;

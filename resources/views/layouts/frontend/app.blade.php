@@ -1250,116 +1250,179 @@
     @yield("content")
 
     @if(!Route::is('/'))
-    <!-- Unified Modern Colorful Footer -->
-    <footer class="react-main-footer-colorful">
-        <div class="footer-glow-bar"></div>
+    <!-- Unified Modern Colorful Footer Matching Homepage -->
+    <footer class="react-main-footer-modern">
+        <div class="footer-top-accent-line"></div>
 
-        <div class="footer-top-wrap py-5">
+        <div class="footer-main-grid-wrap py-5">
             <div class="container">
                 <div class="row g-4">
-                    <!-- Col 1: About -->
+                    <!-- Col 1: Brand & About -->
                     <div class="col-12 col-md-6 col-lg-3">
-                        <div class="footer-col-content">
-                            <a href="{{ route('/') }}" class="footer-brand-logo d-inline-block mb-3">
+                        <div class="footer-modern-col pe-lg-2">
+                            <a href="{{ route('/') }}" class="footer-brand-logo-modern d-inline-block mb-3">
                                 <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('logo') }}" alt="{{ setting('title') }}" />
                             </a>
-                            <p class="footer-about-text">
-                                {{ setting('footer_about', 'কৃষি পরিবার - আপনার কৃষি সেবা, স্টকের সঠিক মূল্য এবং আর্থিক সমৃদ্ধির নির্ভরযোগ্য ডিজিটাল মাধ্যম।') }}
+                            <p class="footer-brand-bio">
+                                {{ setting('footer_about') ?: (setting('about_us_text') ?: ($isBn 
+                                    ? 'ই-কৃষি সেবা – দেশের কৃষক, খামারি, উদ্যোক্তা ও সাধারণ পরিবারের জন্য সাশ্রয়ী মূল্যে পুষ্টিকর খাদ্যপণ্য ও আধুনিক কৃষিপণ্য সরবরাহের বিশ্বস্ত ডিজিটাল প্ল্যাটফর্ম।'
+                                    : 'ekrishisheba - Your trusted agro investment, real-time commodity trading, and essential grocery distribution digital platform.'
+                                )) }}
                             </p>
                         </div>
                     </div>
 
-                    <!-- Col 2: Quick Links -->
+                    <!-- Col 2: Services & Market -->
                     <div class="col-6 col-md-3 col-lg-2">
-                        <div class="footer-col-content">
-                            <h4 class="footer-col-title">{{ $isBn ? 'প্রয়োজনীয় লিঙ্ক' : 'Quick Links' }}</h4>
-                            <ul class="footer-links-list">
-                                <li><a href="{{ route('/') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'হোমপেজ' : 'Home' }}</a></li>
-                                <li><a href="{{ route('about') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}</a></li>
-                                <li><a href="{{ route('business.outlets') }}"><i class="fa fa-angle-right me-2 text-warning"></i> <strong class="text-warning">{{ $isBn ? 'আমাদের আউটলেট' : 'Our Outlets' }}</strong></a></li>
-                                <li><a href="{{ route('properties.index') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'জমি ও প্রপার্টি' : 'Properties' }}</a></li>
-                                <li><a href="{{ route('gallery') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'গ্যালারি' : 'Gallery' }}</a></li>
-                                <li><a href="{{ route('career') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ক্যারিয়ার' : 'Career' }}</a></li>
-                                <li><a href="{{ route('privacy') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'প্রাইভেসি পলিসি' : 'Privacy' }}</a></li>
-                                <li><a href="{{ route('terms') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'টার্মস এন্ড কন্ডিশন' : 'Terms' }}</a></li>
-                                <li><a href="{{ route('corporate.support.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o me-2 text-danger"></i> {{ $isBn ? 'অ্যাবাউট কর্পোরেট সাপোর্ট' : 'About Corporate Support' }}</a></li>
+                        <div class="footer-modern-col">
+                            <h4 class="footer-modern-title">
+                                <span>{{ $isBn ? 'সেবাসমূহ' : 'Our Services' }}</span>
+                            </h4>
+                            <ul class="footer-modern-links">
+                                <li>
+                                    <a href="{{ route('/') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'হোম পেজ' : 'Home' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('shop.index') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'মাসিক বাজার শপ' : 'Monthly Bazaar' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('gallery') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'কৃষি গ্যালারি' : 'Gallery' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('our_videos') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'ভিডিও ও টিউটোরিয়াল' : 'Our Videos' }}
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Col 3: Business Column -->
+                    <!-- Col 3: Business Ecosystem -->
                     <div class="col-6 col-md-3 col-lg-2">
-                        <div class="footer-col-content">
-                            <h4 class="footer-col-title">{{ $isBn ? 'বিজনেস' : 'Business' }}</h4>
-                            <ul class="footer-links-list">
-                                <li><a href="{{ route('business.investor') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ইনভেস্টর' : 'Investor' }}</a></li>
-                                <li><a href="{{ route('business.wholesale') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'হোলসেল' : 'Wholesale' }}</a></li>
-                                <li><a href="{{ route('business.franchise') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'ফ্র্যাঞ্চাইজি' : 'Franchise' }}</a></li>
-                                <li><a href="{{ route('business.umrah_haj') }}"><i class="fa fa-angle-right me-2 text-warning"></i> {{ $isBn ? 'উমরাহ/হজ' : 'Umrah Haj' }}</a></li>
+                        <div class="footer-modern-col">
+                            <h4 class="footer-modern-title">
+                                <span>{{ $isBn ? 'বিজনেস' : 'Business' }}</span>
+                            </h4>
+                            <ul class="footer-modern-links">
+                                <li>
+                                    <a href="{{ route('business.investor') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'ইনভেস্টর' : 'Investor' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('business.wholesale') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'হোলসেল' : 'Wholesale' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('business.franchise') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'ফ্র্যাঞ্চাইজি' : 'Franchise' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('business.umrah_haj') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'উমরাহ/হজ' : 'Umrah Haj' }}
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Col 4: Contact Info -->
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="footer-col-content">
-                            <h4 class="footer-col-title">যোগাযোগ করুন</h4>
-                            <ul class="footer-contact-info-list">
-                                @if(setting('address1'))
-                                    <li>
-                                        <i class="fa fa-map-marker text-warning mt-1"></i>
-                                        <span>{{ setting('address1') }}@if(setting('address2') && setting('address2') !== setting('address1')), {{ setting('address2') }}@endif</span>
-                                    </li>
-                                @endif
-                                @if(setting('phone1'))
-                                    <li>
-                                        <i class="fa fa-phone text-warning mt-1"></i>
-                                        <a href="tel:{{ setting('phone1') }}">{{ setting('phone1') }}</a>
-                                    </li>
-                                @endif
-                                @if(setting('email1'))
-                                    <li>
-                                        <i class="fa fa-envelope text-warning mt-1"></i>
-                                        <a href="mailto:{{ setting('email1') }}" style="word-break: break-all; overflow-wrap: anywhere;">{{ setting('email1') }}</a>
-                                    </li>
-                                @endif
+                    <!-- Col 4: Info & Policies -->
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="footer-modern-col">
+                            <h4 class="footer-modern-title">
+                                <span>{{ $isBn ? 'তথ্য ও পলিসি' : 'Info & Policies' }}</span>
+                            </h4>
+                            <ul class="footer-modern-links">
+                                <li>
+                                    <a href="{{ route('about') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'আমাদের সম্পর্কে' : 'About Us' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('business.outlets') }}">
+                                        <i class="fa fa-angle-right"></i> <strong class="text-warning">{{ $isBn ? 'আমাদের আউটলেট' : 'Our Outlets' }}</strong>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('privacy') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'প্রাইভেসি পলিসি' : 'Privacy Policy' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('terms') }}">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'শর্তাবলী ও নিয়মাবলী' : 'Terms & Conditions' }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('corporate.support.pdf') }}" target="_blank" rel="noopener noreferrer">
+                                        <i class="fa fa-angle-right"></i> {{ $isBn ? 'অ্যাবাউট কর্পোরেট সাপোর্ট' : 'About Corporate Support' }}
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Col 4: Social Media -->
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="footer-col-content">
-                            <h4 class="footer-col-title">সোশ্যাল মিডিয়া</h4>
-                            <p class="footer-social-desc">
-                                আমাদের সাথে সামাজিক যোগাযোগ মাধ্যমে যুক্ত থাকুন ও সর্বশেষ আপডেট পান।
-                            </p>
-                            <div class="footer-social-buttons d-flex align-items-center flex-wrap">
-                                @if(setting('facbook_link'))
-                                    <a href="{{ setting('facbook_link') }}" target="_blank" rel="noreferrer" class="ftr-btn fb" title="Facebook" style="margin-right: 12px; margin-bottom: 8px;">
-                                        <i class="fa fa-facebook"></i>
-                                    </a>
-                                @endif
-                                @if(setting('instagram_link'))
-                                    <a href="{{ setting('instagram_link') }}" target="_blank" rel="noreferrer" class="ftr-btn insta" title="Instagram" style="margin-right: 12px; margin-bottom: 8px;">
-                                        <i class="fa fa-instagram"></i>
-                                    </a>
-                                @endif
-                                @if(setting('twitter_link'))
-                                    <a href="{{ setting('twitter_link') }}" target="_blank" rel="noreferrer" class="ftr-btn tw" title="Twitter" style="margin-right: 12px; margin-bottom: 8px;">
-                                        <i class="fa fa-twitter"></i>
-                                    </a>
-                                @endif
-                                @if(setting('linkedin_link'))
-                                    <a href="{{ setting('linkedin_link') }}" target="_blank" rel="noreferrer" class="ftr-btn in" title="LinkedIn" style="margin-right: 12px; margin-bottom: 8px;">
-                                        <i class="fa fa-linkedin"></i>
-                                    </a>
-                                @endif
-                                @if(setting('youtube_link'))
-                                    <a href="{{ setting('youtube_link') }}" target="_blank" rel="noreferrer" class="ftr-btn yt" title="YouTube" style="margin-right: 12px; margin-bottom: 8px;">
-                                        <i class="fa fa-youtube-play"></i>
-                                    </a>
-                                @endif
+                    <!-- Col 5: Contact & Connect -->
+                    <div class="col-12 col-md-8 col-lg-3">
+                        <div class="footer-modern-col">
+                            <h4 class="footer-modern-title">
+                                <span>{{ $isBn ? 'যোগাযোগ ও সোশ্যাল মিডিয়া' : 'Contact & Connect' }}</span>
+                            </h4>
+                            <ul class="footer-contact-modern-list mb-3">
+                                <li>
+                                    <i class="fa fa-map-marker text-warning mt-1"></i>
+                                    <span>{{ setting('address1') ?: 'Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka- 1207' }}</span>
+                                </li>
+                                <li>
+                                    <i class="fa fa-phone text-success mt-1"></i>
+                                    <a href="tel:{{ setting('phone1') ?: '+880183256897' }}">{{ setting('phone1') ?: '+880183256897' }}</a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-envelope text-info mt-1"></i>
+                                    <a href="mailto:{{ setting('email1') ?: 'ekrishisheba@gmail.com' }}">{{ setting('email1') ?: 'ekrishisheba@gmail.com' }}</a>
+                                </li>
+                            </ul>
+
+                            <!-- Social Links with Colorful 3D Gradient Buttons -->
+                            <div class="footer-social-modern-wrap">
+                                <div class="footer-social-modern-title">
+                                    {{ $isBn ? 'যুক্ত থাকুন আমাদের সাথে:' : 'Follow Us:' }}
+                                </div>
+                                <div class="footer-social-modern-icons d-flex align-items-center flex-wrap gap-2">
+                                    @if(setting('facbook_link'))
+                                        <a href="{{ setting('facbook_link') }}" target="_blank" rel="noopener noreferrer" class="modern-social-btn fb" title="Facebook">
+                                            <i class="fa fa-facebook"></i>
+                                        </a>
+                                    @endif
+                                    @if(setting('youtube_link'))
+                                        <a href="{{ setting('youtube_link') }}" target="_blank" rel="noopener noreferrer" class="modern-social-btn yt" title="YouTube">
+                                            <i class="fa fa-youtube-play"></i>
+                                        </a>
+                                    @endif
+                                    @if(setting('linkedin_link'))
+                                        <a href="{{ setting('linkedin_link') }}" target="_blank" rel="noopener noreferrer" class="modern-social-btn in" title="LinkedIn">
+                                            <i class="fa fa-linkedin"></i>
+                                        </a>
+                                    @endif
+                                    @if(setting('instagram_link'))
+                                        <a href="{{ setting('instagram_link') }}" target="_blank" rel="noopener noreferrer" class="modern-social-btn ig" title="Instagram">
+                                            <i class="fa fa-instagram"></i>
+                                        </a>
+                                    @endif
+                                    @if(setting('twitter_link'))
+                                        <a href="{{ setting('twitter_link') }}" target="_blank" rel="noopener noreferrer" class="modern-social-btn tw" title="Twitter / X">
+                                            <i class="fa fa-twitter"></i>
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1367,43 +1430,47 @@
             </div>
         </div>
 
-        <!-- Accepted Payment Methods & SSL Security Banner -->
+        <!-- 4. Accepted Payment Methods & Full SSL Security Banner -->
         <div class="footer-payment-security-ribbon py-2 text-center" style="background: rgba(0,0,0,0.25); border-top: 1px solid rgba(255,255,255,0.06);">
             <div class="container text-center">
                 @php
                     $sslLogo = setting('ssl_payment_logo');
                     $sslImgUrl = $sslLogo ? asset('upload/images/backend/logo/' . $sslLogo) : 'https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-01.png';
                 @endphp
-                <img src="{{ $sslImgUrl }}" alt="SSLCommerz Verified Payment Gateways" class="img-fluid" style="max-height: 65px; width: auto; max-width: 100%; object-fit: contain;">
+                <img src="{{ $sslImgUrl }}" alt="SSLCommerz Verified Payment Gateways" class="img-fluid" style="max-height: 70px; width: auto; max-width: 100%; object-fit: contain;">
             </div>
         </div>
 
-        <!-- Bottom Bar -->
-        <div class="footer-bottom-bar py-3">
+        <!-- 5. Bottom Copyright & Credits Strip -->
+        <div class="footer-bottom-bar-modern py-3">
             <div class="container">
-                <div class="row align-items-center justify-content-between">
-                    <div class="col-12 col-md-6 text-center text-md-start mb-2 mb-md-0">
-                        <p class="copyright-text mb-0">
-                            {{ setting('footer_copyright', '© '.date('Y').' iKrishiPoribar. All Rights Reserved.') }}
-                        </p>
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 text-center text-md-start">
+                    <div class="footer-copyright-text">
+                        {{ setting('footer_copyright', '© '.date('Y').' ekrishisheba. All Rights Reserved.') }}
                     </div>
-                    <div class="col-12 col-md-6 text-center text-md-end">
-                        <p class="developed-by-text mb-0">
-                            @if(setting('footer_developed_by_url'))
-                                <a href="{{ setting('footer_developed_by_url') }}" target="_blank" rel="noreferrer" class="developed-by-link">
-                                    {{ setting('footer_developed_by', 'Smart Agriculture & Stock Market Solutions') }}
-                                </a>
-                            @else
-                                <span>{{ setting('footer_developed_by', 'Smart Agriculture & Stock Market Solutions') }}</span>
-                            @endif
-                        </p>
+                    <div class="footer-legal-quick-links d-none d-md-flex align-items-center gap-3 font-size-12">
+                        <a href="{{ route('privacy') }}">{{ $isBn ? 'গোপনীয়তা' : 'Privacy' }}</a>
+                        <span class="text-muted">•</span>
+                        <a href="{{ route('terms') }}">{{ $isBn ? 'শর্তাবলী' : 'Terms' }}</a>
+                        <span class="text-muted">•</span>
+                        <a href="{{ route('about') }}">{{ $isBn ? 'পরিচিতি' : 'About' }}</a>
+                    </div>
+                    <div class="footer-developer-credit">
+                        {{ $isBn ? 'কারিগরি সহায়তায়:' : 'Developed by:' }}
+                        @if(setting('footer_developed_by_url'))
+                            <a href="{{ setting('footer_developed_by_url') }}" target="_blank" rel="noreferrer" class="dev-brand-link">
+                                {{ setting('footer_developed_by', 'ekrishisheba') }}
+                            </a>
+                        @else
+                            <span class="dev-brand-link">{{ setting('footer_developed_by', 'ekrishisheba') }}</span>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Floating Scroll to Top -->
-        <button type="button" class="scroll-to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Scroll to top">
+        <button type="button" class="scroll-to-top-btn-modern" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Scroll to top" title="উপরে যান">
             <i class="fa fa-arrow-up"></i>
         </button>
     </footer>

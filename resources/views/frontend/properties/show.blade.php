@@ -566,19 +566,20 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 13px;
 }
 .btn-submit-booking {
-    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    background: {{ setting('button_color') ?: '#007e8a' }};
     color: #ffffff;
     border: none;
     border-radius: 50px;
     font-size: 15px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    box-shadow: 0 4px 14px {{ setting('button_color') ?: '#007e8a' }}50;
     transition: all 0.25s ease;
 }
 .btn-submit-booking:hover {
-    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+    background: {{ setting('button_color') ?: '#007e8a' }};
+    opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
+    box-shadow: 0 6px 20px {{ setting('button_color') ?: '#007e8a' }}65;
     color: #ffffff;
 }
 .booking-security-note {

@@ -8,7 +8,9 @@ export default function MonthlyBazarSection({ products = [], routes = {}, site =
     const shopUrl = routes.our_products ? `${routes.our_products}?badge=monthly-bazar` : '/our-products?badge=monthly-bazar';
     const activeBtnColor = (site && site.button_color) ? site.button_color : '#007e8a';
     const isBtnAnimated = site && site.button_animation !== '0' && site.button_animation !== false;
-    const dynamicOrderBtnText = (site && site.product_order_btn_text) ? site.product_order_btn_text : (lang === 'bn' ? 'অর্ডার করুন' : 'Order Now');
+    const dynamicOrderBtnText = (lang === 'bn')
+        ? 'অর্ডার করুন'
+        : ((site && site.product_order_btn_text && site.product_order_btn_text !== 'অর্ডার করুন') ? site.product_order_btn_text : 'Order Now');
 
     return (
         <section className="monthly-bazar-home-showcase py-4" style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
