@@ -1258,7 +1258,7 @@
                     </div>
 
                     <!-- Col 2: Quick Links -->
-                    <div class="col-6 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3">
                         <div class="footer-col-content">
                             <h4 class="footer-col-title">প্রয়োজনীয় লিঙ্ক</h4>
                             <ul class="footer-links-list">
@@ -1276,7 +1276,7 @@
                     </div>
 
                     <!-- Col 3: Contact Info -->
-                    <div class="col-6 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3">
                         <div class="footer-col-content">
                             <h4 class="footer-col-title">যোগাযোগ করুন</h4>
                             <ul class="footer-contact-info-list">

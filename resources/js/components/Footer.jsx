@@ -190,7 +190,7 @@ export default function Footer({
                         </div>
 
                         {/* Col 2: Services & Market */}
-                        <div className="col-6 col-md-6 col-lg-2">
+                        <div className="col-12 col-md-6 col-lg-2">
                             <div className="footer-modern-col">
                                 <h4 className="footer-modern-title">
                                     <span>{lang === 'bn' ? 'আমাদের সেবাসমূহ' : 'Our Services'}</span>
@@ -231,7 +231,7 @@ export default function Footer({
                         </div>
 
                         {/* Col 3: Portals & Legal */}
-                        <div className="col-6 col-md-6 col-lg-3">
+                        <div className="col-12 col-md-6 col-lg-3">
                             <div className="footer-modern-col">
                                 <h4 className="footer-modern-title">
                                     <span>{lang === 'bn' ? 'পোর্টাল ও সহায়তা' : 'Portals & Support'}</span>
