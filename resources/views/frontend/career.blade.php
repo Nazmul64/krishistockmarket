@@ -1,3 +1,8 @@
+@php
+    $siteLang = request()->cookie('ekrishi_lang', 'en');
+    $isBn = ($siteLang === 'bn');
+@endphp
+
 @extends('layouts.frontend.app')
 
 @section('content')
@@ -122,8 +127,8 @@
             color: #64748b;
             font-size: 16px;
             background: transparent;
-            transition: color 0.25s ease;
             flex-shrink: 0;
+            transition: color 0.25s ease;
         }
         .modern-input-group:focus-within .modern-input-icon {
             color: #10b981;
@@ -131,11 +136,12 @@
         .modern-input-field {
             flex: 1;
             height: 50px;
+            border: none;
+            background: transparent;
             padding: 0 16px 0 0;
             font-size: 14.5px;
+            font-weight: 500;
             color: #0f172a;
-            background: transparent;
-            border: none;
             outline: none;
             font-family: inherit;
         }
@@ -144,7 +150,7 @@
             font-weight: 400;
         }
 
-        /* Custom Modern Select Wrap */
+        /* Modern Select Wrap */
         .modern-select-wrap {
             position: relative;
             display: flex;
@@ -167,16 +173,17 @@
         .modern-select-field {
             flex: 1;
             height: 50px;
-            padding: 0 42px 0 0;
-            font-size: 14.5px;
-            color: #0f172a;
-            background: transparent;
             border: none;
+            background: transparent;
+            padding: 0 40px 0 0;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #0f172a;
             outline: none;
-            font-family: inherit;
             cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
+            font-family: inherit;
         }
         .modern-select-arrow {
             position: absolute;
@@ -299,23 +306,23 @@
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             border: none;
             color: #ffffff;
-            padding: 16px 28px;
             font-size: 16px;
             font-weight: 700;
-            border-radius: 14px;
-            width: 100%;
+            padding: 15px 36px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 8px 10px -6px rgba(16, 185, 129, 0.2);
             cursor: pointer;
-            display: flex;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.45);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 12px;
+            width: 100%;
         }
         .btn-modern-submit:hover {
-            background: linear-gradient(135deg, #047857 0%, #059669 100%);
             transform: translateY(-2px);
-            box-shadow: 0 16px 32px -4px rgba(16, 185, 129, 0.55);
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5);
+            background: linear-gradient(135deg, #047857 0%, #059669 100%);
             color: #ffffff;
         }
 
@@ -348,22 +355,20 @@
             font-size: 18px;
         }
     </style>
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-    </style>
 
     <!-- Hero Banner -->
     <div class="career-hero-banner text-center py-5">
         <div class="container position-relative py-3" style="z-index: 2;">
             <span class="badge px-3 py-2 rounded-pill mb-3" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 13px;">
-                <i class="fa fa-briefcase me-1"></i> ক্যারিয়ার গড়ুন আমাদের সাথে
+                <i class="fa fa-briefcase me-1"></i> {{ $isBn ? 'ক্যারিয়ার গড়ুন আমাদের সাথে' : 'Build Your Career With Us' }}
             </span>
-            <h1 class="display-5 fw-bold text-white mb-2" style="letter-spacing: -0.5px;">ক্যারিয়ার পাথ (Career Opportunities)</h1>
+            <h1 class="display-5 fw-bold text-white mb-2" style="letter-spacing: -0.5px;">
+                {{ $isBn ? 'ক্যারিয়ার পাথ' : 'Career Opportunities' }}
+            </h1>
             <p class="text-white-50 mx-auto fs-6" style="max-width: 650px;">
-                ই-কৃষি সেবা পরিবারের সাথে আপনার মেধা ও পরিশ্রম যুক্ত করে গড়ে তুলুন একটি সমৃদ্ধ ও স্থায়ী ডিজিটাল ক্যারিয়ার
+                {{ $isBn 
+                    ? 'ই-কৃষি সেবা পরিবারের সাথে আপনার মেধা ও পরিশ্রম যুক্ত করে গড়ে তুলুন একটি সমৃদ্ধ ও স্থায়ী ডিজিটাল ক্যারিয়ার' 
+                    : 'Join e-Krishi Sheba and build a rewarding, sustainable career in digital agriculture' }}
             </p>
         </div>
     </div>
@@ -376,7 +381,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fa fa-check-circle fa-2x me-3 text-success"></i>
                         <div>
-                            <h5 class="fw-bold mb-1">আবেদন সফলভাবে গৃহীত হয়েছে!</h5>
+                            <h5 class="fw-bold mb-1">{{ $isBn ? 'আবেদন সফলভাবে গৃহীত হয়েছে!' : 'Application Submitted Successfully!' }}</h5>
                             <p class="mb-0 fs-6">{{ session('success') }}</p>
                         </div>
                     </div>
@@ -386,7 +391,7 @@
 
             @if($errors->any())
                 <div class="alert alert-danger alert-dismissible fade show rounded-4 p-4 mb-4 shadow-sm" role="alert">
-                    <h6 class="fw-bold mb-2"><i class="fa fa-exclamation-triangle me-2"></i>কিছু তথ্যে অসঙ্গতি রয়েছে:</h6>
+                    <h6 class="fw-bold mb-2"><i class="fa fa-exclamation-triangle me-2"></i>{{ $isBn ? 'কিছু তথ্যে অসঙ্গতি রয়েছে:' : 'There were some issues with your submission:' }}</h6>
                     <ul class="mb-0 ps-3">
                         @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -404,18 +409,26 @@
                         <div>
                             <div class="d-flex align-items-center gap-2 mb-4">
                                 <span class="badge bg-warning bg-opacity-20 text-warning px-3 py-2 rounded-pill fw-bold">
-                                    <i class="fa fa-star me-1"></i> আমাদের সুবিধা
+                                    <i class="fa fa-star me-1"></i> {{ $isBn ? 'আমাদের সুবিধা' : 'Our Benefits' }}
                                 </span>
                             </div>
-                            <h4 class="fw-bold text-dark mb-4">কেন আমাদের সাথে কাজ করবেন?</h4>
+                            <h4 class="fw-bold text-dark mb-4">
+                                {{ $isBn ? 'কেন আমাদের সাথে কাজ করবেন?' : 'Why Work With Us?' }}
+                            </h4>
 
                             <div class="perk-item-card">
                                 <div class="perk-icon-wrap" style="background: #ecfdf5; color: #059669;">
                                     <i class="fa fa-leaf"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-dark">ডিজিটাল এগ্রো বিপ্লব</h6>
-                                    <p class="text-muted small mb-0">বাংলাদেশের কৃষিখাতে আধুনিক তথ্যপ্রযুক্তি ও ডিজিটাল সাপ্লাই চেইনে কাজ করার অনন্য সুযোগ।</p>
+                                    <h6 class="fw-bold mb-1 text-dark">
+                                        {{ $isBn ? 'ডিজিটাল এগ্রো বিপ্লব' : 'Digital Agro Revolution' }}
+                                    </h6>
+                                    <p class="text-muted small mb-0">
+                                        {{ $isBn 
+                                            ? 'বাংলাদেশের কৃষিখাতে আধুনিক তথ্যপ্রযুক্তি ও ডিজিটাল সাপ্লাই চেইনে কাজ করার অনন্য সুযোগ।' 
+                                            : 'A unique opportunity to work in modern agricultural technology and digital supply chains.' }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -424,8 +437,14 @@
                                     <i class="fa fa-line-chart"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-dark">উজ্জ্বল ক্যারিয়ার প্রবৃদ্ধি</h6>
-                                    <p class="text-muted small mb-0">মেধা ও পারফরম্যান্স অনুযায়ী নিয়মিত ইনসেন্টিভ, বোনাস এবং দ্রুত পদোন্নতি সুবিধা।</p>
+                                    <h6 class="fw-bold mb-1 text-dark">
+                                        {{ $isBn ? 'উজ্জ্বল ক্যারিয়ার প্রবৃদ্ধি' : 'Accelerated Career Growth' }}
+                                    </h6>
+                                    <p class="text-muted small mb-0">
+                                        {{ $isBn 
+                                            ? 'মেধা ও পারফরম্যান্স অনুযায়ী নিয়মিত ইনসেন্টিভ, বোনাস এবং দ্রুত পদোন্নতি সুবিধা।' 
+                                            : 'Regular performance incentives, bonuses, and accelerated career growth opportunities.' }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -434,26 +453,32 @@
                                     <i class="fa fa-users"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-1 text-dark">সৌহার্দ্যপূর্ণ সংস্কৃতি</h6>
-                                    <p class="text-muted small mb-0">সহযোগিতাপূর্ণ আধুনিক অফিস কালচার যেখানে প্রতিটি কর্মীর মতামত সমান গুরুত্বপূর্ণ।</p>
+                                    <h6 class="fw-bold mb-1 text-dark">
+                                        {{ $isBn ? 'সৌহার্দ্যপূর্ণ সংস্কৃতি' : 'Supportive Culture' }}
+                                    </h6>
+                                    <p class="text-muted small mb-0">
+                                        {{ $isBn 
+                                            ? 'সহযোগিতাপূর্ণ আধুনিক অফিস কালচার যেখানে প্রতিটি কর্মীর মতামত সমান গুরুত্বপূর্ণ।' 
+                                            : 'A collaborative, modern workplace where every team member\'s contribution is valued.' }}
+                                    </p>
                                 </div>
                             </div>
 
                             <!-- Rules Box -->
                             <div class="p-3 rounded-4 mt-4" style="background: #f1f5f9; border: 1px solid #e2e8f0;">
                                 <h6 class="fw-bold text-dark mb-2">
-                                    <i class="fa fa-info-circle text-primary me-1"></i> আবেদনের নির্দেশিকা:
+                                    <i class="fa fa-info-circle text-primary me-1"></i> {{ $isBn ? 'আবেদনের নির্দেশিকা:' : 'Application Guidelines:' }}
                                 </h6>
                                 <ul class="text-muted mb-0 ps-3 small" style="line-height: 1.7;">
-                                    <li>আপনার হালনাগাদ <strong>সিভি (PDF ফরম্যাটে)</strong> আপলোড করুন (সর্বোচ্চ ১০MB)।</li>
-                                    <li>সঠিক ও সচল মোবাইল নম্বর এবং বর্তমান ঠিকানা প্রদান করুন।</li>
-                                    <li>কভার লেটার ঐচ্ছিক, তবে সংক্ষিপ্ত পরিচিতি লিখলে অগ্রাধিকার দেওয়া হবে।</li>
+                                    <li>{!! $isBn ? 'আপনার হালনাগাদ <strong>সিভি (PDF ফরম্যাটে)</strong> আপলোড করুন (সর্বোচ্চ ১০MB)।' : 'Upload your updated <strong>resume in PDF format</strong> (maximum 10MB).' !!}</li>
+                                    <li>{{ $isBn ? 'সঠিক ও সচল মোবাইল নম্বর এবং বর্তমান ঠিকানা প্রদান করুন।' : 'Provide an active contact phone number and full current address.' }}</li>
+                                    <li>{{ $isBn ? 'কভার লেটার ঐচ্ছিক, তবে সংক্ষিপ্ত পরিচিতি লিখলে অগ্রাধিকার দেওয়া হবে।' : 'A cover letter is optional, but a brief introduction is encouraged.' }}</li>
                                 </ul>
                             </div>
                         </div>
 
                         <div class="mt-4 pt-3 border-top text-center text-muted small">
-                            নিয়োগ সংক্রান্ত তথ্যের জন্য সরাসরি যোগাযোগ:<br>
+                            {{ $isBn ? 'নিয়োগ সংক্রান্ত তথ্যের জন্য সরাসরি যোগাযোগ:' : 'Direct contact for recruitment inquiries:' }}<br>
                             <strong class="text-dark"><i class="fa fa-phone text-success me-1"></i>{{ setting('phone1') }}</strong> | 
                             <span class="text-primary"><i class="fa fa-envelope text-primary me-1"></i>{{ setting('email1') }}</span>
                         </div>
@@ -466,12 +491,14 @@
                         <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2 border-bottom pb-3">
                             <div>
                                 <h3 class="fw-bold text-dark mb-1">
-                                    <i class="fa fa-id-card-o text-success me-2"></i> অনলাইনে ক্যারিয়ার আবেদন
+                                    <i class="fa fa-id-card-o text-success me-2"></i> {{ $isBn ? 'অনলাইনে ক্যারিয়ার আবেদন' : 'Online Career Application' }}
                                 </h3>
-                                <p class="text-muted small mb-0">আপনার প্রয়োজনীয় তথ্য পূরণ করে নিচে সিভি (PDF) আপলোড করুন</p>
+                                <p class="text-muted small mb-0">
+                                    {{ $isBn ? 'আপনার প্রয়োজনীয় তথ্য পূরণ করে নিচে সিভি (PDF) আপলোড করুন' : 'Fill in your details and upload your resume (PDF) below' }}
+                                </p>
                             </div>
                             <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill fw-bold" style="font-size: 12px;">
-                                <i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i> নিয়োগ উন্মুক্ত
+                                <i class="fa fa-circle text-success me-1" style="font-size: 8px;"></i> {{ $isBn ? 'নিয়োগ উন্মুক্ত' : 'Hiring Open' }}
                             </span>
                         </div>
 
@@ -481,7 +508,7 @@
                             <!-- Section 1: Personal Info -->
                             <div class="mb-4">
                                 <div class="form-section-title form-section-emerald">
-                                    <i class="fa fa-user-circle"></i> ১. ব্যক্তিগত পরিচয় (Personal Information)
+                                    <i class="fa fa-user-circle"></i> {{ $isBn ? '১. ব্যক্তিগত পরিচয়' : '1. Personal Information' }}
                                 </div>
 
                                 <div class="row">
@@ -489,16 +516,16 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="first_name" class="modern-label">
-                                                <span>ফার্স্ট নেম (First Name) <span class="required-star">*</span></span>
+                                                <span>{{ $isBn ? 'ফার্স্ট নেম' : 'First Name' }} <span class="required-star">*</span></span>
                                             </label>
                                             <div class="modern-input-group">
                                                 <div class="modern-input-icon"><i class="fa fa-user"></i></div>
                                                 <input type="text" class="modern-input-field @error('first_name') is-invalid @enderror" 
                                                        id="first_name" name="first_name" value="{{ old('first_name') }}" 
-                                                       placeholder="উদাঃ মোঃ নাজমুল" required>
+                                                       placeholder="{{ $isBn ? 'ফার্স্ট নেম লিখুন' : 'Enter First Name' }}" required>
                                             </div>
                                             @error('first_name')
-                                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                                 <div class="text-danger small mt-1">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -507,13 +534,13 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="last_name" class="modern-label">
-                                                <span>লাস্ট নেম (Last Name) <span class="required-star">*</span></span>
+                                                <span>{{ $isBn ? 'লাস্ট নেম' : 'Last Name' }} <span class="required-star">*</span></span>
                                             </label>
                                             <div class="modern-input-group">
                                                 <div class="modern-input-icon"><i class="fa fa-user-o"></i></div>
                                                 <input type="text" class="modern-input-field @error('last_name') is-invalid @enderror" 
                                                        id="last_name" name="last_name" value="{{ old('last_name') }}" 
-                                                       placeholder="উদাঃ ইসলাম" required>
+                                                       placeholder="{{ $isBn ? 'লাস্ট নেম লিখুন' : 'Enter Last Name' }}" required>
                                             </div>
                                             @error('last_name')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -525,13 +552,13 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="phone" class="modern-label">
-                                                <span>মোবাইল নম্বর (Phone Number) <span class="required-star">*</span></span>
+                                                <span>{{ $isBn ? 'মোবাইল নম্বর' : 'Phone Number' }} <span class="required-star">*</span></span>
                                             </label>
                                             <div class="modern-input-group">
                                                 <div class="modern-input-icon"><i class="fa fa-phone"></i></div>
                                                 <input type="tel" class="modern-input-field @error('phone') is-invalid @enderror" 
                                                        id="phone" name="phone" value="{{ old('phone') }}" 
-                                                       placeholder="উদাঃ 017XXXXXXXX" required>
+                                                       placeholder="{{ $isBn ? 'মোবাইল নম্বর লিখুন' : 'Enter Phone Number' }}" required>
                                             </div>
                                             @error('phone')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -543,14 +570,14 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="email" class="modern-label">
-                                                <span>ইমেইল ঠিকানা (Email)</span>
-                                                <span class="modern-label-hint">(ঐচ্ছিক)</span>
+                                                <span>{{ $isBn ? 'ইমেইল ঠিকানা' : 'Email Address' }}</span>
+                                                <span class="modern-label-hint">{{ $isBn ? '(ঐচ্ছিক)' : '(Optional)' }}</span>
                                             </label>
                                             <div class="modern-input-group">
                                                 <div class="modern-input-icon"><i class="fa fa-envelope"></i></div>
                                                 <input type="email" class="modern-input-field @error('email') is-invalid @enderror" 
                                                        id="email" name="email" value="{{ old('email') }}" 
-                                                       placeholder="উদাঃ yourname@example.com">
+                                                       placeholder="{{ $isBn ? 'ইমেইল এড্রেস লিখুন' : 'Enter Email Address' }}">
                                             </div>
                                             @error('email')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -563,7 +590,7 @@
                             <!-- Section 2: Position & Address -->
                             <div class="mb-4">
                                 <div class="form-section-title form-section-blue">
-                                    <i class="fa fa-briefcase"></i> ২. পদের পছন্দ ও বর্তমান ঠিকানা (Position & Address)
+                                    <i class="fa fa-briefcase"></i> {{ $isBn ? '২. পদের পছন্দ ও বর্তমান ঠিকানা' : '2. Position & Address' }}
                                 </div>
 
                                 <div class="row">
@@ -571,18 +598,18 @@
                                     <div class="col-12 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="position_applied" class="modern-label">
-                                                <span>আবেদিত পদবী / পছন্দের বিভাগ (Position Applied) <span class="required-star">*</span></span>
+                                                <span>{{ $isBn ? 'আবেদিত পদবী / পছন্দের বিভাগ' : 'Position Applied' }} <span class="required-star">*</span></span>
                                             </label>
                                             <div class="modern-select-wrap">
                                                 <div class="modern-input-icon"><i class="fa fa-id-badge"></i></div>
                                                 <select class="modern-select-field @error('position_applied') is-invalid @enderror" id="position_applied" name="position_applied">
-                                                    <option value="General Career Application">সাধারণ ক্যারিয়ার আবেদন (Open / General Application)</option>
-                                                    <option value="Field Agro Officer">ফিল্ড এগ্রো অফিসার (Field Agro Officer)</option>
-                                                    <option value="Marketing & Distribution Executive">মার্কেটিং & ডিস্ট্রিবিউশন এক্সিকিউটিভ</option>
-                                                    <option value="Customer Support Representative">কাস্টমার সাপোর্ট রিপ্রেজেনটেটিভ</option>
-                                                    <option value="Branch Coordinator">শাখা পরিচালক / ব্রাঞ্চ কো-অর্ডিনেটর</option>
-                                                    <option value="IT & Digital Operations">আইটি & ডিজিটাল অপারেশনস</option>
-                                                    <option value="Accounting & Audit">অ্যাকাউন্টিং & অডিট</option>
+                                                    <option value="General Career Application">{{ $isBn ? 'সাধারণ ক্যারিয়ার আবেদন' : 'General Career Application' }}</option>
+                                                    <option value="Field Agro Officer">{{ $isBn ? 'ফিল্ড এগ্রো অফিসার' : 'Field Agro Officer' }}</option>
+                                                    <option value="Marketing & Distribution Executive">{{ $isBn ? 'মার্কেটিং ও ডিস্ট্রিবিউশন এক্সিকিউটিভ' : 'Marketing & Distribution Executive' }}</option>
+                                                    <option value="Customer Support Representative">{{ $isBn ? 'কাস্টমার সাপোর্ট রিপ্রেজেনটেটিভ' : 'Customer Support Representative' }}</option>
+                                                    <option value="Branch Coordinator">{{ $isBn ? 'শাখা পরিচালক / ব্রাঞ্চ কো-অর্ডিনেটর' : 'Branch Coordinator' }}</option>
+                                                    <option value="IT & Digital Operations">{{ $isBn ? 'আইটি ও ডিজিটাল অপারেশনস' : 'IT & Digital Operations' }}</option>
+                                                    <option value="Accounting & Audit">{{ $isBn ? 'অ্যাকাউন্টিং ও অডিট' : 'Accounting & Audit' }}</option>
                                                 </select>
                                                 <div class="modern-select-arrow"><i class="fa fa-chevron-down"></i></div>
                                             </div>
@@ -596,13 +623,13 @@
                                     <div class="col-12 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="address" class="modern-label">
-                                                <span>বর্তমান ঠিকানা (Full Address) <span class="required-star">*</span></span>
+                                                <span>{{ $isBn ? 'বর্তমান ঠিকানা' : 'Current Address' }} <span class="required-star">*</span></span>
                                             </label>
                                             <div class="modern-input-group">
                                                 <div class="modern-input-icon"><i class="fa fa-map-marker"></i></div>
                                                 <input type="text" class="modern-input-field @error('address') is-invalid @enderror" 
                                                        id="address" name="address" value="{{ old('address') }}" 
-                                                       placeholder="বাড়ি নং, রোড, এলাকা/গ্রাম, থানা, জেলা" required>
+                                                       placeholder="{{ $isBn ? 'বর্তমান ঠিকানা লিখুন' : 'Enter Full Address' }}" required>
                                             </div>
                                             @error('address')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -615,7 +642,7 @@
                             <!-- Section 3: Documents & Cover Letter -->
                             <div class="mb-4">
                                 <div class="form-section-title form-section-purple">
-                                    <i class="fa fa-file-text-o"></i> ৩. সিভি ও পরিচিতি সংযুক্তি (Resume & Cover Letter)
+                                    <i class="fa fa-file-text-o"></i> {{ $isBn ? '৩. সিভি ও পরিচিতি সংযুক্তি' : '3. Resume & Cover Letter' }}
                                 </div>
 
                                 <div class="row">
@@ -623,8 +650,8 @@
                                     <div class="col-12 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label class="modern-label">
-                                                <span>সিভি / রেজুমে আপলোড (Resume PDF) <span class="required-star">*</span></span>
-                                                <span class="modern-label-hint">শুধুমাত্র PDF ফাইল (সর্বোচ্চ ১০MB)</span>
+                                                <span>{{ $isBn ? 'সিভি / রেজুমে আপলোড' : 'Resume / CV Upload' }} <span class="required-star">*</span></span>
+                                                <span class="modern-label-hint">{{ $isBn ? 'শুধুমাত্র PDF ফাইল (সর্বোচ্চ ১০MB)' : 'PDF format only (Max 10MB)' }}</span>
                                             </label>
 
                                             <!-- Custom Modern Dropzone -->
@@ -632,11 +659,15 @@
                                                 <div class="modern-dropzone-icon-circle">
                                                     <i class="fa fa-cloud-upload"></i>
                                                 </div>
-                                                <h5 class="fw-bold text-dark mb-1" style="font-size: 16px;">আপনার সিভি (PDF ফাইল) নির্বাচন করতে এখানে ক্লিক করুন</h5>
-                                                <p class="text-muted small mb-3">অথবা আপনার ড্রাইভ থেকে ফাইল টেনে এনে ছেড়ে দিন (Drag & Drop)</p>
+                                                <h5 class="fw-bold text-dark mb-1" style="font-size: 16px;">
+                                                    {{ $isBn ? 'আপনার সিভি (PDF ফাইল) নির্বাচন করতে এখানে ক্লিক করুন' : 'Click here to select your Resume (PDF file)' }}
+                                                </h5>
+                                                <p class="text-muted small mb-3">
+                                                    {{ $isBn ? 'অথবা আপনার ড্রাইভ থেকে ফাইল টেনে এনে ছেড়ে দিন (Drag & Drop)' : 'or drag and drop your file here' }}
+                                                </p>
                                                 
                                                 <span class="btn-dropzone-browse">
-                                                    <i class="fa fa-folder-open-o"></i> ফাইল ব্রাউজ করুন (Browse File)
+                                                    <i class="fa fa-folder-open-o"></i> {{ $isBn ? 'ফাইল ব্রাউজ করুন' : 'Browse File' }}
                                                 </span>
 
                                                 <!-- 100% Invisible Native File Input -->
@@ -651,12 +682,12 @@
                                                             <i class="fa fa-file-pdf-o"></i> PDF
                                                         </span>
                                                         <div class="text-start">
-                                                            <strong id="fileNameTxt" class="d-block text-dark small">কোনো ফাইল নির্বাচিত হয়নি</strong>
+                                                            <strong id="fileNameTxt" class="d-block text-dark small">{{ $isBn ? 'কোনো ফাইল নির্বাচিত হয়নি' : 'No file selected' }}</strong>
                                                             <span id="fileSizeTxt" class="text-muted" style="font-size: 11px;"></span>
                                                         </div>
                                                     </div>
                                                     <span class="badge bg-success bg-opacity-10 text-success border border-success px-2 py-1 rounded-pill small">
-                                                        <i class="fa fa-check-circle me-1"></i> নির্বাচিত হয়েছে
+                                                        <i class="fa fa-check-circle me-1"></i> {{ $isBn ? 'নির্বাচিত হয়েছে' : 'Selected' }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -671,13 +702,13 @@
                                     <div class="col-12 mb-3">
                                         <div class="modern-form-group mb-0">
                                             <label for="cover_letter" class="modern-label">
-                                                <span>কভার লেটার (Cover Letter)</span>
-                                                <span class="modern-label-hint">(ঐচ্ছিক - সংক্ষেপে নিজের যোগ্যতা লিখুন)</span>
+                                                <span>{{ $isBn ? 'কভার লেটার' : 'Cover Letter' }}</span>
+                                                <span class="modern-label-hint">{{ $isBn ? '(ঐচ্ছিক - সংক্ষেপে নিজের যোগ্যতা লিখুন)' : '(Optional - briefly introduce yourself)' }}</span>
                                             </label>
                                             <div class="modern-textarea-wrap">
                                                 <textarea class="modern-textarea-field @error('cover_letter') is-invalid @enderror" 
                                                           id="cover_letter" name="cover_letter" rows="4" 
-                                                          placeholder="নিজের পূর্ব অভিজ্ঞতা, শিক্ষাগত যোগ্যতা এবং কেন আপনি আমাদের প্রতিষ্ঠানে কাজ করতে আগ্রহী তা সংক্ষেপে তুলে ধরুন...">{{ old('cover_letter') }}</textarea>
+                                                          placeholder="{{ $isBn ? 'নিজের পূর্ব অভিজ্ঞতা, শিক্ষাগত যোগ্যতা এবং কেন আপনি আমাদের প্রতিষ্ঠানে কাজ করতে আগ্রহী তা সংক্ষেপে লিখুন...' : 'Briefly describe your experience, education, and why you wish to join our team...' }}">{{ old('cover_letter') }}</textarea>
                                             </div>
                                             @error('cover_letter')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -690,11 +721,11 @@
                             <!-- Submit Button -->
                             <div class="mt-4 pt-2">
                                 <button type="submit" class="btn-modern-submit">
-                                    <span>আবেদন নিশ্চিত ও জমা দিন (Submit Application)</span>
+                                    <span>{{ $isBn ? 'আবেদন নিশ্চিত ও জমা দিন' : 'Submit Application' }}</span>
                                     <i class="fa fa-paper-plane"></i>
                                 </button>
                                 <small class="text-muted text-center d-block mt-3">
-                                    <i class="fa fa-shield text-success me-1"></i> আপনার প্রদত্ত সমস্ত তথ্য সম্পূর্ণ সুরক্ষিত ও গোপনীয় থাকবে।
+                                    <i class="fa fa-shield text-success me-1"></i> {{ $isBn ? 'আপনার প্রদত্ত সমস্ত তথ্য সম্পূর্ণ সুরক্ষিত ও গোপনীয় থাকবে।' : 'All information provided will remain strictly confidential and protected.' }}
                                 </small>
                             </div>
 
