@@ -628,16 +628,7 @@
                                 </a>
                             </div>
 
-                            <!-- 11. Leadership Messages -->
-                            <div class="col-6 col-md-4 col-xl-3">
-                                <a href="{{ route('corporate.leadership_messages') }}" class="action-tile h-100">
-                                    <div class="action-icon-wrap" style="background: #fffbeb; color: #d97706;">
-                                        <i class="fa fa-quote-left"></i>
-                                    </div>
-                                    <div class="action-title">নেতৃবৃন্দের বাণী</div>
-                                    <div class="action-subtitle">চেয়ারম্যান ও এমডি'র বক্তব্য</div>
-                                </a>
-                            </div>
+
 
                             <!-- 12. Activities & Projects -->
                             <div class="col-6 col-md-4 col-xl-3">
@@ -828,13 +819,7 @@
                                     <div class="action-subtitle">লক্ষ্য, মিশন ও মূলনীতি</div>
                                 </a>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <a href="{{ route('corporate.leadership_messages') }}" class="action-tile h-100">
-                                    <div class="action-icon-wrap" style="background: #fffbeb; color: #d97706;"><i class="fa fa-quote-left"></i></div>
-                                    <div class="action-title">নেতৃবৃন্দের বাণী</div>
-                                    <div class="action-subtitle">চেয়ারম্যান ও এমডি'র বক্তব্য</div>
-                                </a>
-                            </div>
+
                             <div class="col-6 col-md-3">
                                 <a href="{{ route('corporate.activities') }}" class="action-tile h-100">
                                     <div class="action-icon-wrap" style="background: #fef2f2; color: #b91c1c;"><i class="fa fa-tasks"></i></div>

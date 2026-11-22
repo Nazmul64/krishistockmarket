@@ -226,6 +226,14 @@ class FrontendController extends Controller
             'menu_membership_status' => setting('menu_membership_status', '1') !== '0',
             'menu_membership_name_bn' => setting('menu_membership_name_bn') ?: 'মেম্বারশিপ কার্ড',
             'menu_membership_name_en' => setting('menu_membership_name_en') ?: 'Membership Cards',
+
+            'ssl_payment_logo' => setting('ssl_payment_logo') ? (
+                file_exists(public_path('upload/images/backend/logo/' . setting('ssl_payment_logo')))
+                    ? asset('upload/images/backend/logo/' . setting('ssl_payment_logo'))
+                    : (file_exists(public_path('upload/payments/' . setting('ssl_payment_logo')))
+                        ? asset('upload/payments/' . setting('ssl_payment_logo'))
+                        : asset(ltrim(setting('ssl_payment_logo'), '/')))
+            ) : null,
         ];
 
         // Auth state & Navigation URLs

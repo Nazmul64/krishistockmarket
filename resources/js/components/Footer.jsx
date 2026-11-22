@@ -56,18 +56,6 @@ export default function Footer({
                                         : 'ekrishisheba - Your trusted agro investment, real-time commodity trading, and essential grocery distribution digital platform.'
                                     )}
                                 </p>
-
-                                {/* Verification Trust Badges */}
-                                <div className="footer-trust-badges-list mt-3">
-                                    <div className="trust-pill">
-                                        <i className="fa fa-check-circle text-success me-1"></i>
-                                        <span>{lang === 'bn' ? 'সরকার অনুমোদিত ও ভেরিফাইড' : 'Govt. Approved Platform'}</span>
-                                    </div>
-                                    <div className="trust-pill">
-                                        <i className="fa fa-lock text-warning me-1"></i>
-                                        <span>{lang === 'bn' ? 'জিরো-ট্রাস্ট এনক্রিপ্টেড সার্ভার' : 'Zero-Trust Protected'}</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -188,34 +176,16 @@ export default function Footer({
                 </div>
             </div>
 
-            {/* 4. Accepted Payment Methods & Security Seal Ribbon */}
-            <div className="footer-payment-security-ribbon py-3">
+            {/* 4. Accepted Payment Methods & Full SSL Security Banner */}
+            <div className="footer-payment-security-ribbon py-2">
                 <div className="container">
-                    <div className="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-3 text-center text-lg-start">
-                        <div className="d-flex align-items-center flex-wrap justify-content-center gap-2">
-                            <span className="payment-label">
-                                <i className="fa fa-shield text-success me-1"></i>
-                                {lang === 'bn' ? 'নিরাপদ পেমেন্ট পার্টনারসমূহ:' : 'Accepted Payment Gateways:'}
-                            </span>
-                            <div className="payment-badges-row d-flex align-items-center flex-wrap gap-2">
-                                <span className="payment-badge bkash">bKash</span>
-                                <span className="payment-badge nagad">Nagad</span>
-                                <span className="payment-badge rocket">Rocket</span>
-                                <span className="payment-badge upay">Upay</span>
-                                <span className="payment-badge visa">VISA</span>
-                                <span className="payment-badge mastercard">MasterCard</span>
-                                <span className="payment-badge cod">{lang === 'bn' ? 'ক্যাশ অন ডেলিভারি' : 'Cash on Delivery'}</span>
-                            </div>
-                        </div>
-
-                        <div className="d-flex align-items-center justify-content-center gap-3">
-                            <span className="security-seal">
-                                <i className="fa fa-lock text-warning me-1"></i> 256-Bit SSL Encrypted
-                            </span>
-                            <span className="security-seal">
-                                <i className="fa fa-check-shield text-info me-1"></i> Zero-Trust Secured
-                            </span>
-                        </div>
+                    <div className="text-center w-100 py-1">
+                        <img 
+                            src={site.ssl_payment_logo || "https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-01.png"} 
+                            alt="SSLCommerz Verified & Accepted Payment Gateways" 
+                            className="img-fluid"
+                            style={{ maxHeight: '70px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+                        />
                     </div>
                 </div>
             </div>

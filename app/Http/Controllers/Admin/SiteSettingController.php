@@ -102,8 +102,9 @@ class SiteSettingController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'logo' => 'image',
-            'favicon' => 'image'
+            'logo' => 'nullable|image',
+            'favicon' => 'nullable|image',
+            'ssl_payment_logo' => 'nullable|image|max:4096'
         ]);
 
         if ($request->hasFile('logo')) {
@@ -139,6 +140,24 @@ class SiteSettingController extends Controller
             SiteSetting::updateOrCreate(
                 ['name' => 'favicon'],
                 ['value' => $favIconName]
+            );
+        }
+
+        if ($request->hasFile('ssl_payment_logo')) {
+            $setting = SiteSetting::where('name', 'ssl_payment_logo')->first();
+            if ($setting && $setting->value) {
+                $oldPath = base_path('public/upload/images/backend/logo/' . $setting->value);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
+            }
+            $sslName = 'ssl_banner_' . time() . Str::random(5) . '.' . $request->file('ssl_payment_logo')->getClientOriginalExtension();
+
+            Image::make($request->file('ssl_payment_logo'))->save(base_path('public/upload/images/backend/logo/' . $sslName));
+
+            SiteSetting::updateOrCreate(
+                ['name' => 'ssl_payment_logo'],
+                ['value' => $sslName]
             );
         }
 

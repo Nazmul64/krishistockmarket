@@ -561,8 +561,34 @@
                                                         alt="" style="width:30%; margin-top:5px">
                                                 </div>
                                             </div>
+                                        </div>
 
-
+                                        <div class="form-group pb-4">
+                                            <div class="row">
+                                                <label class="col-lg-3 control-label text-lg-start pt-2"
+                                                    for="ssl_payment_logo">
+                                                    <i class="fa fa-credit-card text-success me-1"></i> এসএসএল / পেমেন্ট গেটওয়ে ব্যানার (SSL / Payment Banner)
+                                                </label>
+                                                <div class="col-lg-5">
+                                                    <input type="file" class="form-control" id="ssl_payment_logo" name="ssl_payment_logo" accept="image/*">
+                                                    <small class="text-muted d-block mt-1">ফুটারের নিচে সম্পূর্ণ অংশ জুড়ে এই এসএসএল ব্যানার লোগো ইমেজটি শো করবে। (PNG, JPG, WebP)</small>
+                                                    <span class="text-danger">
+                                                        @error('ssl_payment_logo')
+                                                        {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    @if(setting('ssl_payment_logo'))
+                                                        <img src="{{ asset('upload/images/backend/logo') }}/{{ setting('ssl_payment_logo') }}"
+                                                            alt="SSL Banner" style="max-width: 100%; max-height: 55px; object-fit: contain; background: #0f172a; padding: 4px; border-radius: 6px;">
+                                                    @else
+                                                        <img src="https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-01.png"
+                                                            alt="SSLCommerz Banner" style="max-width: 100%; max-height: 50px; object-fit: contain; background: #0f172a; padding: 4px; border-radius: 6px;">
+                                                        <small class="text-muted d-block mt-1">ডিফল্ট SSLCommerz ব্যানার সক্রিয়</small>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
 
 

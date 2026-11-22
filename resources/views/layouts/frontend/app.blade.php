@@ -1353,6 +1353,17 @@
             </div>
         </div>
 
+        <!-- Accepted Payment Methods & SSL Security Banner -->
+        <div class="footer-payment-security-ribbon py-2 text-center" style="background: rgba(0,0,0,0.25); border-top: 1px solid rgba(255,255,255,0.06);">
+            <div class="container text-center">
+                @php
+                    $sslLogo = setting('ssl_payment_logo');
+                    $sslImgUrl = $sslLogo ? asset('upload/images/backend/logo/' . $sslLogo) : 'https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-01.png';
+                @endphp
+                <img src="{{ $sslImgUrl }}" alt="SSLCommerz Verified Payment Gateways" class="img-fluid" style="max-height: 65px; width: auto; max-width: 100%; object-fit: contain;">
+            </div>
+        </div>
+
         <!-- Bottom Bar -->
         <div class="footer-bottom-bar py-3">
             <div class="container">
