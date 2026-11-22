@@ -388,14 +388,6 @@ html, body {
       <!-- Title -->
       <h3 class="title">REGISTRATION</h3>
 
-      <!-- Bonus Badge -->
-      <div class="bonus-badge-wrap">
-        <div class="bonus-badge-pill">
-          <i class="fa fa-gift"></i>
-          <span>Instant ৳300 Bonus Credit</span>
-        </div>
-      </div>
-
       <!-- Alerts -->
       @if(session('error'))
         <div class="login-alert error">
@@ -422,7 +414,7 @@ html, body {
 
         <!-- Card Number -->
         <div class="input-group">
-          <input type="text" name="card_number" value="{{ old('card_number') }}" maxlength="12" placeholder="12-Digit Card Number (কার্ড নাম্বার)" required autofocus autocomplete="off" />
+          <input type="text" name="card_number" value="{{ old('card_number') }}" maxlength="12" placeholder="Enter Card Number" required autofocus autocomplete="off" />
           <span class="input-icon">
             <i class="fa fa-id-card"></i>
           </span>
@@ -433,7 +425,7 @@ html, body {
 
         <!-- Name -->
         <div class="input-group">
-          <input type="text" name="name" value="{{ old('name') }}" placeholder="Full Name (পূর্ণ নাম)" required autocomplete="name" />
+          <input type="text" name="name" value="{{ old('name') }}" placeholder="Enter Full Name" required autocomplete="name" />
           <span class="input-icon">
             <i class="fa fa-user"></i>
           </span>
@@ -444,7 +436,7 @@ html, body {
 
         <!-- Mobile Number -->
         <div class="input-group">
-          <input type="text" name="phone_number" value="{{ old('phone_number') }}" placeholder="Mobile Number (মোবাইল নাম্বার)" required autocomplete="tel" />
+          <input type="text" name="phone_number" value="{{ old('phone_number') }}" placeholder="Enter Mobile Number" required autocomplete="tel" />
           <span class="input-icon">
             <i class="fa fa-phone"></i>
           </span>
@@ -455,8 +447,8 @@ html, body {
 
         <!-- Password -->
         <div class="input-group">
-          <input type="password" name="password" id="registerPassword" placeholder="Password (পাসওয়ার্ড কমপক্ষে ৮ অক্ষর)" required autocomplete="new-password" />
-          <button type="button" class="input-icon-btn toggle-password-visibility" id="togglePasswordBtn" title="পাসওয়ার্ড দেখুন বা লুকান" aria-label="Toggle password visibility">
+          <input type="password" name="password" id="registerPassword" placeholder="Enter Password" required autocomplete="new-password" />
+          <button type="button" class="input-icon-btn toggle-password-visibility" id="togglePasswordBtn" title="Toggle password visibility" aria-label="Toggle password visibility">
             <i class="fa fa-eye" id="togglePasswordIcon"></i>
           </button>
         </div>
@@ -466,8 +458,8 @@ html, body {
 
         <!-- Confirm Password -->
         <div class="input-group">
-          <input type="password" name="password_confirmation" id="registerConfirmPassword" placeholder="Confirm Password (পাসওয়ার্ড নিশ্চিত করুন)" required autocomplete="new-password" />
-          <button type="button" class="input-icon-btn toggle-password-visibility" id="toggleConfirmPasswordBtn" title="পাসওয়ার্ড নিশ্চিতকরণ দেখুন বা লুকান" aria-label="Toggle password confirmation visibility">
+          <input type="password" name="password_confirmation" id="registerConfirmPassword" placeholder="Enter Confirm Password" required autocomplete="new-password" />
+          <button type="button" class="input-icon-btn toggle-password-visibility" id="toggleConfirmPasswordBtn" title="Toggle password confirmation visibility" aria-label="Toggle password confirmation visibility">
             <i class="fa fa-eye" id="toggleConfirmPasswordIcon"></i>
           </button>
         </div>
@@ -477,7 +469,7 @@ html, body {
 
         <!-- Submit Button -->
         <button type="submit" class="login-btn">
-          CREATE ACCOUNT & CLAIM ৳300
+          CREATE ACCOUNT
         </button>
 
         <!-- Footer Links -->
