@@ -975,7 +975,7 @@
             if (!mapTextarea || !mapPreviewBox) return;
             var val = mapTextarea.value.trim();
             if (!val) {
-                var defAddr = '{{ urlencode(setting("address1") ?: "Narsingdi, Dhaka, Bangladesh") }}';
+                var defAddr = '{{ urlencode(setting("address1") ?: "Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka- 1207") }}';
                 mapPreviewBox.innerHTML = '<iframe src="https://maps.google.com/maps?q=' + defAddr + '&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0; width:100%; height:100%; min-height:250px;" allowfullscreen="" loading="lazy"></iframe>';
                 return;
             }

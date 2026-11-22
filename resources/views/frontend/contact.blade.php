@@ -107,7 +107,7 @@
                                         $mapHtml = $rawMap;
                                     }
                                 } else {
-                                    $defaultAddress = urlencode(setting('address1') ?: 'Narsingdi, Dhaka, Bangladesh');
+                                    $defaultAddress = urlencode(setting('address1') ?: 'Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka- 1207');
                                     $mapHtml = '<iframe src="https://maps.google.com/maps?q=' . $defaultAddress . '&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0; min-height: 380px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
                                 }
                             @endphp

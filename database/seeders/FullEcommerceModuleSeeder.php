@@ -279,7 +279,7 @@ class FullEcommerceModuleSeeder extends Seeder
             'hotline' => '09617900200',
             'phone' => '01805-020340',
             'whatsapp' => '01805020340',
-            'email' => 'support@asmishop.com',
+            'email' => 'ekrishisheba@gmail.com',
             'currency_symbol' => '৳',
             'currency_code' => 'BDT',
             'address' => 'Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka-1207',

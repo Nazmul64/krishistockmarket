@@ -32,8 +32,8 @@ export default function Footer({
 
     // Phone & Email defaults
     const phone = site.phone1 || site.phone2 || '+88018********';
-    const email = site.email1 || site.email2 || 'info@ekrishisheba.com';
-    const address = site.address1 || site.address2 || (lang === 'bn' ? 'ঢাকা, বাংলাদেশ' : 'Dhaka, Bangladesh');
+    const email = site.email1 || site.email2 || 'ekrishisheba@gmail.com';
+    const address = site.address1 || site.address2 || 'Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka- 1207';
 
     return (
         <footer className="react-main-footer-modern">

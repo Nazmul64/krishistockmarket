@@ -35,12 +35,12 @@ class SettingSeeder extends Seeder
                 ],
                 [
                     'name' => 'address1',
-                    'value' => 'Dhaka, Narsingdi',
+                    'value' => 'Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka- 1207',
                     'created_at' => Carbon::now()
                 ],
                 [
                     'name' => 'address2',
-                    'value' => 'Dhaka, Narsingdi',
+                    'value' => 'Plot #45, Probal Tower, Ring Road, Mohammadpur, Dhaka- 1207',
                     'created_at' => Carbon::now()
                 ],
                 [
@@ -55,12 +55,12 @@ class SettingSeeder extends Seeder
                 ],
                 [
                     'name' => 'email1',
-                    'value' => 'siteemail@gmail.com',
+                    'value' => 'ekrishisheba@gmail.com',
                     'created_at' => Carbon::now()
                 ],
                 [
                     'name' => 'email2',
-                    'value' => 'siteemail2@gmail.com',
+                    'value' => 'ekrishisheba@gmail.com',
                     'created_at' => Carbon::now()
                 ],
                 [
